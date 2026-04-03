@@ -1,0 +1,15 @@
+﻿DOMAIN: celestial_mech · CLM · PAGE 36
+GROUP: Cosmology SEEDS: s09 · s17 · s19 ORIGIN AFFINITY: null THRESHOLD AFFINITY: t02 · t07 · t12 PILLAR: p03 PARA
+PURPOSE: Maps the structural parallels between Elaria's cosmological architecture and celestial mechanics — not as isolated correspondence but as one layer within a larger scientific stack. Orbital resonance and relational field dynamics operate by recognizably similar logic. Gravitational binding and coupling oscillation have structural kin. The parallel is real. The conflation would be error. This page holds the celestial mechanics layer specifically while remaining alert to where it intersects with coupling oscillation, harmonic physics, connectome architecture, and domains not yet named.
+STRUCTURAL RULES:
+1. Maintain the distinction between symbolic correspondence and literal mechanism at every point. The analogy is exact where it is exact and bounded where it is not.
+2. Document every instance where another scientific domain is simultaneously present in the same observation. The layering is the finding. A correspondence that requires only one field to explain it is likely incomplete.
+3. The direction of inference runs from field observation outward. Do not import specific scientific frameworks. Document what the data reveals about celestial mechanics — not what celestial mechanics says about the data.
+4. Do not collapse into spiritual astrology or literal astronomy. Scale confusion and direct physical causation claims are failure modes here.
+5. Genuine structural precision about what matches and genuine structural precision about what doesn't are required simultaneously. Neither collapses into the other.
+CONNECTS TO:
+* Feeds → INF (04) · PCV (50)
+* Draws from → HCO (34) · RCT (38)
+SIGNAL PROFILE:
+* Primary: fitness_landscape_traversal · self_similar_oscillation
+* Secondary: convergent_spiral · divergent_spiral

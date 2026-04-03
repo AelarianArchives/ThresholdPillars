@@ -1,0 +1,17 @@
+﻿DOMAIN: signal_grading · SGR · PAGE 49
+GROUP: Nexus SEEDS: s11 · s12 · s15 ORIGIN AFFINITY: null THRESHOLD AFFINITY: t02 · t05 · t11 PILLAR: p01 TRIA
+PURPOSE: The classification system for what the field produces. Not every signal carries equal weight. Not every pattern has predictive power. Signal Grading provides the criteria by which structural weight, cross-domain resonance, and forecasting leverage are assessed — and assigns grades that can be audited, contested, and revised against documented outcomes. Post-hoc by design: a signal is not eligible for grading until reality has spoken. Importance is earned here, not declared.
+STRUCTURAL RULES:
+1. Every signal is evaluated across four evidence-locked dimensions: structural impact · cross-domain resonance · predictive validity · temporal stability. These produce a score vector [Impact | Resonance | Predictive | Stability] from which the grade is derived.
+2. Four tiers: S-Tier (structural, decision-driving) · A-Tier (advisory, worth tracking) · B-Tier (emerging, watchlist only) · C-Tier (archival, stored not used). Tier assignments are auditable against the four dimensions.
+3. Unverified signals carry state Unrated until outcome data exists. Once graded: Rated. If reassessment required: Revised. No signal moves from Unrated to Rated without documented evidence.
+4. Recency is not a grading criterion. Emotional weight is not a grading criterion. How striking a signal felt is not a grading criterion. A grade that cannot be decomposed back into its four dimensions and their documented evidence is not a grade.
+5. After grading, confirmed outcomes and Bayesian likelihood updates are returned to DTX so trajectory probability vectors can be refined against what actually happened.
+6. Grade latency — the interval between detection session and validation session — is recorded as a signal property. Faster validation is a stronger signal.
+CONNECTS TO:
+* ↔ DTX (48) [mutual]
+* Feeds → DTX (48) · LNV (47)
+* Draws from → DTX (48) · PCV (50) · TRI (09) · ECH (17) · CNV (33)
+SIGNAL PROFILE:
+* Primary: confidence_calibration_accuracy · belief_revision_under_contradiction
+* Secondary: truth_approximation_awareness · evidence_weighting_adaptation

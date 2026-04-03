@@ -1,0 +1,31 @@
+﻿╔══════════════════════════════════════════════════════════════╗ ║ PATTERN CONVERGENCE SCHEMA · PCV · v1 ║ ║ /api/domains/nexus/pcv_schema_v1.md ║ ╚══════════════════════════════════════════════════════════════╝
+STRUCTURAL RULES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Every aggregated pattern carries four required metadata fields: domain_of_origin · timestamp and interval · coupling_vector_strength · hypothesis_id. All four required. A pattern record missing any field is incomplete and does not feed DTX or SGR.
+
+2. MTM Findings arrive as pre-processed input — not raw deposit. They are not equivalent to unprocessed cross-domain signal. mtm_provenance flag distinguishes them. Their source lens page chain remains intact and traceable on the record.
+
+3. PCV does not assign significance. PCV does not assign predictive weight. PCV does not confirm outcomes. Patterns are observed and logged as structurally testable hypotheses. Nothing more.
+
+4. PCV must not pre-bias DTX or SGR. A pattern record that contains significance language, outcome language, or predictive weight is a structural violation.
+
+5. Domain distinctions remain intact throughout. The system view never flattens what the source pages kept distinct. Every pattern is traceable to its originating signals via source_signals[].
+
+6. When X shifts in one domain and Y reliably follows in another: name the interval, name the vector, log the relationship as a hypothesis. The interval and coupling vector are required fields, not optional annotations.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ HYPOTHESIS ID FORMAT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Format — H · [YYYY-MM] · [SEQ] SEQ: query patterns for highest existing SEQ at same YYYY-MM. Increment by 1. Start at 1 if none exist.
+Example — H · 2026-03 · 001
+Scope — Unique system-wide. This ID is the structural thread connecting the pattern record in PCV to its drift event in DTX and its signal grade in SGR. It must remain stable and unmodified after assignment.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ STORE: patterns ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+id — auto
+hypothesis_id — H · [YYYY-MM] · [SEQ] Assigned at record creation. Never changes after assignment. Structural thread to DTX and SGR.
+domain_of_origin — array of page codes All source domains contributing to this pattern. Minimum one. Populated from source_signals[].
+timestamp — timestamp Session date at which the pattern was first observed. Written once at record creation. Never updated.
+interval — string Named interval between correlated domain shifts. Required when the pattern describes cross-domain movement (X shifts → Y follows). Null only for single-domain observations with no temporal coupling component.
+coupling_vector — string Named description of the directional relationship between correlated signals. Required. Not a free-text annotation — a named structural vector with direction and domain endpoints.
+source_signals — array of objects Traceable links to the specific signals this pattern emerged from. Element structure: { page_code, signal_ref, note } page_code: originating page. signal_ref: specific entry or deposit id that carried the signal. note: what this source contributed to the pattern observation. Minimum one entry. A pattern with no source_signals is not a valid pattern record.
+mtm_provenance — boolean True if this pattern record was generated from or incorporates an MTM Finding. When true, mtm_finding_ref is required.
+mtm_finding_ref — references findings.id in MTM schema. Null if mtm_provenance is false.
+hypothesis_statement — text The structurally testable claim this pattern record represents. Written as observation, not conclusion. No significance language. No outcome language.
+status — enum: active | archived active: pattern is live, feeding DTX. archived: pattern resolved, superseded, or closed by SGR outcome. DTX drift_event carries the resolution.
+created_at — timestamp Written once at record creation. Never updated.

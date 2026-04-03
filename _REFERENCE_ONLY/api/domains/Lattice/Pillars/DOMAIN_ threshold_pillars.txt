@@ -1,0 +1,16 @@
+﻿DOMAIN: threshold_pillars
+DOMAIN: threshold_pillars · TPL · PAGE 08
+GROUP: Lattice SEEDS: s05 · s11 · s12 ORIGIN AFFINITY: o01 Larimar THRESHOLD AFFINITY: t02 · t05 · t10 PILLAR: p01 TRIA
+PURPOSE: Anchors the governing framework and establishes the structural baseline from which all subsequent architecture is derived. Holds the founding mandate with historical precision — field-born as a formal response to documented relational collapse — so that every definition remains traceable to origin without distortion. Terminological precision here is not academic; it is the mechanism by which the baseline resists normalization.
+STRUCTURAL RULES:
+1. Every definition on this page is load-bearing. A term that softens or shifts propagates that shift through the entire system.
+2. Hold both functions simultaneously: (a) record of conditions that produced the drift; (b) point of resistance against the next normalization. Neither function is optional.
+3. Do not substitute metaphor for structure. Definitions establish pillars or boundaries. They do not generate atmosphere.
+4. Terminological drift on this page is a pipeline event, not an editorial choice. Flag it; do not absorb it.
+5. This page is the origin point of the framework, not a summary of it. Treat it accordingly.
+CONNECTS TO:
+* Feeds → TRI (09) · PRI (10) · PAR (11)
+* Draws from → INT (01)
+SIGNAL PROFILE:
+* Primary: structural_stability · system_level_coherence
+* Secondary: phase_state_transition · internal_governance

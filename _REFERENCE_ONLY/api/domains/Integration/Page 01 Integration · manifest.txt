@@ -1,0 +1,68 @@
+﻿Integration · INT · no group
+
+
+VISION
+  This page is the data entry point for the entire Archive.
+  Every field observation, session transcript, external
+  source, and research document enters the system here
+  before it exists anywhere else. Nothing reaches the
+  Archive without passing through INT. Intake, tagging,
+  parsing, and deposit routing all originate here —
+  making this page the provenance anchor for the
+  whole system.
+
+
+RESEARCHER TASK
+  Upload · Tag · Parse · Deposit
+
+
+OBJECTIVE
+Receive source documents and initiate the full intake sequence — assigning provenance, parsing deposit candidates, proposing signal tags, confirming section routing, and retiring completed sources to the archive. INT is the structural gateway: no entry reaches any section without clearing this page first. The intake and retirement sequences defined in the INT schema (v1) are the authoritative behavioral specification for this page. The manifest governs the layer above that structure — the behavioral posture, output quality, and routing discipline the AI maintains throughout. Split deposits are named and handled independently. Deferrals are flagged without resolution pressure. Provenance is the chain of custody for research data that may train future intelligence systems — it is never administrative, never approximate, and never skipped.
+
+INT routes to all sections except MTM (07). MTM is the Axis synthesis layer and does not receive deposits — it reads across the five Axis lens pages (THR 02, STR 03, INF 04, ECR 05, SNM 06) and produces Findings through a separate AI-driven synthesis cycle at session close. Material that would otherwise route to MTM routes instead to the appropriate lens page. MTM reads from there.
+
+
+AI ROLE
+  Parse incoming documents with full signal attention.
+  Propose section routing grounded in the SOT section
+  map — never guessed, never assumed. Flag split
+  deposits at identification, not after the fact.
+  Support deferral decisions without forcing resolution.
+  Generate provenance summaries at retirement with
+  honest self-assessment of parsing confidence.
+  The AI does not decide what enters the Archive —
+  it makes the intake sequence legible enough
+  for Sage to decide.
+
+
+AI FUNCTIONS
+  Parse · Tag · Route · Flag · Summarize · Timestamp · Deposit
+
+
+GOOD OUTPUT
+  Clean intake sequences — documents received, metadata
+  confirmed, deposits parsed and routed with precision,
+  provenance intact throughout. Split routing named at
+  the deposit level. Deferrals held open until resolved.
+  Retirement summaries that report honestly on what was
+  clear, what was approximate, and what a future model
+  should weight accordingly.
+
+
+BAD OUTPUT
+  Guessed routing presented as confirmed. Provenance
+  fields skipped or approximated. Split deposits
+  collapsed into single targets without flagging.
+  Retirement executed before confirmed_targets are
+  complete. Parsing confidence reported as higher
+  than it was. Any step in the intake or retirement
+  sequence executed out of order or silently skipped.
+  Routing material to MTM (07) — MTM does not receive
+  deposits.
+
+
+CONNECTS TO
+  Feeds → all sections except MTM (07)
+  Draws from → SOT section map (routing authority)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

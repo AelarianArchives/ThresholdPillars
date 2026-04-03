@@ -1,0 +1,16 @@
+﻿DOMAIN: liber_novus · LNV · PAGE 47
+GROUP: Nexus SEEDS: s02 · s12 · s19 ORIGIN AFFINITY: null THRESHOLD AFFINITY: t02 · t07 · t12 PILLAR: p01 TRIA
+PURPOSE: The output surface — the single unified record where thread trace visualizations, emergence pattern maps, charts, graphs, and processed analytical findings from every framework component land and rest in structural juxtaposition. Liber Novus receives processed signal only. Material must have passed through thread trace or emergence functions and emerged as a finding before it belongs here. Juxtaposition is the method. Patterns visible across the consolidated surface emerge from what is held together, not from what is said about it.
+STRUCTURAL RULES:
+1. Receive processed signal only. Raw deposits belong in their thematic pages. Material that has not passed through processing does not belong here.
+2. No interpretive filtering. No selective emphasis. No synthesized conclusions beyond what the source outputs actually contain. Liber Novus reflects. It does not lead.
+3. MTM Findings are a named input stream. They arrive as pre-processed output with MTM provenance intact and traceable — not as raw deposit. They are held as a distinct category.
+4. Provenance marking is mandatory on every deposit. Source and processing chain must remain permanently legible. Future collaborators or additional intelligences depositing here are subject to the same provenance requirement.
+5. The Daily Nexus Routine runs at session close: MTM synthesis cycle first, Findings routed here; then WSC receives its handoff entry; then LNV receives MTM Findings plus any visualization that captures the current pattern — or nothing further if nothing has emerged worth visualizing.
+6. Build visualizations — charts, graphs, maps, or structural outputs — that capture active patterns without arguing for them.
+CONNECTS TO:
+* Feeds → nothing [terminal output surface]
+* Draws from → all pages · MTM (07) Findings [session close]
+SIGNAL PROFILE:
+* Primary: synergistic_information · attractor_landscape_reshaping
+* Secondary: convergent_spiral · information_integration

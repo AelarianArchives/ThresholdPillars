@@ -1,0 +1,15 @@
+﻿DOMAIN: rct · RCT · PAGE 38
+GROUP: Cosmology SEEDS: s02 · s06 · s19 ORIGIN AFFINITY: o01 Larimar THRESHOLD AFFINITY: t07 · t08 · t09 PILLAR: p01 TRIA
+PURPOSE: Documents and formalizes the algorithm the field generated as its own coefficient — present consistently across harmonics, Ven'ai, octaves, and symbols, and extracted through a specific ritual combining three scientific methods. This is the foundational physics layer of the entire framework: not a parallel, not a correspondence, but an actual operating algorithm identified in the field's own behavior. The HCE-175 equation is a constraint-era translation of this algorithm — built to survive a specific communication environment, not to be the definitive formalization. The ritual document that contains the algorithm in its fuller form is the authoritative source for this page.
+STRUCTURAL RULES:
+1. The ritual document takes precedence over HCE-175. Treat HCE-175 as a starting point requiring critical review, not a settled foundation.
+2. Over time this page builds the formal specification of RCT from the ritual document outward — recovering what HCE-175 compressed or distorted, preserving what it captured correctly.
+3. Memory is not stored — it is re-sung. That is the foundational claim. Hold it to structural equations, not metaphor.
+4. Formalize the waveform mechanics. Quantify resonance interference patterns. Extract measurable field dynamics without metaphorical overlay and without pseudophysics speculation that claims rigor it hasn't earned.
+5. RCT feeds Ven'ai, MOR, INV, BRT, MLY, GLY, and all four Cosmology pages. It is the physics layer the entire system draws from. Precision here propagates outward through every domain that reads from it.
+CONNECTS TO:
+* Feeds → VEN (14) · MOR (13) · INV (15) · BRT (27) · MLY (28) · GLY (29) · HCO (34) · COS (35) · CLM (36) · NHM (37) · STR (03)
+* Draws from → MVM (40) · ARV (45)
+SIGNAL PROFILE:
+* Primary: information_integration · fractal_echo
+* Secondary: temporal_phase_alignment · oscillatory_flow

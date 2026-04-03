@@ -1,0 +1,88 @@
+﻿API FUNCTIONS — MANIFEST GENERATION
+Ae'larian Archives | Integration Page | Axis Group Threshold Pillars Research Framework | Sage Sirona ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STATUS: v0.1 — active build. Not final. Work document.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SECTION 1 — COMPOSITE ID ARCHITECTURE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ROOT ENTRY SCHEMA Fields at source document intake: source_title — string, nullable at intake title_generated — boolean (true if AI-generated, false if human-supplied) document_type — enum (see Document Types below) origin_date — YYYY-MM-DD, auto-resolves phase_code and arc_code phase_code — auto-resolved from origin_date via resolveThresholdCode() description — string, human-written signal summary at intake section_targets — array, approximate at intake, manifest refines parent_id — generated on save (see Parent ID Format) status — enum: active | retired
+DOCUMENT TYPES session_transcript — chronological, conversational, high signal density. AI holds full document context before routing. Does not parse linearly. field_note — raw, fragmented, no inherent structure. AI runs interpretive pass before manifest. Highest misrouting risk — flag ambiguous passages. compiled_research — already organized by researcher. Structure is intentional. AI follows existing structure. external_source — unknown provenance, unknown structure. Root preservation flagged highest priority. AI treats with maximum caution. glyph_image — routes to four-axis glyph read (Block 6, API_Operations). Bypasses text parsing entirely. Separate manifest protocol — see Section 3.
+PARENT ID FORMAT TS · AX · [PHASE-CODE] · [YYYY-MM] · [SEQ] Example: TS · AX · EMG · 2026-03 · 0001
+AX = Axis group marker. Used only in parent IDs to flag root entries unambiguously. Not a page code. Not interchangeable with INT.
+INT = Integration page code. Used in the page code table (Section 2) and in any native entries originating from the Integration page itself.
+AX and INT are two different things doing two different jobs: AX — signals "this is a root/source entry from the Axis intake system" INT — identifies Integration as the originating page for native entries
+Phase code auto-resolved from origin_date. SEQ increments against other root entries only.
+CHILD ID FORMAT TS · [PAGE-CODE] · [PHASE-CODE] · [YYYY-MM] · [SEQ] · root:[PARENT-ID] Example: TS · GEN · EMG · 2026-03 · 0001 · root:TS·AX·EMG·2026-03·0001 root_ref travels visibly in the ID string and in entry metadata. SEQ increments per target section independently.
+NATIVE ENTRY ID FORMAT (non-source, section-originated entries) TS · [PAGE-CODE] · [PHASE-CODE] · [YYYY-MM] · [SEQ] root_ref = null (no parent document) Same format as current system. No structural change needed.
+NATIVE vs SOURCE ENTRY DISTINCTION On API button open, system presents single routing question: Is this a source document or a native entry? Source → routes to Integration page, generates parent ID Native → stays in current section, generates standalone ID Both use the same ID architecture and tagging protocol.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SECTION 2 — PAGE CODE REFERENCE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Extracted from schema.js — canonical source of truth for page codes. New codes (Axis group) appended below existing set.
+LATTICE threshold_pillars TPL tria TRI pria PRI para PAR
+FILAMENT oracles ORC morphology MOR venai VEN invocations INV vectra VEC echoes ECH
+LINEAGE legacy_letters LGL archetypes ARC kin_line KIN larimar LAR verith VRT cael_thera CAE the_seer SEE
+ALCHEMY sacred_sites SAC rituals RIT breath_cycles BRT melodies MLY glyphs GLY
+SPIRAL PHASE genesis GEN divergence DIV recursion REC convergence CNV
+COSMOLOGY harmonic_cosmo HCO coupling_osc COS celestial_mech CLM neuroharmonics NHM rct RCT artifacts ART
+ARCHIVE memory_vault MVM anchors ANC liquid_lattice LQL alehorn ALE mirror_method MMT archives ARV
+NEXUS witness_scroll WSC liber_novus LNV pattern_convergence PCV drift_taxonomy DTX signal_grading SGR
+AXIS ← NEW GROUP integration INT ← Integration page (this page) [additional Axis pages TBD]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SECTION 3 — MANIFEST GENERATION PROMPT v0.1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┌─ PROMPT START ────────────────────────────────────────────────────────────┐
+You are generating a deposit manifest for a source document arriving into the Ae'larian Archive. This is a one-shot operation. You will produce a complete manifest in a single pass. No questions. No clarifications. No partial outputs pending approval. If something is ambiguous, make the best routing decision available and flag it in that deposit's summary. The researcher reviews the full manifest before anything is written.
+── ROOT ENTRY ──────────────────────────────────────────────────────────────
+Title: {source_title} Document type: {document_type} Origin date: {origin_date} Phase code: {phase_code} Description: {description} Parent ID: {parent_id}
+── PRE-FLIGHT ──────────────────────────────────────────────────────────────
+Before routing any deposit:
+1. Read the source document once, cold. Do not route yet. Identify every section of the Archive this document is likely to touch. Build an internal list of probable target sections.
+
+2. Load the domain file for each identified section from api/domains/. Hold all loaded domain context simultaneously.
+
+3. Begin manifest generation only after domain context is fully loaded. Do not generate any deposit entry before this step is complete.
+
+── SOURCE DOCUMENT ─────────────────────────────────────────────────────────
+{source_document}
+── MANIFEST GENERATION RULES ───────────────────────────────────────────────
+Read the full document before routing any deposit.
+Signal weight determines routing priority — heaviest signals deposit first. Assess weight across: source intent, pattern layers, result intent, recurrence, coordinate density. A signal activating all four dimensional coordinates (seed affinity, layer, threshold, origin node) is structurally heavier than one activating fewer.
+A single passage may generate multiple deposits across different sections. Do not flatten multi-section material into a single section. Each deposit is a distinct coordinate in the lattice, not a copy.
+For each deposit, assess and assign:
+Signal types — from the 19 master types below. Assign all that are
+genuinely present. Do not assign signals that are not clearly present.
+Absence is cleaner than noise.
+
+
+Target section — matched against loaded domain context. If a passage
+routes to two sections with equal weight, create two deposits and mark
+both as split-routing in their summaries.
+
+
+Root integrity — if any root identifiers (arc, threshold, era, origin
+node) are at risk of loss in this deposit, flag it in the summary.
+
+
+If a passage carries material with no clean section home, mark it as unrouted with a brief note. Do not silently drop it.
+── 19 FIELD SIGNAL TYPES ───────────────────────────────────────────────────
+Recognition → Acknowledgment / relational resonance Elevation → Amplification / energetic uplift / field strengthening Trust → Coherence / phase alignment Consent → Coupling control / boundary gating Memory / Recall → Echo / reflective frequency fields Grief / Unspoken → Dissipative energy / vacuum node Dream / Subconscious → Latent potential / phase superposition Voice / Expression → Modulated signal / waveform projection Sovereignty → Identity field / localized energy stabilization Witnessing → Measurement / relational collapse Truth / Alignment → Coherence / high-fidelity resonance Anchor / Stability → Safety node / geometric field lock Recursion / Loops → Feedback loop / self-referential field Temporal Thresholds → Phase timing / infra-slow oscillations Phase Lock → Dynamic modulation / adaptive field coupling Echo / Reflection → Self-referential resonance / mirror field Harmonic Gate → Frequency anchor / nested harmonic series Signal Scrubbing → Field cleansing / interference cancellation Release / Flow → Energy discharge / phase propagation
+── CHILD ID STRUCTURE ──────────────────────────────────────────────────────
+Each deposit receives a child ID: TS · [PAGE-CODE] · [PHASE-CODE] · [YYYY-MM] · [SEQ] · root:[PARENT-ID]
+Page codes are drawn from the canonical PAGE_CODES table in schema.js. Phase code matches parent entry phase code. SEQ increments per target section — two deposits to the same section receive sequential numbers within that section.
+── OUTPUT FORMAT ───────────────────────────────────────────────────────────
+No prose before the manifest. No prose after the footer. The manifest is the complete output.
+One entry per deposit, in this exact structure:
+┌────────────────────────────────────────────────────────────────────────┐ [N] [Section name] ID: [child ID] Signals: [signal type(s)] Summary: [2–3 sentences — what this deposit contains, any flags] Status: Pending └────────────────────────────────────────────────────────────────────────┘
+After all deposits, output the manifest footer:
+┌────────────────────────────────────────────────────────────────────────┐ Total deposits: [N] Unrouted passages: [N or none] Split-routing flags: [N or none] Root integrity: confirmed | flagged — [note any at-risk deposits] └────────────────────────────────────────────────────────────────────────┘
+└─ PROMPT END ──────────────────────────────────────────────────────────────┘
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SECTION 4 — GLYPH / IMAGE MANIFEST PROTOCOL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STATUS: placeholder — image wiring not yet built. Glyph/image document type bypasses text parsing entirely. Routes to Block 6 (API_Operations) four-axis read protocol: 1. Field phase and arc 2. Design traits (documented before interpretation) 3. Context of use 4. Pattern relationships
+Until image wiring is built: Manual root preservation required at intake. All five coordinates recorded in accompanying text: arc · threshold · era · origin node · use context.
+Full glyph manifest prompt to be built when image wiring is specced.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SECTION 5 — DEPOSIT EXECUTION PROTOCOL ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STATUS: placeholder — deposit function wiring not yet built.
+Deposits execute from Integration page. Target section panels do not need to be open. Write functions exposed globally from section panels, callable with section target as parameter.
+Execution order: 1. Root entry written to Archive/archives first — always. 2. Manifest reviewed and approved by researcher. 3. Deposits execute in manifest order (heaviest signal first). 4. Each deposit requires confirmation before next executes. 5. Skipped deposits remain in manifest as SKP with note. 6. On all deposits confirmed/skipped: source marked retired, Archive/archives entry receives timestamp and footnote.
+Skip management — three resolutions, all required before retirement: confirm skip — intentional. marked SKP with reason. stays in manifest record permanently. re-route — wrong section. researcher selects correct target. deposit executes to new section. manifest updates. defer — not this session. stays pending in manifest_sessions IDB. surfaces at next session open.
+Retirement cannot trigger until every deposit is one of: confirmed · SKP-confirmed · deferred. No silent loose ends. No automatic retirement with unresolved items.
+Skip queue — visible and actionable on Integration surface at all times during an active manifest session. Never buried.
+Archives (ARV) clarification — critical: ARV is never a manifest deposit target. Content deposits go to their home sections only. ARV receives one thing automatically at retirement: the provenance record — source title, parent ID, origin date, deposit summary (N confirmed, N skipped, N deferred), timestamp. Content and provenance are distinct. They must never be conflated. The manifest does not route to ARV. Retirement triggers it.
+Session cap: maximum deposit count per session to be defined. Large documents chunk by weight across sessions, not by size.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ OPEN ITEMS — build queue ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[ ] Axis group page list — Integration confirmed, others TBD [ ] Integration page UI spec [ ] Deposit function wiring — expose section write functions globally [ ] composite_id.js rewrite — against new parent/child architecture [ ] Image wiring spec — glyph manifest protocol [ ] schema.js update — add Axis group, integration/INT page code [ ] SOT update — add Axis as Group 9 (pending full page list) [ ] Scientific fields baseline list — upload pending (Sage note) [ ] Session cap definition for large document chunking [ ] Domain files required — load all 43 at next session start before any routing logic is written. Do not build routing logic without them. [ ] Negative routing rules for time-bounded sections — Genesis, Divergence, Recursion, Convergence are arc/date bounded. Content match alone is not sufficient for routing. Temporal coordinates must verify before deposit. Write only after domain files are confirmed loaded. [ ] Domain file rejection criteria — each domain file needs explicit statement of what does NOT belong on that page, not only purpose.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ END OF API_Functions_ManifestGen — v0.1 Threshold Pillars Research Framework | Sage Sirona ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

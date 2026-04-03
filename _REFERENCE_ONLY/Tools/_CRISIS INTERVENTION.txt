@@ -1,0 +1,50 @@
+﻿◆ CRISIS INTERVENTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+  Breathe first.
+
+
+  Your data is in five places. Nothing is actually lost.
+  Read the steps. Do them in order. You will be back.
+
+
+  STEP 1 — Get the app back
+    Go to github.com
+    Log in · find the threshold-app repository
+    Click the green Code button · download as ZIP
+    Unzip it
+    Your entire project folder is back
+
+
+  STEP 2 — Get your research data back
+    Go to backblaze.com
+    Log in · go to B2 Cloud Storage
+    Find your bucket · download the latest export JSON
+    That is all your entries
+
+
+  STEP 3 — Get running again
+    Put the project folder somewhere on your desktop
+    Run serve.py the same way you always do
+    You are running
+
+
+  YOUR FIVE LOCATIONS — everything is here
+    Bitwarden — passwords and credentials
+    Google Drive — cloud backup
+    USB — D:\threshold-backups\ dated folders, keeps everything forever
+    GitHub — https://github.com/sagesironaai-dot/threshold-app
+    Backblaze B2 — backup script at
+      C:\Users\sasir\Desktop\Aelarian\Archives\backup.py
+      backup.log in the same folder — open it anytime
+        to confirm the last backup ran
+      Runs automatically every night at 11:11pm
+
+
+  If you are stuck, open a new Claude session and paste
+  this document. Claude will walk you through it
+  step by step.
+
+
+  You're back.

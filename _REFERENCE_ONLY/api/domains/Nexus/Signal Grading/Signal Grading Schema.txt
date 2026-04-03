@@ -1,0 +1,45 @@
+﻿╔══════════════════════════════════════════════════════════════╗ ║ SIGNAL GRADING SCHEMA · SGR · v1 ║ ║ /api/domains/nexus/sgr_schema_v1.md ║ ╚══════════════════════════════════════════════════════════════╝
+STRUCTURAL RULES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Every signal is evaluated across four evidence-locked dimensions: structural_impact · cross_domain_resonance · predictive_validity · temporal_stability. These produce a score_vector from which the tier is derived. All four dimensions required. A grade without a complete score vector is not a grade.
+
+2. A signal is not eligible for grading until outcome data exists. grade_state begins as Unrated. It moves to Rated only when documented evidence exists for all four dimensions. It moves to Revised when new outcomes require reassessment.
+
+3. Recency is not a grading criterion. Emotional weight is not a grading criterion. How striking a signal felt is not a grading criterion. A grade that cannot be decomposed back into its four dimensions and their documented evidence is not a grade.
+
+4. Grade latency — the interval between detection_session and validation_session — is a signal property recorded on the grade record. Faster validation is a stronger signal. This field mirrors the DTX record and is written here independently.
+
+5. After grading, confirmed outcomes and Bayesian likelihood updates are returned to DTX so outcome_vector can be refined against what actually happened. bayesian_return_status tracks whether this has occurred.
+
+6. No signal moves from Unrated to Rated without documented evidence on all four dimensions. Partial evidence does not produce a partial grade. The signal remains Unrated until the evidence base is complete.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ GRADING DIMENSIONS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+structural_impact How much the signal actually affected system behavior. Values: negligible | local | cross_node | system_wide
+cross_domain_resonance Whether the signal appeared independently across multiple domains. Values: isolated | echoed | convergent | universal
+predictive_validity Whether the signal successfully preceded real outcomes. Values: none | weak | moderate | strong weak: one instance of predictive success. moderate: repeatable across more than one instance. strong: validated across multiple documented events.
+temporal_stability Whether the signal persisted or decayed over time. Values: transient | recurring | stable | anchoring
+TIER DERIVATION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+S-Tier — system_wide impact · convergent or universal resonance · strong predictive validity · stable or anchoring. Decision-driving. Applied to active system decisions.
+A-Tier — cross_node impact · echoed or convergent resonance · moderate predictive validity · recurring or stable. Advisory. Worth tracking. Not yet decisive.
+B-Tier — local impact · isolated or echoed resonance · weak predictive validity · transient or recurring. Emerging. Watchlist only.
+C-Tier — negligible impact · no cross-domain support · no predictive validity · transient. Archival. Stored, not used.
+DERIVATION RULE: Tier is derived from the lowest qualifying dimension. A signal cannot claim S-Tier if any dimension scores below S-Tier threshold. Elevation requires all four dimensions to support it.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ STORE: signal_grades ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+id — auto
+drift_event_ref — references drift_events.id in DTX schema. Required. A signal grade without a DTX origin is not valid.
+hypothesis_ref — references patterns.hypothesis_id in PCV schema. Carried forward from the DTX record for full chain traceability: PCV → DTX → SGR.
+// Score vector — all four required before Rated
+score_vector — object { structural_impact, cross_domain_resonance, predictive_validity, temporal_stability } Each field holds the enum value from its dimension. Null on individual fields while grade_state is Unrated. All four populated before grade_state → Rated.
+grade_rationale — object { impact_rationale, resonance_rationale, predictive_rationale, stability_rationale } One rationale field per dimension. Each states the documented evidence supporting that dimension score. Required at Rated. A dimension score without documented rationale is not complete.
+tier — enum: S | A | B | C Null while grade_state is Unrated. Derived from score_vector per tier derivation rules. Written when grade_state → Rated. Updated when grade_state → Revised.
+grade_state — enum: Unrated | Rated | Revised Unrated: outcome data does not yet exist. Default at record creation. Rated: all four dimensions scored with documented evidence. Tier assigned. Revised: new outcomes required reassessment. Score vector and tier updated. revised_at written.
+revised_at — timestamp Null until grade_state → Revised. Written at the moment of reassessment.
+// Grade latency
+detection_session — timestamp Mirrors drift_events. detection_session. Written at record creation.
+validation_session — timestamp Session date at which grading was completed. Null until grade_state → Rated.
+grade_latency — integer (days) Computed when validation_session is written: validation_session minus detection_session in days. Null until validation occurs. Signal property, not administrative field.
+// Bayesian return to DTX
+bayesian_return_status — enum: pending | sent | failed pending: grade complete, Bayesian update not yet sent to DTX. sent: confirmed outcome and likelihood update returned to DTX. DTX outcome_vector updated. failed: return attempt failed. Retry permitted. WRITE ORDER: SGR writes bayesian_return_status → sent before DTX updates outcome_vector. If DTX write fails, bayesian_return_status remains sent — visible signal, recoverable on retry.
+bayesian_payload — object The confirmed outcome and likelihood delta sent to DTX. { confirmed_outcome, p_resolve_delta, p_collapse_delta, p_stable_delta } Written when bayesian_return_status → sent. Null until then. Preserved as record of what was returned.
+// Lifecycle
+created_at — timestamp Written once at record creation. Never updated.
+last_updated — timestamp Written at record creation. Updated on every state change: score_vector update, tier assignment, grade_state change, bayesian_return_status change.

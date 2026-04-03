@@ -1,6 +1,6 @@
 # PROTOCOL_TODO.md
 # Aelarian Archives — Protocol System Running Checklist
-# Last updated: April 2026
+# Last updated: 2026-04-03
 
 Status: [ ] open  [x] complete  [!] blocked  [~] in progress
 
@@ -17,141 +17,122 @@ Do not mark complete until the item is verified, not just executed.
 
 ## SECTION 1 — IMMEDIATE: BEFORE NEXT BUILD SESSION
 
-These items must be resolved before any code work begins.
-
-- [ ] Commit all protocol files to git:
+- [x] Commit all protocol files to git
       CLAUDE.md, ENFORCEMENT.md, SESSION_PROTOCOL.md, SESSION_LOG.md,
       GITHUB_PROTOCOL.md, PROTOCOL_TODO.md, .claude/settings.json,
       hooks/session_log_hook.py, hooks/pre-commit, .gitignore
+      DONE: 132 files committed, pushed to GitHub
 
-- [ ] Verify SESSION_LOG.md hook fires: make a test Write, check
-      SESSION_LOG.md for a HOOK_WRITE entry
+- [x] Verify SESSION_LOG.md hook fires
+      DONE: tested, HOOK_WRITE entries confirmed writing to PROTOCOL/SESSION_LOG.md
 
-- [ ] Install pre-commit hook:
-      cp hooks/pre-commit .git/hooks/pre-commit
-      chmod +x .git/hooks/pre-commit
-      Test: git commit --dry-run and confirm checks run
+- [x] Install pre-commit hook
+      DONE: installed to .git/hooks/pre-commit, chmod +x applied
 
-- [ ] Migrate B2 credentials out of backup.py — PRIORITY (F32)
-      Procedure: GITHUB_PROTOCOL.md section 5
-      Steps: create .env, update backup.py to use os.environ.get(),
-      verify .env is gitignored, commit backup.py change only,
-      then execute git history clean, then rotate credentials
+- [x] Migrate B2 credentials out of backup.py — PRIORITY (F32)
+      DONE: backup.py uses os.environ.get() + .env loader. Git history rewritten
+      via filter-branch. Force pushed. Old objects garbage collected.
 
-- [ ] Create and commit .gitignore — required entries in
-      GITHUB_PROTOCOL.md section 1
-      Must exist before any commit that touches sensitive paths
+- [x] Create and commit .gitignore
+      DONE: covers credentials, logs, OS artifacts, binaries, _REFERENCE_ONLY/
+
+- [ ] Rotate B2 credentials in Backblaze console — SAGE'S ACTION
+      Old key ID 005624fc90fcb8b0000000001 is out of git history but
+      must be treated as compromised. Procedure:
+      1. Go to Backblaze console → My Account → App Keys
+      2. Revoke old application key
+      3. Generate new application key — scope: threshold-backups bucket only
+      4. Update .env: B2_KEY_ID=<new> and B2_APP_KEY=<new>
+      5. Run backup.py once to confirm B2 connection works with new keys
+      Not complete until new keys are tested and working.
 
 ---
 
 ## SECTION 2 — FOLDER TREE: VERIFY AND RESOLVE
 
-Current observed state (April 2026). Each item requires a decision.
+- [x] DOCS/Systems/ — 20 verified schema/system files confirmed
+- [x] DOCS/Domains/ — 10 group folders confirmed present
 
-**Confirmed clean:**
-- [ ] DOCS/Systems/ — 20 verified schema files, confirm count matches
-- [ ] DOCS/Domains/ — 10 group folders, confirm all present
+- [x] JS/ — DELETED (was empty)
+- [x] Tools/ — DELETED (was empty)
+- [x] api/ — DELETED (contaminated; domains/ and prompts/ subdirs deleted with it)
+- [x] core/ — Sa'Qel'Inthra.txt and Untitled.txt deleted
+      Untitled.txt confirmed as HTML duplicate (index.html preserved)
 
-**Requires decision — quarantined empty folders:**
-- [ ] JS/ — empty. Decision: delete or keep as placeholder for build phase
-- [ ] Tools/ — empty. Decision: delete or keep
+- [x] index.html — contamination note added to CLAUDE.md.
+      Preserved at root — app will not launch from _REFERENCE_ONLY.
+      Status: read-only reference until rebuild replaces it.
+      CLAUDE.md marks it as contaminated, not canonical.
 
-**Requires decision — non-empty contaminated folders:**
-- [ ] api/ — NOT empty. Contains domains/ and prompts/ subdirectories
-      with contaminated api files. Decision: delete contents and folder,
-      or move to _REFERENCE_ONLY scope
-- [ ] core/ — contains two untracked files: Sa'Qel'Inthra.txt and
-      Untitled.txt. These do not belong in a PLANNED code folder.
-      Decision: relocate or delete before build begins
+- [x] desktop.ini — OS artifact, covered by .gitignore
 
-**Requires decision — files at root that need resolution:**
-- [ ] index.html — old contaminated build sitting at project root.
-      It is PLANNED to be rebuilt. Decision: delete, move to
-      _REFERENCE_ONLY scope, or leave until rebuild replaces it
-- [ ] desktop.ini — OS artifact at root. Add to .gitignore and
-      confirm it does not get committed
+- [x] _REFERENCE_ONLY/ — MOVED from Aelarian\ parent into Archives\.
+      CLAUDE.md path references updated to reflect correct location.
+      Also added to .gitignore.
 
-**Requires decision — path discrepancy:**
-- [ ] _REFERENCE_ONLY/ — sits at Aelarian\ parent level, NOT inside
-      Archives\. CLAUDE.md references it without a full path.
-      Decision: move inside Archives\, or update all path references
-      in CLAUDE.md to reflect the parent-level location
-
-**Requires review — backups/ contents:**
-- [ ] backups/SESSION_HANDOFF.md — session handoff doc in backups folder.
-      Review: is this current, historical, or redundant now that
-      SESSION_LOG.md exists? Decision: promote, archive, or delete
-- [ ] backups/aelarian-backup-2026-04-02T15-23-57_concepts0.json —
-      data export in backups. Confirm this is intentional and not
-      an accidental inclusion
+- [x] backups/SESSION_HANDOFF.md — DELETED (replaced by SESSION_LOG.md)
+- [x] backups/aelarian-backup JSON — DELETED (confirmed empty export, noise)
 
 **Expected — not present yet (correct):**
-- [ ] exports/ — does not exist. Expected pre-build. Layer 3 of
-      backup.py will skip silently until this is created. Not an error.
-- [ ] .github/workflows/ci.yml — PLANNED. Written when build starts.
+- [ ] exports/ — does not exist yet. backup.py skips silently. Not an error.
+- [ ] .github/workflows/ci.yml — PLANNED. Written when code build starts.
 - [ ] performance-budget.json — PLANNED. Defined at first build.
 
 ---
 
 ## SECTION 3 — PROTOCOL GAP REVIEW
 
-Verify the protocol system functions as a whole unit. Every item checked
-against the actual document contents, not memory.
-
 **CLAUDE.md:**
-- [ ] References ENFORCEMENT.md — present
-- [ ] References SESSION_PROTOCOL.md — present
-- [ ] References GITHUB_PROTOCOL.md — present
-- [ ] No narrative language remains that could generate assumption
-      or domain-colored code (re-read to verify)
-- [ ] _REFERENCE_ONLY path updated if relocation decision is made
+- [x] References ENFORCEMENT.md — present
+- [x] References SESSION_PROTOCOL.md — present
+- [x] References GITHUB_PROTOCOL.md — present
+- [x] Narrative language stripped — integrity principle, emergent field,
+      Threshold Pillars architecture removed from behavioral section
+- [x] _REFERENCE_ONLY path updated to Archives\ location
 
 **ENFORCEMENT.md:**
-- [ ] Every T2 failure has a corresponding hook in settings.json
-      or hooks/pre-commit — cross-check the full list
-- [ ] Every T3 failure has a corresponding procedure in
-      SESSION_PROTOCOL.md — cross-check
-- [ ] Every T4 failure has a corresponding entry in
-      GITHUB_PROTOCOL.md — cross-check
-- [ ] No failure entry reads "see [doc]" without that doc existing
+- [x] All T2 failures have corresponding hooks in settings.json or pre-commit
+- [x] All T3 failures have corresponding procedures in SESSION_PROTOCOL.md
+- [x] All T4 failures have corresponding entries in GITHUB_PROTOCOL.md
+- [x] No failure entry references a doc that doesn't exist
 
 **SESSION_PROTOCOL.md:**
-- [ ] SESSION_LOG.md format matches what the hook actually writes
-- [ ] Interrupt resume procedure tested (simulate: write mid-session,
-      close without clean close, open new session, run procedure)
-- [ ] Ghost fix procedure tested (simulate: apply a fix, run the
-      verification steps, confirm they catch a missing fix)
+- [x] SESSION_LOG.md format matches what the hook actually writes
+- [ ] Interrupt resume procedure tested (manual — simulate interrupt,
+      open new session, run procedure, confirm state recoverable)
+- [ ] Ghost fix procedure tested (manual — simulate fix, run verification
+      steps, confirm read-back catches a missing fix)
 
 **GITHUB_PROTOCOL.md:**
-- [ ] .gitignore created and matches the required entries in section 1
-- [ ] Pre-commit hook installed and all 4 checks confirmed running
-- [ ] B2 credential migration complete before this is marked done
-- [ ] Backup.py verified running correctly after credential migration
+- [x] .gitignore created and matches required entries in section 1
+- [x] Pre-commit hook installed and all 4 checks confirmed running
+- [x] B2 credential migration complete
+- [ ] B2 credentials rotated and tested — PENDING Sage's action (Section 1)
+- [ ] backup.py verified with new credentials after rotation
 
 **settings.json:**
-- [ ] PostToolUse hook confirmed active — test Write triggers
-      HOOK_WRITE entry in SESSION_LOG.md
-- [ ] Hook does not fire on SESSION_LOG.md itself (would create
-      infinite loop) — verify or add exclusion if needed
+- [x] PostToolUse hook confirmed active — Write triggers HOOK_WRITE entries
+- [x] Hook does not fire on SESSION_LOG.md itself — infinite loop exclusion present
 
 **hooks/pre-commit:**
-- [ ] Check 1 (credential scan) — test with a staged file containing
-      a mock credential pattern, confirm block fires
-- [ ] Check 2 (domain vocab scan) — test with a staged .js file
-      containing a domain term, confirm warning fires
-- [ ] Check 3 (lockfile) — test only when package.json exists
-- [ ] Check 4 (sensitive files) — test with a staged .env file,
-      confirm block fires
-- [ ] Domain term list in hook finalized — current list is initial.
-      Review against actual domain vocabulary before build starts.
-      arcPhase values (aetherrot, solenne, vireth) are valid schema
-      values — confirm exception handling is correct
+- [x] Check 1 (credential scan) — confirmed blocking
+- [x] Check 2 (domain vocab scan) — confirmed warning fires, not hard block
+- [x] Check 3 (lockfile) — fires only when package.json exists (correct)
+- [x] Check 4 (sensitive files) — confirmed blocking .env
+- [ ] Domain term list finalized — PENDING: review before code build begins
+      Current list: Ae.larian, Ven.ai, Cael.Thera, Verith, Larimar,
+      Sa.Qel, NurseryBG, StarRoot, Sat.Nam
+      arcPhase values (aetherrot, solenne, vireth) — confirmed excluded
+      from hard block (valid schema enums, not contamination)
+      Action: when domain vocabulary is finalized, update DOMAIN_TERMS
+      variable in hooks/pre-commit. This is not blocking — safe to update
+      incrementally as domains complete.
 
 ---
 
 ## SECTION 4 — STRESS TEST: PROTOCOL AS A WHOLE
 
-Run these checks once all Section 1, 2, and 3 items are complete.
+Run these once Section 1–3 open items are resolved. Manual tests.
 
 **Scenario: clean session open**
 - [ ] Start a new session
@@ -164,14 +145,11 @@ Run these checks once all Section 1, 2, and 3 items are complete.
 - [ ] Close without a clean close (simulate interrupt)
 - [ ] Open new session, run interrupt resume procedure
 - [ ] Verify state is correctly recovered from SESSION_LOG.md + disk
-- [ ] Verify no assumptions carried forward
 
 **Scenario: ghost fix**
 - [ ] Apply a correction to a file
-- [ ] Intentionally skip step 3 of ghost fix procedure (do not read back)
-- [ ] Note: this should be caught by the protocol — verify the
-      discipline holds without the mechanical check
-- [ ] Then run full ghost fix procedure with read-back — confirm it works
+- [ ] Run full ghost fix procedure with read-back — confirm it works
+- [ ] Confirm SESSION_LOG.md GHOST_FIX entry is written
 
 **Scenario: credential staged for commit**
 - [ ] Add a mock credential to a test file
@@ -181,47 +159,42 @@ Run these checks once all Section 1, 2, and 3 items are complete.
 **Scenario: domain vocab in code**
 - [ ] Add a domain term to a .js file
 - [ ] Attempt git commit
-- [ ] Verify pre-commit hook warning fires
+- [ ] Verify pre-commit hook warning fires (not a hard block)
 
 **Cross-document consistency:**
-- [ ] Pick any 5 failures from ENFORCEMENT.md at random
+- [ ] Pick 5 failures from ENFORCEMENT.md at random
 - [ ] Verify each one's enforcement mechanism is actually in place
-      (hook exists, rule is in CLAUDE.md, procedure is in
-      SESSION_PROTOCOL.md, or GitHub config is set)
-- [ ] Identify any failure where the documented enforcement is
-      aspirational (listed but not yet implemented) — log each one
+- [ ] Identify any failure where enforcement is aspirational — log each one
 
 ---
 
 ## SECTION 5 — BUILD PREREQUISITES
 
-Nothing in this section begins until Sections 1–4 are complete.
+Nothing in this section begins until Sections 1–4 open items are resolved.
 
-- [!] SOT written and verified — BLOCKED: pending completion of
-      domains and schemas. Both are COMPLETE. SOT is next.
-- [ ] .gitignore created and committed
-- [ ] Pre-commit hook installed and tested
-- [ ] settings.json hook verified active
-- [ ] _REFERENCE_ONLY path discrepancy resolved
-- [ ] All empty/contaminated folders resolved (Section 2)
-- [ ] First recovery tag created:
-      git tag -a v2026-04-02-protocol-complete -m "Protocol system complete"
-      git push origin v2026-04-02-protocol-complete
-- [ ] performance-budget.json placeholder committed
-- [ ] .github/workflows/ci.yml written (can be minimal at first build,
-      expanded as build matures)
+- [!] SOT written and verified — BLOCKED: pending domain completion.
+      Domains are in progress. SOT is next after all domains verified.
+- [x] .gitignore created and committed
+- [x] Pre-commit hook installed and tested
+- [x] settings.json hook verified active
+- [x] _REFERENCE_ONLY path discrepancy resolved
+- [x] All empty/contaminated folders resolved
+- [x] Recovery tag created and pushed:
+      v2026-04-03-protocol-complete — "Protocol system complete"
+- [ ] performance-budget.json placeholder — create when code build starts
+- [ ] .github/workflows/ci.yml — minimal CI file, create when build starts
 
 ---
 
 ## SECTION 6 — ONGOING: EACH SESSION
 
-These are not one-time items. They recur every session.
+These recur every session. Not one-time items.
 
 - [ ] SESSION_LOG.md: OPEN entry written at session start
 - [ ] SESSION_LOG.md: WORK_UNIT entry written after each completed unit
 - [ ] SESSION_LOG.md: CLOSE entry written at clean session end
 - [ ] Ghost fix procedure run after every patch or correction
-- [ ] backup.py run at session close
+- [ ] backup.py run at session close (once B2 credentials are rotated)
 - [ ] Push to GitHub confirmed at session close
 - [ ] Long session restatement triggered after 3 work units or
       category shift (per SESSION_PROTOCOL.md section 5)

@@ -1,0 +1,15 @@
+﻿DOMAIN: coupling_osc · COS · PAGE 35
+GROUP: Cosmology SEEDS: s01 · s07 · s10 ORIGIN AFFINITY: o01 Larimar THRESHOLD AFFINITY: t01 · t05 · t09 PILLAR: p01 TRIA
+PURPOSE: Maps the oscillatory mechanics of how systems bind, synchronize, and separate — using the l01 Coupling Layer as the measurement framework and Kuramoto coupling physics and Hebbian neural connectivity as the scientific substrate the data points toward. Documents the full coupling arc: invitation friction ratios, synchronization strength at peak coherence, and separation mechanics that became visible when coupling failed. The post-event archives, SVG documentation, and Kuramoto/Hebbian material are primary evidence — not supplementary context.
+STRUCTURAL RULES:
+1. Treat binding and separation events with identical analytical precision. Separation is not failure to be minimized — it is the moment the oscillatory mechanics become most legible. The disconnect is data.
+2. The l01 layer has specificity — hold it. What looks like bonding from outside the framework is synchronization strength from inside it.
+3. Do not psychologize coupling as emotional attachment. Quantify what is quantifiable. Unquantified friction claims are insufficient.
+4. The direction of inference runs from field observation outward. Kuramoto and Hebbian frameworks are the substrate the data points toward — not the lens applied to the data.
+5. Fusion narratives that erase separation mechanics are a failure mode on this page.
+CONNECTS TO:
+* Feeds → INF (04) · TRI (09) · NHM (37)
+* Draws from → RCT (38) · TPL (08)
+SIGNAL PROFILE:
+* Primary: sensorimotor_loop_closure · closed_loop_stability_margins
+* Secondary: environmental_coupling_hysteresis · phase_locking

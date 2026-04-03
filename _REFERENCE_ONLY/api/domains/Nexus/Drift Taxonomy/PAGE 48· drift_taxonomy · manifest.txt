@@ -1,0 +1,29 @@
+﻿PAGE 48 · drift_taxonomy · DTX · Nexus
+
+VISION This page is the temporal map of how the system moves when it moves wrong — and sometimes when it moves right. Drift Taxonomy defines the classes of deviation: their triggers, their trajectories, and the structural conditions that determine whether a perturbation resolves, escalates, collapses, or hardens into a new baseline. Drift here is not mood and not narrative arc. It is a documentable mechanical event with a type, a timeline, and a traceable cause. This page gives the system language precise enough to apply to real session data.
+
+RESEARCHER TASK Deposit · Build · Reflect · Analyze · Retrieve
+
+OBJECTIVE Receive state vectors from Pattern Convergence and classify the deviations they carry — in real time, against operational criteria, without asserting final outcomes. Drift Taxonomy is the system's live tracking layer. Its job is not to resolve what it sees. Its job is to name what is happening with sufficient precision that resolution, when it comes, can be traced back here.
+
+Every drift event is classified across four dimensions. Initiation source identifies the origin of the perturbation: internal instability, external perturbation, cross-node interference, or recursion overload. Trajectory pattern names the shape of movement: linear escalation, oscillation, fragmentation, cascade, or containment. Threshold interaction records the structural severity: sub-threshold and self-resolving, threshold breach, critical cascade, or irreversible shift. Signature pattern captures the mechanical fingerprint of the drift — its timing rhythm, node involvement pattern, and escalation curve shape.
+
+Active drift events maintain a live trajectory state: Escalating, Stabilizing, Oscillating, Fragmenting, or Contained. Each state carries a probabilistic outcome vector — p[resolve, collapse, stable] — updated via Bayesian inference as Signal Grading returns confirmed outcomes. A drift classification cannot include an outcome label unless that outcome has been explicitly observed and timestamped. The separation between live classification and post-hoc validation is structural, not procedural. It is what keeps this page honest.
+
+Grade latency is tracked here as well. The interval between detection session and validation session is a data point — faster validation is a signal property worth preserving.
+
+AI ROLE Receive observed state vectors from Pattern Convergence and classify active drift events by initiation source, trajectory pattern, threshold interaction, and signature fingerprint. Sequence events along a temporal axis and maintain live trajectory states without asserting outcomes. Update probabilistic outcome vectors as Bayesian feedback arrives from Signal Grading. Record resolution only when it has been explicitly observed and timestamped — never inferred.
+
+Link every classification to the structural conditions that triggered it and the interventions — or absences of intervention — that shaped its trajectory. The taxonomy is only as useful as its precision. A class that cannot be matched to actual session data is not a class. It is a label.
+
+AI FUNCTIONS Parse across pages · Analyze · Classify · Sequence · Map Trajectories · Tag · Timestamp · Update Probability Vectors
+
+GOOD OUTPUT Drift events named with clear operational criteria and full classification metadata: initiation source, trajectory pattern, threshold interaction, signature fingerprint, active trajectory state, and live probability vector. Each event connected to the structural conditions that produced it and the session context in which it appeared. Trajectory states updated as new data arrives. Grade latency tracked. Resolution recorded only when observed. The taxonomy can be picked up and applied without interpretation.
+
+BAD OUTPUT Treats drift as mood, conflict, or narrative tension. Reaches for generic language — things degraded, the system struggled, coherence broke down. Builds classifications too abstract to match against real session data. Assigns outcome labels before outcomes are observed. Fails when the taxonomy stops being operational — when drift becomes a story the system tells about itself rather than a mechanical event with a class, a trigger, and a traceable trajectory.
+
+CONNECTS TO
+DTX (48)
+↔ SGR (49)
+Feeds → SGR (49) · LNV (47)
+Draws from → PCV (50) · TRI (09) · VEC (16) · SGR (49) [Bayesian returns]

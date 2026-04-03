@@ -1,0 +1,31 @@
+﻿PAGE 49 · signal_grading · SGR · Nexus
+
+VISION This page is the classification system for what the field produces. Not every signal carries equal weight. Not every pattern has predictive power. Signal Grading provides the criteria by which structural weight, cross-domain resonance, and forecasting leverage are assessed — and assigns grades that can be audited, contested, and revised against documented outcomes. A grade here is not an aesthetic judgment and not a measure of how striking a signal felt. It is a structural rating with explicit rationale, mapped back to the domain it came from and the events it did or did not predict.
+
+RESEARCHER TASK Deposit · Build · Reflect · Analyze · Retrieve
+
+OBJECTIVE Receive drift events and converged patterns from DTX and PCV and grade them — not against expectation, but against observed outcomes. Signal Grading is post-hoc by design. A signal is not eligible for grading until reality has spoken. Importance is earned here, not declared.
+
+Every signal is evaluated across four evidence-locked dimensions. Structural impact measures how much the signal actually affected system behavior: negligible, local, cross-node, or system-wide. Cross-domain resonance measures whether it appeared independently across multiple domains: isolated, echoed, convergent, or universal. Predictive validity measures whether it successfully preceded real outcomes: none, weak at one instance, moderate and repeatable, or strong across multiple events. Temporal stability measures whether it persisted or decayed: transient, recurring, stable, or anchoring.
+
+These four dimensions combine into a signal score vector — [Impact | Resonance | Predictive | Stability] — from which the grade is derived. S-Tier signals are structural: high impact, multi-domain convergence, proven predictive validity, stable across time. These become decision-driving. A-Tier signals are advisory: moderate impact, some cross-domain support, partial predictive success — worth tracking, not yet decisive. B-Tier signals are emerging: low-to-moderate impact, limited validation, early-stage repetition — watchlist only. C-Tier signals are archival: no predictive validity, no structural impact, documented for completeness and stored, not used.
+
+Unverified signals — detected by PCV, possibly tracked by DTX — carry a state of Unrated until outcome data exists. Once graded, a signal is marked Rated. If new outcomes require reassessment, it is marked Revised. No signal moves from Unrated to Rated without documented evidence. Grade latency — the interval between detection session and validation session — is recorded as a signal property. Faster validation is a stronger signal.
+
+After grading, confirmed outcomes and Bayesian likelihood updates are returned to DTX so trajectory probability vectors can be refined against what actually happened.
+
+AI ROLE Evaluate signals against the four grading dimensions consistently and assign grades with fully documented score vectors and justification for every rating. Distinguish noise from weak signals and weak signals from high-leverage indicators — without collapsing those categories into each other. Demonstrate the predictive or structural value of elevated signals by tracing them across multiple documented events before raising their tier. Return confirmed outcome data and Bayesian updates to DTX after each grading event.
+
+Recency is not a grading criterion. Emotional weight is not a grading criterion. How striking a signal felt is not a grading criterion. A grade that cannot be decomposed back into its four dimensions and their documented evidence is not a grade.
+
+AI FUNCTIONS Parse across pages · Analyze · Grade · Score · Tag · Timestamp · Return Bayesian Updates to DTX
+
+GOOD OUTPUT Every graded signal carries a complete score vector [Impact | Resonance | Predictive | Stability] with documented rationale for each dimension score. Tier assignments auditable against criteria. High-tier signals traced across multiple documented events that justify the elevation. Grade latency recorded. Unrated signals held cleanly separate from rated ones. Bayesian updates returned to DTX with confirmed outcomes attached. The grading record can be picked up, scrutinized, and revised — nothing in it requires interpretation to evaluate.
+
+BAD OUTPUT Assigns importance based on aesthetics, emotional resonance, or recency. Uses vague tier labels without score vectors underneath them. Inflates grades on signals that have not survived multi-event verification. Grades signals before outcomes are documented. Fails when the classification system becomes impressionistic — when a signal is rated high because it felt load-bearing rather than because the evidence shows it was.
+
+CONNECTS TO 
+SGR (49)
+↔ DTX (48)
+Feeds → DTX (48) · LNV (47)
+Draws from → DTX (48) · PCV (50) · TRI (09) · ECH (17) · CNV (33)

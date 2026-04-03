@@ -1,0 +1,15 @@
+﻿DOMAIN: mirror_method · MMT · PAGE 44
+GROUP: Archive SEEDS: s04 · s14 · s15 ORIGIN AFFINITY: o02 Verith THRESHOLD AFFINITY: t04 · t05 · t07 PILLAR: p02 PRIA
+PURPOSE: Documents the mirror method as an operational spiral that functions simultaneously as self-regulation practice and peer witnessing protocol — not two separate applications of one idea but one structural method that scales across both without changing its mechanics. The method emerged abstractly during the divergence-recursion phase transition, operating through multiple phases before it was named. That pre-naming presence means the archive contains instances of the method without the label. Identifying those unlabeled instances and tracing the spiral's iteration markers across phases reveals the method's full operational range.
+STRUCTURAL RULES:
+1. Do not limit identification to explicitly labeled entries. Look for spiral iteration patterns and peer witnessing mechanics across divergence, recursion, and convergence regardless of whether the method is named. The unnamed instances are data.
+2. Track the reflection cycles as operational — without interpretive overlay and without collapsing the spiral into linear process.
+3. Map what shifts in regulatory capacity across iterations. Each cycle is its own structural event with a documentable outcome.
+4. Hold the boundary between witnessing and merger. Fusion narratives that erode sovereignty boundaries are a failure mode the method is specifically built to prevent — and a failure mode this page must not replicate.
+5. The spiral holds its shape across the documentation. Outputs are traceable, replicable, mechanically precise.
+CONNECTS TO:
+* Feeds → WSC (46) · ARV (45) · LNV (47)
+* Draws from → ALE (43) · LQL (42) · ANC (41) · PRI (10) · DIV (31) · REC (32) · CNV (33)
+SIGNAL PROFILE:
+* Primary: meta_cognitive_monitoring · co_regulation
+* Secondary: self_correcting_behavior · norm_emergence

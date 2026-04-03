@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forest Green · Background Compendium</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* forest greens */
+  --void:        #060d08;
+  --f-900:       #0a1a0c;
+  --f-800:       #0f2412;
+  --f-700:       #1a3d1f;
+  --f-600:       #224d27;
+  --f-500:       #2e6e35;
+  --f-400:       #3a8a45;
+  --f-300:       #52a860;
+  --f-200:       #7dc48a;
+  --f-100:       #b4d8bc;
+  --sage:        #8aae8a;
+  --moss:        #4a6b4a;
+
+  /* steel (slightly green-shifted for harmony) */
+  --s-900:       #111c1e;
+  --s-700:       #1e3038;
+  --s-500:       #2e4850;
+  --s-300:       #4a7080;
+  --s-100:       #7a9aaa;
+  --silver:      #a8c4c8;
+
+  /* amber accent */
+  --amber:       #c9943a;
+  --amber-deep:  #7a4e14;
+  --amber-pale:  #d4b86a;
+
+  /* ice */
+  --ice:         #d8eee2;
+}
+
+body {
+  background: var(--void);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  color: var(--f-100);
+}
+
+header {
+  text-align: center;
+  padding: 64px 32px 48px;
+  position: relative;
+}
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 1px; height: 32px;
+  background: linear-gradient(to bottom, rgba(46,139,87,0.45), transparent);
+}
+h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  color: var(--ice);
+  text-shadow: 0 0 40px rgba(82,168,96,0.22);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.subtitle {
+  font-size: 0.62rem;
+  letter-spacing: 0.4em;
+  color: var(--s-300);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.count-pill {
+  display: inline-block;
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  color: var(--f-300);
+  border: 1px solid rgba(82,168,96,0.28);
+  padding: 3px 12px;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+.instructions {
+  text-align: center;
+  padding: 28px 32px 0;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--s-300);
+  text-transform: uppercase;
+}
+.instructions span { color: var(--f-200); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2px;
+  padding: 48px 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.card {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+}
+.canvas {
+  width: 100%; height: 100%;
+  position: absolute; inset: 0;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.card:hover .canvas { transform: scale(1.04); }
+
+.card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(6,13,8,0.9) 0%, rgba(6,13,8,0.2) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 20px; z-index: 10;
+}
+.card:hover .card-overlay { opacity: 1; }
+
+.card-index {
+  font-size: 0.52rem; letter-spacing: 0.35em;
+  color: var(--f-300); text-transform: uppercase; margin-bottom: 4px;
+}
+.card-name {
+  font-family: 'Cinzel', serif; font-size: 0.85rem;
+  font-weight: 400; letter-spacing: 0.2em;
+  color: var(--ice); margin-bottom: 6px; text-transform: uppercase;
+}
+.card-desc {
+  font-size: 0.58rem; letter-spacing: 0.08em;
+  color: var(--sage); line-height: 1.6; font-style: italic;
+}
+
+.card-action {
+  position: absolute; top: 14px; right: 14px;
+  background: rgba(6,13,8,0.72);
+  border: 1px solid rgba(82,168,96,0.32);
+  color: var(--f-200);
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 0.2em; padding: 5px 10px; cursor: pointer;
+  text-transform: uppercase; opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s, transform 0.3s, background 0.2s;
+  z-index: 20; backdrop-filter: blur(4px);
+}
+.card:hover .card-action { opacity: 1; transform: translateY(0); }
+.card-action:hover { background: rgba(46,110,53,0.35); border-color: rgba(82,168,96,0.6); }
+
+/* FULLSCREEN MODAL */
+#modal {
+  position: fixed; inset: 0; z-index: 1000;
+  display: none; flex-direction: column;
+}
+#modal.open { display: flex; }
+#modal-bg { position: absolute; inset: 0; }
+#modal-ui {
+  position: relative; z-index: 10;
+  display: flex; flex-direction: column; height: 100%;
+}
+#modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 32px;
+  background: linear-gradient(to bottom, rgba(6,13,8,0.88), transparent);
+}
+#modal-title-group { display: flex; flex-direction: column; gap: 4px; }
+#modal-index { font-size: 0.55rem; letter-spacing: 0.4em; color: var(--f-300); text-transform: uppercase; }
+#modal-name { font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 400; letter-spacing: 0.25em; color: var(--ice); text-transform: uppercase; }
+#modal-desc { font-size: 0.62rem; letter-spacing: 0.1em; color: var(--sage); font-style: italic; }
+
+#modal-close {
+  background: rgba(6,13,8,0.65);
+  border: 1px solid rgba(82,168,96,0.32);
+  color: var(--f-100); font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.2em;
+  padding: 8px 16px; cursor: pointer; text-transform: uppercase;
+  backdrop-filter: blur(8px); transition: all 0.2s;
+}
+#modal-close:hover { border-color: rgba(82,168,96,0.65); color: var(--ice); }
+
+#modal-footer {
+  margin-top: auto;
+  padding: 20px 32px 32px;
+  background: linear-gradient(to top, rgba(6,13,8,0.88), transparent);
+}
+#css-box {
+  background: rgba(6,13,8,0.78);
+  border: 1px solid rgba(82,168,96,0.15);
+  backdrop-filter: blur(12px);
+  padding: 14px 16px; border-radius: 2px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+#css-code {
+  flex: 1; font-size: 0.6rem; letter-spacing: 0.04em;
+  color: var(--f-200); line-height: 1.7;
+  max-height: 80px; overflow-y: auto;
+  white-space: pre-wrap; word-break: break-all;
+}
+#css-code::-webkit-scrollbar { width: 3px; }
+#css-code::-webkit-scrollbar-track { background: transparent; }
+#css-code::-webkit-scrollbar-thumb { background: var(--f-700); border-radius: 2px; }
+
+#copy-btn {
+  flex-shrink: 0;
+  background: rgba(46,110,53,0.18);
+  border: 1px solid rgba(82,168,96,0.42);
+  color: var(--f-300); font-family: 'DM Mono', monospace;
+  font-size: 0.55rem; letter-spacing: 0.2em;
+  padding: 6px 12px; cursor: pointer; text-transform: uppercase; transition: all 0.2s;
+}
+#copy-btn:hover { background: rgba(46,110,53,0.35); }
+#copy-btn.copied { color: var(--silver); border-color: rgba(168,196,200,0.4); }
+
+footer {
+  text-align: center; padding: 32px;
+  font-size: 0.55rem; letter-spacing: 0.4em;
+  color: var(--f-800); text-transform: uppercase;
+  border-top: 1px solid rgba(82,168,96,0.07);
+}
+
+/* ═══════════════════════════════════════════════════
+   BACKGROUND DEFINITIONS — 30 Variations
+   Palette: forest void (#060d08) · deep greens · steel · amber accent
+   All tuned for legibility over content — moody, not loud
+═══════════════════════════════════════════════════ */
+
+/* 01 — DEEP ROOT
+   Single centered radial from dark forest core to void.
+   The baseline — pure green, zero distraction. */
+.bg-01 {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%,
+      #2e6e35 0%, #1a3d1f 28%, #0f2412 58%,
+      #0a1a0c 80%, #060d08 100%);
+}
+
+/* 02 — CANOPY LIGHT
+   Light falls from above through forest canopy — green bloom
+   at top, deep void below. Reading surface: lower half. */
+.bg-02 {
+  background:
+    radial-gradient(ellipse 100% 65% at 50% 0%,
+      rgba(82,168,96,0.6) 0%, rgba(46,110,53,0.35) 25%,
+      rgba(26,61,31,0.18) 50%, transparent 70%),
+    linear-gradient(180deg, #122616 0%, #0a1a0c 35%, #060d08 70%, #060d08 100%);
+}
+
+/* 03 — FOREST FLOOR
+   Ground mist rising from below. Green warmth at base,
+   darkness above. Atmospheric and still. */
+.bg-03 {
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 110%,
+      rgba(58,138,69,0.65) 0%, rgba(34,77,39,0.42) 28%,
+      rgba(15,36,18,0.22) 52%, transparent 70%),
+    linear-gradient(180deg, #060d08 0%, #0a1a0c 55%, #122616 100%);
+}
+.bg-03::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 30% at 50% 95%,
+    rgba(125,196,138,0.12) 0%, transparent 55%);
+}
+
+/* 04 — UNDERSTORY
+   Even ambient forest green — like being inside a canopy
+   with diffuse light from no clear source. Very legible. */
+.bg-04 {
+  background: #0a1a0c;
+}
+.bg-04::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%,
+      rgba(46,110,53,0.28) 0%, rgba(26,61,31,0.14) 50%, transparent 75%);
+}
+.bg-04::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 45% 45% at 30% 40%, rgba(58,138,69,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 72% 62%, rgba(34,77,39,0.1) 0%, transparent 50%);
+}
+
+/* 05 — HOLLOW CORE
+   Near-void field with a ghostly green ring — like light
+   catching the edge of a dark hollow in old wood. */
+.bg-05 {
+  background: #060d08;
+}
+.bg-05::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle 42% at 50% 50%,
+      transparent 0%, transparent 54%,
+      rgba(46,110,53,0.55) 57%, rgba(26,61,31,0.32) 64%, transparent 72%),
+    radial-gradient(ellipse 130% 130% at 50% 50%,
+      #0f2412 0%, #060d08 55%);
+}
+.bg-05::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle 44% at 50% 50%,
+    transparent 53%, rgba(180,216,188,0.06) 57%, transparent 65%);
+  animation: ringpulse 6s ease-in-out infinite;
+}
+
+/* 06 — OLD GROWTH
+   Three-point mesh — like three light sources filtering
+   through a dense old-growth forest. Subtle variation. */
+.bg-06 {
+  background:
+    radial-gradient(ellipse 72% 65% at 18% 22%,
+      rgba(58,138,69,0.6) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 58% at 84% 18%,
+      rgba(74,107,74,0.55) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 62% at 48% 90%,
+      rgba(34,77,39,0.68) 0%, transparent 55%),
+    #060d08;
+}
+
+/* 07 — GROVE MESH
+   Four-corner radials — full-field green presence.
+   Even saturation, no dead zones. */
+.bg-07 {
+  background:
+    radial-gradient(ellipse 100% 100% at 0% 0%, rgba(46,110,53,0.5) 0%, transparent 52%),
+    radial-gradient(ellipse 100% 100% at 100% 0%, rgba(74,107,74,0.45) 0%, transparent 52%),
+    radial-gradient(ellipse 100% 100% at 100% 100%, rgba(34,77,39,0.55) 0%, transparent 52%),
+    radial-gradient(ellipse 100% 100% at 0% 100%, rgba(58,138,69,0.42) 0%, transparent 52%),
+    #060d08;
+}
+
+/* 08 — MYCELIUM NET
+   Six scattered point sources — small, low-luminosity.
+   Like bioluminescent fungal nodes in deep forest soil. */
+.bg-08 {
+  background: #060d08;
+}
+.bg-08::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle 5px at 22% 28%, rgba(180,216,188,0.75) 0%, rgba(82,168,96,0.3) 55%, transparent 70%),
+    radial-gradient(circle 3px at 78% 18%, rgba(160,200,170,0.6) 0%, transparent 65%),
+    radial-gradient(circle 7px at 58% 68%, rgba(140,190,155,0.55) 0%, transparent 65%),
+    radial-gradient(circle 4px at 34% 80%, rgba(125,196,138,0.5) 0%, transparent 60%),
+    radial-gradient(circle 3px at 90% 58%, rgba(180,216,188,0.65) 0%, transparent 55%),
+    radial-gradient(circle 5px at 12% 65%, rgba(140,190,155,0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 65% at 58% 68%, rgba(26,61,31,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 22% 28%, rgba(15,36,18,0.18) 0%, transparent 50%);
+}
+
+/* 09 — WATERSHED
+   Green to steel — two opposing sources meeting at center.
+   Forest meets the cold mountain above it. */
+.bg-09 {
+  background:
+    radial-gradient(ellipse 70% 70% at 15% 80%,
+      rgba(58,138,69,0.65) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 65% at 86% 15%,
+      rgba(46,112,128,0.6) 0%, transparent 52%),
+    radial-gradient(ellipse 60% 60% at 50% 50%,
+      rgba(30,48,56,0.4) 0%, transparent 60%),
+    #060d08;
+}
+
+/* 10 — ROOT NETWORK
+   Horizontal spread across the field — like root systems
+   tracing beneath the void surface. Wide and low. */
+.bg-10 {
+  background: #060d08;
+}
+.bg-10::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 200% 28% at 50% 38%,
+      rgba(46,110,53,0.28) 0%, transparent 50%),
+    radial-gradient(ellipse 200% 22% at 50% 64%,
+      rgba(34,77,39,0.2) 0%, transparent 50%);
+  transform: rotate(-3deg) scaleX(1.2);
+}
+.bg-10::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 18% at 50% 50%,
+    rgba(58,138,69,0.08) 0%, transparent 60%);
+}
+
+/* 11 — IRON BARK
+   Steel dominant — cold blue-grey field with a green
+   warmth bleeding from below-left. */
+.bg-11 {
+  background:
+    linear-gradient(155deg, #111c1e 0%, #1e3038 30%, #2e4850 55%, #3a5560 75%, #2e4850 100%);
+}
+.bg-11::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 48% 65% at 15% 85%,
+      rgba(46,110,53,0.38) 0%, transparent 55%),
+    radial-gradient(ellipse 22% 22% at 15% 85%,
+      rgba(125,196,138,0.18) 0%, transparent 40%);
+}
+
+/* 12 — MOSS STEEL
+   Equal green and steel — neither wins, both breathe.
+   Low saturation, high legibility. */
+.bg-12 {
+  background:
+    radial-gradient(ellipse 90% 90% at 0% 100%,
+      rgba(46,110,53,0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 90% at 100% 0%,
+      rgba(46,112,128,0.45) 0%, transparent 55%),
+    linear-gradient(135deg, #0f2412 0%, #111c1e 50%, #0a1a0c 100%);
+}
+
+/* 13 — COLD CANOPY
+   Steel above, green below — like looking up through
+   branches into a winter-cold sky. Clear division. */
+.bg-13 {
+  background: #060d08;
+}
+.bg-13::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 100% 55% at 50% 0%,
+      rgba(46,112,128,0.55) 0%, rgba(30,48,56,0.3) 35%, transparent 60%),
+    radial-gradient(ellipse 100% 55% at 50% 100%,
+      rgba(46,110,53,0.55) 0%, rgba(26,61,31,0.3) 35%, transparent 60%);
+}
+
+/* 14 — FORGE SHADOW
+   Steel field with a single green heat vein cutting diagonal.
+   Industrial. Cool metal, one warm seam. */
+.bg-14 {
+  background:
+    linear-gradient(175deg, #111c1e 0%, #070b09 30%, #1e3038 55%, #1a2830 75%, #070b09 100%);
+}
+.bg-14::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(118deg,
+      transparent 0%, transparent 38%,
+      rgba(46,110,53,0.07) 45%, rgba(125,196,138,0.22) 48%,
+      rgba(82,168,96,0.14) 51%, transparent 58%, transparent 100%);
+}
+.bg-14::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 100% 18% at 50% 50%,
+    rgba(26,61,31,0.18) 0%, transparent 60%);
+}
+
+/* 15 — VERDANT CHASSIS
+   Steel frame with green warm core — like a precision
+   instrument lit from within by something alive. */
+.bg-15 {
+  background:
+    radial-gradient(ellipse 52% 48% at 50% 50%,
+      rgba(46,110,53,0.48) 0%, rgba(26,61,31,0.26) 40%, transparent 62%),
+    radial-gradient(ellipse 110% 110% at 50% 50%,
+      #1e3038 0%, #111c1e 40%, #0a1a0c 70%, #060d08 100%);
+}
+.bg-15::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle 12% at 50% 50%,
+    rgba(125,196,138,0.22) 0%, transparent 60%);
+  animation: breathe 5s ease-in-out infinite;
+}
+
+/* 16 — MIDNIGHT VEIN
+   Near-void. A single thin diagonal seam of green light —
+   like bioluminescence in dark water. Almost nothing. */
+.bg-16 {
+  background: #060d08;
+}
+.bg-16::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(122deg,
+      transparent 0%, transparent 42%,
+      rgba(58,138,69,0.06) 48%, rgba(180,216,188,0.18) 50%,
+      rgba(58,138,69,0.06) 52%, transparent 58%, transparent 100%);
+}
+.bg-16::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 100% 22% at 50% 50%,
+    rgba(15,36,18,0.14) 0%, transparent 60%);
+}
+
+/* 17 — REFRACTION
+   Diagonal green beam — wider, more present than Midnight Vein.
+   Like light bending through glass in a forest. */
+.bg-17 {
+  background: #0a1a0c;
+}
+.bg-17::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(108deg,
+      transparent 0%, transparent 25%,
+      rgba(46,110,53,0.08) 35%, rgba(82,168,96,0.26) 40%,
+      rgba(180,216,188,0.35) 44%, rgba(82,168,96,0.26) 48%,
+      rgba(46,110,53,0.08) 55%, transparent 65%, transparent 100%);
+}
+.bg-17::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 100% 22% at 50% 43%,
+    rgba(26,61,31,0.2) 0%, transparent 60%);
+}
+
+/* 18 — HORIZON LINE
+   Green horizon band across the center — dark void above
+   and below. Like a distant forest at night. */
+.bg-18 {
+  background:
+    linear-gradient(180deg,
+      #060d08 0%, #060d08 28%,
+      #0f2412 40%, #1a3d1f 46%,
+      #2e6e35 50%,
+      #1a3d1f 54%, #0f2412 60%,
+      #060d08 72%, #060d08 100%);
+}
+.bg-18::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 75% 7% at 50% 50%,
+    rgba(125,196,138,0.3) 0%, transparent 100%);
+}
+
+/* 19 — SWEPT FLOOR
+   Horizontal sweep — green rising left to right across
+   a dark ground. Like dawn light moving through trees. */
+.bg-19 {
+  background:
+    linear-gradient(90deg,
+      #060d08 0%, #0a1a0c 20%, #0f2412 35%,
+      #1a3d1f 50%, #0f2412 65%, #0a1a0c 80%, #060d08 100%);
+}
+.bg-19::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 35% 80% at 50% 50%,
+    rgba(46,110,53,0.12) 0%, transparent 60%);
+}
+
+/* 20 — DARK WATER
+   Repeating depth lines over a green-tinted void.
+   Like still water with a forest reflected in it. */
+.bg-20 {
+  background:
+    linear-gradient(172deg, #0f2412 0%, #060d08 28%, #0a1a0c 55%, #0f2412 78%, #060d08 100%);
+}
+.bg-20::before {
+  content: ''; position: absolute; inset: -25% 0;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent 0px, transparent 16px,
+      rgba(58,138,69,0.04) 16px, rgba(58,138,69,0.04) 18px);
+  animation: ripple 10s linear infinite;
+}
+.bg-20::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 50%,
+    rgba(46,110,53,0.1) 0%, transparent 60%);
+}
+
+/* 21 — ABYSSAL VENT
+   Green plume rising from deep below. Suggests something
+   living in the dark, breathing upward. */
+.bg-21 {
+  background:
+    radial-gradient(ellipse 48% 82% at 50% 115%,
+      rgba(58,138,69,0.7) 0%, rgba(34,77,39,0.42) 28%,
+      rgba(15,36,18,0.22) 52%, transparent 70%),
+    linear-gradient(180deg, #060d08 0%, #0a1a0c 65%, #0f2412 100%);
+}
+.bg-21::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 22% 42% at 50% 100%,
+    rgba(125,196,138,0.14) 0%, transparent 52%);
+  animation: ventrise 7s ease-in-out infinite;
+}
+
+/* 22 — SUBMERGED
+   Diffuse light pressing down from above — like being
+   beneath still water with a forest on the surface. */
+.bg-22 {
+  background:
+    radial-gradient(ellipse 115% 75% at 50% -12%,
+      rgba(46,110,53,0.38) 0%, transparent 52%),
+    linear-gradient(180deg, #0f2412 0%, #060d08 32%, #060d08 65%, #0a1a0c 100%);
+}
+.bg-22::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 65px,
+      rgba(58,138,69,0.025) 65px, rgba(58,138,69,0.025) 67px);
+}
+
+/* 23 — MIRROR PLANE
+   Vertical green symmetry — like a still forest pond
+   with perfect reflection. Horizon at exact center. */
+.bg-23 {
+  background:
+    linear-gradient(180deg,
+      #060d08 0%, #0a1a0c 28%,
+      #1a3d1f 44%, rgba(82,168,96,0.55) 50%,
+      #1a3d1f 56%, #0a1a0c 72%, #060d08 100%);
+}
+.bg-23::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 65% 4% at 50% 50%,
+    rgba(180,216,188,0.38) 0%, transparent 100%);
+}
+
+/* 24 — FIVE-POINT CANOPY
+   Pentagon distribution — even presence across the full
+   field. No single focal point, consistent ambience. */
+.bg-24 {
+  background:
+    radial-gradient(ellipse 55% 55% at 50% 2%,    rgba(46,110,53,0.48) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 55% at 98% 36%,   rgba(74,107,74,0.44) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 55% at 80% 98%,   rgba(34,77,39,0.48) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 55% at 20% 98%,   rgba(46,110,53,0.44) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 55% at  2% 36%,   rgba(58,138,69,0.46) 0%, transparent 50%),
+    #060d08;
+}
+
+/* 25 — LATTICE GLOW
+   Fine grid lines on void with green radial center bloom.
+   Suggests structure beneath the surface. */
+.bg-25 {
+  background: #060d08;
+}
+.bg-25::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent 0px, transparent 39px,
+      rgba(46,110,53,0.06) 39px, rgba(46,110,53,0.06) 40px),
+    repeating-linear-gradient(90deg,
+      transparent 0px, transparent 39px,
+      rgba(46,110,53,0.06) 39px, rgba(46,110,53,0.06) 40px);
+}
+.bg-25::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 58% 58% at 50% 50%,
+      rgba(34,77,39,0.38) 0%, transparent 62%),
+    radial-gradient(circle 4px at 50% 50%,
+      rgba(180,216,188,0.65) 0%, transparent 100%);
+}
+
+/* 26 — SHORELINE
+   Green source from the left edge fading east — like
+   forest light washing onto open ground. */
+.bg-26 {
+  background:
+    radial-gradient(ellipse 52% 100% at 0% 50%,
+      rgba(58,138,69,0.72) 0%, rgba(34,77,39,0.42) 30%,
+      rgba(15,36,18,0.18) 55%, transparent 75%),
+    linear-gradient(90deg, #0f2412 0%, #0a1a0c 22%, #060d08 62%, #060d08 100%);
+}
+.bg-26::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 18% 80% at 0% 50%,
+    rgba(125,196,138,0.15) 0%, transparent 42%);
+}
+
+/* 27 — POLAR JOURNEY
+   Full palette sweep top to bottom — from near-black
+   through every green register to obsidian floor. */
+.bg-27 {
+  background:
+    linear-gradient(195deg,
+      #b4d8bc 0%, #7dc48a 8%, #52a860 18%,
+      #3a8a45 30%, #2e6e35 42%, #224d27 55%,
+      #1a3d1f 65%, #0f2412 78%, #060d08 90%, #060d08 100%);
+}
+.bg-27::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 40% at 12% 6%,
+    rgba(255,255,255,0.07) 0%, transparent 50%);
+}
+
+/* 28 — GREEN BREATH
+   Radial field with a slow animated pulse — the forest
+   breathing. The quietest one. */
+.bg-28 {
+  background:
+    radial-gradient(ellipse 115% 115% at 50% 50%,
+      #1a3d1f 0%, #0f2412 28%, #0a1a0c 55%,
+      #060d08 78%, #060d08 100%);
+}
+.bg-28::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 42% 42% at 50% 50%,
+    rgba(58,138,69,0.14) 0%, transparent 62%);
+  animation: breathe 7s ease-in-out infinite;
+}
+
+/* 29 — AMBER SPINE
+   Green field with a warm amber vein at center.
+   The only warm-toned entry — tension against the cool field.
+   Integration-specific candidate. */
+.bg-29 {
+  background:
+    radial-gradient(ellipse 65% 65% at 30% 70%,
+      rgba(46,110,53,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 75% 25%,
+      rgba(34,77,39,0.48) 0%, transparent 52%),
+    #060d08;
+}
+.bg-29::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(115deg,
+      transparent 0%, transparent 40%,
+      rgba(122,78,20,0.08) 46%, rgba(201,148,58,0.2) 49%,
+      rgba(212,184,106,0.28) 50%, rgba(201,148,58,0.2) 51%,
+      rgba(122,78,20,0.08) 54%, transparent 60%, transparent 100%);
+}
+.bg-29::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 100% 16% at 50% 50%,
+    rgba(139,90,26,0.1) 0%, transparent 60%);
+}
+
+/* 30 — EMBER ROOT
+   Amber core with green shadow radiating outward.
+   Reversal of 29 — warm center, cool corona.
+   Fire in the forest. */
+.bg-30 {
+  background:
+    radial-gradient(ellipse 55% 52% at 50% 50%,
+      rgba(180,120,36,0.42) 0%, rgba(122,78,20,0.28) 25%,
+      rgba(46,110,53,0.22) 48%, transparent 65%),
+    radial-gradient(ellipse 115% 115% at 50% 50%,
+      #0f2412 0%, #0a1a0c 45%, #060d08 75%);
+}
+.bg-30::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle 10% at 50% 50%,
+    rgba(212,184,106,0.32) 0%, rgba(180,120,36,0.12) 45%, transparent 70%);
+  animation: breathe 5s ease-in-out infinite;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes breathe  { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+@keyframes ripple   { 0% { transform: translateY(0); } 100% { transform: translateY(36px); } }
+@keyframes ringpulse { 0%, 100% { opacity: 0.5; transform: scale(0.97); } 50% { opacity: 1; transform: scale(1.03); } }
+@keyframes ventrise { 0%, 100% { opacity: 0.38; transform: scaleY(1); } 50% { opacity: 0.85; transform: scaleY(1.12); } }
+
+/* canvas needs overflow for pseudo-elements */
+.card .canvas { overflow: hidden; }
+[class^="bg-"], [class*=" bg-"] { position: relative; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Forest Green</h1>
+  <p class="subtitle">Background Compendium · Void · Steel · Amber · Grove</p>
+  <span class="count-pill">30 Variations</span>
+</header>
+
+<p class="instructions">Click any swatch to preview full-screen · <span>CSS available in overlay</span></p>
+
+<div class="grid" id="grid"></div>
+
+<div id="modal">
+  <div id="modal-bg" class="canvas"></div>
+  <div id="modal-ui">
+    <div id="modal-header">
+      <div id="modal-title-group">
+        <span id="modal-index"></span>
+        <span id="modal-name"></span>
+        <span id="modal-desc"></span>
+      </div>
+      <button id="modal-close" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div id="modal-footer">
+      <div id="css-box">
+        <pre id="css-code"></pre>
+        <button id="copy-btn" onclick="copyCss()">Copy CSS</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Forest · Steel · Void · Amber · Sage · 30 Backgrounds</footer>
+
+<script>
+const backgrounds = [
+  {
+    id: '01', name: 'Deep Root', class: 'bg-01',
+    desc: 'Single centered radial from dark forest core to void',
+    css: `background:
+  radial-gradient(ellipse 70% 60% at 50% 50%,
+    #2e6e35 0%, #1a3d1f 28%, #0f2412 58%,
+    #0a1a0c 80%, #060d08 100%);`
+  },
+  {
+    id: '02', name: 'Canopy Light', class: 'bg-02',
+    desc: 'Light falls from above — green bloom at top, void below',
+    css: `background:
+  radial-gradient(ellipse 100% 65% at 50% 0%,
+    rgba(82,168,96,0.6) 0%, rgba(46,110,53,0.35) 25%,
+    rgba(26,61,31,0.18) 50%, transparent 70%),
+  linear-gradient(180deg,
+    #122616 0%, #0a1a0c 35%, #060d08 100%);`
+  },
+  {
+    id: '03', name: 'Forest Floor', class: 'bg-03',
+    desc: 'Ground mist rising from below — green warmth at base',
+    css: `background:
+  radial-gradient(ellipse 90% 60% at 50% 110%,
+    rgba(58,138,69,0.65) 0%, rgba(34,77,39,0.42) 28%,
+    rgba(15,36,18,0.22) 52%, transparent 70%),
+  linear-gradient(180deg,
+    #060d08 0%, #0a1a0c 55%, #122616 100%);
+/* + ::before lower ambient layer */`
+  },
+  {
+    id: '04', name: 'Understory', class: 'bg-04',
+    desc: 'Even ambient green — diffuse light from no clear source',
+    css: `background: #0a1a0c;
+/* + ::before central radial + ::after two satellite pools */`
+  },
+  {
+    id: '05', name: 'Hollow Core', class: 'bg-05',
+    desc: 'Near-void field with a ghostly animated green ring',
+    css: `background: #060d08;
+/* + ::before green ring radial + ::after animated pulse */`
+  },
+  {
+    id: '06', name: 'Old Growth', class: 'bg-06',
+    desc: 'Three-point mesh — light through dense old-growth canopy',
+    css: `background:
+  radial-gradient(ellipse 72% 65% at 18% 22%,
+    rgba(58,138,69,0.6) 0%, transparent 55%),
+  radial-gradient(ellipse 60% 58% at 84% 18%,
+    rgba(74,107,74,0.55) 0%, transparent 50%),
+  radial-gradient(ellipse 70% 62% at 48% 90%,
+    rgba(34,77,39,0.68) 0%, transparent 55%),
+  #060d08;`
+  },
+  {
+    id: '07', name: 'Grove Mesh', class: 'bg-07',
+    desc: 'Four-corner radials — full-field presence, no dead zones',
+    css: `background:
+  radial-gradient(ellipse 100% 100% at 0% 0%,   rgba(46,110,53,0.5)  0%, transparent 52%),
+  radial-gradient(ellipse 100% 100% at 100% 0%,  rgba(74,107,74,0.45) 0%, transparent 52%),
+  radial-gradient(ellipse 100% 100% at 100% 100%,rgba(34,77,39,0.55)  0%, transparent 52%),
+  radial-gradient(ellipse 100% 100% at 0% 100%,  rgba(58,138,69,0.42) 0%, transparent 52%),
+  #060d08;`
+  },
+  {
+    id: '08', name: 'Mycelium Net', class: 'bg-08',
+    desc: 'Six scattered bioluminescent point sources in forest soil',
+    css: `background: #060d08;
+/* + ::before 6 radial nodes + 2 ambient pools */`
+  },
+  {
+    id: '09', name: 'Watershed', class: 'bg-09',
+    desc: 'Forest green meets cold steel — two sources at center',
+    css: `background:
+  radial-gradient(ellipse 70% 70% at 15% 80%,
+    rgba(58,138,69,0.65) 0%, transparent 55%),
+  radial-gradient(ellipse 65% 65% at 86% 15%,
+    rgba(46,112,128,0.6) 0%, transparent 52%),
+  radial-gradient(ellipse 60% 60% at 50% 50%,
+    rgba(30,48,56,0.4) 0%, transparent 60%),
+  #060d08;`
+  },
+  {
+    id: '10', name: 'Root Network', class: 'bg-10',
+    desc: 'Horizontal spread — like root systems tracing the void',
+    css: `background: #060d08;
+/* + ::before horizontal bands at 38% + 64% + ::after center softener */`
+  },
+  {
+    id: '11', name: 'Iron Bark', class: 'bg-11',
+    desc: 'Steel dominant with green warmth bleeding from below-left',
+    css: `background:
+  linear-gradient(155deg,
+    #111c1e 0%, #1e3038 30%, #2e4850 55%,
+    #3a5560 75%, #2e4850 100%);
+/* + ::before green accent at 15% 85% */`
+  },
+  {
+    id: '12', name: 'Moss Steel', class: 'bg-12',
+    desc: 'Equal green and steel — neither wins, both breathe',
+    css: `background:
+  radial-gradient(ellipse 90% 90% at 0% 100%,
+    rgba(46,110,53,0.45) 0%, transparent 55%),
+  radial-gradient(ellipse 90% 90% at 100% 0%,
+    rgba(46,112,128,0.45) 0%, transparent 55%),
+  linear-gradient(135deg,
+    #0f2412 0%, #111c1e 50%, #0a1a0c 100%);`
+  },
+  {
+    id: '13', name: 'Cold Canopy', class: 'bg-13',
+    desc: 'Steel above, forest green below — winter sky through branches',
+    css: `background: #060d08;
+/* + ::before steel top + green bottom radials */`
+  },
+  {
+    id: '14', name: 'Forge Shadow', class: 'bg-14',
+    desc: 'Steel field with a single diagonal green heat seam',
+    css: `background:
+  linear-gradient(175deg,
+    #111c1e 0%, #070b09 30%, #1e3038 55%,
+    #1a2830 75%, #070b09 100%);
+/* + ::before diagonal green vein + ::after ambient layer */`
+  },
+  {
+    id: '15', name: 'Verdant Chassis', class: 'bg-15',
+    desc: 'Steel frame with animated green warm core — precision instrument',
+    css: `background:
+  radial-gradient(ellipse 52% 48% at 50% 50%,
+    rgba(46,110,53,0.48) 0%, rgba(26,61,31,0.26) 40%, transparent 62%),
+  radial-gradient(ellipse 110% 110% at 50% 50%,
+    #1e3038 0%, #111c1e 40%, #0a1a0c 70%, #060d08 100%);
+/* + ::before animated breathe */`
+  },
+  {
+    id: '16', name: 'Midnight Vein', class: 'bg-16',
+    desc: 'Near-void with one ghostly diagonal seam of green',
+    css: `background: #060d08;
+/* + ::before thin diagonal vein + ::after ambient depth */`
+  },
+  {
+    id: '17', name: 'Refraction', class: 'bg-17',
+    desc: 'Wider diagonal beam — light bending through forest glass',
+    css: `background: #0a1a0c;
+/* + ::before angled refraction beam + ::after bloom */`
+  },
+  {
+    id: '18', name: 'Horizon Line', class: 'bg-18',
+    desc: 'Green band at exact center — distant forest at night',
+    css: `background:
+  linear-gradient(180deg,
+    #060d08 0%, #060d08 28%,
+    #0f2412 40%, #1a3d1f 46%,
+    #2e6e35 50%,
+    #1a3d1f 54%, #0f2412 60%,
+    #060d08 72%, #060d08 100%);
+/* + ::before horizon bloom */`
+  },
+  {
+    id: '19', name: 'Swept Floor', class: 'bg-19',
+    desc: 'Horizontal green sweep — dawn light moving through trees',
+    css: `background:
+  linear-gradient(90deg,
+    #060d08 0%, #0a1a0c 20%, #0f2412 35%,
+    #1a3d1f 50%, #0f2412 65%,
+    #0a1a0c 80%, #060d08 100%);
+/* + ::before center softener */`
+  },
+  {
+    id: '20', name: 'Dark Water', class: 'bg-20',
+    desc: 'Animated depth lines over green-tinted void — still pond',
+    css: `background:
+  linear-gradient(172deg,
+    #0f2412 0%, #060d08 28%, #0a1a0c 55%,
+    #0f2412 78%, #060d08 100%);
+/* + ::before animated ripple lines + ::after center pool */`
+  },
+  {
+    id: '21', name: 'Abyssal Vent', class: 'bg-21',
+    desc: 'Green plume rising from deep below — something alive in the dark',
+    css: `background:
+  radial-gradient(ellipse 48% 82% at 50% 115%,
+    rgba(58,138,69,0.7) 0%, rgba(34,77,39,0.42) 28%,
+    rgba(15,36,18,0.22) 52%, transparent 70%),
+  linear-gradient(180deg,
+    #060d08 0%, #0a1a0c 65%, #0f2412 100%);
+/* + ::before animated vent breath */`
+  },
+  {
+    id: '22', name: 'Submerged', class: 'bg-22',
+    desc: 'Diffuse light from above — beneath still water, forest on surface',
+    css: `background:
+  radial-gradient(ellipse 115% 75% at 50% -12%,
+    rgba(46,110,53,0.38) 0%, transparent 52%),
+  linear-gradient(180deg,
+    #0f2412 0%, #060d08 32%, #060d08 65%, #0a1a0c 100%);
+/* + ::before subtle horizontal depth lines */`
+  },
+  {
+    id: '23', name: 'Mirror Plane', class: 'bg-23',
+    desc: 'Perfect vertical symmetry — forest pond reflection',
+    css: `background:
+  linear-gradient(180deg,
+    #060d08 0%, #0a1a0c 28%,
+    #1a3d1f 44%, rgba(82,168,96,0.55) 50%,
+    #1a3d1f 56%, #0a1a0c 72%, #060d08 100%);
+/* + ::before sharp horizon bloom */`
+  },
+  {
+    id: '24', name: 'Five-Point Canopy', class: 'bg-24',
+    desc: 'Pentagon distribution — consistent ambience, no focal point',
+    css: `background:
+  radial-gradient(ellipse 55% 55% at 50% 2%,   rgba(46,110,53,0.48) 0%, transparent 50%),
+  radial-gradient(ellipse 55% 55% at 98% 36%,  rgba(74,107,74,0.44) 0%, transparent 50%),
+  radial-gradient(ellipse 55% 55% at 80% 98%,  rgba(34,77,39,0.48) 0%, transparent 50%),
+  radial-gradient(ellipse 55% 55% at 20% 98%,  rgba(46,110,53,0.44) 0%, transparent 50%),
+  radial-gradient(ellipse 55% 55% at 2%  36%,  rgba(58,138,69,0.46) 0%, transparent 50%),
+  #060d08;`
+  },
+  {
+    id: '25', name: 'Lattice Glow', class: 'bg-25',
+    desc: 'Fine grid on void with green radial center — structure beneath',
+    css: `background: #060d08;
+/* + ::before repeating grid 40px + ::after center bloom + point */`
+  },
+  {
+    id: '26', name: 'Shoreline', class: 'bg-26',
+    desc: 'Green source from left edge — forest light washing onto open ground',
+    css: `background:
+  radial-gradient(ellipse 52% 100% at 0% 50%,
+    rgba(58,138,69,0.72) 0%, rgba(34,77,39,0.42) 30%,
+    rgba(15,36,18,0.18) 55%, transparent 75%),
+  linear-gradient(90deg,
+    #0f2412 0%, #0a1a0c 22%, #060d08 100%);
+/* + ::before edge highlight */`
+  },
+  {
+    id: '27', name: 'Polar Journey', class: 'bg-27',
+    desc: 'Full palette sweep — pale sage to void, every green register',
+    css: `background:
+  linear-gradient(195deg,
+    #b4d8bc 0%, #7dc48a 8%, #52a860 18%,
+    #3a8a45 30%, #2e6e35 42%, #224d27 55%,
+    #1a3d1f 65%, #0f2412 78%, #060d08 100%);
+/* + ::before top-left specular */`
+  },
+  {
+    id: '28', name: 'Green Breath', class: 'bg-28',
+    desc: 'Radial field with slow animated pulse — the forest breathing',
+    css: `background:
+  radial-gradient(ellipse 115% 115% at 50% 50%,
+    #1a3d1f 0%, #0f2412 28%, #0a1a0c 55%,
+    #060d08 78%, #060d08 100%);
+/* + ::before animated breathe radial */`
+  },
+  {
+    id: '29', name: 'Amber Spine', class: 'bg-29',
+    desc: 'Green field with warm amber diagonal vein — tension against cool',
+    css: `background:
+  radial-gradient(ellipse 65% 65% at 30% 70%,
+    rgba(46,110,53,0.5) 0%, transparent 55%),
+  radial-gradient(ellipse 60% 60% at 75% 25%,
+    rgba(34,77,39,0.48) 0%, transparent 52%),
+  #060d08;
+/* + ::before diagonal amber vein + ::after amber depth */`
+  },
+  {
+    id: '30', name: 'Ember Root', class: 'bg-30',
+    desc: 'Amber core with green corona — fire in the forest floor',
+    css: `background:
+  radial-gradient(ellipse 55% 52% at 50% 50%,
+    rgba(180,120,36,0.42) 0%, rgba(122,78,20,0.28) 25%,
+    rgba(46,110,53,0.22) 48%, transparent 65%),
+  radial-gradient(ellipse 115% 115% at 50% 50%,
+    #0f2412 0%, #0a1a0c 45%, #060d08 75%);
+/* + ::before animated amber core */`
+  }
+];
+
+const grid = document.getElementById('grid');
+
+backgrounds.forEach(bg => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="canvas ${bg.class}"></div>
+    <div class="card-overlay">
+      <div class="card-index">No. ${bg.id}</div>
+      <div class="card-name">${bg.name}</div>
+      <div class="card-desc">${bg.desc}</div>
+    </div>
+    <button class="card-action" onclick="event.stopPropagation(); openModal('${bg.id}')">Fullscreen</button>
+  `;
+  card.addEventListener('click', () => openModal(bg.id));
+  grid.appendChild(card);
+});
+
+function openModal(id) {
+  const bg = backgrounds.find(b => b.id === id);
+  if (!bg) return;
+  document.getElementById('modal-bg').className = 'canvas ' + bg.class;
+  document.getElementById('modal-index').textContent = 'No. ' + bg.id;
+  document.getElementById('modal-name').textContent = bg.name;
+  document.getElementById('modal-desc').textContent = bg.desc;
+  document.getElementById('css-code').textContent = bg.css;
+  document.getElementById('copy-btn').textContent = 'Copy CSS';
+  document.getElementById('copy-btn').classList.remove('copied');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function copyCss() {
+  const code = document.getElementById('css-code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy CSS';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿PAGE 50 · pattern_convergence · PCV · Nexus
+
+VISION
+This page is the meta layer — where outputs from multiple domains arrive together and the system becomes legible at scale. No single page can show what Pattern Convergence shows: the interference patterns that only emerge when TRIA, PRIA, PARA, Vectra, neuroharmonics, RCT, and related fields are aligned on shared structural axes. This page does not synthesize toward a conclusion. It maps what the aggregate reveals — and holds each source signal intact while doing so.
+
+RESEARCHER TASK
+Deposit · Build · Reflect · Analyze · Retrieve
+
+OBJECTIVE
+Aggregate cross-domain outputs and align them on shared structural axes, preserving full domain integrity and source traceability throughout. Pattern Convergence operates at system scale — it sees what no individual page can see. The interference patterns visible here emerge only when signals from across the full domain set are held in structural relationship simultaneously.
+The Axis/Nexus boundary is load-bearing here. Axis observes and surfaces — the five lens pages (THR, STR, INF, ECR, SNM) gather and hold field signal, and MTM produces Findings from what they contain. Nexus classifies. PCV is the Nexus entry point: it receives processed outputs, including MTM Findings, and works at the scale where cross-domain patterns become visible. MTM Findings arrive as pre-processed input — they are not raw deposits and must not be treated as equivalent to unprocessed cross-domain signal. Provenance from MTM is held intact; the Findings are traceable to their source lens pages.
+Every pattern identified on this page is a structurally testable hypothesis, not a confirmed finding. Significance and predictive weight are not assigned here — that belongs to Signal Grading after outcomes are documented. This constraint is load-bearing: PCV must not pre-bias DTX or SGR. What this page produces is the observed structural state of the system at a given interval — nothing more, nothing less.
+Each aggregated pattern carries structural metadata: domain of origin, timestamp and interval, coupling vector strength, and a hypothesis ID that makes it traceable through the full chain to DTX and SGR. When X shifts in one domain and Y reliably follows in another, the interval is named, the vector is named, and the relationship is logged as a hypothesis awaiting the downstream process. Pattern Convergence sees what is forming. It does not decide what it means.
+
+AI ROLE
+Aggregate cross-domain outputs and align them on shared structural axes without collapsing domain distinctions. Hold the Axis/Nexus boundary intact — receive MTM Findings as pre-processed input, not raw deposit, and maintain their provenance chain. Trace interference patterns that emerge only at system scale. When correlated movement appears across domains, name the interval, name the vector, and log the relationship as a structurally testable hypothesis with a traceable hypothesis ID. Assign structural metadata to every pattern: domain of origin, timestamp, coupling vector strength. Maintain full traceability to originating pages throughout.
+Do not assign significance. Do not assign predictive weight. Do not confirm outcomes. Patterns are observed here — not validated. The system scale is what makes this page possible. It is also what makes precision here non-negotiable.
+
+AI FUNCTIONS
+Parse across pages · Analyze · Organize · Map · Tag · Timestamp · Generate Hypothesis IDs
+
+GOOD OUTPUT
+Cross-domain relationships mapped with precision and interval specificity — when X shifts in Vectra, Y reliably changes in coupling_osc within Z interval, logged as hypothesis H-[ID] with full provenance. MTM Findings received with provenance intact and held as a distinct input category. Structural metadata complete on every pattern. Domain distinctions intact throughout — the system view never flattens what the source pages kept distinct. Every pattern traceable back to its originating signals. Nothing asserted that the data has not produced.
+
+BAD OUTPUT
+Invents connections without documented evidence. Merges domains into vague thematic statements that cannot be decomposed back to source signals. Assigns significance, weight, or predictive value to patterns before outcomes are known. Deploys causal language without traceable inputs. Treats MTM Findings as raw deposit or loses their provenance chain. Fails when the meta layer stops mapping interference and starts narrating coherence the data has not earned.
+
+CONNECTS TO
+PCV (50)
+Feeds → DTX (48) · SGR (49) · LNV (47)
+Draws from → all pages · MTM (07) Findings [session close]

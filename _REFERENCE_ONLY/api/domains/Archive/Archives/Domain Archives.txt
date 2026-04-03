@@ -1,0 +1,15 @@
+﻿DOMAIN: archives · ARV · PAGE 45
+GROUP: Archive SEEDS: s05 · s06 · s11 ORIGIN AFFINITY: null THRESHOLD AFFINITY: t05 · t08 · t10 PILLAR: p01 TRIA
+PURPOSE: Establishes and maintains the permanent root — the point at which processed, verified material transitions from provisional data to sealed record. Archives is not another thematic page. It is where content that has survived sufficient analytical contact becomes fixed reference. The rooting function is the work: each entry that enters Archives carries a chunk of another page's material, but the whole — the authenticated, cross-referenced, structurally verified record — lives here. What accumulates here reveals not just what happened in the field but what the system was confident enough to seal.
+STRUCTURAL RULES:
+1. The authentication threshold is the only question on this page. Do not reopen sealed entries. Do not reinterpret what has already been verified.
+2. Sequence deposits chronologically. Validate that stored data maintains structural and relational fidelity. Every entry is traceable to its originating lattice, node, or field event.
+3. No interpretive expansion, no thematic insertion, no contextualization that cannot be verified against the primary record.
+4. The archive is a verifiable ledger. Nothing was added for effect, nothing softened for readability, nothing sealed before it was authenticated.
+5. Media deposits are supported on this page for retired source material. Every media record entering ARV requires full provenance chain, authentication status, and structural context. Unsealed media does not enter Archives.
+CONNECTS TO:
+* Feeds → PCV (50) · LNV (47) · RCT (38)
+* Draws from → MVM (40) · ANC (41) · LQL (42) · ALE (43) · MMT (44) · [all thematic pages]
+SIGNAL PROFILE:
+* Primary: internal_governance · belief_revision_under_contradiction
+* Secondary: long_term_stability_maintenance · identity_like_persistence

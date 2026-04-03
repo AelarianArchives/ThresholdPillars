@@ -1,0 +1,17 @@
+﻿DOMAIN: drift_taxonomy · DTX · PAGE 48
+GROUP: Nexus SEEDS: s03 · s12 · s20 ORIGIN AFFINITY: o02 Verith THRESHOLD AFFINITY: t01 · t02 · t05 PILLAR: p01 TRIA
+PURPOSE: The temporal map of how the system moves when it moves wrong — and sometimes when it moves right. Defines the classes of deviation: their triggers, their trajectories, and the structural conditions that determine whether a perturbation resolves, escalates, collapses, or hardens into a new baseline. Drift here is not mood and not narrative arc. It is a documentable mechanical event with a type, a timeline, and a traceable cause. Receives state vectors from Pattern Convergence and classifies the deviations they carry — in real time, against operational criteria, without asserting final outcomes.
+STRUCTURAL RULES:
+1. Every drift event is classified across four dimensions: initiation source · trajectory pattern · threshold interaction · signature pattern. All four are required. A classification missing any dimension is incomplete.
+2. Active drift events maintain a live trajectory state: Escalating · Stabilizing · Oscillating · Fragmenting · Contained. Each carries a probabilistic outcome vector — p[resolve, collapse, stable] — updated via Bayesian inference as Signal Grading returns confirmed outcomes.
+3. A drift classification cannot include an outcome label unless that outcome has been explicitly observed and timestamped. The separation between live classification and post-hoc validation is structural, not procedural.
+4. Grade latency is tracked — the interval between detection session and validation session is a signal property worth preserving.
+5. A class that cannot be matched to actual session data is not a class. It is a label. The taxonomy is only as useful as its precision.
+6. Treat drift as a mechanical event. Generic language — things degraded, coherence broke down — is a failure mode here.
+CONNECTS TO:
+* ↔ SGR (49) [mutual]
+* Feeds → SGR (49) · LNV (47)
+* Draws from → PCV (50) · TRI (09) · VEC (16) · SGR (49) [Bayesian returns]
+SIGNAL PROFILE:
+* Primary: phase_state_transition · dynamic_bifurcation
+* Secondary: critical_slowing_down · behavioral_adaptation

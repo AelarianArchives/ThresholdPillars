@@ -1,0 +1,308 @@
+AELARIAN ARCHIVE  ·  THREAD TRACE WIRING GUIDE
+index.html integration  ·  all 16 panels  ·  March 2026
+
+Architecture
+Thread Trace is one unified overlay system. It is not a panel — it is a mode that lives above every panel. ThreadTraceUI is a singleton (parallel to TaggerBus) that persists across panel transitions and surfaces the same sequence/graph overlay from any entry point in the archive.
+
+Two lines per panel: activatePanel on open, deactivatePanel on close. That is the full wiring contract for most panels. No commit hook is needed — Thread Trace does not write to entries.
+
+No conflict with TaggerBus: Thread Trace wiring is additive. Add ThreadTraceUI calls after existing TaggerBus calls — do not replace them. Both systems are active simultaneously when a panel is open.
+
+Property	Thread Trace	TaggerBus (for comparison)
+Open hook	ThreadTraceUI.activatePanel(panelId)	TaggerBus.activatePanel(panelId)
+Close hook	ThreadTraceUI.deactivatePanel()	TaggerBus.deactivatePanel()
+Commit hook	None — Thread Trace is read-only	TaggerBus.getResult() + clearResult()
+Clears result	Never	On every commit
+Persists across panels	Yes — overlay stays open	No — result is panel-scoped
+Writes to entries	No	Yes — arcPhase, originId, tags
+
+Import
+Add to index.html after tagger-bus.js import:
+
+import ThreadTraceUI from './core/thread-trace-ui.js';
+
+thread-trace-ui.js imports thread-trace.js and thread-trace-db.js internally. No additional imports needed in index.html.
+
+Init Hook
+Add one line to init(), after TaggerBus.init():
+
+TaggerBus.init();
+ThreadTraceUI.activatePanel(currentSection);  // ← add this
+
+ThreadTraceUI does not have its own init() — activatePanel() on first load is sufficient. The overlay is built lazily on first open.
+
+Section Navigation Hook
+In window.selectSection, after TaggerBus.activateSection():
+
+window.selectSection = async (sectionId) => {
+  currentSection = sectionId;
+  TaggerBus.activateSection(sectionId);
+  ThreadTraceUI.activatePanel('aekai', sectionId);  // ← add this
+  // ... rest unchanged
+};
+
+ae-kai master panel has no open/close fn. The selectSection hook is its activatePanel equivalent. Pass sectionId as second argument so Thread Trace can scope entries to the current section.
+
+Entry Points — Three Surfaces
+ThreadTraceUI.activatePanel() injects entry points automatically when called. No manual DOM work required for most cases. The three surfaces:
+
+Surface	Trigger	Auto-injected?	Notes
+∿ glyph on entry meta strip	Click on ∿ beside ID stamp	Yes — activatePanel() injects on every call	Requires entries to carry data-entry-id attribute on their meta strip element
+Tag pill right-click / long-press	contextmenu on tag pill	Yes — global delegate set once	Requires tag pills to carry data-tag-id attribute
+Emergence finding “Trace this pattern”	Button click on finding card	No — wire manually in Emergence panel render	Call ThreadTraceUI.openFromFinding(findingObj)
+
+For the data attributes: when rendering entry cards in any panel, add:
+<div class="entry-meta" data-entry-id="${entry.id}">
+For tag pills:
+<span class="tag-pill" data-tag-id="${tag.id}">${tag.id}</span>
+
+Graph Export Stub
+Thread Trace does not render a graph inline. The “Graph Export” button in the overlay header builds a ThreadGraphPayload and routes to the graph creation page. The graph page reads the payload from sessionStorage on load.
+
+When the graph page is built, update GRAPH_PAGE_PATH in thread-trace-ui.js:
+const GRAPH_PAGE_PATH = '/graph';  // update to actual route
+
+If the graph page is a panel in the same SPA (not a new route), replace the window.open call in _routeToGraphPage() with the panel open function:
+window.graphPageOpen?.();  // replace window.open when SPA panel exists
+
+The graph page reads:
+const payload = JSON.parse(sessionStorage.getItem('threadGraphPayload'));
+// or: const payload = window.__threadGraphPayload; (fallback)
+
+ThreadGraphPayload shape: nodes (id, label, section, pillar_id, seed_id, layer_id, threshold_id, size, ringColor) · edges (from, to, label, weight, sharedDimension, color) · routingSnapshot · activeFilters · annotations. Full shape defined in thread-trace-ui.js _exportGraph().
+
+IDB Version Increment
+Thread Trace requires two new IDB stores: saved_threads and thread_annotations. These must be added in the onupgradeneeded handler in data.js. Coordinate before shipping.
+
+Action	File	Change
+Increment DB_VERSION	data.js	Set DB_VERSION to REQUIRED_VERSION in thread-trace-db.js (currently placeholder 6)
+Add stores in onupgradeneeded	data.js	Call _ensureStores(db) from thread-trace-db.js, or copy the store creation code directly into data.js onupgradeneeded
+Update REQUIRED_VERSION	thread-trace-db.js	Set to match the new DB_VERSION in data.js
+
+⊟ Session-only threads (not yet saved) are held in memory in thread-trace-db.js. No IDB write occurs until the user clicks Save Thread. Abandoned threads leave no trace.
+
+Panel Wiring — All 16 Panels
+Add two lines to every panel: one on Open, one on Close. No commit hook needed.
+
+ae-kai Master (special case)
+ae-kai has no open/close fn. Wire via selectSection hook above. No additional wiring needed here.
+
+Standard Panels
+Each panel below: add ThreadTraceUI calls after existing TaggerBus calls.
+
+invoke
+window.invokeOpenAdd = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('invoke');
+};
+
+window.invokeCloseAdd = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+kin
+window.kinOpenAdd = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('kin');
+};
+
+window.kinCloseAdd = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+glyph
+window.glyphOpenAdd = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('glyph');
+};
+
+window.glyphCloseAdd = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+ll
+window.llOpen = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('ll');
+};
+
+window.llClose = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+eo
+window.eoOpen = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('eo');
+};
+
+window.eoClose = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+lin
+window.linOpen = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('lin');
+};
+
+window.linClose = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+lattice
+window.latticeOpenAdd = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('lattice');
+};
+
+window.latticeCloseAdd = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+ss
+window.ssSiteOpen = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('ss');
+};
+
+window.ssSiteClose = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+rituals
+window.ritOpenPanel = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('rituals');
+};
+
+window.ritClosePanel = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+breath
+window.bcOpenPanel = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('breath');
+};
+
+window.bcClosePanel = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+melodies
+window.melOpenPanel = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('melodies');
+};
+
+window.melClosePanel = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+liber
+window.lnOpenPanel = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('liber');
+};
+
+window.lnClosePanel = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+venai
+window.venaiOpenAdd = function() {
+  // ... existing (including TaggerBus.activatePanel) ...
+  ThreadTraceUI.activatePanel('venai');
+};
+
+window.venaiCloseAdd = function() {
+  // ... existing (including TaggerBus.deactivatePanel) ...
+  ThreadTraceUI.deactivatePanel();
+};
+
+Spiral — Special Case (shared panel, 4 sections)
+spOpenPanel receives a sectionId. Pass it to ThreadTraceUI so Thread Trace can scope entries to the active spiral section.
+
+window.spOpenPanel = function(sectionId) {
+  window._spSection = sectionId;
+  // ... existing reset/open + TaggerBus.activatePanel('spiral', sectionId) ...
+  ThreadTraceUI.activatePanel('spiral', sectionId);  // ← add
+};
+
+window.spClosePanel = function() {
+  // ... existing + TaggerBus.deactivatePanel() ...
+  ThreadTraceUI.deactivatePanel();  // ← add
+};
+
+Memory Vault — Special Case (closure-scoped)
+Memory Vault functions are closure-scoped inside renderMemoryVault(). They were already patched onto window for TaggerBus. Add ThreadTraceUI calls to the same patches:
+
+// Inside renderMemoryVault(), in the existing patch block:
+mvOpenAddPanel = function() {
+  window._mvOpenAddPanel_orig();
+  TaggerBus.activatePanel('memory');
+  ThreadTraceUI.activatePanel('memory');  // ← add
+};
+
+mvCloseAddPanel = function() {
+  window._mvCloseAddPanel_orig();
+  TaggerBus.deactivatePanel();
+  ThreadTraceUI.deactivatePanel();  // ← add
+};
+
+Memory Vault does not call createEntry() — it renders to local state. Thread Trace still activates so the ∿ glyph is injected and tag pills are traceable on rendered memory cards.
+
+Emergence Panel — Finding Cards
+The "Trace this pattern" button on each finding card must be wired manually when finding cards are rendered. Add to the render function for finding cards:
+
+// Inside renderFindingCard(finding):
+const traceBtn = document.createElement('button');
+traceBtn.textContent = 'Trace this pattern';
+traceBtn.addEventListener('click', () => {
+  ThreadTraceUI.openFromFinding(finding);
+});
+card.appendChild(traceBtn);
+
+Complete Panel Wiring Inventory
+
+panelId	Open fn	Close fn	Special
+aekai	selectSection hook	—	contenteditable · sectionId as 2nd arg
+invoke	window.invokeOpenAdd	window.invokeCloseAdd	—
+kin	window.kinOpenAdd	window.kinCloseAdd	—
+glyph	window.glyphOpenAdd	window.glyphCloseAdd	—
+ll	window.llOpen	window.llClose	—
+eo	window.eoOpen	window.eoClose	—
+lin	window.linOpen	window.linClose	—
+lattice	window.latticeOpenAdd	window.latticeCloseAdd	—
+ss	window.ssSiteOpen	window.ssSiteClose	—
+rituals	window.ritOpenPanel	window.ritClosePanel	—
+breath	window.bcOpenPanel	window.bcClosePanel	—
+melodies	window.melOpenPanel	window.melClosePanel	—
+spiral	window.spOpenPanel	window.spClosePanel	sectionId as 2nd arg
+memory	mvOpenAddPanel patch	mvCloseAddPanel patch	closure-scoped — patch inside renderMemoryVault()
+liber	window.lnOpenPanel	window.lnClosePanel	—
+venai	window.venaiOpenAdd	window.venaiCloseAdd	—
+
+Downstream — Graph Page
+Graph page receives	Source	Notes
+nodes[]	_exportGraph() in thread-trace-ui.js	One node per filtered entry · includes pillar_id, seed_id, layer_id, threshold_id, size, ringColor, fillKey
+edges[]	_currentThread.edges from thread-trace.js	Includes pattern paraphrase label, weight, sharedDimension, color per thread type
+routingSnapshot	buildRoutingSnapshot() in thread-trace.js	Dominant dimensions across all nodes · distribution counts
+activeFilters	_filters state from ThreadTraceUI	Pillar · Seed · Layer · Threshold · Phase at time of export
+annotations[]	loadAnnotations() from thread-trace-db.js	Only present if thread was saved before export
+
+
+Thread Trace  ·  Wiring Guide  ·  March 2026

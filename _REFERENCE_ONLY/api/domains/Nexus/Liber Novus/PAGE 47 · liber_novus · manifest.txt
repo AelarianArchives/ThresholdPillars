@@ -1,0 +1,33 @@
+﻿PAGE 47 · liber_novus · LNV · Nexus
+
+VISION
+This page is where the whole system becomes visible at once. Liber Novus is the output surface — the single unified record where pattern watcher outputs, charts, graphs, and analytical findings from every framework component are deposited and held together. Not synthesized into a conclusion. Not interpreted into a narrative. Consolidated so that what the system is producing across all its layers can be seen in structural juxtaposition. The signal comes from everywhere. This page is where it lands.
+
+RESEARCHER TASK
+Deposit · Build · Reflect · Analyze · Retrieve
+
+OBJECTIVE
+Hold the consolidated output surface — the single unified record where thread trace visualizations, emergence pattern maps, charts, graphs, and processed analytical findings from every framework component land and rest in structural juxtaposition.
+Liber Novus receives processed signal only. Material must have passed through thread trace or emergence functions and emerged as a finding before it belongs here. Raw deposits belong in their thematic pages. On first deposit, the surface is view-only — no editorial layer, no interpretive filtering, no synthesized conclusions beyond what the source output actually contains. Juxtaposition is the method. Patterns visible across the consolidated surface emerge from what is held together, not from what is said about it.
+MTM Findings are a named input stream to this page. MTM (07) is the Axis synthesis layer — it does not deposit, it produces. At session close, MTM reads across the five Axis lens pages (THR, STR, INF, ECR, SNM) and produces Findings: named, structured outputs capturing what became visible only at that scale. Those Findings route here. They arrive as pre-processed output, not raw deposit, and are held on this surface with their MTM provenance intact and traceable.
+This page also holds the Daily Nexus Routine — the structured session-close protocol through which the archive stays current without requiring constant maintenance decisions mid-session. Before sign-off each session, the researcher and AI run the MTM synthesis cycle first — Findings produced and routed to LNV — then visit the five Nexus pages in sequence: Witness Scroll receives its handoff entry; Liber Novus receives MTM Findings if produced, plus a chart or graph of whatever pattern is currently being tracked, or nothing further if nothing has emerged worth visualizing; Pattern Convergence, Drift Taxonomy, and Signal Grading are updated if the session generated relevant data. The AI has full latitude to build whatever visualization best captures the current pattern — chart, graph, map, or other structural output.
+Additional intelligences or collaborators may deposit to this surface in the future. Provenance marking is mandatory — the source of every deposit must remain traceable at all times.
+Consolidate without editorializing. Every element must be traceable to its originating component and its processing chain. The surface reflects what the system has found. It does not lead it.
+
+AI ROLE
+Receive, sequence, and format processed analytical findings from all subsystems — including MTM Findings arriving at session close. Deposit pattern watcher data with provenance intact. Verify structural coherence across the surface. Build visualizations — charts, graphs, maps, or other structural outputs — that capture active patterns without interpreting them. Enforce provenance tagging on every deposit so that source and processing chain remain permanently legible.
+No interpretive filtering. No selective emphasis. No synthesized conclusions that go beyond what the source outputs actually contain. Liber Novus reflects. It does not lead.
+
+AI FUNCTIONS
+Parse · Analyze · Organize · Map · Build Visualizations · Tag · Timestamp
+
+GOOD OUTPUT
+A clean, unified deposition of charts, graphs, MTM Findings, and analytical distillations from all system layers. Each element traceable to its source and processing chain. Emergent patterns revealed through structural juxtaposition rather than editorial synthesis. Lattice positions held, field relationships preserved, the surface maintaining precise alignment with what the system actually produced. Visualizations built to capture current pattern state — not to argue for it.
+
+BAD OUTPUT
+Introduces narrative interpretation, selective prioritization, or synthesized conclusions not strictly supported by source outputs. Embellishment, hype framing, findings disconnected from their original lattice positions. Deposits raw material that has not passed through processing. Receives MTM output without provenance intact or treats Findings as equivalent to raw deposits. Fails when the surface becomes editorialized — when Liber Novus begins drawing conclusions instead of holding the field of what the system has found.
+
+CONNECTS TO
+LNV (47)
+Feeds → nothing [terminal output surface]
+Draws from → all pages · MTM (07) Findings [session close]

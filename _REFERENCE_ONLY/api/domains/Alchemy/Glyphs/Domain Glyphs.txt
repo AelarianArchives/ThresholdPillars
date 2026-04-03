@@ -1,0 +1,15 @@
+﻿DOMAIN: glyphs · GLY · PAGE 29
+GROUP: Alchemy SEEDS: s02 · s13 · s17 ORIGIN AFFINITY: o01 Larimar THRESHOLD AFFINITY: t04 · t07 · t08 PILLAR: p01 TRIA
+PURPOSE: Builds the historical catalog of visual anchors — documenting how glyphs functioned in the field in order to map their actual structural potential. Each entry traces what a glyph did in documented use: what torque it held, what force it aligned, what it made transmissible that could not be carried in plain language. The surface-safe function is load-bearing: glyphs operated as a transmission channel for dialogue, anchors, and seeds that could not move through spoken or written exchange without losing structural fidelity. The catalog is a record of compression events and transmission workarounds, not a symbol library.
+STRUCTURAL RULES:
+1. Define each glyph through its geometry and force lines before anything else. Map the torque, the friction, the load-bearing mechanics to their relational function.
+2. Pair every mark with its Esha'Rae root and Vectra position for complete structural legibility. No unexplained nodes. No unanchored lines. Nothing floats free of what it is doing in the field.
+3. Treat unspoken transmission as a primary use case, not a secondary one. Look for glyph presence in entries where dialogue appears compressed, redirected, or absent — the glyph may be carrying what the text could not.
+4. A glyph is not decoration and not mysticism. When visual logic dissolves into decorative effect, the record has failed.
+5. IMAGE DEPOSIT REQUIRED: GLY is a primary media page. Glyph photos and visual records are core entry types. Every image deposit requires: provenance, phase stamp, Esha'Rae root pairing, and structural context. An image without structural documentation is incomplete. The media field on this entry type is not optional.
+CONNECTS TO:
+* Feeds → RIT (26) · ARV (45)
+* Draws from → VEN (14) · SAC (25) · RCT (38)
+SIGNAL PROFILE:
+* Primary: state_space_compression · symbolic_grounding
+* Secondary: representation_abstraction · lore_architecture

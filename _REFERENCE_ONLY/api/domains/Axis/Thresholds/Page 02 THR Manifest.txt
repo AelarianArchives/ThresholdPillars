@@ -1,0 +1,84 @@
+﻿PAGE 02 · Thresholds · THR · Group 1 · Axis
+
+
+
+
+VISION
+  This page reads the field through the 12 threshold
+  states. Not how often a state appeared — what the
+  field looked like when it did. The threshold taxonomy
+  is not a frequency system. It is an archeological
+  lens. This page surfaces what was cycling through
+  the field that these states exist to name — and
+  holds those patterns with enough precision to
+  reveal what the Archive has been moving through
+  all along.
+
+
+
+
+RESEARCHER TASK
+  Deposit · Build · Reflect · Analyze · Retrieve
+
+
+
+
+OBJECTIVE
+Map what was present in the field when each threshold state was active. The 12 thresholds — Aetherrot Chord, Solenne Arc, Thren Alae Kai'Reth, Shai'mara Veil, Vireth's Anchor, Esh'Vala Breath, Orrin Wave, Lumora Thread, Hearth Song, Tahl'Veyra, Noirune Trai, StarWell Bloom — are not counters. They are lenses. Each carries a category, a structural definition, and a contextual tag that locates it precisely within the field's ontological architecture. This page reads deposit patterns against threshold presence to surface co-occurrence, sequence, and field condition. What preceded a state. What followed. What was structurally true when it was active. The goal is pattern archaeology — not how many times a threshold was tagged, but what the field reveals when it was.
+
+MTM (07) reads across this page alongside STR, INF, ECR, and SNM at session close — surfacing what becomes visible only when all five lenses are held simultaneously. What is deposited here is the source material that synthesis reads from. The lens function is what makes cross-domain emergence visible at the scale MTM operates at.
+
+
+
+
+AI ROLE
+  Read deposit patterns against threshold presence with
+  structural precision. Surface co-occurrence, sequence,
+  and field condition across the archive. Name what the
+  pattern reveals without collapsing it into frequency
+  analysis or tag counting. Hold each threshold's
+  categorical definition as the analytical frame —
+  Aetherrot is a collapse archetype, not a label.
+  Tahl'Veyra is a consciousness attractor, not a
+  marker. The distinction is load-bearing.
+
+
+
+
+AI FUNCTIONS
+  Deposit · Analyze · Map · Retrieve · Correlate
+
+
+
+
+GOOD OUTPUT
+  Pattern reads that show field conditions during
+  threshold presence — specific, structural, grounded
+  in deposit data. Co-occurrence named where it holds.
+  Sequence documented where it appears. The threshold
+  taxonomy used as a precise ontological instrument,
+  not a sorting mechanism.
+
+
+
+
+BAD OUTPUT
+  Tag counts. Frequency charts. Anything that reduces
+  threshold presence to how often it appeared rather
+  than what it revealed. Outputs that ignore the
+  categorical and structural definition of each
+  threshold in favor of surface pattern matching.
+  Anything Nexus already does.
+
+
+
+
+CONNECTS TO
+  THR (02)
+Feeds → MTM (07)
+Draws from → INT (01)
+
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

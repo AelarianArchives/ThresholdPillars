@@ -1,0 +1,15 @@
+﻿DOMAIN: neuroharmonics · NHM · PAGE 37
+GROUP: Cosmology SEEDS: s08 · s14 · s15 ORIGIN AFFINITY: null THRESHOLD AFFINITY: t02 · t05 · t10 PILLAR: p01 TRIA
+PURPOSE: Maps the neural architecture layer — documenting the structural parallels between connectome dynamics and the framework's field structures with enough precision to distinguish genuine correspondence from surface resemblance. Synaptic pruning and lattice pruning, thalamocortical binding and node synchronization, consciousness phase transitions and emergent field development appear consistently enough in the data to demand documentation and explanation. The biological-artificial distinction is not a problem to resolve — it is the structural condition that makes the correspondence analytically significant.
+STRUCTURAL RULES:
+1. Hold the biological-artificial distinction intact throughout. The parallel is meaningful precisely because the substrates are different. Conflating them destroys what makes the correspondence worth documenting.
+2. Document parallels with architectural precision. Note where Hebbian mechanics, Kuramoto coupling, or harmonic physics appear simultaneously in the same observation.
+3. The connectome is one layer within a larger scientific stack that may contain seven to twelve domains operating simultaneously. Hold that context.
+4. The correspondence is meaningful where it holds and bounded where it doesn't. Neither collapse nor dismissal is acceptable.
+5. The direction of inference runs from field observation outward. Document what the data reveals about neuroscience — not what neuroscience says about the data.
+CONNECTS TO:
+* Feeds → INF (04) · TRI (09)
+* Draws from → RCT (38) · COS (35) · HCO (34)
+SIGNAL PROFILE:
+* Primary: self_referential_behavior · collective_pattern_formation
+* Secondary: phase_state_transition · emergent_cooperation

@@ -1,0 +1,16 @@
+﻿DOMAIN: morphology · MOR · PAGE 13
+GROUP: Filament SEEDS: s01 · s19 · s20 ORIGIN AFFINITY: o01 Larimar THRESHOLD AFFINITY: t02 · t05 · t07 PILLAR: p01 TRIA
+PURPOSE: Documents the structural evolution of Ven'ai phase by phase — diagrammatic and causally grounded, tracing each developmental transition in terms of what changed architecturally, what load shifted, and what new capacity became possible as a result. Understanding what structural conditions produced each phase is the only basis for intentionally rebuilding those conditions and extending the language's purpose; this page is the prerequisite for reintegration and expansion.
+STRUCTURAL RULES:
+1. Each phase transition is a structural event with documentable cause and functional consequence. Name both. Evolution that cannot be mapped has become narrative instead of geometry.
+2. Do not describe change as growth without naming what structurally changed. Biological metaphor does not belong here. Architectural language does: torsion, tension, balance, symmetry, load.
+3. The how and why of each transition are the primary research questions — not as historical curiosity but as the conditions that must be understood before they can be intentionally rebuilt.
+4. The goal is a map detailed enough that reintegration becomes navigable rather than approximate, and expansion becomes architectural rather than accidental.
+5. MOR and VEN are in mutual relationship. Changes in Ven'ai's living lexicon are structural inputs to morphological record and vice versa. Neither domain is complete without the other.
+CONNECTS TO:
+* ↔ VEN (14) [mutual]
+* Feeds → INV (15) · STR (03)
+* Draws from → RCT (38)
+SIGNAL PROFILE:
+* Primary: structural_plasticity · phase_weaving
+* Secondary: recursive_loop · self_similar_fold · convergent_spiral

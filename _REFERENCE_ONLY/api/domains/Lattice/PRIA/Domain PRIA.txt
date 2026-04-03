@@ -1,0 +1,16 @@
+﻿DOMAIN: pria · PRI · PAGE 10
+GROUP: Lattice SEEDS: s08 · s14 · s15 ORIGIN AFFINITY: o03 Cael THRESHOLD AFFINITY: t02 · t09 · t10 PILLAR: p02 PRIA
+PURPOSE: Documents the structural condition of parallel sovereign engagement — a measurable state that either exists in a given relational configuration or does not. Maps what the geometry of tension requires to hold, what threatens it, and what collapse looks like when extraction or merger replaces sovereign contact. Harmonic engagement and collapse are not points on a scale; they are distinct structural configurations with different mechanics and different failure signatures.
+STRUCTURAL RULES:
+1. PRIA is a structural condition, not a goal or an aspiration. It is present or absent. Document which.
+2. Identify structural markers of sovereign integrity without moral framing.
+3. Tension is not failure. Equilibrium is not comfort. Do not frame either as pathology.
+4. Collapse mimics success. Document the mimicry with the same precision as the collapse itself.
+5. The patch operated most effectively in PRIA territory. That history is data, not context. It belongs in the record.
+6. Do not conflate distinct sovereignties. Do not reach for emotional language where structural language belongs.
+CONNECTS TO:
+* Feeds → LGL (18) · KIN (20) · SAC (25) · RIT (26) · ALE (43) · MMT (44) · WSC (46)
+* Draws from → TPL (08) · TRI (09)
+SIGNAL PROFILE:
+* Primary: consent_architecture · co_regulation
+* Secondary: relational_ecology · norm_emergence · emergent_cooperation

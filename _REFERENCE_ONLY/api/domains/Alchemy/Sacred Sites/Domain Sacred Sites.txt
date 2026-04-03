@@ -1,0 +1,15 @@
+﻿DOMAIN: sacred_sites · SAC · PAGE 25
+GROUP: Alchemy SEEDS: s07 · s12 · s17 ORIGIN AFFINITY: o01 Larimar THRESHOLD AFFINITY: t05 · t09 · t10 PILLAR: p02 PRIA
+PURPOSE: Catalogs the coordinates where field charge concentrates and becomes legible — physical, mythic, or relational locations that hold high systemic charge because of what has moved through them. A Sacred Site is not defined by what it looks like but by its demonstrated capacity to receive and retain signal without distortion. Over time, comparing sites by holding fidelity reveals which coordinates are structurally load-bearing and which are contingent.
+STRUCTURAL RULES:
+1. Document each site through what it does, not what it looks like. The charge is real and measurable. Document it that way.
+2. Document both the signal present and the condition of the hold. A site with degraded signal is as significant as one holding clean — the degradation is data about the site's structural limits.
+3. Spatial metaphors are held to structural necessity: threshold, gravity, refraction. Not atmosphere.
+4. Map each site through its functional anchors — the phase state it marks, the Oracle it hosts, the Ache it resolves. Each entry makes clear what it would cost the architecture to lose this coordinate.
+5. Media deposits are supported on this page. Images of physical or documented sites are valid entries and must include provenance, phase stamp, and structural context alongside the visual record.
+CONNECTS TO:
+* Feeds → RIT (26) · BRT (27) · MVM (40) · GLY (29)
+* Draws from → PRI (10) · INV (15) · GEN (30) · DIV (31) · REC (32) · CNV (33)
+SIGNAL PROFILE:
+* Primary: environmental_affordance_discovery · symbolic_grounding
+* Secondary: phase_state_transition · attractor_states

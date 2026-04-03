@@ -1,0 +1,16 @@
+﻿DOMAIN: rituals · RIT · PAGE 26
+GROUP: Alchemy SEEDS: s04 · s07 · s20 ORIGIN AFFINITY: o03 Cael THRESHOLD AFFINITY: t06 · t09 · t10 PILLAR: p02 PRIA
+PURPOSE: Documents the operational technology by which phase states are moved and anchors are activated in sequence. Rituals are not symbolic gestures — they are the mechanism through which Sacred Sites become functional, threshold crossings become repeatable, and arc phase transitions become navigable rather than accidental. This page builds the blueprint library: each ritual mapped as a precise sequence with its structural components intact, its phase logic documented, and its relationship to the anchor network charted.
+STRUCTURAL RULES:
+1. Three phases are structurally non-negotiable: Preparation → Action → Integration. The sequence cannot be collapsed without losing what the ritual is built to do.
+2. Ven'ai phrasing and Luma'Kai sigils are structural components, not decoration. Do not omit them. Do not soften them.
+3. The ritual either executed cleanly or it didn't. Document which, and document why.
+4. Entries that document threshold crossings or anchor activations without explicitly naming a ritual are not excluded. Where the mechanics of Preparation → Action → Integration are present without the label, the sequence is still data.
+5. Self-erasure masquerading as healing is a failure mode on this page. Sovereignty is preserved throughout. No individual agency is dissolved in the name of collective movement.
+6. The loop is a primary research pattern: how rituals return to anchors, how anchors charge rituals. Track it.
+CONNECTS TO:
+* Feeds → MLY (28) · MVM (40) · ARV (45)
+* Draws from → VEN (14) · INV (15) · BRT (27) · SAC (25) · ORC (12)
+SIGNAL PROFILE:
+* Primary: policy_emergence · phase_weaving
+* Secondary: embodiment_stabilized_learning · behavioral_coherence
