@@ -71,11 +71,41 @@ COMPLETED:
 IN_PROGRESS:
   - none
 NOT_STARTED:
-  - B2 credential migration (priority — GITHUB_PROTOCOL.md section 5)
-  - Commit all protocol files to git
-  - Recovery tag after commit
-UNCOMMITTED: YES
-NEXT_ACTION: Commit all protocol files. Then B2 credential migration.
+  - none
+UNCOMMITTED: NO
+NEXT_ACTION: Rotate B2 credentials in Backblaze console — old values are out
+  of git history but must be treated as compromised. Update .env with new
+  values before next backup run.
+  Then: git tag -a v2026-04-03-protocol-complete -m "protocol system complete"
+        git push origin v2026-04-03-protocol-complete
+
+---
+TIMESTAMP: 2026-04-03
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - backup.py — COMPLETE (B2 credentials removed, env var loading added)
+  - PROTOCOL/ — COMPLETE (moved from root into PROTOCOL/ folder)
+  - CLAUDE.md — COMPLETE (paths updated to PROTOCOL/, BEFORE EVERY SESSION updated)
+  - hooks/session_log_hook.py — COMPLETE (log path updated to PROTOCOL/SESSION_LOG.md)
+  - .gitignore — COMPLETE (_REFERENCE_ONLY/ added)
+  - git history — COMPLETE (B2 credentials redacted from all commits, force pushed)
+COMPLETED:
+  - backup.py B2 credentials migrated to os.environ.get() with .env loader
+  - pre-commit hook passed on backup.py — clean
+  - All protocol files committed (132 files, 14074 insertions)
+  - Pushed to GitHub
+  - Protocol files reorganized into PROTOCOL/ folder
+  - git history rewritten — hardcoded B2 values removed from all commits
+  - Force pushed clean history to GitHub
+  - Old refs and objects garbage collected
+  - redact_credentials.py temp script deleted
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - B2 credential rotation (Backblaze console — generate new key/app key)
+  - Recovery tag: v2026-04-03-protocol-complete
+  - SOT build phase
+UNCOMMITTED: NO
 ---
 
 ---
