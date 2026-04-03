@@ -29,7 +29,7 @@ B2_APP_KEY = os.environ.get("B2_APP_KEY")
 # === LOGGING ===
 log_path = os.path.join(PROJECT_FOLDER, "backup.log")
 logging.basicConfig(filename=log_path, level=logging.INFO,
-    format="%(asctime)s — %(message)s")
+    format="%(asctime)s — %(message)s", encoding="utf-8")
 
 def log(msg):
     print(msg)
