@@ -1,0 +1,12 @@
+{
+  "note": "PLACEHOLDER — values to be defined when app build begins. Update before first production deploy.",
+  "last_updated": "PLACEHOLDER",
+  "budgets": {
+    "js_bundle_kb": null,
+    "css_bundle_kb": null,
+    "total_page_weight_kb": null,
+    "first_contentful_paint_ms": null,
+    "time_to_interactive_ms": null,
+    "indexeddb_open_ms": null
+  }
+}

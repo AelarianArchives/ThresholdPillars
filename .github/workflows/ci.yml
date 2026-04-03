@@ -1,0 +1,100 @@
+name: CI
+
+# Mirrors the 4 checks in hooks/pre-commit.
+# Catches anything that bypassed the local hook.
+# Expand this file when the build introduces a test runner.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  integrity-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      # ---------------------------------------------------------------
+      # CHECK 1 — Credential patterns (F32)
+      # Hard block. Mirrors pre-commit check 1.
+      # ---------------------------------------------------------------
+      - name: Credential scan
+        run: |
+          CREDENTIAL_PATTERNS="B2_KEY_ID\s*=\s*['\"][^'\"]{5}|B2_APP_KEY\s*=\s*['\"][^'\"]{5}|password\s*=\s*['\"][^'\"]{3}|api_key\s*=\s*['\"][^'\"]{3}|app_key\s*=\s*['\"][^'\"]{3}|secret\s*=\s*['\"][^'\"]{3}"
+          BLOCKED=0
+          for FILE in $(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD 2>/dev/null); do
+            if echo "$FILE" | grep -qE "(^|/)\.env(\.|$)"; then
+              echo "BLOCKED: .env file found in commit: $FILE"
+              BLOCKED=1
+            elif [ -f "$FILE" ]; then
+              if grep -qiP "$CREDENTIAL_PATTERNS" "$FILE" 2>/dev/null; then
+                echo "BLOCKED: Credential pattern in: $FILE"
+                BLOCKED=1
+              fi
+            fi
+          done
+          if [ $BLOCKED -eq 1 ]; then exit 1; fi
+          echo "Credential scan: clean"
+
+      # ---------------------------------------------------------------
+      # CHECK 2 — Domain vocabulary in code files (F14)
+      # Warning only — mirrors pre-commit check 2.
+      # ---------------------------------------------------------------
+      - name: Domain vocabulary scan
+        run: |
+          DOMAIN_TERMS="Ae\.larian|Ven\.ai|Cael\.Thera|Verith|Larimar|Sa\.Qel|NurseryBG|StarRoot|Sat\.Nam"
+          CODE_EXTENSIONS="\.(js|ts|py|css|html)$"
+          WARNINGS=0
+          for FILE in $(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD 2>/dev/null); do
+            if echo "$FILE" | grep -qE "$CODE_EXTENSIONS"; then
+              if echo "$FILE" | grep -qE "(DOCS/|hooks/)"; then continue; fi
+              if [ -f "$FILE" ] && grep -qP "$DOMAIN_TERMS" "$FILE" 2>/dev/null; then
+                echo "WARNING: Domain vocabulary in code file: $FILE"
+                WARNINGS=$((WARNINGS + 1))
+              fi
+            fi
+          done
+          if [ $WARNINGS -gt 0 ]; then
+            echo "$WARNINGS warning(s) — domain vocabulary found in code files."
+            echo "Review before merging. See ENFORCEMENT.md F14."
+          else
+            echo "Domain vocabulary scan: clean"
+          fi
+
+      # ---------------------------------------------------------------
+      # CHECK 3 — Lockfile consistency (F20)
+      # Hard block when package.json exists. Mirrors pre-commit check 3.
+      # ---------------------------------------------------------------
+      - name: Lockfile check
+        run: |
+          if [ -f "package.json" ]; then
+            if [ ! -f "package-lock.json" ]; then
+              echo "BLOCKED: package.json present but package-lock.json missing."
+              exit 1
+            fi
+            echo "Lockfile check: clean"
+          else
+            echo "Lockfile check: skipped (no package.json)"
+          fi
+
+      # ---------------------------------------------------------------
+      # CHECK 4 — Sensitive file patterns (F32)
+      # Hard block. Mirrors pre-commit check 4.
+      # ---------------------------------------------------------------
+      - name: Sensitive file check
+        run: |
+          SENSITIVE_PATTERNS="(^|/)credentials|secrets\.(json|yml|yaml)|\.pem$|\.p12$|\.key$"
+          BLOCKED=0
+          for FILE in $(git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD 2>/dev/null); do
+            if echo "$FILE" | grep -qiE "$SENSITIVE_PATTERNS"; then
+              echo "BLOCKED: Sensitive file pattern: $FILE"
+              BLOCKED=1
+            fi
+          done
+          if [ $BLOCKED -eq 1 ]; then exit 1; fi
+          echo "Sensitive file check: clean"
