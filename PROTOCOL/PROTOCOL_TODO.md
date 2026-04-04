@@ -1,6 +1,6 @@
 # PROTOCOL_TODO.md
 # Aelarian Archives — Protocol System Running Checklist
-# Last updated: 2026-04-03
+# Last updated: 2026-04-04
 
 Status: [ ] open  [x] complete  [!] blocked  [~] in progress
 
@@ -12,6 +12,55 @@ This list tracks everything required for the protocol system to function
 as a whole unit. Work through sections in order. Each completed item is
 marked [x]. Blocked items are marked [!] with the blocker named.
 Do not mark complete until the item is verified, not just executed.
+
+---
+
+## SECTION 0 — PRIORITY: SAFEGUARD GAPS — RESOLVE BEFORE CODE BUILD
+
+Identified 2026-04-04 during directive audit. All six items close before
+any code writing begins. These are not optional.
+
+- [ ] Fix ENFORCEMENT.md T2 mismatch — F15, F44, F06
+      F15 (dead code detection), F44 (variable shadowing linter), and F06
+      (pre-commit runs test suite) are listed in ENFORCEMENT.md as T2 hook
+      enforcement. None are implemented in pre-commit. Documentation says
+      mechanical protection exists when it does not.
+      Action: either implement each check, or downgrade their tier in
+      ENFORCEMENT.md to T1 (behavioral) with an honest note that mechanical
+      enforcement is deferred until the build produces code to check. Do not
+      leave the tier claim and the missing implementation in contradiction.
+
+- [ ] Fix pre-commit Check 2 severity — warning vs. hard block
+      Check 2 (domain vocab scan) fires as a WARNING in the hook script.
+      ENFORCEMENT.md says it should be a hard block. Implementation and
+      documentation disagree.
+      Action: decide which is correct. If hard block — update hook script.
+      If warning — update ENFORCEMENT.md. Record the decision here.
+
+- [ ] Add mechanical guard for _REFERENCE_ONLY
+      Currently protected only by a T1 behavioral rule in CLAUDE.md.
+      Nothing in the hook or pre-commit prevents a write into _REFERENCE_ONLY.
+      Action: add a path check to pre-commit (or the PostToolUse hook) that
+      hard-blocks any write to _REFERENCE_ONLY/ and logs the attempt.
+
+- [ ] Remove NurseryBG from DOMAIN_TERMS in hooks/pre-commit
+      NurseryBG is from the infected build — it is not a domain term.
+      It is currently in the DOMAIN_TERMS list, which means it will trigger
+      the domain vocab scan on legitimate commits. Remove it.
+      Do this alongside domain term list finalization (Section 3).
+
+- [ ] Write SYSTEM_ doc and SCHEMA for schema.js
+      Every planned .js module requires both a SYSTEM_ overview doc and a
+      full SCHEMA (CLAUDE.md coverage rule). schema.js has neither.
+      Action: write SYSTEM_ Schema.md and SCHEMA for schema.js before
+      schema.js is built. Scope: PHASE_CODES, PAGE_CODES, all enums,
+      ownership boundary (schema.js owns codes, not logic).
+      This is a build prerequisite — schema.js is first in the build order.
+
+- [ ] Section 4 stress tests and Section 5 tagger prerequisites
+      See Section 4 (6 manual scenarios, all untested) and Section 5
+      (7 tagger.js prerequisites, all open). Both sections are already
+      tracked below. Closing them is part of this priority batch.
 
 ---
 
