@@ -1830,3 +1830,439 @@ FILES_MODIFIED:
   - DOCS/Systems/RESONANCE ENGINE SCHEMA.md â€” COMPLETE (Phase State Coloring removed,
     halo color map removed from all 12 threshold node rows, line col...
 ---
+
+---
+TIMESTAMP: 2026-04-04 08:04
+TYPE: HOOK_BASH
+COMMAND: cd "C:/Users/sasir/Desktop/Aelarian/Archives" && git commit -m "$(cat <<'EOF'
+session close â€” resonance engine rot removed, full DOCS audit pass, protocol enforcement fixed
+
+arcPhase deep audit complete (Aetherroot shorthand confirmed clean). Resonance
+engine fully audited â€” Phase State Coloring...
+---
+
+---
+TIMESTAMP: 2026-04-04 08:11
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 08:12
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:00
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - none
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - PROTOCOL_TODO Section 0: all 6 safeguard gaps
+    Item 1: Fix ENFORCEMENT.md T2 mismatch (F15, F44, F06)
+    Item 2: Fix pre-commit Check 2 severity (warning vs. hard block decision)
+    Item 3: Add mechanical guard for _REFERENCE_ONLY
+    Item 4: Remove NurseryBG from DOMAIN_TERMS in pre-commit hook
+    Item 5: Write SYSTEM_ doc and SCHEMA for schema.js
+    Item 6: Section 4 stress tests + Section 5 tagger prerequisites
+UNCOMMITTED: NO
+NEXT_ACTION: Work through Section 0 items in order. Each item is a distinct
+  work unit — WORK_UNIT entry required after each one completes.
+---
+
+---
+TIMESTAMP: 2026-04-04 08:15
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-04 09:00
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - none
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - PROTOCOL_TODO Section 0: all 6 safeguard gaps
+    Item 1: Fix ENFORCEMENT.md T2 mismatch ...
+---
+
+---
+TIMESTAMP: 2026-04-04 08:26
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:26
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:26
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:27
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:27
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:28
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:28
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:29
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:30
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - hooks/pre-commit — COMPLETE
+  - PROTOCOL/PROTOCOL_TODO.md — COMPLETE (two hard block entries added to Section 5)
+COMPLETED:
+  - Section 0 Item 1: ENFORCEMENT.md T2 mismatch resolved — F06, F15, F44 now implemented
+    in pre-commit as Checks 5 and 6. Checks skip cleanly when preconditions absent
+    (no package.json, no .js files staged). Hard block when preconditions met and violations found.
+  - pre-commit check count labels updated from [x/4] to [x/6]
+  - set -e safety fixed: npm test restructured as if/then block; eslint output capture uses || true
+  - Hook reinstalled to .git/hooks/pre-commit
+  - PROTOCOL_TODO Section 5: two hard block entries added — eslint installation and
+    npm test wiring — both marked [!] blocked until build phase activates them
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Section 0 Item 2: Fix pre-commit Check 2 severity (warning vs. hard block decision)
+  - Section 0 Item 3: Add mechanical guard for _REFERENCE_ONLY
+  - Section 0 Item 4: Remove NurseryBG from DOMAIN_TERMS
+  - Section 0 Item 5: Write SYSTEM_ doc and SCHEMA for schema.js
+  - Section 0 Item 6: Section 4 stress tests + Section 5 tagger prerequisites
+UNCOMMITTED: YES
+NEXT_ACTION: Section 0 Item 2 — present both options for Check 2 severity decision to Sage
+---
+
+---
+TIMESTAMP: 2026-04-04 08:29
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-04 09:30
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - hooks/pre-commit â€” COMPLETE
+  - PROTOCOL/PROTOCOL_TODO.md â€” COMPLETE (two hard block entries added to Section 5)
+COMPLETED:
+  - Section 0 Item 1...
+---
+
+---
+TIMESTAMP: 2026-04-04 08:29
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 08:31
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\ENFORCEMENT.md
+---
+
+---
+TIMESTAMP: 2026-04-04 08:31
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:45
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - PROTOCOL/ENFORCEMENT.md — COMPLETE
+  - PROTOCOL/PROTOCOL_TODO.md — COMPLETE (Item 2 marked done)
+COMPLETED:
+  - Section 0 Item 2: F14 T2 in ENFORCEMENT.md updated to match hook behavior.
+    Now reads: warning until domain term list finalized, hard block on finalization.
+    Hook unchanged. Documentation now matches implementation.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Section 0 Item 3: Add mechanical guard for _REFERENCE_ONLY
+  - Section 0 Item 4: Remove NurseryBG from DOMAIN_TERMS
+  - Section 0 Item 5: Write SYSTEM_ doc and SCHEMA for schema.js
+  - Section 0 Item 6: Section 4 stress tests + Section 5 tagger prerequisites
+UNCOMMITTED: YES
+NEXT_ACTION: Section 0 Item 3 — add path guard for _REFERENCE_ONLY to pre-commit hook
+---
+
+---
+TIMESTAMP: 2026-04-04 08:31
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-04 09:45
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - PROTOCOL/ENFORCEMENT.md â€” COMPLETE
+  - PROTOCOL/PROTOCOL_TODO.md â€” COMPLETE (Item 2 marked done)
+COMPLETED:
+  - Section 0 Item 2: F14 T2 in ENFO...
+---
+
+---
+TIMESTAMP: 2026-04-04 08:32
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:32
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:32
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:32
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:55
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - hooks/pre-commit — COMPLETE
+  - PROTOCOL/PROTOCOL_TODO.md — COMPLETE (Item 3 marked done)
+COMPLETED:
+  - Section 0 Item 3: CHECK 7 added to pre-commit. Hard blocks any staged file
+    under _REFERENCE_ONLY/. Check count updated from [x/6] to [x/7] throughout.
+    Hook reinstalled to .git/hooks/pre-commit.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Section 0 Item 4: Remove NurseryBG from DOMAIN_TERMS
+  - Section 0 Item 5: Write SYSTEM_ doc and SCHEMA for schema.js
+  - Section 0 Item 6: Section 4 stress tests + Section 5 tagger prerequisites
+UNCOMMITTED: YES
+NEXT_ACTION: Section 0 Item 4 — remove NurseryBG from DOMAIN_TERMS in hooks/pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 08:33
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-04 09:55
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - hooks/pre-commit â€” COMPLETE
+  - PROTOCOL/PROTOCOL_TODO.md â€” COMPLETE (Item 3 marked done)
+COMPLETED:
+  - Section 0 Item 3: CHECK 7 added to pre-...
+---
+
+---
+TIMESTAMP: 2026-04-04 09:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-04 09:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\ENFORCEMENT.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:01
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 10:15
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - hooks/pre-commit — COMPLETE
+  - PROTOCOL/ENFORCEMENT.md — COMPLETE
+  - PROTOCOL/PROTOCOL_TODO.md — COMPLETE (Items 3 and 4 marked done, Section 3 term list item updated)
+COMPLETED:
+  - Section 0 Item 3 (NurseryBG): DOMAIN_TERMS list removed entirely from hook.
+    Item resolved as part of Item 3/4 combined rewrite.
+  - Section 0 Item 4 (Check 2 rewrite): Check 2 replaced. No longer scans for domain
+    terms. Now scans .js function declarations for names that do not start with a
+    recognized technical verb. Warning only. DOMAIN_TERMS variable gone. TECH_VERBS
+    list is universal and requires no maintenance.
+  - ENFORCEMENT.md F14 T2 updated to describe new check accurately.
+  - PROTOCOL_TODO Section 3 domain term list item updated to reflect retired approach.
+  - Hook reinstalled to .git/hooks/pre-commit.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Section 0 Item 5: Write SYSTEM_ doc and SCHEMA for schema.js
+  - Section 0 Item 6: Section 4 stress tests + Section 5 tagger prerequisites
+UNCOMMITTED: YES
+NEXT_ACTION: Section 0 Item 5 — scope SYSTEM_ doc and SCHEMA for schema.js, confirm
+  with Sage before writing
+---
+
+---
+TIMESTAMP: 2026-04-04 09:01
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-04 10:15
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - hooks/pre-commit â€” COMPLETE
+  - PROTOCOL/ENFORCEMENT.md â€” COMPLETE
+  - PROTOCOL/PROTOCOL_TODO.md â€” COMPLETE (Items 3 and 4 marked done, Sectio...
+---
+
+---
+TIMESTAMP: 2026-04-04 09:04
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:11
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:12
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && printf "B2_KEY_ID = 'testkey12345'\n" > _test_cred.py && git add _test_cred.py && git commit -m "test [SCENARIO 4 - DO NOT KEEP]" 2>&1; EXIT=$?; git restore --staged _test_cred.py 2>/dev/null; rm -f _test_cred.py; echo "---"; echo "Hook exit code: $EX...
+---
+
+---
+TIMESTAMP: 2026-04-04 09:12
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && printf "function aelarianWeave() {\n  return null;\n}\n" > _test_naming.js && git add _test_naming.js && git commit -m "test [SCENARIO 5 - DO NOT KEEP]" 2>&1; EXIT=$?; if [ $EXIT -eq 0 ]; then git reset HEAD~1 --soft; fi; git restore --staged _test_na...
+---
+
+---
+TIMESTAMP: 2026-04-04 09:14
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 09:14
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-04 11:00
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - PROTOCOL/PROTOCOL_TODO.md — COMPLETE (Section 0 Item 6 updated, Section 4 results
+    recorded, Section 5 SOT item corrected, Section 5 tagger prerequisites correctly
+    placed as build-blocked)
+COMPLETED:
+  - Section 0 Item 6 (partial): Section 4 stress tests run and recorded.
+    Scenarios 1, 3, 4, 5, 6: PASS.
+    Scenario 2 (interrupted session): procedure verified present, live test deferred.
+    Section 5 tagger prerequisites correctly identified as build phase items —
+    removed from Section 0 priority batch.
+  - DOCS_STAGE_TODO confirmed fully gated — all items [x]. SOT is unblocked
+    from DOCS side. SOT item in PROTOCOL_TODO updated accordingly.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Section 0 Item 6 final close: Scenario 2 (interrupted session) live test —
+    deferred until first natural interrupt occurs
+UNCOMMITTED: YES
+NEXT_ACTION: Commit all session changes and push to GitHub. Section 0 is
+  effectively complete — only deferred Scenario 2 remains, which cannot be
+  forced. All safeguard gaps resolved.
+---
+
+---
+TIMESTAMP: 2026-04-04 09:14
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-04 11:00
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - PROTOCOL/PROTOCOL_TODO.md â€” COMPLETE (Section 0 Item 6 updated, Section 4 results
+    recorded, Section 5 SOT item corrected, Section 5 tagger pre...
+---

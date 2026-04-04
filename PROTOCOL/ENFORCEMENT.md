@@ -174,8 +174,11 @@ knowledge. Led to a 30,000-line index collapse.
 - T1: Domain vocabulary — symbolic, mythic, or project-specific naming —
   never enters code. Function names, variable names, schema fields,
   and comments use plain technical language only. No exceptions.
-- T2: Pre-commit hook scans all modified code files against the domain
-  term list. Commit blocked if domain terms are found in code.
+- T2: Pre-commit hook scans .js function declarations for names that do
+  not start with a recognized technical verb. Fires as a warning — not a
+  hard block. Coverage is limited to `function` keyword declarations;
+  arrow functions and class methods are covered when eslint is active at
+  build phase. Promotion to hard block occurs at that point.
 
 ---
 

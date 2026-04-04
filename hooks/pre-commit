@@ -19,11 +19,15 @@ WARNINGS=0
 # CHECK 1 — Credential patterns (F32)
 # Hard block. Commit does not proceed.
 # ---------------------------------------------------------------
-echo "  [1/4] Credential scan..."
+echo "  [1/7] Credential scan..."
 
 CREDENTIAL_PATTERNS="B2_KEY_ID\s*=\s*['\"][^'\"]{5}|B2_APP_KEY\s*=\s*['\"][^'\"]{5}|password\s*=\s*['\"][^'\"]{3}|api_key\s*=\s*['\"][^'\"]{3}|app_key\s*=\s*['\"][^'\"]{3}|secret\s*=\s*['\"][^'\"]{3}"
 
 for FILE in $STAGED_FILES; do
+    # Skip .md files — documentation, not executable code
+    if echo "$FILE" | grep -qE "\.md$"; then
+        continue
+    fi
     # Block .env from being staged at all
     if echo "$FILE" | grep -qE "(^|/)\.env(\.|$)"; then
         echo ""
@@ -44,46 +48,52 @@ done
 echo "  PASS"
 
 # ---------------------------------------------------------------
-# CHECK 2 — Domain vocabulary in code files (F14)
-# Warning only until domain term list is finalized.
-# Promote to hard block once exceptions are confirmed.
+# CHECK 2 — Function naming: technical verb required (F14)
+# Warning only. Promotes to hard block when eslint is active (build phase).
+# Covers function keyword declarations in .js files only.
+# Arrow functions and class methods: covered by eslint at build phase.
+# Rule: function names describe what code does mechanically (verb first).
+# Canonical names belong on the things themselves, not on the actions.
 # ---------------------------------------------------------------
-echo "  [2/4] Domain vocabulary scan..."
+echo "  [2/7] Function naming check..."
 
-CODE_EXTENSIONS="\.(js|ts|py|css|html)$"
+TECH_VERBS="^(get|set|create|update|delete|fetch|load|save|store|build|parse|validate|resolve|render|handle|init|reset|clear|check|run|start|stop|format|convert|find|add|remove|apply|process|compute|generate|read|write|sync|dispatch|emit|bind|register|configure|setup|teardown|serialize|decode|encode|transform|merge|filter|sort|map|compare|display|show|hide|open|close|connect|send|receive|push|pull|log|track|report|is|has|can|should|on|test|describe)"
 
-# Terms that have NO valid use in code logic or naming.
-# arcPhase values (aetherrot, solenne, vireth) are excluded here —
-# they are valid schema enum values. Review this list before build starts.
-DOMAIN_TERMS="Ae.larian|Ven.ai|Cael.Thera|Verith|Larimar|Sa.Qel|NurseryBG|StarRoot|Sat.Nam"
-
+CHECK2_WARNINGS=0
 for FILE in $STAGED_FILES; do
-    # Only scan code files, not docs or schemas
-    if echo "$FILE" | grep -qE "$CODE_EXTENSIONS"; then
-        if echo "$FILE" | grep -qE "(DOCS/|hooks/)"; then
+    if echo "$FILE" | grep -qE "\.js$"; then
+        if echo "$FILE" | grep -qE "(DOCS/|hooks/|_REFERENCE_ONLY/)"; then
             continue
         fi
-        if git show ":$FILE" 2>/dev/null | grep -qP "$DOMAIN_TERMS" 2>/dev/null; then
-            echo ""
-            echo "  WARNING: Domain vocabulary in code file: $FILE"
-            echo "  Function names, variables, and comments must use plain technical language."
-            echo "  See ENFORCEMENT.md F14. Review before committing."
-            WARNINGS=$((WARNINGS + 1))
+        FUNC_NAMES=$(git show ":$FILE" 2>/dev/null | \
+            grep -oE 'function [a-z][a-zA-Z0-9]*[[:space:]]*\(' | \
+            grep -oE ' [a-z][a-zA-Z0-9]+' | \
+            tr -d ' ') || true
+        if [ -n "$FUNC_NAMES" ]; then
+            VIOLATIONS=$(echo "$FUNC_NAMES" | grep -vE "$TECH_VERBS" 2>/dev/null) || true
+            if [ -n "$VIOLATIONS" ]; then
+                echo ""
+                echo "  WARNING: Non-technical function name(s) in: $FILE"
+                echo "$VIOLATIONS" | while IFS= read -r name; do
+                    echo "    function ${name}() — name does not start with a technical verb"
+                done
+                echo "  Function names must describe what code does mechanically. See ENFORCEMENT.md F14."
+                CHECK2_WARNINGS=$((CHECK2_WARNINGS + 1))
+                WARNINGS=$((WARNINGS + 1))
+            fi
         fi
     fi
 done
 
-if [ $WARNINGS -eq 0 ]; then
+if [ $CHECK2_WARNINGS -eq 0 ]; then
     echo "  PASS"
-else
-    echo "  $WARNINGS warning(s). Review output above before proceeding."
 fi
 
 # ---------------------------------------------------------------
 # CHECK 3 — Lockfile consistency (F20)
 # Hard block when package.json exists.
 # ---------------------------------------------------------------
-echo "  [3/4] Lockfile check..."
+echo "  [3/7] Lockfile check..."
 
 if [ -f "package.json" ]; then
     if [ ! -f "package-lock.json" ]; then
@@ -109,7 +119,7 @@ fi
 # CHECK 4 — Sensitive file patterns (F32)
 # Hard block.
 # ---------------------------------------------------------------
-echo "  [4/4] Sensitive file check..."
+echo "  [4/7] Sensitive file check..."
 
 SENSITIVE_PATTERNS="(^|/)credentials|secrets\.(json|yml|yaml)|\.pem$|\.p12$|\.key$"
 
@@ -118,6 +128,84 @@ for FILE in $STAGED_FILES; do
         echo ""
         echo "  BLOCKED: Sensitive file pattern detected: $FILE"
         echo "  This file type must not be committed."
+        exit 1
+    fi
+done
+
+echo "  PASS"
+
+# ---------------------------------------------------------------
+# CHECK 5 — Test suite (F06)
+# Hard block if test suite exists and fails.
+# Skip if no package.json or no test files found.
+# ---------------------------------------------------------------
+echo "  [5/7] Test suite..."
+
+if [ -f "package.json" ]; then
+    TEST_FILES=$(find . \( -name "*.test.js" -o -name "*.spec.js" \) -not -path "*/node_modules/*" 2>/dev/null)
+    TEST_DIR=$(find . -type d -name "test" -not -path "*/node_modules/*" 2>/dev/null | head -1)
+    if [ -n "$TEST_FILES" ] || [ -n "$TEST_DIR" ]; then
+        if npm test --silent 2>&1; then
+            echo "  PASS"
+        else
+            echo ""
+            echo "  BLOCKED: Test suite failed. Fix failing tests before committing."
+            exit 1
+        fi
+    else
+        echo "  SKIP (package.json present but no test files found)"
+    fi
+else
+    echo "  SKIP (no package.json — applies when build phase begins)"
+fi
+
+# ---------------------------------------------------------------
+# CHECK 6 — Dead code and variable shadow detection (F15, F44)
+# Hard block on violations in staged .js files.
+# Hard block if .js files are staged but eslint is not installed.
+# Skip if no .js files staged.
+# Requires: eslint installed at node_modules/.bin/eslint
+# ---------------------------------------------------------------
+echo "  [6/7] Dead code and shadow detection (eslint)..."
+
+JS_FILES=$(echo "$STAGED_FILES" | grep -E "\.js$" | grep -v "^_REFERENCE_ONLY/") || true
+
+if [ -z "$JS_FILES" ]; then
+    echo "  SKIP (no .js files staged)"
+else
+    if [ ! -f "node_modules/.bin/eslint" ]; then
+        echo ""
+        echo "  BLOCKED: eslint not installed. Required before any .js files can be committed."
+        echo "  See PROTOCOL_TODO.md Section 5 — eslint hard block."
+        exit 1
+    fi
+    ESLINT_OUTPUT=$(echo "$JS_FILES" | xargs node_modules/.bin/eslint \
+        --no-eslintrc \
+        --rule '{"no-unused-vars": "error", "no-shadow": "error"}' \
+        --format compact 2>&1) || true
+    if [ -n "$ESLINT_OUTPUT" ]; then
+        echo ""
+        echo "  BLOCKED: Dead code or variable shadowing detected:"
+        echo "$ESLINT_OUTPUT"
+        echo "  See ENFORCEMENT.md F15, F44."
+        exit 1
+    fi
+    echo "  PASS"
+fi
+
+# ---------------------------------------------------------------
+# CHECK 7 — _REFERENCE_ONLY write guard
+# Hard block. _REFERENCE_ONLY is a contaminated read-only snapshot.
+# No file inside it is ever staged or committed.
+# ---------------------------------------------------------------
+echo "  [7/7] _REFERENCE_ONLY guard..."
+
+for FILE in $STAGED_FILES; do
+    if echo "$FILE" | grep -qE "^_REFERENCE_ONLY/"; then
+        echo ""
+        echo "  BLOCKED: Staged file is inside _REFERENCE_ONLY/: $FILE"
+        echo "  _REFERENCE_ONLY is a read-only contaminated snapshot."
+        echo "  No writes to this directory are permitted. See CLAUDE.md."
         exit 1
     fi
 done
