@@ -2961,3 +2961,101 @@ COMPLETED:
   - s01â€“s20 audit against Sage's canonical signal seed list â€” all clear
  ...
 ---
+
+---
+TIMESTAMP: 2026-04-04 11:11
+TYPE: HOOK_BASH
+COMMAND: grep "^| " "C:/Users/sasir/Desktop/Aelarian/Archives/DOCS/Systems/TAG VOCABULARY.md" | grep -E "s2[1-9]|s3[0-9]|s40" | awk '{print $2}' | sort | uniq -d
+---
+
+---
+TIMESTAMP: 2026-04-04 11:11
+TYPE: HOOK_BASH
+COMMAND: 
+# Get all s01-s20 tag IDs
+s0120=$(grep "^| " "C:/Users/sasir/Desktop/Aelarian/Archives/DOCS/Systems/TAG VOCABULARY.md" | grep -E "\| s(0[1-9]|1[0-9]|20) " | awk '{print $2}')
+# Get all s21-s40 tag IDs
+s2140=$(grep "^| " "C:/Users/sasir/Desktop/Aelarian/Archives/DOCS/Systems/TAG VOCABULARY.md" | gre...
+---
+
+---
+TIMESTAMP: 2026-04-04 11:13
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DOCS\Systems\TAG VOCABULARY.md
+---
+
+---
+TIMESTAMP: 2026-04-04 (session 2 — audit close)
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DOCS/Systems/TAG VOCABULARY.md — COMPLETE
+COMPLETED:
+  - Full content audit s21–s40: all tag IDs verified against seed sciences,
+    all layer assignments verified correct, no cross-axis duplicates found
+  - s25 phase_field_modulation: corrected l02 → l01
+    Reasoning: Micro-Glide Phase Modulation is l01 science; concept is
+    intra-field structural modulation, not inter-field coupling
+  - s25 now all l01 — consistent with seed domain
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - NODE_REGISTRY (62 nodes) — next session
+  - ARC_SEED_TAGS ordered list — next session
+  - SOT_BUILD_TODO Items 2–5 — next session
+UNCOMMITTED: YES
+NEXT_ACTION: Commit, push, close session.
+---
+
+---
+TIMESTAMP: 2026-04-04 11:13
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:/Users/sasir/Desktop/Aelarian/Archives/PROTOCOL/SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-04 (session 2 â€” audit close)
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DOCS/Systems/TAG VOCABULARY.md â€” COMPLETE
+COMPLETED:
+  - Full content audit s21â€“s40: all tag IDs verified against seed sci...
+---
+
+---
+TIMESTAMP: 2026-04-04 (session 2 — final close)
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DOCS/Systems/TAG VOCABULARY.md — COMPLETE
+      Full s01–s40 content audit complete · s25 layer correction applied
+      All 40 seeds: 8 tags each, correct layer assignments, no duplicates
+  - PROTOCOL/SESSION_LOG.md — COMPLETE (this file)
+COMPLETED:
+  - s01–s20 content audit: all tags verified against canonical signal seed list
+  - s21–s40 content audit: all tags verified against sciences, layer assignments correct
+  - s25 phase_field_modulation: l02 → l01 (Sage confirmed)
+  - Tag count: all 40 seeds at exactly 8 tags — verified
+  - Cross-axis duplicate scan: none found — signal and analytical vocabularies fully distinct
+  - TAG VOCABULARY.md: complete, clean, audited end to end
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - NODE_REGISTRY (62 nodes: 40 seeds + 4 layers + 12 thresholds + 3 pillars + 3 origins)
+  - ARC_SEED_TAGS ordered list (s01–s40 in order)
+  - SOT_BUILD_TODO Items 2–5
+UNCOMMITTED: NO (committed this close)
+NEXT_ACTION: Next session — NODE_REGISTRY. All tag vocabulary work is complete.
+  SOT_BUILD_TODO Item 1 closes after NODE_REGISTRY and ARC_SEED_TAGS.
+---
+
+---
+TIMESTAMP: 2026-04-04 11:13
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:/Users/sasir/Desktop/Aelarian/Archives/PROTOCOL/SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-04 (session 2 â€” final close)
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DOCS/Systems/TAG VOCABULARY.md â€” COMPLETE
+      Full s01â€“s40 content audit complete Â· s25 layer correction applied
+      All ...
+---

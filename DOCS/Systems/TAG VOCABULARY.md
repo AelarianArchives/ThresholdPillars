@@ -472,7 +472,7 @@ Sciences: Metric Fields · Mirror Fields · Oscillation Fields · Micro-Glide Ph
 | subharmonic_field_analysis  | s25     | l01      | th06          | p02       |
 | field_geometry_mapping      | s25     | l01      | th04          | p01       |
 | metric_distortion_analysis  | s25     | l01      | th01          | p01       |
-| phase_field_modulation      | s25     | l02      | th04          | p01       |
+| phase_field_modulation      | s25     | l01      | th04          | p01       |
 
 ---
 
