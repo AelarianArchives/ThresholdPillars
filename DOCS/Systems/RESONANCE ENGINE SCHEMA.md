@@ -6,11 +6,11 @@ OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━�
 
 
 
-OWNS Visual field rendering — live node physics simulation Node position calculation and animation loop Resonance line drawing between nodes with active shared tag history Tagger sync — receiving weight updates on tag deposit Pulse animation on tag deposit Threshold halo rendering Its own canvas element exclusively
+OWNS Visual field rendering — live node physics simulation Node position calculation and animation loop Resonance line drawing between nodes with active shared tag history Tagger sync — receiving weight updates on tag deposit Pulse animation on tag deposit Threshold halo rendering Its own `<canvas>` element within the ResonanceCanvas Svelte component
 
 
 
-DOES NOT OWN Tag routing decisions — owned by tagger.js IDB reads or writes — owned by data.js Entry data or schema — owned by schema.js and data.js bg-canvas — the background canvas. Does not belong to this system. Any second background canvas Node content or tag vocabulary — owned by tags-vocab.js
+DOES NOT OWN Tag routing decisions — owned by tagger store (Svelte) backed by FastAPI `/tagger/` endpoint Database reads or writes — owned by FastAPI service layer (PostgreSQL via API) Entry data or schema — owned by FastAPI models and service layer Background rendering — if a background visual component exists, it is a separate Svelte component. Does not belong to this system Node content or tag vocabulary — owned by TAG VOCABULARY.md / backend tag vocabulary model
 
 
 
@@ -18,15 +18,15 @@ CANVAS RULES — NON-NEGOTIABLE ━━━━━━━━━━━━━━━━
 
 
 
-1\. Resonance Engine renders to its own dedicated canvas element only. Not bg-canvas.
+1\. Resonance Engine renders to its own dedicated `<canvas>` element inside the ResonanceCanvas Svelte component. This element is not shared with any other rendering system.
 
 
 
-2\. The background canvas has a dedicated owner. Any background work goes there. A second background system produces screen-blend accumulation and void wash.
+2\. If a background visual component exists, it is a separate Svelte component with its own element. Adding a second rendering target to this component produces screen-blend accumulation and void wash.
 
 
 
-3\. Resonance Engine canvas sits above bg-canvas in z-order, below UI panels.
+3\. ResonanceCanvas component is layered via CSS z-index: above background elements, below UI panels.
 
 
 
@@ -34,7 +34,7 @@ CANVAS RULES — NON-NEGOTIABLE ━━━━━━━━━━━━━━━━
 
 
 
-Canvas element ID and z-order: PLANNED — defined in index.html DOM at Phase 11\\.
+ResonanceCanvas component CSS z-index positioning: PLANNED — defined relative to other UI layers.
 
 
 
@@ -50,7 +50,7 @@ Total nodes: 62 (fixed — count never changes)
 
 
 
-┌─────────────────────────────────────────────────────────┐ │ TIER 2 — THRESHOLD NODES (gravity nodes) count: 12 │ ├──────┬──────────┬──────────┬────────────────────────────┤ │ ID │ Name │ Mobility │ Notes │ ├──────┼──────────┼──────────┼────────────────────────────┤ │ th01 │ — │ STATIC │ │ │ th02 │ — │ STATIC │ │ │ th03 │ — │ STATIC │ │ │ th04 │ — │ STATIC │ │ │ th05 │ — │ STATIC │ │ │ th06 │ — │ STATIC │ │ │ th07 │ — │ STATIC │ │ │ th08 │ — │ STATIC │ │ │ th09 │ — │ STATIC │ │ │ th10 │ — │ STATIC │ │ │ th11 │ — │ STATIC │ │ │ th12 │ — │ STATIC │ │ └──────┴──────────┴──────────┴────────────────────────────┘ Threshold names are defined in tags-vocab.js.
+┌─────────────────────────────────────────────────────────┐ │ TIER 2 — THRESHOLD NODES (gravity nodes) count: 12 │ ├──────┬──────────┬──────────┬────────────────────────────┤ │ ID │ Name │ Mobility │ Notes │ ├──────┼──────────┼──────────┼────────────────────────────┤ │ th01 │ — │ STATIC │ │ │ th02 │ — │ STATIC │ │ │ th03 │ — │ STATIC │ │ │ th04 │ — │ STATIC │ │ │ th05 │ — │ STATIC │ │ │ th06 │ — │ STATIC │ │ │ th07 │ — │ STATIC │ │ │ th08 │ — │ STATIC │ │ │ th09 │ — │ STATIC │ │ │ th10 │ — │ STATIC │ │ │ th11 │ — │ STATIC │ │ │ th12 │ — │ STATIC │ │ └──────┴──────────┴──────────┴────────────────────────────┘ Threshold names are defined in TAG VOCABULARY.md / backend tag vocabulary model.
 
 
 
@@ -62,7 +62,7 @@ Total nodes: 62 (fixed — count never changes)
 
 
 
-┌─────────────────────────────────────────────────────────┐ │ TIER 5 — SEED NODES (cluster nodes) count: 40 │ ├──────┬──────────┬──────────┬────────────────────────────┤ │ ID │ Name │ Mobility │ Notes │ ├──────┼──────────┼──────────┼────────────────────────────┤ │ s01 │ — │ mobile │ all 40 visible at all times│ │ s02 │ — │ mobile │ │ │ s03 │ — │ mobile │ │ │ s04 │ — │ mobile │ │ │ s05 │ — │ mobile │ │ │ s06 │ — │ mobile │ │ │ s07 │ — │ mobile │ │ │ s08 │ — │ mobile │ │ │ s09 │ — │ mobile │ │ │ s10 │ — │ mobile │ │ │ s11 │ — │ mobile │ │ │ s12 │ — │ mobile │ │ │ s13 │ — │ mobile │ │ │ s14 │ — │ mobile │ │ │ s15 │ — │ mobile │ │ │ s16 │ — │ mobile │ │ │ s17 │ — │ mobile │ │ │ s18 │ — │ mobile │ │ │ s19 │ — │ mobile │ │ │ s20 │ — │ mobile │ │ │ s21 │ — │ mobile │ │ │ s22 │ — │ mobile │ │ │ s23 │ — │ mobile │ │ │ s24 │ — │ mobile │ │ │ s25 │ — │ mobile │ │ │ s26 │ — │ mobile │ │ │ s27 │ — │ mobile │ │ │ s28 │ — │ mobile │ │ │ s29 │ — │ mobile │ │ │ s30 │ — │ mobile │ │ │ s31 │ — │ mobile │ │ │ s32 │ — │ mobile │ │ │ s33 │ — │ mobile │ │ │ s34 │ — │ mobile │ │ │ s35 │ — │ mobile │ │ │ s36 │ — │ mobile │ │ │ s37 │ — │ mobile │ │ │ s38 │ — │ mobile │ │ │ s39 │ — │ mobile │ │ │ s40 │ — │ mobile │ │ └──────┴──────────┴──────────┴────────────────────────────┘ Seed names defined in tags-vocab.js.
+┌─────────────────────────────────────────────────────────┐ │ TIER 5 — SEED NODES (cluster nodes) count: 40 │ ├──────┬──────────┬──────────┬────────────────────────────┤ │ ID │ Name │ Mobility │ Notes │ ├──────┼──────────┼──────────┼────────────────────────────┤ │ s01 │ — │ mobile │ all 40 visible at all times│ │ s02 │ — │ mobile │ │ │ s03 │ — │ mobile │ │ │ s04 │ — │ mobile │ │ │ s05 │ — │ mobile │ │ │ s06 │ — │ mobile │ │ │ s07 │ — │ mobile │ │ │ s08 │ — │ mobile │ │ │ s09 │ — │ mobile │ │ │ s10 │ — │ mobile │ │ │ s11 │ — │ mobile │ │ │ s12 │ — │ mobile │ │ │ s13 │ — │ mobile │ │ │ s14 │ — │ mobile │ │ │ s15 │ — │ mobile │ │ │ s16 │ — │ mobile │ │ │ s17 │ — │ mobile │ │ │ s18 │ — │ mobile │ │ │ s19 │ — │ mobile │ │ │ s20 │ — │ mobile │ │ │ s21 │ — │ mobile │ │ │ s22 │ — │ mobile │ │ │ s23 │ — │ mobile │ │ │ s24 │ — │ mobile │ │ │ s25 │ — │ mobile │ │ │ s26 │ — │ mobile │ │ │ s27 │ — │ mobile │ │ │ s28 │ — │ mobile │ │ │ s29 │ — │ mobile │ │ │ s30 │ — │ mobile │ │ │ s31 │ — │ mobile │ │ │ s32 │ — │ mobile │ │ │ s33 │ — │ mobile │ │ │ s34 │ — │ mobile │ │ │ s35 │ — │ mobile │ │ │ s36 │ — │ mobile │ │ │ s37 │ — │ mobile │ │ │ s38 │ — │ mobile │ │ │ s39 │ — │ mobile │ │ │ s40 │ — │ mobile │ │ └──────┴──────────┴──────────┴────────────────────────────┘ Seed names defined in TAG VOCABULARY.md / backend tag vocabulary model.
 
 
 
@@ -250,11 +250,11 @@ PAYLOAD STRUCTURE ━━━━━━━━━━━━━━━━━ On every c
 
 
 
-SYNC TRIGGER SEQUENCE ━━━━━━━━━━━━━━━━━━━━━ Steps 1–8 belong to the tagger commit handler. Resonance Engine owns steps 9–12. 1\\. Tag deposit confirmed in commit handler 2\\. capturedTags extracted from result 3\\. Entry fields built into payload 4\\. originId set on payload 5\\. createEntry() confirms success 6\\. TaggerBus.clearResult() called 7\\. _emgNotify(capturedTags) called 8\\. Commit handler dispatches 'ae:tagCommit' CustomEvent with deposit payload. Resonance Engine listener registered at init receives it. No direct reference between tagger and engine at runtime. 9\\. Affected node weights recalculated 10\\. Field position recalculation queued for next animation frame 11\\. Pulse animation triggered on affected nodes 12\\. Resonance lines re-evaluated for new or updated connections
+SYNC TRIGGER SEQUENCE ━━━━━━━━━━━━━━━━━━━━━ The tagger store (Svelte) is the source of tag deposit events. The ResonanceCanvas component subscribes to the tagger store and reacts when new deposits arrive. 1\\. Tagger store updates with confirmed tag deposit 2\\. ResonanceCanvas component's store subscription fires reactively 3\\. Affected node weights recalculated 4\\. Field position recalculation queued for next animation frame 5\\. Pulse animation triggered on affected nodes 6\\. Resonance lines re-evaluated for new or updated connections
 
 
 
-SYNC RULES ━━━━━━━━━━ — Weight updates do not block the UI thread. Queued and processed on animation frame. — Resonance Engine does not call TaggerBus directly. It receives. It does not pull. — Resonance Engine does not write to IDB. Weight state is derived at runtime from entry data.
+SYNC RULES ━━━━━━━━━━ — Weight updates do not block the UI thread. Queued and processed on animation frame. — Resonance Engine does not call tagger service directly. It subscribes to the tagger store reactively. It receives. It does not pull. — Resonance Engine does not write to the database. Weight state is derived at runtime from entry data fetched via API.
 
 
 
@@ -262,7 +262,7 @@ SYNC RULES ━━━━━━━━━━ — Weight updates do not block the UI
 
 
 
-— Runs continuously while archive is open. — Frame sequence (strict order): 1\\. Recalculate forces 2\\. Update node positions 3\\. Redraw nodes 4\\. Redraw halos 5\\. Redraw resonance lines (last — most expensive) — Frame rate target: 60fps. Degrade gracefully if performance requires. — Physics simulation is damped. Nodes settle into equilibrium rather than oscillating indefinitely. — DAMPING\\\_CONSTANT: PLANNED — calibration variable.
+— Runs continuously while ResonanceCanvas component is mounted. Uses requestAnimationFrame, managed by component lifecycle (onMount starts, onDestroy stops). — Frame sequence (strict order): 1\\. Recalculate forces 2\\. Update node positions 3\\. Redraw nodes 4\\. Redraw halos 5\\. Redraw resonance lines (last — most expensive) — Frame rate target: 60fps. Degrade gracefully if performance requires. — Physics simulation is damped. Nodes settle into equilibrium rather than oscillating indefinitely. — DAMPING\\\_CONSTANT: PLANNED — calibration variable.
 
 
 
@@ -270,7 +270,7 @@ SYNC RULES ━━━━━━━━━━ — Weight updates do not block the UI
 
 
 
-1\. CANVAS CONFLICT WITH bg-canvas Resonance Engine canvas must be a separate element. Any attempt to render to bg-canvas destroys the background and produces void wash. Guard: Resonance Engine canvas element is assigned a unique DOM id distinct from bg-canvas at DOM definition in index.html. No rendering call in resonance\_engine.js references bg-canvas by id or selector. Canvas reference is captured once at init and never reassigned.
+1\. CANVAS CONFLICT WITH OTHER RENDERING COMPONENTS ResonanceCanvas must render to its own `<canvas>` element only. Any attempt to share a canvas with another rendering system (e.g. a background visual component) destroys the background and produces void wash. Guard: component owns its canvas element via Svelte `bind:this` — no external reference sharing. Canvas reference is captured once at onMount and never reassigned.
 
 
 
@@ -300,19 +300,15 @@ BASE\\\_WEIGHT\\\_ORIGIN — heaviest tier base value BASE\\\_WEIGHT\\\_THRESHOL
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ PUBLIC API ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ResonanceEngine.init() → void
-Captures the canvas element reference. Registers the ae:tagCommit event listener.
-Starts the animation loop. Called once at archive load. The engine runs continuously
-from this point — no further external calls required. All subsequent updates arrive
-via ae:tagCommit events.
+No external public API. The ResonanceCanvas Svelte component manages its own
+lifecycle. Initialization runs automatically on component mount (onMount):
+acquires canvas reference via bind:this, initializes node registry with base
+weights, subscribes to tagger store, and starts the animation loop. Cleanup
+runs on component destroy (onDestroy). No external init call required.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ FILES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 
-resonance\\\_engine.js Physics simulation, node registry, animation loop, tagger sync. Status: PLANNED
-
-
-
-Canvas element Dedicated canvas in index.html. Status: PLANNED
+frontend/src/lib/components/ResonanceCanvas.svelte — Svelte component: physics simulation, node registry, animation loop, tagger store subscription, owns `<canvas>` element. Status: PLANNED
 

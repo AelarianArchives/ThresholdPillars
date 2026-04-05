@@ -91,28 +91,29 @@ fi
 
 # ---------------------------------------------------------------
 # CHECK 3 — Lockfile consistency (F20)
-# Hard block when package.json exists.
+# Hard block when frontend/package.json exists.
+# Monorepo-aware: lockfile lives in frontend/, not project root.
 # ---------------------------------------------------------------
 echo "  [3/7] Lockfile check..."
 
-if [ -f "package.json" ]; then
-    if [ ! -f "package-lock.json" ]; then
+if [ -f "frontend/package.json" ]; then
+    if [ ! -f "frontend/package-lock.json" ]; then
         echo ""
-        echo "  BLOCKED: package.json present but package-lock.json is missing."
-        echo "  Run: npm ci (never npm install)"
+        echo "  BLOCKED: frontend/package.json present but frontend/package-lock.json is missing."
+        echo "  Run: cd frontend && npm ci (never npm install)"
         exit 1
     fi
-    if echo "$STAGED_FILES" | grep -q "package.json"; then
-        if ! echo "$STAGED_FILES" | grep -q "package-lock.json"; then
+    if echo "$STAGED_FILES" | grep -q "^frontend/package.json$"; then
+        if ! echo "$STAGED_FILES" | grep -q "^frontend/package-lock.json$"; then
             echo ""
-            echo "  BLOCKED: package.json staged without package-lock.json."
+            echo "  BLOCKED: frontend/package.json staged without frontend/package-lock.json."
             echo "  Both must be committed together."
             exit 1
         fi
     fi
     echo "  PASS"
 else
-    echo "  SKIP (no package.json — applies when build introduces npm dependencies)"
+    echo "  SKIP (no frontend/package.json — applies when frontend exists)"
 fi
 
 # ---------------------------------------------------------------
@@ -137,15 +138,14 @@ echo "  PASS"
 # ---------------------------------------------------------------
 # CHECK 5 — Test suite (F06)
 # Hard block if test suite exists and fails.
-# Skip if no package.json or no test files found.
+# Monorepo-aware: tests live in frontend/src/, run from frontend/.
 # ---------------------------------------------------------------
 echo "  [5/7] Test suite..."
 
-if [ -f "package.json" ]; then
-    TEST_FILES=$(find . \( -name "*.test.js" -o -name "*.spec.js" \) -not -path "*/node_modules/*" 2>/dev/null)
-    TEST_DIR=$(find . -type d -name "test" -not -path "*/node_modules/*" 2>/dev/null | head -1)
-    if [ -n "$TEST_FILES" ] || [ -n "$TEST_DIR" ]; then
-        if npm test --silent 2>&1; then
+if [ -f "frontend/package.json" ]; then
+    TEST_FILES=$(find frontend/src \( -name "*.test.ts" -o -name "*.test.js" -o -name "*.spec.ts" -o -name "*.spec.js" \) 2>/dev/null)
+    if [ -n "$TEST_FILES" ]; then
+        if (cd frontend && npm test --silent 2>&1); then
             echo "  PASS"
         else
             echo ""
@@ -153,43 +153,79 @@ if [ -f "package.json" ]; then
             exit 1
         fi
     else
-        echo "  SKIP (package.json present but no test files found)"
+        echo "  SKIP (frontend exists but no test files found)"
     fi
 else
-    echo "  SKIP (no package.json — applies when build phase begins)"
+    echo "  SKIP (no frontend/package.json — applies when frontend exists)"
 fi
 
 # ---------------------------------------------------------------
 # CHECK 6 — Dead code and variable shadow detection (F15, F44)
-# Hard block on violations in staged .js files.
-# Hard block if .js files are staged but eslint is not installed.
-# Skip if no .js files staged.
-# Requires: eslint installed at node_modules/.bin/eslint
+# Monorepo-aware: frontend files (.js, .ts, .svelte) use frontend ESLint.
+# Non-frontend .js files use root ESLint (if installed).
+# Skips core/ (reference-only) and hooks/ (shell scripts).
 # ---------------------------------------------------------------
 echo "  [6/7] Dead code and shadow detection (eslint)..."
 
-JS_FILES=$(echo "$STAGED_FILES" | grep -E "\.js$" | grep -v "^_REFERENCE_ONLY/") || true
+FRONTEND_LINT_FILES=$(echo "$STAGED_FILES" | grep -E "^frontend/.*\.(js|ts|svelte)$") || true
+OTHER_JS_FILES=$(echo "$STAGED_FILES" | grep -E "\.js$" | grep -v "^frontend/" | grep -v "^_REFERENCE_ONLY/" | grep -v "^core/" | grep -v "^hooks/") || true
 
-if [ -z "$JS_FILES" ]; then
-    echo "  SKIP (no .js files staged)"
-else
-    if [ ! -f "node_modules/.bin/eslint" ]; then
+LINT_RAN=0
+
+if [ -n "$FRONTEND_LINT_FILES" ]; then
+    if [ ! -f "frontend/node_modules/.bin/eslint" ]; then
         echo ""
-        echo "  BLOCKED: eslint not installed. Required before any .js files can be committed."
-        echo "  See PROTOCOL_TODO.md Section 5 — eslint hard block."
+        echo "  BLOCKED: eslint not installed in frontend/. Required before frontend files can be committed."
+        echo "  Run: cd frontend && npm ci"
         exit 1
     fi
-    ESLINT_OUTPUT=$(echo "$JS_FILES" | xargs node_modules/.bin/eslint \
+    RELATIVE_FILES=$(echo "$FRONTEND_LINT_FILES" | sed 's|^frontend/||')
+    ESLINT_EXIT=0
+    ESLINT_OUTPUT=$(cd frontend && echo "$RELATIVE_FILES" | xargs node_modules/.bin/eslint 2>&1) || ESLINT_EXIT=$?
+    if [ $ESLINT_EXIT -eq 1 ]; then
+        echo ""
+        echo "  BLOCKED: ESLint errors in frontend files:"
+        echo "$ESLINT_OUTPUT"
+        echo "  See ENFORCEMENT.md F15, F44."
+        exit 1
+    elif [ $ESLINT_EXIT -eq 2 ]; then
+        echo ""
+        echo "  BLOCKED: ESLint configuration error:"
+        echo "$ESLINT_OUTPUT"
+        exit 1
+    fi
+    LINT_RAN=1
+fi
+
+if [ -n "$OTHER_JS_FILES" ]; then
+    if [ ! -f "node_modules/.bin/eslint" ]; then
+        echo ""
+        echo "  BLOCKED: eslint not installed at project root. Required before .js files outside frontend/ can be committed."
+        exit 1
+    fi
+    ESLINT_EXIT=0
+    ESLINT_OUTPUT=$(echo "$OTHER_JS_FILES" | xargs node_modules/.bin/eslint \
         --no-eslintrc \
         --rule '{"no-unused-vars": "error", "no-shadow": "error"}' \
-        --format compact 2>&1) || true
-    if [ -n "$ESLINT_OUTPUT" ]; then
+        2>&1) || ESLINT_EXIT=$?
+    if [ $ESLINT_EXIT -eq 1 ]; then
         echo ""
         echo "  BLOCKED: Dead code or variable shadowing detected:"
         echo "$ESLINT_OUTPUT"
         echo "  See ENFORCEMENT.md F15, F44."
         exit 1
+    elif [ $ESLINT_EXIT -eq 2 ]; then
+        echo ""
+        echo "  BLOCKED: ESLint configuration error:"
+        echo "$ESLINT_OUTPUT"
+        exit 1
     fi
+    LINT_RAN=1
+fi
+
+if [ $LINT_RAN -eq 0 ]; then
+    echo "  SKIP (no lintable files staged)"
+else
     echo "  PASS"
 fi
 

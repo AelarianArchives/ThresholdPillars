@@ -98,10 +98,17 @@ Only launch components are implemented. This means:
 | THREAD TRACE SCHEMA.md        | Thread storage PG, filter queries via FastAPI   | 7     |
 | COMPOSITE ID SCHEMA.md        | Sequence counter in backend DB, no IDB counter  | 7     |
 | RESONANCE ENGINE SCHEMA.md    | Canvas -> Svelte component, data via API        | 6     |
+| resonance_engine_system.md    | Sync with RESONANCE ENGINE SCHEMA, remove old   | 6     |
+|                               | refs (CustomEvent, index.html, canvas)          |       |
+| SYSTEM_ Thread Trace.md       | Sync with THREAD TRACE SCHEMA, remove old refs  | 7     |
+|                               | (TaggerBus, data.js, IDB)                       |       |
+| SYSTEM_ Composite ID.md       | Sync with COMPOSITE ID SCHEMA, remove old refs  | 7     |
+|                               | (IDB, data.js, schema.js, ts_sequence)          |       |
 
-Note: The 2 renamed files also receive updates post-rename. The "7 updates"
-count refers to the 7 files listed above (2 post-rename + 5 others). The
+Note: The 2 renamed files also receive updates post-rename. The "10 updates"
+count refers to the 10 files listed above (2 post-rename + 8 others). The
 rename operation and the content update happen in the same stage.
+3 updates added from session 9 Category A integrity scan findings.
 
 ### New Files (5)
 | File                          | What It Defines                                 | Stage |
@@ -123,7 +130,7 @@ rename operation and the content update happen in the same stage.
 |                               | autonomous initiation rules, turn management,   |       |
 |                               | multi-presence session handling                  |       |
 
-Total: 2 renames + 7 updates + 5 new files = 14 DOCS operations
+Total: 2 renames + 10 updates + 5 new files = 17 DOCS operations
 
 ---
 
@@ -411,6 +418,10 @@ Confirm: dev server starts, page loads at localhost (default port 5173).
 2. Update `RESONANCE ENGINE SCHEMA.md` — canvas rendering becomes Svelte
    component (ResonanceCanvas), physics simulation data fetched via API,
    node positions managed in Svelte store, no vanilla JS animation loop
+3. Update `resonance_engine_system.md` — sync with RESONANCE ENGINE SCHEMA
+   updates. Remove 7 old refs (CustomEvent, index.html, canvas refs).
+   Replace with Svelte component architecture, API data layer.
+   (Category A from session 9 integrity scan)
 
 ### Commit
 ```
@@ -479,6 +490,14 @@ API key stored in `backend/.env` (gitignored).
 3. Update `COMPOSITE ID SCHEMA.md` — sequence counter moves to backend
    (PostgreSQL or SQLite), no IDB ts_sequence store, stamp assembly in
    FastAPI service layer
+4. Update `SYSTEM_ Thread Trace.md` — sync with THREAD TRACE SCHEMA
+   updates. Remove 29 old refs (TaggerBus, data.js, IDB). Replace with
+   FastAPI service layer, Svelte stores, PostgreSQL.
+   (Category A from session 9 integrity scan)
+5. Update `SYSTEM_ Composite ID.md` — sync with COMPOSITE ID SCHEMA
+   updates. Remove 18 old refs (IDB, data.js, schema.js, ts_sequence).
+   Replace with FastAPI service layer, backend sequence counter.
+   (Category A from session 9 integrity scan)
 
 ### Commit
 ```

@@ -14,25 +14,24 @@
 * Tagger sync — receiving weight updates when tags are deposited  
 * Pulse animation on tag deposit  
 * Threshold halo rendering  
-* Its own canvas element exclusively
+* Its own `<canvas>` element within the ResonanceCanvas Svelte component
 
 ## **WHAT THIS SYSTEM DOES NOT OWN**
 
-* Tag routing decisions — owned by tagger.js  
-* IDB reads or writes — owned by data.js  
-* Entry data or schema — owned by schema.js and data.js  
-* bg-canvas — the background canvas. Does not belong to this system.  
-* Any second background canvas. One background system exists. This is not it.  
-* Node content or tag vocabulary — owned by tags-vocab.js
+* Tag routing decisions — owned by tagger store (Svelte) backed by FastAPI `/tagger/` endpoint  
+* Database reads or writes — owned by FastAPI service layer (PostgreSQL via API)  
+* Entry data or schema — owned by FastAPI models and service layer  
+* Background rendering — if a background visual component exists, it is a separate Svelte component. Does not belong to this system.  
+* Node content or tag vocabulary — owned by TAG VOCABULARY.md / backend tag vocabulary model
 
 ---
 
 ## **CANVAS RULES — NON-NEGOTIABLE**
 
-* Resonance Engine renders to its own dedicated canvas element. This element is not bg-canvas.  
-* The background canvas has a dedicated owner. Any background work goes there. Adding a second background system produces screen-blend accumulation and void wash.  
-* Resonance Engine canvas sits above bg-canvas in z-order, below UI panels.  
-* Squiggle/resonance line rendering is contained entirely within the Resonance Engine canvas. It does not bleed into other rendering contexts.
+* Resonance Engine renders to its own dedicated `<canvas>` element inside the ResonanceCanvas Svelte component. This element is not shared with any other rendering system.  
+* If a background visual component exists, it is a separate Svelte component with its own element. Adding a second rendering target to this component produces screen-blend accumulation and void wash.  
+* ResonanceCanvas component is layered via CSS z-index: above background elements, below UI panels.  
+* Squiggle/resonance line rendering is contained entirely within the ResonanceCanvas component's canvas. It does not bleed into other rendering contexts.
 
 ---
 
@@ -231,23 +230,25 @@ On every confirmed tag deposit, Resonance Engine receives:
 
 ### **Sync Trigger Sequence**
 
-The Resonance Engine owns steps 9–12 of the full tagger sync sequence. Steps 1–8
-belong to the tagger commit handler. The engine's sequence begins at event receipt.
+The Resonance Engine owns the reactive update sequence. The tagger store (Svelte)
+is the source of tag deposit events. The ResonanceCanvas component subscribes to
+the tagger store and reacts when new deposits arrive.
 
-1. `ae:tagCommit` CustomEvent received on document listener.  
+1. Tagger store updates with confirmed tag deposit.  
    Payload: `{ tags, phase_state, originId, timestamp }`.  
-2. Affected node weights recalculated. For each tag: seed\_id, layer\_id,  
+2. ResonanceCanvas component's store subscription fires reactively.  
+3. Affected node weights recalculated. For each tag: seed\_id, layer\_id,  
    threshold\_id, and pillar\_id node weights updated per activity score formula.  
-3. If originId present: matching origin node weight updated.  
-4. Physics recalculation queued for next animation frame. Does not block UI thread.  
-5. Pulse animation triggered on all affected nodes.  
-6. Resonance lines re-evaluated for new or updated connections.
+4. If originId present: matching origin node weight updated.  
+5. Physics recalculation queued for next animation frame. Does not block UI thread.  
+6. Pulse animation triggered on all affected nodes.  
+7. Resonance lines re-evaluated for new or updated connections.
 
 ### **Sync Rules**
 
 * Weight updates do not block the UI thread — queued and processed on animation frame  
-* Resonance Engine does not call TaggerBus directly — it receives, it does not pull  
-* Resonance Engine does not write to IDB — weight state is derived at runtime from entry data
+* Resonance Engine does not call tagger service directly — it subscribes to the tagger store reactively. It receives, it does not pull  
+* Resonance Engine does not write to the database — weight state is derived at runtime from entry data fetched via API
 
 ---
 
@@ -265,22 +266,22 @@ belong to the tagger commit handler. The engine's sequence begins at event recei
 
 ### **INITIALIZATION SEQUENCE — strict order**
 
-1. `ResonanceEngine.init()` called once at app init after DOM is ready.
-2. Canvas element located in DOM. Canvas context acquired. Canvas sized to viewport.
+1. ResonanceCanvas Svelte component mounts (`onMount` lifecycle).
+2. `<canvas>` element reference acquired via Svelte `bind:this`. Canvas context acquired. Canvas sized to viewport.
 3. Node registry initialized — all 5 tiers built with base weight values.
-4. `ae:tagCommit` event listener registered on document.
-5. Animation loop started. Runs continuously while archive is open.
+4. Tagger store subscription established (Svelte reactive subscription).
+5. Animation loop started via `requestAnimationFrame`. Runs continuously while component is mounted.
+6. On component destroy (`onDestroy`): animation loop stopped, store subscription released.
 
-Failure at step 2 (canvas element not found): engine cannot initialize. Guard:
-  canvas element ID must be present in DOM at init time. Never call init() before
-  DOM ready.
-Failure at step 4 (listener not registered): engine never receives tag deposit
-  events. Weight updates never arrive. Guard: listener registered inside init() —
-  no external call required after init.
+Failure at step 2 (canvas element not available): component cannot initialize rendering. Guard:
+  `bind:this` guarantees element availability at `onMount` — no timing risk.
+Failure at step 4 (store subscription fails): engine never receives tag deposit
+  events. Weight updates never arrive. Guard: subscription established inside
+  `onMount` — no external call required.
 
-### **TAG DEPOSIT SYNC SEQUENCE — fires on ae:tagCommit event receipt**
+### **TAG DEPOSIT SYNC SEQUENCE — fires on tagger store update**
 
-1. `ae:tagCommit` CustomEvent received. Payload extracted:
+1. Tagger store update received reactively. Payload extracted:
    `{ tags, phase_state, originId, timestamp }`.
 2. For each tag: validate seed\_id, layer\_id, threshold\_id, and pillar\_id present.
    Skip tags with incomplete routing chain — they cannot update nodes.
@@ -301,17 +302,17 @@ Failure at step 5 (animation frame unavailable): physics update deferred to next
 
 ## **PUBLIC API**
 
-**ResonanceEngine.init() → void**
-Called once at app init after DOM is ready. Locates canvas element, acquires
-context, initializes node registry with base weights, registers `ae:tagCommit`
-event listener on document, and starts the animation loop. Never called more
-than once.
+**No external public API.** The ResonanceCanvas Svelte component manages its own
+lifecycle. Initialization runs automatically on component mount (`onMount`):
+acquires canvas reference via `bind:this`, initializes node registry with base
+weights, subscribes to tagger store, and starts the animation loop. Cleanup
+runs on component destroy (`onDestroy`). No external init call required.
 
 ---
 
 ## **KNOWN FAILURE MODES**
 
-1. **Canvas conflict with bg-canvas** — Resonance Engine canvas must be a separate element. Any attempt to render to bg-canvas destroys the background and produces void wash. Guard against this at implementation.
+1. **Canvas conflict with other rendering components** — ResonanceCanvas must render to its own `<canvas>` element only. Any attempt to share a canvas with another rendering system (e.g. a background visual component) destroys the background and produces void wash. Guard: component owns its element via `bind:this` — no external reference sharing.
 
 2. **Squiggle rendering breaking other systems** — Squiggle drawing is expensive. If not contained to its own canvas and animation frame budget, it bleeds into UI rendering. Keep resonance line drawing as the last operation in each frame.
 
@@ -328,7 +329,7 @@ than once.
 * PLANNED: exact base weight values — determined at calibration session  
 * PLANNED: RADIUS\_SCALAR · PULL\_SCALAR · REPULSION\_CONSTANT · MIN\_NODE\_DISTANCE · DENSITY\_SCALAR · DAMPING\_CONSTANT — all calibration variables, values TBD  
 * PLANNED: squiggle rendering algorithm — amplitude, frequency, frame update method  
-* PLANNED: canvas element ID and z-order in index.html DOM
+* PLANNED: ResonanceCanvas component CSS z-index positioning relative to other UI layers
 
 ---
 
@@ -336,6 +337,5 @@ than once.
 
 | File | Role | Status |
 | ----- | ----- | ----- |
-| `resonance_engine.js` | Physics simulation, node registry, animation loop, tagger sync | PLANNED |
-| Canvas element | Dedicated canvas in index.html | PLANNED |
+| `frontend/src/lib/components/ResonanceCanvas.svelte` | Svelte component — physics simulation, node registry, animation loop, tagger store subscription, owns `<canvas>` element | PLANNED |
 
