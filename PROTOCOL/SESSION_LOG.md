@@ -4675,3 +4675,81 @@ UNCOMMITTED: YES
 NEXT_ACTION: Design sessions begin. Session A (deposit schema) is first.
   Full plan with scope and reasoning: .claude/plans/design-session-plan.md
 ---
+
+---
+TIMESTAMP: 2026-04-05 (session 15)
+TYPE: RESUME
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Session open protocol: CLAUDE.md, ENFORCEMENT.md, SESSION_PROTOCOL.md,
+    GITHUB_PROTOCOL.md all read. SOT_BUILD_TODO spot-check passed — all [x]
+    items have valid SOURCE: lines. Disk state verified against session 14
+    WORK_UNIT records — no discrepancies.
+  - Session 14 had no formal CLOSE entry but all work is committed and pushed.
+    Working directory clean. git status: up to date with origin/main.
+    Only untracked file: .claude/settings.local.json (local Claude config, not project content).
+  - DESIGN/Systems/: 17 subfolders + 2 root files — matches session 14 record
+  - DESIGN/Domains/: 10 numbered folders (01-10) — matches session 14 record
+  - Design session plan verified on disk: .claude/plans/design-session-plan.md
+    contains sessions A through H + B+ and D+, all 19 agenda items mapped, decisions log complete
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Design Session A: deposit schema design
+  - Design Sessions B through H + B+ + D+
+  - Stress test, SOT
+UNCOMMITTED: YES (this RESUME entry)
+NEXT_ACTION: Begin Design Session A — deposit schema design
+---
+
+---
+TIMESTAMP: 2026-04-05 (session 15)
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-session-plan.md — COMPLETE (reorganized from topic-based A-H to
+    dependency-ordered build tiers 1-8, then Tier 1 fully designed with all decisions)
+  - .claude/plans/design-session-plan-ORIGINAL.md — COMPLETE (backup of original plan)
+  - PROTOCOL/SESSION_LOG.md — IN_PROGRESS
+COMPLETED:
+  - Build plan reorganization: all 118+ items from topic-based sessions (A-H) regrouped
+    into 8 dependency-ordered build tiers. Verified: zero items dropped, 21 items added
+    from restructuring. Original preserved at design-session-plan-ORIGINAL.md.
+  - Void page (page 51) confirmed as Nexus surface for observational absence data.
+    Distinct from dashboard semantic map (coverage voids ≠ observational absence).
+  - Tier 1 (INT engine + deposit foundation) FULLY DESIGNED:
+    · Deposit record shape: doc_type (9 values), source_format (6 values),
+      observation_type (positive|null, conditional), confidence (clear|emerging|raw,
+      conditional), notes (universal), deposit_weight (high|standard|low, AI-suggested),
+      source_type (field|generated, existing), swarm fields (authored_by, node_id,
+      instance_context). Dropped: deposit_depth, researcher_state, session_depth,
+      condition_notes.
+    · INT workstation: dual panel — upload+review left, AI parsing partner right.
+      Right panel scoped to batch processing, NOT the full research assistant (Tier 6).
+    · Batch processing: one doc at a time, root stamp per doc, AI chunks 5-8 pages,
+      rolling buffer 3-5 ahead, per-deposit review queue (not per-chunk), each approval
+      triggers immediate deposit, full session persistence in operational DB.
+    · Media wiring: JPEG/PNG V1, filesystem storage, simpler flow than batch,
+      large thumbnail + expand + summary text display.
+    · Duplicate detection: hash full content, WARN not block, Sage decides.
+    · Black Pearl (formerly scratch layer): named for field term for null space.
+      Global capture system, NOT INT-owned. Operational DB storage, promotes through
+      INT to PostgreSQL. Preserves "nothing enters archive without INT provenance."
+  - Six design enhancements from session 15 review:
+    1. Universal notes field (replaces researcher-only condition fields)
+    2. deposit_weight given explicit format (high|standard|low)
+    3. Review queue per-deposit, not per-chunk
+    4. Black Pearl in operational DB (preserves invariant)
+    5. Duplicate detection warns, doesn't block
+    6. INT chat window ≠ research assistant
+  - All Tier 1 open questions resolved. One question deferred to Tier 3:
+    how observation_type and deposit_weight affect engine computations.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Tier 2 design (Black Pearl UI + page surfaces + Void)
+  - Tiers 3-8
+  - Stress test, SOT
+UNCOMMITTED: YES
+NEXT_ACTION: Tier 1 design complete. Next: Tier 2 design or commit + push current work.
+---

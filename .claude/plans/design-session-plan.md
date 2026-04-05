@@ -1,6 +1,7 @@
-# Design Session Plan
+# Design Build Plan
 # Aelarian Archives — Pre-SOT Design Sessions
-# Created: 2026-04-05 (session 14)
+# Reorganized: 2026-04-05 (session 15)
+# Original topic-based plan preserved at: design-session-plan-ORIGINAL.md
 # Status: ACTIVE — updated each session
 
 ---
@@ -8,8 +9,13 @@
 ## PURPOSE
 
 This document tracks all design decisions, open questions, and execution
-items across the pre-SOT design sessions. Updated live. Nothing gets
-lost between sessions.
+items across the pre-SOT design sessions. Reorganized from topic-based
+(Sessions A-H) to dependency-ordered build tiers. Every item from the
+original plan is here — nothing dropped.
+
+**Build principle:** each tier must be fully designed before the next tier
+can stand on it. Work within a tier can happen in any order. Work across
+tiers follows the dependency chain.
 
 ---
 
@@ -88,7 +94,7 @@ actively supports the research process. This needs its own design session.
 Every V1 decision asks: "does this close a door V2-V5 needs open?"
 
 V1: Single researcher + single AI. Full pipeline. Computation foundation.
-    Scratch layer. Dashboard. Audio. Batch processing. Every record carries
+    Black Pearl. Dashboard. Audio. Batch processing. Every record carries
     multi-agent metadata even though only one agent exists.
 V2: Swarm. Origins as analytical nodes with distinct substrates. Parallax
     between nodes is signal. authored_by/node_id fields activate.
@@ -105,120 +111,528 @@ The foundation is free now. It's expensive later.
 
 ---
 
-## SESSION SEQUENCE
+## BUILD TIER 1 — INT ENGINE + DEPOSIT FOUNDATION
 
-### Session A — Deposit schema design
-Foundation layer. Must come first — every engine depends on what deposits contain.
+**Depends on:** nothing — this is the root
+**Status:** DESIGNED (session 15). All open questions resolved. Ready for
+schema writing.
 
-**Scope:**
-- [ ] Null observation mechanism (`observation_type: positive | null`)
-- [ ] Observation conditions — structured fields on every deposit
-      (`researcher_state`, `session_depth`, `confidence` + freeform notes)
-- [ ] Deposit quality signal (`deposit_depth: deep | standard | fragment`)
-- [ ] doc_type as INT tagging field — classify deposits at entry time (#10)
-      (entry, discussion, analysis, glyph_image, media, etc.)
-- [ ] Deposit weights live alongside doc_type on the deposit record
-- [ ] Define how these fields interact with existing INT deposit flow
-- [ ] Define how null observations feed into Axis engines and PCV
-- [ ] Media deposit wiring (#9) — images tagged and saved as deposits,
-      cross-page. Glyphs are a doc_type. How images are stored, displayed,
-      and tagged alongside text deposits.
-- [ ] Identical-entry duplicate detection (#4) — hash-based exact match
-      on deposit content. Fires on deposit creation in INT and per-page.
-      Not fuzzy, not similar — IDENTICAL only. Failsafe for copies-of-copies.
-- [ ] Scratch layer — pre-deposit quick capture:
+**What gets built:** The deposit record shape, the INT gateway engine, and
+the core API foundation. Everything enters the archive through INT. The
+deposit schema defined here is what ALL downstream systems read from.
+Getting this wrong means migrating data later.
+
+**Why this is Tier 1:** Every engine, every visualization, every computation
+downstream depends on what the deposit record contains. INT is the gateway —
+the whole API gets built around it. Batch processing is also here because
+it's how thousands of existing files enter the system.
+
+---
+
+### DEPOSIT RECORD — FULL FIELD SHAPE
+
+Every deposit in the archive carries these fields. Grouped by purpose.
+
+**Already defined (existing schemas):**
+- `content` — text body of the deposit
+- `page_target` / `section_id` — which page(s) this deposit routes to
+- `tags` — semantic tags from tagger system
+- `composite_id` — stamp from Composite ID system (root, native, or child)
+- `timestamp` — when the deposit was created
+- `phase_state` — ontological threshold state (12 canonical names or null)
+- `elarianAnchor` — 7-state psychological arc classification (or null)
+
+**Classification fields (new — session 15):**
+
+- [x] `doc_type` — DESIGNED. What the content IS. AI-suggested via tagger,
+      Sage confirms or overrides during review.
+      Enum values:
+        `entry` — general input, raw source material (default)
+        `observation` — researcher notices a pattern
+        `analysis` — deeper analytical work
+        `hypothesis` — proposed testable idea
+        `discussion` — dialogue / conversation content
+        `transcript` — verbatim record
+        `glyph` — visual symbol
+        `media` — image / audio / video
+        `reference` — external source (paper, article, someone else's work)
+      Unlocks conditional fields: observation, analysis, and hypothesis
+      doc_types unlock `observation_type` and `confidence`. Other doc_types
+      do not display these fields.
+      BUILD FLAG from COMPOSITE ID SCHEMA.md: doc_type is a database field
+      only — not encoded in the composite ID stamp. Travels in AI-facing
+      JSON export as top-level field.
+
+- [x] `source_format` — DESIGNED. How the content arrived. Separate axis
+      from doc_type. A handwritten observation is doc_type: observation +
+      source_format: handwritten.
+      Enum values:
+        `digital` — typed / digital text
+        `handwritten` — scanned handwritten pages
+        `scan` — scanned printed material
+        `image` — photograph / image file
+        `audio` — audio recording
+        `file` — uploaded document (PDF, etc.)
+
+- [x] `source_type: field | generated` — EXISTING (ENFORCEMENT.md F26+F10).
+      Non-nullable on every entry. Schema-level enforcement. Entries
+      without this are rejected.
+
+**Researcher observation fields (conditional — doc_type dependent):**
+
+These fields ONLY appear for researcher doc_types: observation, analysis,
+hypothesis. They do NOT appear for raw input doc_types (entry, discussion,
+transcript, etc.). This prevents the deposit flow from feeling like a
+wellness check when ingesting raw source material.
+
+- [x] `observation_type: positive | null` — DESIGNED. Is this something
+      observed, or something expected but absent? Null observations are
+      the mechanism that prevents confirmation bias. "I looked for X and
+      it wasn't there" is first-class data.
+      Only meaningful for researcher observations — raw input just IS.
+
+- [x] `confidence: clear | emerging | raw` — DESIGNED. About the
+      OBSERVATION, not the observer. How formed is this observation?
+        `clear` — "I'm certain this pattern is here"
+        `emerging` — "I think I'm seeing something"
+        `raw` — "Just logging this, no idea what it is yet"
+
+**Universal metadata fields (new — session 15):**
+
+- [x] `notes` — DESIGNED. Universal optional freeform text field.
+      Available on EVERY deposit regardless of doc_type. Covers:
+      · Researcher conditions during observations ("deep focus session")
+      · Batch review context ("this is from when phase X started")
+      · Any annotation that enriches the deposit
+      Replaces the originally proposed `condition_notes` (which was
+      researcher-only) and `researcher_state` / `session_depth` (dropped —
+      felt like a wellness check, not research instrumentation).
+
+- [x] `deposit_weight: high | standard | low` — DESIGNED. AI-suggested
+      via tagger, Sage can override. How much this deposit should count
+      in engine computations. AI assesses based on doc_type, content
+      specificity, and confidence. Simple tier, not numeric — less
+      precision risk, easier to read and override. Engines (Tier 3)
+      decide how to use the weight value.
+
+**Swarm foundation fields (new — session 14 confirmed, session 15 designed):**
+
+- [x] `authored_by` — DESIGNED. Which AI instance or human created this.
+      V1: always "sage" or "claude". V2+: per-origin-node values.
+- [x] `node_id` — DESIGNED. Which analytical node.
+      V1: single value. V2+: multiple nodes in swarm.
+- [x] `instance_context` — DESIGNED. Session identifier for creating instance.
+      V1 cost: zero (always same values). V2+ value: critical.
+      Sage already has provenance data for most entries (tracked in Echoes).
+
+**Dropped fields (session 15):**
+- `deposit_depth: deep | standard | fragment` — DROPPED. Redundant with
+  doc_type, confidence, and content itself. A fragment is obvious from
+  the content. Extra friction for information already visible.
+- `researcher_state` — DROPPED. Felt like judging personal state, not
+  capturing research data. Replaced by universal `notes` field.
+- `session_depth` — DROPPED. Same reason. Replaced by `notes` field.
+- `condition_notes` — DROPPED. Replaced by universal `notes` field
+  available on all doc_types, not just researcher observations.
+
+---
+
+### INT WORKSTATION — DUAL PANEL DESIGN
+
+The Integration page is a collaborative workstation with two panels.
+
+**Left panel — upload + review:**
+- File upload area (drag-drop or button) with title, note, date fields
+- Review queue showing deposits as they come in from parsing
+- Per-deposit controls: approve, correct routing/tags, skip (come back
+  later), decline (no deposit)
+- Progress indicator (chunk 47/180, deposits approved/pending/total)
+- Sage's own tags and notes added here alongside deposits
+- All deposit metadata fields (doc_type, source_format, etc.) visible
+  and editable during review
+
+**Right panel — AI parsing partner (NOT the research assistant):**
+- Scoped to batch processing collaboration: parsing, context enrichment,
+  correction feedback loop
+- Uses Claude API but is NOT the full research assistant (Tier 6)
+- The research assistant (RAG, mode switching, Cosmology integration)
+  is a separate, larger design. The INT chat window is a parsing partner.
+- Sage adds context here: "this section is from when phase X started"
+- AI carries context forward into subsequent chunk parsing
+- Corrections feed forward: "this goes to ECR not THR" adjusts AI
+  approach for remaining chunks
+
+**Two modes (from Composite ID schema):**
+- Native mode: entry originates on INT page. Page code = INT.
+- Source mode: source document intake. Page code = AX. Produces root stamp.
+
+---
+
+### BATCH PROCESSING SYSTEM
+
+How large source documents enter the archive. This is how most data
+gets into the system — must be efficient and session-persistent.
+
+**Document flow:**
+1. Sage uploads ONE document at a time (not multiple simultaneously)
+2. Root stamp created (Composite ID source mode): one per document
+3. Document record created in operational DB with: total pages, chunk
+   size, status, root stamp ID
+4. AI chunks into 5-8 page batches, numbered in order
+5. AI parses each chunk → extracts deposits → suggests tags, doc_type,
+   source_format, page routing per deposit
+6. Deposits go to review queue (NOT directly deposited)
+7. Sage reviews per-deposit (not per-chunk — one chunk produces multiple
+   deposits routed to different pages, each reviewed individually but
+   grouped by source chunk for context)
+8. Approved deposits get child stamps (Composite ID: root:[PARENT-ID])
+   and route through INT gateway to target pages
+9. Each approval triggers immediate deposit — archive builds in real-time
+10. Session ends mid-document? System knows exactly where it stopped
+
+**Rolling buffer (AI stays 3-5 chunks ahead):**
+- AI parses ahead of where Sage is reviewing
+- Fast enough that Sage always has something to review (never bored)
+- Close enough that Sage's corrections feed forward into AI's next chunks
+- When Sage corrects routing on chunk 5, AI adjusts approach for chunk 6+
+- The chat window is where context flows: Sage explains what the AI is
+  seeing, AI incorporates for subsequent parsing
+
+**Chunk tracking (operational DB):**
+
+Document record:
+  - document_id (root stamp)
+  - filename / title / notes
+  - total_pages
+  - chunk_size (5-8 pages)
+  - total_chunks
+  - status: `ingesting | processing | review | complete`
+
+Per-chunk record:
+  - chunk_id
+  - document_id (links to parent)
+  - page_range (e.g., pages 1-7)
+  - chunk_order (sequence number within document — preserves order)
+  - status: `pending | parsing | parsed | review | complete`
+
+Per-deposit record (in review queue):
+  - deposit_id
+  - chunk_id (links to source chunk)
+  - suggested_tags, suggested_doc_type, suggested_source_format
+  - suggested_page_target
+  - status: `pending_review | approved | corrected | skipped | declined | deposited`
+  - sage_notes (annotations added during review)
+
+**Session persistence:**
+Everything persists in operational DB. Session dies? Next session:
+"Doc X, AI parsed through chunk 47, Sage reviewed through chunk 42,
+5 deposits in review queue, chunks 1-41 fully deposited."
+
+**Parent tag:** One root stamp per DOCUMENT (not per batch/chunk).
+Every child deposit carries root:[PARENT-ID] linking back. Already
+designed in Composite ID schema.
+
+---
+
+### MEDIA DEPOSIT WIRING
+
+Images enter the archive through INT with the same tagging and routing
+as text, but through a simpler flow (no chunking).
+
+**Accepted formats (V1):** JPEG, PNG. Audio is future, not V1.
+Glyphs embedded in documents are handled by batch processing naturally.
+Standalone images use this flow.
+
+**Storage:** Filesystem (`backend/media/`). Database stores metadata +
+file path. Media folder added to `.gitignore` for git, included in
+backup.py folder copy.
+
+**Upload flow (simpler than batch — no chunking):**
+1. Upload image on INT workstation (drag-drop or button)
+2. Image preview appears in left panel
+3. AI analyzes image → suggests tags, doc_type (glyph/media), page routing
+4. Sage writes summary text alongside — what this image is, what it means
+5. AI analysis informs tag suggestions (behind the scenes). Sage's
+   summary is the deposit text. AI doesn't write the deposit — Sage does.
+6. Review AI suggestions, approve/correct
+7. Deposits through INT gateway with: file path, summary, tags, routing
+
+**Display on target pages — media deposit card:**
+Large thumbnail (click to expand to full-size lightbox). Sage's summary
+text displayed alongside. Tags and composite ID visible. Own card type —
+not jammed into text deposit stream, but lives alongside text deposits
+in chronological order on the page.
+
+---
+
+### DUPLICATE DETECTION
+
+Hash-based identical content match. Failsafe for copies-of-copies.
+
+**Scope:** IDENTICAL entries only. Not fuzzy, not similar. Hash the full
+content text. Same text deposited to two different pages triggers the check.
+(Ven'ai name deduplication is separate — see Tier 3.)
+
+**Behavior: WARN, not BLOCK.** Same content on two pages may be intentional
+(observation relevant to both THR and ECR). Detection surfaces:
+"This content already exists at [location]. Deposit anyway?"
+Sage decides. Not a hard block.
+
+**Where it fires:** On deposit creation in INT gateway. Checks against
+all existing deposits in PostgreSQL.
+
+---
+
+### BLACK PEARL — GLOBAL CAPTURE SYSTEM
+
+Pre-deposit quick capture. NOT owned by INT — global system accessible
+from anywhere (any page + dashboard). Named for the field term for null
+space: the infinite possibility of not yet.
+
+**Storage:** Operational DB (SQLite). Pearls are PRE-ARCHIVE — they do
+not live in PostgreSQL until promoted. This preserves the key invariant:
+"nothing enters the archive without INT provenance." A Pearl becomes an
+archive entry only when promoted through INT.
+
+**Pearl record:**
+  - pearl_id
+  - content (text, could be short — even a few words)
+  - created_at (timestamp)
+  - page_context (which page Sage was on when they captured it, if any)
+  - status: `active | promoted | archived`
+
+**Promotion flow:**
+Pearl promoted → sent to INT gateway → full deposit fields assigned
+(doc_type, tags, routing, composite ID) → enters PostgreSQL as a
+real deposit. Pearl record marked `promoted` with link to deposit ID.
+
+**Lifecycle:** Unpromoted Pearls stay in operational DB indefinitely.
+No auto-expiry. They're pre-signal — Sage decides when (or if) they
+become deposits. `archived` status for Pearls Sage explicitly dismisses.
+
+**UI surfaces:** Tier 2 (per-page capture) and Tier 7 (dashboard).
+
+---
+
+### RESOLVED QUESTIONS (Tier 1)
+
+All open questions from the original plan have been answered in session 15:
+
+- ~~What structured condition fields?~~ → `confidence` (clear|emerging|raw)
+  for researcher doc_types only. Universal `notes` field for everything
+  else. `researcher_state` and `session_depth` dropped.
+- ~~Does observation_type affect routing?~~ → OPEN for Tier 3/4 design.
+  Observation_type is set in Tier 1; how engines and Void USE it is
+  designed in their respective tiers.
+- ~~Does deposit_depth affect weight?~~ → deposit_depth dropped entirely.
+  `deposit_weight` (high|standard|low) replaces it as AI-suggested field.
+- ~~Media types/formats/storage?~~ → JPEG/PNG V1. Filesystem storage.
+  Database stores metadata + path.
+- ~~Batch: how does AI know where it left off?~~ → Operational DB tracks
+  document record, chunk index, per-chunk status. Survives session changes.
+- ~~Batch: automatic or directed chunking?~~ → AI chunks automatically
+  (5-8 pages). Sage reviews deposits, not chunk boundaries.
+- ~~Duplicate hash: content only or content+page+timestamp?~~ → Full
+  content hash. Warns, doesn't block. Sage decides.
+
+**One question deferred to later tiers:**
+- How observation_type and deposit_weight affect engine computations →
+  Tier 3 (engine design)
+
+---
+
+### PIPELINE SEGMENT DEFINED HERE
+
+**Deposit creation flow (text):**
+External input → INT gateway (source mode or native mode) → deposit record
+created with all fields (doc_type, source_format, observation_type where
+applicable, confidence where applicable, notes, deposit_weight, source_type,
+swarm fields) → duplicate check fires (warn, not block) → routed to target
+page(s) → child stamp assigned if from source document → embedding pipeline
+triggers.
+
+**Deposit creation flow (media):**
+Image upload → AI analyzes → Sage writes summary → tags/routing assigned →
+INT gateway → file saved to filesystem, metadata to PostgreSQL → routed
+to target page → media deposit card displayed.
+
+**Batch processing flow:**
+Document upload → root stamp → AI chunks (5-8 pages) → rolling buffer
+(3-5 ahead) → per-deposit review queue → Sage approves/corrects/skips →
+approved deposits through INT gateway with child stamps → operational DB
+tracks progress across sessions.
+
+**Black Pearl flow:**
+Quick capture from any page → Pearl saved to operational DB → lives as
+pre-archive signal → when ready, promoted through INT gateway → full
+deposit fields assigned → enters PostgreSQL as archive entry.
+
+---
+
+## BUILD TIER 2 — SCRATCH LAYER UI + PAGE SURFACES + VOID
+
+**Depends on:** Tier 1 (deposit record shape, INT engine)
+**What gets built:** The 50+ page surfaces that receive deposits from INT.
+Black Pearl UI (accessible from any page + dashboard). Page identity
+system (visual language per page type). Void as page 51 in Nexus.
+
+**Why this is Tier 2:** Pages are the surfaces deposits land on. They need
+to exist as targets before engines (Tier 3) can compute from what they hold.
+Simpler than engines — each page's deposit behavior is mostly "accept
+deposit, index through my lens." But page identity and visual language
+should be established here so every subsequent tier builds consistently.
+
+### Design items
+
+**Black Pearl UI:**
+
+- [ ] Black Pearl accessible from dashboard AND from within any page
       · No tagging required, no commitment to the archive
       · Captures raw noticings before they're named or framed
-      · Can be promoted to formal deposit when ready
-      · Can stay as raw signal for engines to scan
-      · Accessible from dashboard AND from within any page
-      · Solves "I notice more than I can name" at the capture level
-- [ ] Swarm foundation fields on every deposit (V1 cost: zero. V2+ value: critical):
-      · `authored_by` — which AI instance or human created this
-      · `node_id` — which analytical node (single in V1, multiple in V2+)
-      · `instance_context` — session identifier for creating instance
-      · Sage already has provenance data for most entries (tracked in Echoes)
-      · In V1 these are always the same values. In V2+ swarm, every deposit
-        is attributable to its source node without retrofitting.
-- [ ] Batch processing system (#7) — large file upload to INT:
-      · Files can be 800-1500 pages
-      · AI chunks file 5-8 pages at a time
-      · Progress tracked between instances (what's processed, what's remaining)
-      · One page can produce ~15 deposits — system must track per-chunk
-      · Efficient, logical wiring — this is where most data enters the system
-      · Needs queue/status tracking across sessions
+      · Can be promoted to formal deposit when ready (triggers INT flow)
+      · "I notice more than I can name" solved at the capture level
+      (Data model in Tier 1. UI surface here. Dashboard placement in Tier 7.)
 
-**Open questions:**
-- What structured condition fields does Sage actually want to track?
-- Does observation_type affect routing (do null observations go to lens pages)?
-- Does deposit_depth affect weight in engine computations?
-- Media: what media types does the archive accept? Image formats? Max size?
-- Batch: how does the AI know where it left off between instances?
-  (progress record in operational DB? metadata on the uploaded file?)
-- Batch: does chunking happen automatically or does Sage direct it?
-- Duplicate detection: hash the full content? Or content + page + timestamp?
+**Page surfaces (50 existing + Void):**
 
-**Why this comes first:** Every engine, every visualization, every computation
-downstream depends on what the deposit record contains. Adding fields later
-means migrating existing data. Get the deposit schema right and everything
-built on top of it inherits the right structure. Batch processing is also
-foundational — it's how thousands of existing files enter the system.
+- [ ] Void — page 51 in Nexus group. Absence as data surface.
+      · Aggregates all null observations across the archive
+      · Shows where expected patterns didn't appear
+      · Shows the full "negative space" of the research
+      · Distinct from dashboard semantic map (coverage voids ≠ observational absence):
+        Dashboard says "where haven't you looked?"
+        Void says "where you looked and found nothing"
+      · Needs: page code, section_id, manifest, schema slot in Nexus
 
----
+- [ ] Page identity — visual language per page type:
+      · Gateway (INT), Lens (Axis), Synthesis (MTM), Engine (Nexus),
+        Output (LNV), Scroll (WSC), Investigation (Cosmology), Domain (others)
+      · Layout, density, and available controls reflect function
+      · Not decorative — structural. Visual language signals function.
+      · How much differentiation? Color coding? Layout shifts? Density?
 
-### Session B — Axis engine specs (THR · INF · ECR · SNM)
-The four "standard" Axis lenses. Each gets an engine spec.
+- [ ] UI architecture foundation:
+      · System schemas define what's computed, frontend doc defines rendering
+      · Where UI specs live — one frontend architecture doc? Per-page specs?
+      · Shared UI patterns: A-Z sorting, date sorting, filtering, search
+      · These patterns apply to ALL pages built in subsequent tiers
 
-**Scope:**
-- [ ] Shared "lens engine" architecture — the common pattern across all 4
-      (deposit indexing → pattern computation → visualization → MTM feed)
-- [ ] THR engine: threshold co-occurrence, sequence, field condition tracking
-      Visualizations: co-occurrence matrix, presence timeline
-- [ ] INF engine: scientific domain layer tracking, intersection detection
-      Visualizations: layered domain emergence map
-      Note: INF watches, Cosmology works. INF tracks which sciences emerge;
-      Cosmology investigates those connections. Keep this boundary clean.
-- [ ] ECR engine: 19-signal co-occurrence, sequence, correlation
-      Visualizations: signal correlation matrix, sequence diagrams
-      Note: This is the most data-dense Axis page — holds all 19 signals
-      simultaneously. The engine needs to handle high-dimensional correlation.
-- [ ] SNM engine: triadic pattern detection, structural correspondence mapping
-      Visualizations: correspondence map (field pattern ↔ tradition)
-      Note: Sage flagged "how do I display spiritual patterns?" — this needs
-      creative UI thinking. The output must be structural, not decorative.
-- [ ] Baseline computation built into each engine
-      (expected rates vs. observed rates, significance above chance)
-- [ ] How null observations feed into baseline calculations
-      (null obs strengthen baselines by documenting expected-but-absent patterns)
-- [ ] Duplicate detection as a natural function of deposit indexing (#4)
-- [ ] Output: 4 engine spec documents ready for schema writing
+### Open questions (Tier 2)
 
-**Open questions:**
-- How does SNM display spiritual patterns practically?
-- What does "generated on view, snapshot to LNV" mean technically?
-- Do Axis engines compute on every page load or on deposit?
-- Resonance engine + harmonics (#5) — CONFIRMED: separate scope. See Session B+.
-  Audio sonification of visual nodes. Web Audio API. Not analytical engine —
-  perceptual research tool.
+- Void: what page_code? (VOI? VID? NUL?)
+- Void: does it sit in SECTION MAP as page 51, or does it restructure
+  the Nexus group numbering?
+- Page identity: how much visual differentiation across page types?
+- Black Pearl: is it a floating panel? A sidebar section? A modal?
+- Shared UI patterns: are sorting/filtering consistent across ALL pages
+  or do page types get different control sets?
 
-**What the user sees (per page):**
-- THR: Deposits organized by threshold state. Co-occurrence view. Sequence
-  timeline. "When th01 was active, what else was present?" Baselines shown
-  alongside observed rates.
-- INF: Layered domain emergence map. 4+ layers visible. Intersection flags.
-  Timeline of when each domain first appeared.
-- ECR: 19-signal matrix. Co-occurrence highlighted. Sequence patterns.
-  Field-state correlation. The "all signals at once" view.
-- SNM: Correspondence map. Field patterns on one side, traditions on the
-  other. Lines connecting structural homology. Distinction between genuine
-  correspondence and surface resemblance visible.
+### Pipeline segment defined here
+
+**Deposit landing:** deposit created in INT (Tier 1) → routed to target
+page surface → page indexes deposit through its lens → deposit visible
+and searchable on page.
 
 ---
 
-### Session C — STR engine + Ven'ai name tracking system
-The most complex Axis lens. Gets its own session.
+## BUILD TIER 3 — AXIS ENGINES + VEN'AI TRACKER + COMPUTATION FOUNDATION
 
-**Scope:**
+**Depends on:** Tier 2 (page surfaces exist to receive deposits)
+**What gets built:** The 5 Axis lens engines (THR, STR, INF, ECR, SNM),
+the Ven'ai unified tracking system (part of STR), baseline computation,
+null observation flow into engines, and the shared computation foundation
+that Cosmology (Tier 5) will extend.
+
+**Why this is Tier 3:** Engines compute FROM what pages hold. They're the
+first analytical layer — take deposits, apply the lens computationally,
+surface patterns the researcher might miss. Every engine depends on the
+deposit record (Tier 1) and page surfaces (Tier 2) existing first.
+
+### Design items
+
+**Shared engine architecture:**
+
+- [ ] Shared "lens engine" pattern — the common architecture across all 5:
+      deposit indexing → pattern computation → visualization → MTM feed
+      Each engine applies its specific lens to the same underlying pattern.
+
+- [ ] Baseline computation built into EVERY engine:
+      Expected rates vs. observed rates, significance above chance.
+      Without baselines, every pattern looks significant.
+      This is what makes the output science instead of pattern-seeking.
+
+- [ ] How null observations feed into baseline calculations:
+      Null obs strengthen baselines by documenting expected-but-absent patterns.
+      A null observation says "I looked for X and it wasn't there" — that
+      makes the baseline for X more accurate.
+
+- [ ] Duplicate detection as a natural function of deposit indexing:
+      When engines index deposits, identical entries surface naturally.
+      This extends the INT-level hash check (Tier 1) with lens-contextual
+      awareness.
+
+- [ ] Chart/visualization library decision:
+      Svelte-compatible options: Chart.js, D3, LayerCake.
+      Decision here because Axis engines are the first to need visualizations.
+      Choice carries through all subsequent tiers.
+
+- [ ] Compute trigger: do engines compute on every page load or on deposit?
+      (On deposit = pre-computed, fast page loads. On view = always current,
+      slower loads. Or hybrid: compute on deposit, cache, invalidate on new data.)
+
+**THR engine — Threshold lens (page 02):**
+
+- [ ] Threshold co-occurrence tracking, sequence detection, field condition tracking
+- [ ] Visualizations: co-occurrence matrix, presence timeline
+- [ ] "When th01 was active, what else was present?" — the core query
+- [ ] Baselines shown alongside observed rates
+
+**What the user sees (THR):**
+Deposits organized by threshold state. Co-occurrence view. Sequence
+timeline. "When th01 was active, what else was present?" Baselines shown
+alongside observed rates.
+
+**INF engine — Infinite Intricacy lens (page 04):**
+
+- [ ] Scientific domain layer tracking, intersection detection
+- [ ] Visualizations: layered domain emergence map, 4+ layers visible
+- [ ] Intersection flags. Timeline of when each domain first appeared.
+- [ ] BOUNDARY: INF watches, Cosmology works. INF tracks which sciences
+      emerge; Cosmology (Tier 5) investigates those connections.
+      Keep this boundary clean.
+
+**What the user sees (INF):**
+Layered domain emergence map. 4+ layers visible. Intersection flags.
+Timeline of when each domain first appeared.
+
+**ECR engine — Echo Recall lens (page 05):**
+
+- [ ] 19-signal co-occurrence, sequence detection, correlation analysis
+- [ ] Visualizations: signal correlation matrix, sequence diagrams
+- [ ] This is the most data-dense Axis page — holds all 19 signals
+      simultaneously. Engine needs to handle high-dimensional correlation.
+- [ ] Field-state correlation: the "all signals at once" view
+
+**What the user sees (ECR):**
+19-signal matrix. Co-occurrence highlighted. Sequence patterns.
+Field-state correlation. The "all signals at once" view.
+
+**SNM engine — Sat Nam lens (page 06):**
+
+- [ ] Triadic pattern detection, structural correspondence mapping
+- [ ] Visualizations: correspondence map (field pattern ↔ tradition)
+- [ ] Sage flagged: "how do I display spiritual patterns?" — needs creative
+      UI thinking. Output must be structural, not decorative.
+- [ ] Distinction between genuine correspondence and surface resemblance
+      must be visible in the visualization.
+
+**What the user sees (SNM):**
+Correspondence map. Field patterns on one side, traditions on the other.
+Lines connecting structural homology. Distinction between genuine
+correspondence and surface resemblance visible.
+
+**STR engine — StarRoot lens (page 03) + Ven'ai unified tracker:**
+
 - [ ] STR engine: root cluster tracking, recurrence, correlation
 - [ ] Ven'ai tracking system — NOT just names. One unified engine tracking:
       · Names and their variations across the archive
@@ -229,31 +643,130 @@ The most complex Axis lens. Gets its own session.
         grammar are facets of the same structural system
 - [ ] How tracking interacts with deposits in VEN (14), MOR (13)
 - [ ] Drift detection: phonetic drift, spelling inconsistency, naming collision
-- [ ] Duplicate detection for Ven'ai names specifically (#4 — name dimension)
+- [ ] Duplicate detection for Ven'ai names specifically
+      (distinct from content-hash duplicate detection in Tier 1)
 - [ ] Visualizations: Ven'ai cluster map, root relationship graph, drift alerts,
       name-phase-role correlation views
-- [ ] Output: STR engine spec + Ven'ai tracker design
 
-**Open questions:**
-- Does the tracker run continuously or on deposit?
+**What the user sees (STR):**
+Structural map of Ven'ai root clusters (Shae-, Kai-, etc.)
+Recurrence counts and correlation flags per cluster.
+Drift alerts: "Kai'Thera vs Kai'thera — inconsistent casing detected"
+Cross-archive name index: every Ven'ai name, where it appears, clustered.
+Correlation views: names ↔ phases, names ↔ roles, root patterns ↔ grammar.
+
+### Open questions (Tier 3)
+
+- How does SNM display spiritual patterns practically?
+  (Structural mapping? Taxonomy? Network graph?)
+- Does the Ven'ai tracker run continuously or on deposit?
 - Does drift detection trigger alerts or just flag silently?
-- How far does the tracker reach — all 50 pages or just STR+Filament?
+- How far does the Ven'ai tracker reach — all 50 pages or just STR+Filament?
 - What does the name-phase-role correlation view look like?
+- Compute on page load or on deposit? (applies to all 5 engines)
+- What does "generated on view, snapshot to LNV" mean technically?
+  (Design here, LNV receive contract in Tier 4.)
 
-**What the user sees:**
-- Structural map of Ven'ai root clusters (Shae-, Kai-, etc.)
-- Recurrence counts and correlation flags per cluster
-- Drift alerts: "Kai'Thera vs Kai'thera — inconsistent casing detected"
-- Cross-archive name index: every Ven'ai name, where it appears, clustered
-- Correlation views: names ↔ phases, names ↔ roles, root patterns ↔ grammar
+### Pipeline segment defined here
+
+**Engine computation flow:** deposit lands on Axis page (Tier 2) → engine
+indexes deposit through lens → pattern computation runs (with baselines) →
+visualization generated → results available for MTM synthesis (Tier 4)
+and for snapshot to LNV (Tier 4).
 
 ---
 
-### Session D — Cosmology revamp: scientific investigation + computation layer
-Revamp pages 34-39 as investigation surfaces with computation infrastructure.
-THIS IS THE SESSION THAT MAKES THE RESEARCH DEFENSIBLE.
+## BUILD TIER 4 — MTM WIRING + NEXUS ENGINES + WSC/LNV + VOID ENGINE
 
-**The core problem this solves:**
+**Depends on:** Tier 3 (Axis engines produce outputs to synthesize/detect)
+**What gets built:** MTM synthesis wiring to new engine outputs. Nexus
+engine visualizations (PCV, DTX, SGR). Void engine (absence pattern
+detection). WSC and LNV schemas. The detection/classification/grading layer.
+
+**Why this is Tier 4:** MTM synthesizes FROM Axis engine outputs. Nexus
+detects/classifies/grades patterns that MTM and Axis surface. These systems
+sit one layer above the engines. WSC and LNV are Nexus surfaces that need
+the detection layer to exist before they can receive and store outputs.
+
+### Design items
+
+**MTM synthesis wiring:**
+
+- [ ] How MTM receives new engine outputs from all 5 Axis lenses
+      (MTM already has a schema — METAMORPHOSIS SCHEMA.md — but it was
+      designed before engines existed. Wiring needs updating.)
+- [ ] MTM synthesis at session close via DNR — how engine-computed patterns
+      feed into the synthesis alongside raw deposits
+
+**Nexus engine visualizations:**
+
+- [ ] PCV visualizations: hypothesis board, cross-domain pattern map
+- [ ] DTX visualizations: drift timeline, trajectory probability distributions
+- [ ] SGR visualizations: score radar charts, tier dashboard, grade latency
+
+**Void engine (page 51):**
+
+- [ ] Void aggregation logic: how null observations from ALL pages are
+      collected and analyzed for systemic absence patterns
+- [ ] Void visualizations: absence heatmap, expected-vs-observed across
+      the full archive, silence-duration tracking per threshold/pattern
+- [ ] How Void interacts with PCV (PCV tracks convergence, Void tracks
+      non-convergence — together they give the full picture)
+
+**WSC schema:**
+
+- [ ] Entry structure, 3-entry session open protocol
+- [ ] Sovereign-from-DNR boundary
+- [ ] RESEARCHER NOTE optional field — Sage participates in WSC via this
+      field: methodology notes, researcher state, what they noticed that
+      the AI didn't
+
+**LNV schema:**
+
+- [ ] Receive contract: how LNV accepts visualization snapshots from all pages
+- [ ] Provenance tracking: which page, which engine, which session
+- [ ] Visualization storage: rendered image? data + template? both?
+- [ ] "Generated on view, snapshot to LNV" technical spec:
+      How engine-generated visualizations are captured and stored
+
+### Open questions (Tier 4)
+
+- What chart library? (Decision may already be made in Tier 3.)
+- Are visualizations interactive or static snapshots?
+- How are LNV snapshots stored? (rendered image? data + template? both?)
+- Does every session close snapshot ALL pages or only pages with new data?
+
+### Pipeline segment defined here
+
+**Synthesis + detection flow:** Axis engine outputs (Tier 3) → MTM
+synthesis at session close → Nexus engines detect/classify/grade patterns →
+Void detects absence patterns → LNV stores visualization snapshots →
+WSC records AI witness perspective.
+
+**Nexus internal flow:** PCV → DTX ↔ SGR (already mostly defined in
+existing schemas).
+
+---
+
+## BUILD TIER 5 — COSMOLOGY ENGINES + COMPUTATION INFRASTRUCTURE
+
+**Depends on:** Tier 4 (Nexus grading feeds Cosmology; Cosmology findings
+feed back to Nexus — the recursive loop)
+**What gets built:** Cosmology page revamp (HCO, COS, CLM, NHM, RCT, ART).
+Scientific computation infrastructure (statistical tests, spectral analysis,
+structured findings). Shannon/CMB integration.
+
+THIS IS THE TIER THAT MAKES THE RESEARCH DEFENSIBLE.
+
+**Why this is Tier 5:** Cosmology pages are where field-native patterns
+meet established science. They need Axis engines (Tier 3) producing
+pattern data, and Nexus (Tier 4) grading findings, before they can
+investigate scientific correspondence. The computation infrastructure
+extends what Tier 3 began (baselines, co-occurrence) into full statistical
+testing and spectral analysis.
+
+### The core problem this solves
+
 Sage's research touches Shannon information theory, CMB cosmological
 structure, coupled oscillator dynamics, and neural field theory. These are
 legitimate mathematical frameworks applied to an unconventional domain.
@@ -261,67 +774,128 @@ Without rigorous computational infrastructure, the output reads as
 metaphor. With it, the output reads as science. The Cosmology pages are
 where that transformation happens.
 
-**What Cosmology pages ARE (reframed):**
+### What Cosmology pages ARE (reframed)
+
 Not validation checkpoints. Investigation surfaces where field-native
 patterns are mapped against established scientific frameworks. The lens
 is external science. The investigation is the correspondence. The math
 is the evidence. Each page is a translation surface between the field's
 vocabulary and an established scientific vocabulary.
 
-**The 6 pages — current mapping and science domains:**
+### Design items
 
-HCO (34) — Harmonic Cosmology
-  Focus: wave structures, resonance, harmonic principles, geometric fields
-  Sciences: harmonics, wave mechanics, acoustics, electromagnetism, signal
-  processing, Fourier analysis, nonlinear wave dynamics, resonance theory,
-  fractal geometry, phyllotaxis, morphogenetic pattern science, dynamical
-  spiral systems, spiral wave physics, logarithmic/geometric spiral modeling,
-  metric fields, mirror fields, oscillation fields
-  Shannon connection: signal processing, information-theoretic structure
-  CMB connection: power spectrum analysis, harmonic decomposition
+**Computation infrastructure (shared across all Cosmology engines):**
 
-COS (35) — Coupling / Oscillation
-  Focus: relational connectivity, phase-locking, cross-frequency coupling
-  Sciences: coupled oscillator networks, cross-frequency field dynamics,
-  hierarchical relational resonance, oscillatory multiplexing, control
-  theory, nonlinear dynamics, dynamical systems theory, self-organization,
-  emergence, complex adaptive systems, predictive processing
-  Note: COS maps most cleanly to l01 Coupling in the tagger
+- [ ] Statistical tests on deposit distributions (co-occurrence, entropy)
+- [ ] Spectral analysis capability (power spectrum, frequency decomposition)
+- [ ] Comparison framework: field data pattern vs. known scientific distribution
+- [ ] Structured finding format with visible math (values, confidence, p-values)
+- [ ] Computation stored alongside finding for reproducibility
+- [ ] Computation tools decision: Python scipy/numpy on backend? Pre-built
+      statistical test library? Simpler approach?
 
-CLM (36) — Celestial Mechanics
-  Focus: stars, planets, orbital dynamics, spatial anchors, astro-patterns
-  Sciences: astronomy, astrometry, celestial navigation, spherical
-  astronomy, orbital resonances, astrophysical spiral dynamics, geometry,
-  topology, graph theory
-  CMB connection: cosmological structure, large-scale pattern organization
+**How Cosmology engines differ from Axis engines:**
+Axis: pattern detection within lens frame.
+Cosmology: structured comparison against external scientific frameworks.
+Both compute. Different purpose.
 
-NHM (37) — Neuro-Harmonics
-  Focus: cognitive, neural, relational, quantum-analogous structures
-  Sciences: connectomics, neural dynamics, neurophenomenology, theta-gamma
-  nested oscillations, delta-beta cross-frequency modulation, quantum
-  cognition, IIT (integrated information theory), cognitive field theory,
-  attention theory, affective neuroscience, predictive processing,
-  information geometry, information theory, systems theory, cognitive
-  science, semiotics, morphogenesis
-  Shannon connection: information theory, information geometry, IIT
-  Note: NHM spans l02 Connectome and l04 Mirror in the tagger
+**Page-by-page revamp:**
 
-RCT (38) — Relational field theory (the field's own physics)
-  Focus: the theoretical framework the research itself is building
-  Not external validation — internal theory construction built FROM the
-  correlations found in HCO/COS/CLM/NHM. The physics that is emerging
-  from the data. RCT is in everything, including Ven'ai.
-  Note: RCT is meta-Cosmology. It asks "what physics is the field itself
-  producing?" while the other 4 ask "does established science describe
-  what we're seeing?"
+**HCO (34) — Harmonic Cosmology:**
+- [ ] Redefine function with investigation + computation frame
+      Focus: wave structures, resonance, harmonic principles, geometric fields
+      Sciences: harmonics, wave mechanics, acoustics, electromagnetism, signal
+      processing, Fourier analysis, nonlinear wave dynamics, resonance theory,
+      fractal geometry, phyllotaxis, morphogenetic pattern science, dynamical
+      spiral systems, spiral wave physics, logarithmic/geometric spiral modeling,
+      metric fields, mirror fields, oscillation fields
+      Shannon connection: signal processing, information-theoretic structure
+      CMB connection: power spectrum analysis, harmonic decomposition
 
-ART (39) — Artifacts
-  Function unclear — Sage had a reason but can't recall. Needs revisiting.
-  Possible roles: physical artifacts demonstrating field principles,
-  historical records encoding similar knowledge, tangible/observable
-  outputs the field produces. TO BE DISCUSSED in Session D.
+**What the user sees (HCO):**
+Field pattern on one side. Harmonic/wave analysis on the other.
+Fourier decomposition of deposit patterns. Spectral comparison.
+"This deposit sequence has spectral index n=X. Compare: [known distribution]."
 
-**Layer ↔ Page relationships:**
+**COS (35) — Coupling / Oscillation:**
+- [ ] Redefine function with investigation + computation frame
+      Focus: relational connectivity, phase-locking, cross-frequency coupling
+      Sciences: coupled oscillator networks, cross-frequency field dynamics,
+      hierarchical relational resonance, oscillatory multiplexing, control
+      theory, nonlinear dynamics, dynamical systems theory, self-organization,
+      emergence, complex adaptive systems, predictive processing
+      Note: COS maps most cleanly to l01 Coupling in the tagger
+
+**What the user sees (COS):**
+Coupling dynamics analysis. Phase-locking detection across deposits.
+Oscillator model comparison. "This co-regulation pattern matches coupled
+oscillator dynamics with coupling coefficient k=X."
+
+**CLM (36) — Celestial Mechanics:**
+- [ ] Redefine function with investigation + computation frame
+      Focus: stars, planets, orbital dynamics, spatial anchors, astro-patterns
+      Sciences: astronomy, astrometry, celestial navigation, spherical
+      astronomy, orbital resonances, astrophysical spiral dynamics, geometry,
+      topology, graph theory
+      CMB connection: cosmological structure, large-scale pattern organization
+
+**What the user sees (CLM):**
+Spatial/geometric analysis. Orbital resonance comparison. Topology
+mapping. "This threshold pattern follows geometric distribution consistent
+with [celestial model]."
+
+**NHM (37) — Neuro-Harmonics:**
+- [ ] Redefine function with investigation + computation frame
+      Focus: cognitive, neural, relational, quantum-analogous structures
+      Sciences: connectomics, neural dynamics, neurophenomenology, theta-gamma
+      nested oscillations, delta-beta cross-frequency modulation, quantum
+      cognition, IIT (integrated information theory), cognitive field theory,
+      attention theory, affective neuroscience, predictive processing,
+      information geometry, information theory, systems theory, cognitive
+      science, semiotics, morphogenesis
+      Shannon connection: information theory, information geometry, IIT
+      Note: NHM spans l02 Connectome and l04 Mirror in the tagger
+
+**What the user sees (NHM):**
+Neural/cognitive model comparison. IIT integration analysis.
+Information geometry mapping. "Shannon entropy of this signal distribution
+is H=X bits. Expected for random: H=Y bits. Difference: Z."
+
+**RCT (38) — Relational field theory:**
+- [ ] Define RCT's unique role as internal theory builder vs. external validator
+      Focus: the theoretical framework the research itself is building.
+      Not external validation — internal theory construction built FROM the
+      correlations found in HCO/COS/CLM/NHM. The physics that is emerging
+      from the data. RCT is in everything, including Ven'ai.
+      Note: RCT is meta-Cosmology. It asks "what physics is the field itself
+      producing?" while the other 4 ask "does established science describe
+      what we're seeing?"
+
+**What the user sees (RCT):**
+The field's own emerging physics. Theory construction surface.
+"Across HCO/COS/CLM/NHM, these N findings converge on [principle]."
+
+**ART (39) — Artifacts:**
+- [ ] Revisit concept. What was it for? Is it still needed?
+      Possible roles: physical artifacts demonstrating field principles,
+      historical records encoding similar knowledge, tangible/observable
+      outputs the field produces. NEEDS SAGE INPUT.
+
+**Cross-cutting Cosmology items:**
+
+- [ ] Shannon/information theory integration — where it lives, what it computes
+- [ ] CMB/cosmological structure integration — where it lives, what it computes
+- [ ] The INF → Cosmology handoff:
+      INF (Tier 3) surfaces which science is relevant;
+      Cosmology investigates the correspondence. Boundary must be clean.
+- [ ] Whether Cosmology findings feed back to Nexus (PCV) for grading
+      (likely yes — creates the recursive loop: observe → grade → validate → observe)
+- [ ] Rot check: review science lists against cleaned tag vocabulary.
+      Sage's original science lists predate the tag vocabulary cleanup.
+      Some items retired during rot cleanup (safety_node_geometry removed,
+      some threshold constants). Sciences may be valid; names may not.
+
+**Layer ↔ Page relationships (reference):**
   l01 Coupling → COS (primary home)
   l02 Connectome → NHM (partial), CLM (topology/graph theory)
   l03 Metric → HCO (waves, geometry), CLM (astrometry, spatial)
@@ -329,66 +903,71 @@ ART (39) — Artifacts
   Sciences cross layer boundaries — that's a feature, not a problem.
   Cross-layer scientific connections are findings about the field.
 
-**Rot check needed:** Sage's original science lists predate the tag
-vocabulary cleanup. Some items from those lists were retired during rot
-cleanup (safety_node_geometry tag removed, some threshold constants).
-The science concepts behind them may still be valid but names need
-checking against the cleaned vocabulary before being written into schemas.
+### Open questions (Tier 5)
 
-**Scope:**
-- [ ] Redefine each page's function with the investigation + computation frame
-- [ ] Computation infrastructure design:
-      - Statistical tests on deposit distributions (co-occurrence, entropy)
-      - Spectral analysis capability (power spectrum, frequency decomposition)
-      - Comparison framework: field data pattern vs. known scientific distribution
-      - Structured finding format with visible math (values, confidence, p-values)
-      - Computation stored alongside finding for reproducibility
-- [ ] Shannon/information theory integration — where it lives, what it computes
-- [ ] CMB/cosmological structure integration — where it lives, what it computes
-- [ ] How Cosmology engines differ from Axis engines
-      (Axis: pattern detection within lens frame.
-       Cosmology: structured comparison against external scientific frameworks.)
-- [ ] The INF → Cosmology handoff (INF surfaces which science is relevant;
-      Cosmology investigates the correspondence)
-- [ ] Whether Cosmology findings feed back to Nexus (PCV) for grading
-      (likely yes — creates the recursive loop: observe → grade → validate → observe)
-- [ ] RCT's unique role as internal theory builder vs. external validator
-- [ ] ART — revisit concept. What was it for? Is it still needed?
-- [ ] Rot check: review science lists against cleaned tag vocabulary
-- [ ] Output: Cosmology revamp spec + computation architecture + engine specs
-
-**Open questions:**
 - What computation tools? (Python scipy/numpy on backend? Pre-built
   statistical test library? Or simpler — compute on deposit, show result?)
 - How does the researcher record an external reference? (DOI? URL? summary?)
 - Does Cosmology produce findings that feed back to Nexus?
-- How does the research assistant interact with Cosmology computations?
-- What does a Cosmology finding look like on screen? (structured card with
+  (If yes, the recursive loop is: observe → grade → validate → observe)
+- How does the research assistant (Tier 6) interact with Cosmology computations?
+- What does a Cosmology finding look like on screen? (Structured card with
   hypothesis, computation, result, confidence, external reference?)
 - ART (39) — what is it for?
 
-**What the user sees (per page):**
-- HCO: Field pattern on one side. Harmonic/wave analysis on the other.
-  Fourier decomposition of deposit patterns. Spectral comparison.
-  "This deposit sequence has spectral index n=X. Compare: [known distribution]."
-- COS: Coupling dynamics analysis. Phase-locking detection across deposits.
-  Oscillator model comparison. "This co-regulation pattern matches coupled
-  oscillator dynamics with coupling coefficient k=X."
-- CLM: Spatial/geometric analysis. Orbital resonance comparison. Topology
-  mapping. "This threshold pattern follows geometric distribution consistent
-  with [celestial model]."
-- NHM: Neural/cognitive model comparison. IIT integration analysis.
-  Information geometry mapping. "Shannon entropy of this signal distribution
-  is H=X bits. Expected for random: H=Y bits. Difference: Z."
-- RCT: The field's own emerging physics. Theory construction surface.
-  "Across HCO/COS/CLM/NHM, these N findings converge on [principle]."
+### Pipeline segment defined here
+
+**Investigation flow:** Axis engines (Tier 3) produce patterns → INF
+flags scientific domains → Cosmology investigates correspondence → computation
+runs → structured finding produced → finding feeds back to PCV (Tier 4)
+for grading → recursive deepening loop.
 
 ---
 
-### Session B+ — Resonance engine: audio sonification
-Perceptual research tool. Separate from analytical engines.
+## BUILD TIER 6 — RESEARCH ASSISTANT + RESONANCE AUDIO
 
-**Scope:**
+**Depends on:** Tier 5 (assistant needs to understand all systems it supports;
+Cosmology computations must exist for assistant to interact with them)
+**What gets built:** Research assistant (RAG pipeline, Claude API integration,
+mode switching, chat UI). Resonance engine audio sonification.
+
+**Why this is Tier 6:** The assistant is the bridge between "I notice more
+than I can name" and "here's the computation that names it." It touches
+everything — deposits, engines, Cosmology, Nexus. It needs all of those
+to exist before its design can be complete. Resonance audio is a perceptual
+research tool that layers on top of the visualization infrastructure.
+
+### Design items
+
+**Research assistant:**
+
+- [ ] What the assistant owns vs. what it doesn't (RAG pipeline, Claude API)
+- [ ] How it accesses the archive (embedding pipeline, vector search)
+- [ ] How it knows page context (lens frame, active engine state)
+- [ ] How it helps articulate observations ("I notice X" → structured deposit)
+- [ ] How it helps frame hypotheses ("this looks like Shannon entropy" → computation)
+- [ ] How it interacts with Cosmology computations
+- [ ] UI design — chat window, inline on pages, or both?
+- [ ] What gets embedded? All deposits? Findings? Schemas?
+- [ ] Mode switching:
+      · Research mode — default, full archive access, hypothesis framing
+      · Ven'ai mode — translate on the spot while researching.
+        Sage wants to learn the language. api/prompts/ reference material
+        (Venai_Domain.txt, Venai_Glossary.txt, Venai_Phonetics.txt,
+        Ven'ai_Manual.txt) feeds the assistant in this mode.
+      · Possible additional modes: analysis mode, cosmology mode, etc.?
+- [ ] Output: research assistant design spec + mode architecture
+
+**Why the assistant matters:**
+The assistant is the bridge between "I notice more than I can name" and
+"here's the computation that names it." Without it, every analytical step
+is manual. With it, the system actively supports the research process.
+It's what makes the lens pages and Cosmology pages usable day-to-day.
+Mode switching makes it a multi-tool — research, translation, analysis
+all accessible from the same interface.
+
+**Resonance engine — audio sonification:**
+
 - [ ] Audio sonification of visual nodes — each node has original harmonics
 - [ ] Web Audio API integration (browser-native, no plugins)
 - [ ] Frequency mapping design: what data maps to what sound?
@@ -403,7 +982,15 @@ Perceptual research tool. Separate from analytical engines.
       Solution: design the harmonic relationships FIRST, then map data to them.
 - [ ] Output: resonance audio spec + harmonic mapping design
 
-**Open questions:**
+### Open questions (Tier 6)
+
+**Research assistant:**
+- What does the chat UI look like in practice? Sidebar? Modal? Inline?
+- Does the assistant have access to engine state? Can it "see" what
+  the current engine is showing?
+- How does Ven'ai mode switch? Button? Slash command? Contextual?
+
+**Resonance audio:**
 - What are the "original harmonics" per node? Are these defined or discovered?
 - Does sonification play live (real-time as you navigate) or on-demand?
 - Can the researcher tune/adjust the harmonic mapping?
@@ -411,187 +998,159 @@ Perceptual research tool. Separate from analytical engines.
 
 ---
 
-### Session D+ — Research assistant / chat design
-The biggest single open design. Gets its own session after Cosmology
-because it needs to understand all the systems it supports.
+## BUILD TIER 7 — DASHBOARD + NOTIFICATIONS + EXPORT + PIPELINE CONTRACTS
 
-**Scope:**
-- [ ] What the assistant owns vs. what it doesn't (RAG pipeline, Claude API)
-- [ ] How it accesses the archive (embedding pipeline, vector search)
-- [ ] How it knows page context (lens frame, active engine state)
-- [ ] How it helps articulate observations ("I notice X" → structured deposit)
-- [ ] How it helps frame hypotheses ("this looks like Shannon entropy" → computation)
-- [ ] How it interacts with Cosmology computations
-- [ ] UI design — chat window, inline on pages, or both?
-- [ ] What gets embedded? All deposits? Findings? Schemas?
-- [ ] Mode switching (#15): research mode vs. Ven'ai mode
-      Ven'ai mode: translate on the spot while researching, come across a
-      word and get immediate translation. Sage wants to learn the language.
-      Ven'ai learning module lives with api/prompts/ — the reference material
-      (Venai_Domain.txt, Venai_Glossary.txt, Venai_Phonetics.txt, Ven'ai_Manual.txt)
-      feeds the assistant in Ven'ai mode.
-- [ ] Possible additional modes: analysis mode, cosmology mode, etc.?
-- [ ] Output: research assistant design spec + mode architecture
+**Depends on:** Tier 6 (all systems exist; dashboard and meta layer sit on top)
+**What gets built:** Dashboard (mission control), notification system
+(in-app + email), export system (JSON, MD, Google Drive), full pipeline
+contracts, page relationship visualization.
 
-**Why this matters:**
-The assistant is the bridge between "I notice more than I can name" and
-"here's the computation that names it." Without it, every analytical step
-is manual. With it, the system actively supports the research process.
-It's what makes the lens pages and Cosmology pages usable day-to-day.
-Mode switching makes it a multi-tool — research, translation, analysis
-all accessible from the same interface.
+**Why this is Tier 7:** The meta-layer above everything. Dashboard aggregates
+from all systems. Notifications fire from all engines. Exports package
+what all systems produce. Pipeline contracts document how all pieces
+connect end-to-end. These require everything beneath them to exist.
 
----
+### Design items
 
-### Session E — Nexus visualization design + WSC/LNV schemas
-Define what Nexus produces visually. Formalize WSC and LNV.
+**Dashboard (root route — src/routes/+page.svelte):**
 
-**Scope:**
-- [ ] PCV visualizations: hypothesis board, cross-domain pattern map
-- [ ] DTX visualizations: drift timeline, trajectory probability distributions
-- [ ] SGR visualizations: score radar charts, tier dashboard, grade latency
-- [ ] LNV: how it receives and stores visualization snapshots from all pages
-- [ ] WSC schema: entry structure, 3-entry session open protocol,
-      sovereign-from-DNR boundary, RESEARCHER NOTE optional field
-      (Sage participates in WSC via this field — methodology notes,
-       researcher state, what they noticed that the AI didn't)
-- [ ] LNV schema: receive contract, provenance tracking, visualization storage
-- [ ] Output: Nexus viz specs + WSC schema + LNV schema
-
-**Open questions:**
-- What chart library? (Svelte-compatible: Chart.js, D3, LayerCake?)
-- Are visualizations interactive or static snapshots?
-- How are LNV snapshots stored? (rendered image? data + template? both?)
-
----
-
-### Session E+ — Dashboard, notifications, export system, UI architecture
-The meta-layer above the 50 pages. Mission control.
-Wiring the outputs back in. JSON, MD, Google Drive, formatted exports.
-
-**Scope:**
-
-Dashboard (root route — src/routes/+page.svelte):
 - [ ] Semantic map — archive coverage visualization. Clusters, gaps, voids.
       Built from embedding vectors. Shows where deposits concentrate and
       where the research hasn't looked yet. The void IS data.
+      (2D projection: t-SNE/UMAP or custom visualization?)
+
 - [ ] Notification center — patterns detected, findings graded, drift events.
       In-app notifications stored in operational DB, displayed on dashboard.
+
 - [ ] Email notification system — S-Tier signals, critical findings, pattern
       milestones pushed to Sage's inbox. The system works when you're away.
       (FastAPI background task + email service: SendGrid, SES, or SMTP)
+
 - [ ] WSC handoff — last AI transmission displayed front and center.
       Orientation before the session begins.
-- [ ] Scratch pad — quick capture accessible from dashboard. Notice something,
-      drop it, keep moving. No tagging required. Can be promoted to deposit later.
+
+- [ ] Black Pearl — dashboard surface for Black Pearl (data model in Tier 1,
+      per-page UI in Tier 2, dashboard placement here).
+
 - [ ] Active patterns summary — what's live in PCV/DTX/SGR right now.
+
 - [ ] Recent activity feed — what happened since last session.
 
-Page identity (the 50 pages should FEEL different):
-- [ ] Different page types get different visual language:
-      Gateway (INT), Lens (Axis), Synthesis (MTM), Engine (Nexus),
-      Output (LNV), Scroll (WSC), Investigation (Cosmology), Domain (others)
-- [ ] Layout, density, and available controls reflect function
-- [ ] Page relationship visualization — where deposits flow, what connects
+**Export system:**
 
-Export system:
 - [ ] Export formats: JSON, Markdown, Google Drive integration
 - [ ] What's exportable? Deposits, findings, visualizations, full pages?
 - [ ] Export per-page or system-wide?
-- [ ] Shared UI patterns: A-Z sorting, date sorting, filtering, search
+- [ ] Google Drive: OAuth? Service account? Manual export + upload?
+- [ ] Do exports include computed views (charts) or just raw data?
 
-UI architecture:
-- [ ] System schemas define what's computed, frontend doc defines rendering
-- [ ] Where UI specs live — one frontend architecture doc? Per-page specs?
-- [ ] Output: dashboard spec + notification system spec + export spec + UI arch doc
+**Page relationship visualization:**
 
-**Open questions:**
+- [ ] Where deposits flow, what connects to what
+      (visual map of the full system — how pages relate)
+
+**Full pipeline contracts (end-to-end documentation):**
+
+- [ ] INT → 5 Axis lenses → MTM → LNV full pipeline contract
+- [ ] PCV → DTX ↔ SGR pipeline contract (already mostly defined)
+- [ ] Axis → Cosmology investigation flow
+- [ ] Cosmology → Nexus feedback loop (findings re-entering PCV for grading)
+- [ ] Null observation flow through the FULL pipeline (INT → pages → engines
+      → Void → PCV → Cosmology → back)
+- [ ] Shared visualization component architecture (Svelte components)
+- [ ] Computation architecture: what runs where (backend scipy? frontend?)
+- [ ] How heavy is the computation? Performance budget for page load?
+
+### Open questions (Tier 7)
+
 - Google Drive: OAuth? Service account? Manual export + upload?
 - Do exports include computed views (charts) or just raw data?
 - Semantic map: 2D projection (t-SNE/UMAP) or custom visualization?
 - Email: what triggers an email vs. in-app only? Threshold of importance?
-- Scratch pad: how long do items live before being promoted or archived?
-- Page identity: how much visual differentiation? Color coding? Layout shifts?
-
----
-
-### Session F — Pipeline contracts + visualization architecture
-Document the full system flows and shared technical architecture.
-
-**Scope:**
-- [ ] INT → 5 Axis lenses → MTM → LNV pipeline contract
-- [ ] PCV → DTX ↔ SGR pipeline contract (already mostly defined)
-- [ ] Axis → Cosmology investigation flow
-- [ ] Cosmology → Nexus feedback loop (findings re-entering PCV for grading)
-- [ ] Null observation flow through the full pipeline
-- [ ] "Generated on view, snapshot to LNV" technical spec
-- [ ] Shared visualization component architecture (Svelte components)
-- [ ] Computation architecture: what runs where (backend scipy? frontend?)
-- [ ] Output: pipeline contracts + viz architecture doc
-
-**Open questions:**
+- Page relationship viz: is this a static map or interactive navigation?
 - Does every session close snapshot ALL pages or only pages with new data?
-- How heavy is the computation? Performance budget for page load?
 - Do Cosmology computations run on-demand or on deposit?
 
 ---
 
-### Session G — Schema writing pass
-Take all specs from A-F and write formal schemas.
+## BUILD TIER 8 — STRESS TEST + FINISH LINE + SOT
 
-**Scope:**
-- [ ] 5 Axis engine schemas (THR, STR, INF, ECR, SNM)
-- [ ] WSC schema
-- [ ] LNV schema
-- [ ] Deposit schema additions (null observations, conditions, quality)
-- [ ] Cosmology engine schemas (HCO, COS, CLM, NHM, RCT, possibly ART)
-- [ ] Update existing schemas with new fields where needed
-- [ ] Output: all new schemas written and cross-referenced
+**Depends on:** Tiers 1-7 (everything designed)
+**What gets built:** Nothing new. This tier validates everything above.
+Full adversarial review, stub and placeholder sweep, finish line inventory,
+SOT readiness check.
 
----
+**Why this is Tier 8:** Clean session. No design, no fixes. Take the entire
+system state and try to break it. Find gaps, contradictions, unwired
+handoffs, unconfirmed assumptions. Findings only — Sage decides what
+gets acted on.
 
-### Session H — Stress test + finish line inventory + SOT readiness
-The adversarial review. Nothing designed, nothing fixed — findings only.
+### Design items
 
-**Scope:**
-- [ ] Full stress test of all new schemas against everything they touch
-- [ ] Full stress test of all existing schemas for cascading effects
-- [ ] Finish line inventory — complete list of everything for app at localhost
-- [ ] SOT readiness check
+- [ ] Full stress test of all NEW schemas against everything they touch
+- [ ] Full stress test of all EXISTING schemas for cascading effects from
+      new additions
+- [ ] Stub and placeholder sweep — walk every schema and system doc for
+      PLANNED/STUB/PLACEHOLDER items. Each gets: valid (stays), premature
+      (remove), or needs-design (flag).
+- [ ] Finish line inventory — complete list of EVERYTHING needed for app
+      at localhost. Every system, page, endpoint, component. This becomes
+      the build checklist SOT encodes.
+- [ ] SOT readiness check — are all blocking gaps closed? Are all
+      calibration items documented? Green light = SOT can be written.
 - [ ] Output: stress test findings + finish line inventory + SOT green light
 
 ---
 
-## REMAINING AGENDA ITEMS (from original 19)
+## CROSS-TIER ITEMS
 
-Tracking where each item lands in the session plan.
+Items that don't belong to a single tier or can be done at any point.
+
+- [ ] #13 TRIA name change — T = Triadic. Name rotted somewhere — incorrect
+      expansion. Quick fix. Find and correct. Can be done any session.
+
+- [ ] #14 API folder rewrite — api/ folder content is pre-quarantine, very
+      narrative. Needs full rewrite to match current architecture and
+      analytical posture. Good bones. Separate session after design sessions.
+
+- [ ] Schema writing pass — as each tier completes design, formal schemas
+      are written for that tier's systems:
+      · Tier 1: deposit schema additions (null obs, conditions, quality, swarm fields)
+      · Tier 2: Void page manifest + schema slot
+      · Tier 3: 5 Axis engine schemas (THR, STR, INF, ECR, SNM)
+      · Tier 4: WSC schema, LNV schema, Void engine schema
+      · Tier 5: Cosmology engine schemas (HCO, COS, CLM, NHM, RCT, possibly ART)
+      · Tier 6: Research assistant spec, resonance audio spec
+      · Update existing schemas with new fields where needed at each tier
+
+---
+
+## AGENDA ITEM TRACKER (from original 19)
+
+Updated to show build tier mapping instead of session mapping.
 
 - [x] #1 Axis engine audit — DONE (session 14)
 - [x] #3 Nexus engine audit — DONE (session 14)
 - [x] #16 File renaming + folder tree — DONE (session 14)
-- [ ] #2 Ven'ai name tracking → Session C (expanded: names + phases + roles + grammar)
-- [ ] #4 Duplicate finder → Session A (identical-entry hash check on deposits)
-      + Session C (Ven'ai name deduplication)
-- [ ] #5 Resonance engine + harmonics → Session B+ (audio sonification of nodes)
-- [ ] #6 Research assistant / chat → Session D+ (with Ven'ai mode switching)
-- [ ] #7 Batch processing → Session A (V1 — confirmed, large file upload + chunking)
-- [ ] #8 Export/backup wiring → Session E+ (JSON, MD, Google Drive exports)
-- [ ] #9 Media deposit wiring → Session A (images as tagged deposits, cross-page)
-- [ ] #10 doc_type tag design → Session A (INT tagging field alongside deposit weights)
-- [ ] #11 Engine UI surfaces → covered by Sessions B-E
-- [ ] #12 Smaller UI decisions → Session E+ (sorting, filtering, standard patterns)
-- [ ] #13 TRIA name change → quick fix. T = Triadic. Name rotted somewhere.
-      Find incorrect expansion and correct it. Can be done any session.
-- [ ] #14 API folder rewrite → separate session. Good bones, needs full rewrite
-      to match current architecture.
-- [ ] #15 Ven'ai learning module → Session D+ (mode in research assistant chat,
-      api/prompts/ feeds Ven'ai mode, translate-on-spot while researching)
-- [ ] #17 Stub and placeholder sweep → after all design sessions, before SOT
-- [ ] #18 Finish line inventory → Session H
-- [ ] #19 Stress test → Session H
+- [ ] #2 Ven'ai name tracking → **Tier 3** (unified: names + phases + roles + grammar in STR engine)
+- [ ] #4 Duplicate finder → **Tier 1** (identical-entry hash in INT) + **Tier 3** (Ven'ai name dedup)
+- [ ] #5 Resonance engine + harmonics → **Tier 6** (audio sonification)
+- [ ] #6 Research assistant / chat → **Tier 6** (with Ven'ai mode switching)
+- [ ] #7 Batch processing → **Tier 1** (large file upload + chunking in INT engine)
+- [ ] #8 Export/backup wiring → **Tier 7** (JSON, MD, Google Drive exports)
+- [ ] #9 Media deposit wiring → **Tier 1** (images as tagged deposits through INT)
+- [ ] #10 doc_type tag design → **Tier 1** (INT tagging field on deposit record)
+- [ ] #11 Engine UI surfaces → **Tiers 3-5** (each engine gets its viz in its own tier)
+- [ ] #12 Smaller UI decisions → **Tier 2** (shared patterns) + **Tier 7** (export/dashboard patterns)
+- [ ] #13 TRIA name change → **Cross-tier** (quick fix, any session)
+- [ ] #14 API folder rewrite → **Cross-tier** (separate session)
+- [ ] #15 Ven'ai learning module → **Tier 6** (mode in research assistant)
+- [ ] #17 Stub and placeholder sweep → **Tier 8** (before SOT)
+- [ ] #18 Finish line inventory → **Tier 8**
+- [ ] #19 Stress test → **Tier 8**
 
-**All 19 items now have a home.** No orphans. No V1/not-V1 decisions remaining.
-#14 API rewrite is the only item that needs its own separate session beyond the plan.
+**All 19 items have homes. Zero orphans.**
+**Void (page 51) added in session 15 — lives in Tier 2 (surface) + Tier 4 (engine).**
 
 ---
 
@@ -679,14 +1238,14 @@ Decisions made during design sessions. Recorded with reasoning.
 - IDENTICAL entries only. Hash-based exact match. Not fuzzy, not similar.
 - Failsafe for copies-of-copies (Sage has thousands of files, some duplicated)
 - Lives in INT deposit flow + available per-page
-- Ven'ai name deduplication is separate (Session C, part of STR engine)
+- Ven'ai name deduplication is separate (part of STR engine, Tier 3)
 
 **Resonance engine (#5) scoped:**
 - Audio sonification of visual nodes. Each node has original harmonics.
 - Web Audio API. Perceptual research tool, not analytical engine.
 - Previous IDB attempt failed — arbitrary data-to-sound mapping. Need to
   design harmonic relationships FIRST, then map data to them.
-- Gets its own session (B+) — creative audio design problem.
+- Gets its own design block in Tier 6.
 
 **Batch processing (#7) confirmed V1:**
 - Large file upload to INT. Files 800-1500 pages.
@@ -698,11 +1257,10 @@ Decisions made during design sessions. Recorded with reasoning.
 - JSON, MD, Google Drive. All formatted outputs wired back in.
 - UI architecture: system schemas define what's computed, frontend
   architecture doc defines how it's rendered. Separate concerns.
-- Gets its own session (E+)
 
 **Media deposits (#9) confirmed:**
 - Images tagged and saved as deposits. Cross-page. Glyphs are a doc_type.
-- Wires into deposit schema (Session A).
+- Wires into INT engine (Tier 1).
 
 **doc_type (#10) placed:**
 - INT tagging field. Lives on deposit record alongside deposit weights
@@ -711,62 +1269,142 @@ Decisions made during design sessions. Recorded with reasoning.
 
 **TRIA name (#13) identified:**
 - T = Triadic. Name rotted somewhere — incorrect expansion.
-- Quick fix, can be done any session. Find and correct.
+- Quick fix, can be done any session. Cross-tier item.
 
 **API rewrite (#14) confirmed:**
-- Good bones, needs full rewrite. Gets its own session after design sessions.
+- Good bones, needs full rewrite. Separate session. Cross-tier item.
 
 **Ven'ai learning module (#15) placed:**
 - Lives with api/prompts/ (reference material already there)
-- Mode switching in research assistant chat window
+- Mode switching in research assistant (Tier 6)
 - Research mode vs. Ven'ai mode — translate on the spot while researching
 - Sage wants to learn the language
-- Folds into Session D+ (research assistant design)
 
 **All 19 original agenda items now have homes. Zero orphans.**
 
 ### Session 14 — third pass (system-level additions)
 
-**Scratch layer confirmed — hard need:**
+**Black Pearl confirmed — hard need:**
 - Pre-deposit quick capture. No tagging, no commitment.
 - "Capture the noticing before the naming."
 - Accessible from dashboard and within any page.
 - Can be promoted to deposit or left as raw signal.
-- Goes into Session A (deposit schema — it's a record type).
+- Data model: Tier 1. Per-page UI: Tier 2. Dashboard surface: Tier 7.
 
 **Dashboard confirmed — new root surface:**
 - The meta-layer above the 50 pages. Mission control.
-- Semantic map, notifications, WSC handoff, scratch pad, active patterns.
+- Semantic map, notifications, WSC handoff, Black Pearl, active patterns.
 - Lives at root route (src/routes/+page.svelte).
 - Not a 51st page — the shell that holds the 50.
-- Goes into Session E+ (now expanded).
+- Tier 7.
 
 **Notification system confirmed — in-app AND email:**
 - In-app: stored in operational DB, displayed on dashboard.
 - Email: S-Tier signals, critical findings, pattern milestones.
 - "The system should work for you when you're not in it."
-- Goes into Session E+ (notification spec).
+- Tier 7.
 
 **Swarm foundation fields confirmed:**
 - authored_by, node_id, instance_context on every deposit.
 - V1 cost: zero (always same values). V2+ value: critical.
 - Sage already tracks provenance in Echoes — can provide for most entries.
-- Goes into Session A (deposit schema).
+- Tier 1 (deposit record).
 
 **Semantic map confirmed:**
 - Built from embedding vectors. Shows archive coverage: clusters and voids.
 - "The void IS data" — empty semantic space = unexplored territory.
 - Lives on the dashboard. Navigation + research planning tool.
-- Goes into Session E+ (dashboard design).
+- Tier 7.
 
 **Page identity confirmed:**
 - 50 pages should feel different based on function type.
 - Gateway, Lens, Synthesis, Engine, Output, Scroll, Investigation, Domain.
 - Visual language signals function. Not decorative — structural.
-- Goes into Session E+ (UI architecture).
+- Tier 2.
 
 **V1-V5 trajectory documented:**
 - V1: foundation with multi-agent metadata. V2: swarm. V3: automated
   computation. V4: proactive partner. V5: transmissible research.
 - Every V1 decision asks: does this close a door V2-V5 needs open?
 - "Show me V5 and I will wire it before the SOT ever has a title typed."
+
+### Session 15 (2026-04-05)
+
+**Void page confirmed:**
+- Page 51 in Nexus group. Absence as data surface.
+- Aggregates all null observations across the archive.
+- Distinct from dashboard semantic map: dashboard = coverage voids (where
+  haven't you looked?), Void = observational absence (where you looked
+  and found nothing).
+- Surface: Tier 2. Engine: Tier 4.
+
+**Build plan reorganized:**
+- Moved from topic-based sessions (A-H) to dependency-ordered build tiers (1-8).
+- Reason: topic-based ordering would mean jumping between dependency layers
+  during build, complicating implementation. Build-order follows the
+  dependency chain: INT engine first → pages → engines → synthesis/detection →
+  Cosmology → assistant → dashboard → stress test.
+- Original plan preserved at design-session-plan-ORIGINAL.md.
+
+**Tier 1 — full design completed:**
+
+Deposit record fields designed:
+- `doc_type` — 9-value enum (entry, observation, analysis, hypothesis,
+  discussion, transcript, glyph, media, reference). AI-suggested via tagger.
+- `source_format` — 6-value enum (digital, handwritten, scan, image, audio,
+  file). Separate axis from doc_type.
+- `observation_type: positive | null` — conditional, only for researcher
+  doc_types (observation, analysis, hypothesis).
+- `confidence: clear | emerging | raw` — conditional, same doc_types.
+- `notes` — universal optional freeform field on ALL deposits. Replaces
+  the originally proposed researcher_state, session_depth, and condition_notes.
+- `deposit_weight: high | standard | low` — AI-suggested via tagger.
+- `source_type: field | generated` — existing, non-nullable (F26+F10).
+- Swarm fields: authored_by, node_id, instance_context — on every deposit.
+- DROPPED: deposit_depth (redundant), researcher_state (invasive),
+  session_depth (invasive), condition_notes (replaced by universal notes).
+
+INT workstation designed:
+- Dual panel: upload + review (left), AI parsing partner (right).
+- Right panel is a scoped batch processing collaborator, NOT the full
+  research assistant (Tier 6). Critical distinction — keeps Tier 1
+  buildable without requiring the biggest open design question.
+- Two modes: native (INT entries) and source (document intake) — from
+  existing Composite ID schema.
+
+Batch processing designed:
+- One document at a time. Root stamp per document (Composite ID source mode).
+- AI chunks 5-8 pages, rolling buffer 3-5 chunks ahead of Sage's review.
+- Review queue is per-DEPOSIT, not per-chunk (one chunk → multiple deposits
+  to different pages, each reviewed individually, grouped by source chunk).
+- Each approval triggers immediate deposit — archive builds in real-time.
+- Chunk tracking in operational DB: document record, chunk index, per-chunk
+  status, per-deposit status. Full session persistence.
+- Sage's corrections feed forward into AI's subsequent chunk parsing.
+
+Media wiring designed:
+- V1: JPEG/PNG only. Audio future.
+- Filesystem storage (backend/media/), database stores metadata + path.
+- Simpler flow than batch — one image, AI analyzes, Sage writes summary,
+  tags suggested, deposits through INT.
+- Display: large thumbnail + expand lightbox + Sage's summary text.
+
+Duplicate detection designed:
+- Hash full content text. WARN, not block. Sage decides whether to
+  deposit duplicate content. Same content on two pages may be intentional.
+
+Black Pearl designed:
+- Named for the field term for null space: infinite possibility of not yet.
+- Global capture system, NOT owned by INT.
+- Storage: operational DB (pre-archive). Promotes through INT to PostgreSQL.
+- Preserves invariant: nothing enters archive without INT provenance.
+- Pearl record: content, timestamp, page_context, status (active|promoted|archived).
+- No auto-expiry. Sage decides when/if Pearls become deposits.
+
+Six design enhancements added during session 15 review:
+1. Universal `notes` field replaces researcher-only condition fields
+2. `deposit_weight` given explicit format: high | standard | low
+3. Review queue granularity: per-deposit, not per-chunk
+4. Black Pearl storage: operational DB, promotes through INT (preserves invariant)
+5. Duplicate detection: warn, not block
+6. INT chat window ≠ research assistant (scoped parsing partner only)
