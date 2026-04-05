@@ -284,13 +284,9 @@ SYSTEM_ Frontend.md. Written during infrastructure stage (step 2).
 
 **CLEAN — authoritative:**
 ```
-DOCS/Systems/     — verified schemas and system documents
-DOCS/Domains/     — verified domain files
+DESIGN/Systems/     — verified schemas and system documents (organized in named subfolders)
+DESIGN/Domains/     — verified domain files (organized in numbered group folders 01–10)
 ```
-Note: some DOCS/Systems/ files will be renamed or updated during
-infrastructure stage (step 2) to reflect the new architecture. They
-remain authoritative after update. See infrastructure plan for the
-full DOCS update map.
 
 **ACTIVE — valid, do not delete or treat as contaminated:**
 ```
@@ -312,18 +308,19 @@ These directories contain the infrastructure skeleton from stages 5-6.
 Models, routes, services, components, and stores are not yet written —
 those are built from SOT in the core files phase (step 4).
 
-**OLD BUILD — contaminated, read-only reference:**
+**CLAUDE WORKING FILES — .claude/ directory:**
 ```
-core/             — old JS modules (data.js, schema.js, ids.js, etc.)
+.claude/            — Claude-generated working files (plans, memory, settings)
 ```
-The old build. Reference artifacts only — not the planned rebuild.
-index.html and serve.py were deleted in session 8.
-Do not modify. Do not treat any code, structure, or naming as canonical.
-Will be replaced when the rebuild reaches the core files phase.
+All Claude-generated files go in .claude/ unless absolutely needed
+elsewhere. Do not create working files, memory files, or session
+artifacts outside this directory.
 
-**_REFERENCE_ONLY — removed:**
-Deleted by Sage. Sessions were drawing from it without verification.
-No longer accessible. Do not reference, recreate, or attempt to restore.
+**REMOVED — session 14:**
+- `core/` — old build JS modules. Deleted. No longer needed.
+- `backups/` — old manual backup folder (installers, index snapshots).
+  Deleted. Superseded by backup.py + git + B2.
+- `_REFERENCE_ONLY/` — deleted by Sage in prior session.
 
 ---
 
@@ -426,7 +423,7 @@ The same weight as a code rule violation. Not a missed reminder.
 ## BEFORE EVERY SESSION
 
 1. Read this file completely
-2. Verify DOCS/Systems/ and DOCS/Domains/ state — do not assume it matches
+2. Verify DESIGN/Systems/ and DESIGN/Domains/ state — do not assume it matches
    any prior session's record
 3. Read PROTOCOL/ENFORCEMENT.md
 4. Read PROTOCOL/GITHUB_PROTOCOL.md

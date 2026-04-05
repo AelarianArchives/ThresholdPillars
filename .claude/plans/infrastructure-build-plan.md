@@ -98,7 +98,7 @@ Only launch components are implemented. This means:
 | THREAD TRACE SCHEMA.md        | Thread storage PG, filter queries via FastAPI   | 7     |
 | COMPOSITE ID SCHEMA.md        | Sequence counter in backend DB, no IDB counter  | 7     |
 | RESONANCE ENGINE SCHEMA.md    | Canvas -> Svelte component, data via API        | 6     |
-| resonance_engine_system.md    | Sync with RESONANCE ENGINE SCHEMA, remove old   | 6     |
+| SYSTEM_ Resonance Engine.md    | Sync with RESONANCE ENGINE SCHEMA, remove old   | 6     |
 |                               | refs (CustomEvent, index.html, canvas)          |       |
 | SYSTEM_ Thread Trace.md       | Sync with THREAD TRACE SCHEMA, remove old refs  | 7     |
 |                               | (TaggerBus, data.js, IDB)                       |       |
@@ -418,7 +418,7 @@ Confirm: dev server starts, page loads at localhost (default port 5173).
 2. Update `RESONANCE ENGINE SCHEMA.md` — canvas rendering becomes Svelte
    component (ResonanceCanvas), physics simulation data fetched via API,
    node positions managed in Svelte store, no vanilla JS animation loop
-3. Update `resonance_engine_system.md` — sync with RESONANCE ENGINE SCHEMA
+3. Update `SYSTEM_ Resonance Engine.md` — sync with RESONANCE ENGINE SCHEMA
    updates. Remove 7 old refs (CustomEvent, index.html, canvas refs).
    Replace with Svelte component architecture, API data layer.
    (Category A from session 9 integrity scan)
@@ -513,7 +513,7 @@ git push
 Infrastructure is complete when all 7 stages are committed and pushed.
 Stage gate closes. Then:
 
-1. **Systems verification run** — read every DOCS/Systems file, confirm
+1. **Systems verification run** — read every DESIGN/Systems file, confirm
    all references are consistent with new architecture. No IDB references
    remain in any file except as historical context.
 2. **V1 scan** — confirm every file carries V1 designation, no legacy

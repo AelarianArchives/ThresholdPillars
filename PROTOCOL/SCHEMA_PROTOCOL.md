@@ -11,14 +11,14 @@ Defines three things:
 2. The human-readable schema cascade reference
 3. Verification prompt templates for domain and system files
 
-All schema and domain files in DOCS/ are verified. This protocol protects
+All schema and domain files in DESIGN/ are verified. This protocol protects
 that verification state through every future modification.
 
 ---
 
 ## 1. SCHEMA MODIFICATION PROCEDURE
 
-Run this procedure before changing any file in DOCS/Systems/ or DOCS/Domains/.
+Run this procedure before changing any file in DESIGN/Systems/ or DESIGN/Domains/.
 
 1. State the intended change — what field, section, or rule is being modified
    and why. Do not begin the edit until this is stated and acknowledged.
@@ -79,7 +79,7 @@ Touches: COMPOSITE ID SCHEMA.md · INTEGRATION IDB SCHEMA.md · TAGGER SCHEMA.md
 ---
 
 ### TAGGER SCHEMA.md
-Touches: RESONANCE ENGINE SCHEMA.md · EMERGENCE SCHEMA.md · Tagger System.md · INTEGRATION SCHEMA.md
+Touches: RESONANCE ENGINE SCHEMA.md · EMERGENCE SCHEMA.md · SYSTEM_ Tagger.md · INTEGRATION SCHEMA.md
 
 - Resonance Engine: ae:tagCommit payload field names are a hard contract.
   seed_id/layer_id/threshold_id/pillar_id — exact spelling, always
@@ -188,7 +188,7 @@ For each domain in this group verify:
 5. Signal profile tags exist in the tag vocabulary
 
 6. Cross-check against any relevant system schema
-   in DOCS/Systems/ for alignment
+   in DESIGN/Systems/ for alignment
 
 For each file: state what is correct, what is missing,
 what needs correction. Do not fix anything yet.

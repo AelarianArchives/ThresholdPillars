@@ -88,7 +88,7 @@ Do not reorder.
 4. Read ENFORCEMENT.md completely
 5. Re-derive current file state from disk — not from memory, not from the log.
    Read the actual files. Confirm what exists, what is PLANNED, what is clean
-6. Check DOCS/Systems/ and DOCS/Domains/ — confirm state matches last
+6. Check DESIGN/Systems/ and DESIGN/Domains/ — confirm state matches last
    known record. Name any discrepancy before proceeding
 6a. Spot-check SOT_BUILD_TODO.md — for every item marked [x], verify that
     Sage's explicit approval exists in SESSION_LOG.md. A Claude session marking

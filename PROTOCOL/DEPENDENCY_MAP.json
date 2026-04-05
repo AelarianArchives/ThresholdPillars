@@ -134,77 +134,77 @@
       "reason": "App shell. Loads and wires all core files. Canvas element ownership defined here. All API call sites live here. Any structural change to index.html may affect initialization order, canvas references, or API surface of any core file."
     },
 
-    "DOCS/Systems/TAGGER SCHEMA.md": {
+    "DESIGN/Systems/TAGGER SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/RESONANCE ENGINE SCHEMA.md",
-        "DOCS/Systems/EMERGENCE SCHEMA.md",
-        "DOCS/Systems/Tagger System.md",
-        "DOCS/Systems/INTEGRATION SCHEMA.md"
+        "DESIGN/Systems/RESONANCE ENGINE SCHEMA.md",
+        "DESIGN/Systems/EMERGENCE SCHEMA.md",
+        "DESIGN/Systems/SYSTEM_ Tagger.md",
+        "DESIGN/Systems/INTEGRATION SCHEMA.md"
       ],
-      "reason": "ae:tagCommit payload structure is a shared contract with resonance_engine and emergence. Sync sequence must stay aligned with Tagger System.md. Tag routing feeds INT step 5."
+      "reason": "ae:tagCommit payload structure is a shared contract with resonance_engine and emergence. Sync sequence must stay aligned with SYSTEM_ Tagger.md. Tag routing feeds INT step 5."
     },
 
-    "DOCS/Systems/RESONANCE ENGINE SCHEMA.md": {
+    "DESIGN/Systems/RESONANCE ENGINE SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/TAGGER SCHEMA.md"
+        "DESIGN/Systems/TAGGER SCHEMA.md"
       ],
       "reason": "Receives ae:tagCommit payload — payload field names must match exactly what tagger fires. seed_id/layer_id/threshold_id/pillar_id not seed/layer/threshold/pillar."
     },
 
-    "DOCS/Systems/COMPOSITE ID SCHEMA.md": {
+    "DESIGN/Systems/COMPOSITE ID SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/INTEGRATION SCHEMA.md",
-        "DOCS/Systems/INTEGRATION IDB SCHEMA.md"
+        "DESIGN/Systems/INTEGRATION SCHEMA.md",
+        "DESIGN/Systems/INTEGRATION IDB SCHEMA.md"
       ],
       "reason": "Stamp format and sequence counter behavior referenced in integration flow. buildCompositeId() vs previewCompositeId() distinction load-bearing."
     },
 
-    "DOCS/Systems/INTEGRATION SCHEMA.md": {
+    "DESIGN/Systems/INTEGRATION SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/COMPOSITE ID SCHEMA.md",
-        "DOCS/Systems/INTEGRATION IDB SCHEMA.md",
-        "DOCS/Systems/TAGGER SCHEMA.md"
+        "DESIGN/Systems/COMPOSITE ID SCHEMA.md",
+        "DESIGN/Systems/INTEGRATION IDB SCHEMA.md",
+        "DESIGN/Systems/TAGGER SCHEMA.md"
       ],
       "reason": "References composite ID stamp assignment, IDB store write sequence, and tagger routing at step 5. Changes here cascade to all three."
     },
 
-    "DOCS/Systems/INTEGRATION IDB SCHEMA.md": {
+    "DESIGN/Systems/INTEGRATION IDB SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/INTEGRATION SCHEMA.md"
+        "DESIGN/Systems/INTEGRATION SCHEMA.md"
       ],
       "reason": "Store definitions must match what INTEGRATION SCHEMA.md describes. intake_status field placement is a confirmed conflict point — see file header."
     },
 
-    "DOCS/Systems/METAMORPHOSIS SCHEMA.md": {
+    "DESIGN/Systems/METAMORPHOSIS SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/DAILY NEXUS ROUTINE SCHEMA.md"
+        "DESIGN/Systems/DAILY NEXUS ROUTINE SCHEMA.md"
       ],
       "reason": "MTM.runSynthesis() public API called by DNR as step 1. prior_mtm_session_ids (plural) confirmed in both. Return type must match what DNR expects."
     },
 
-    "DOCS/Systems/DAILY NEXUS ROUTINE SCHEMA.md": {
+    "DESIGN/Systems/DAILY NEXUS ROUTINE SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/METAMORPHOSIS SCHEMA.md"
+        "DESIGN/Systems/METAMORPHOSIS SCHEMA.md"
       ],
       "reason": "Calls MTM.runSynthesis(). DNR sequence is strictly ordered — step 1 MTM, step 2 LNV notification. WSC is not part of this routine."
     },
 
-    "DOCS/Systems/EMERGENCE SCHEMA.md": {
+    "DESIGN/Systems/EMERGENCE SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/THREAD TRACE SCHEMA.md",
-        "DOCS/Systems/TAGGER SCHEMA.md"
+        "DESIGN/Systems/THREAD TRACE SCHEMA.md",
+        "DESIGN/Systems/TAGGER SCHEMA.md"
       ],
       "reason": "Thread Trace bridge via window.ThreadTraceUI. onTagSessionComplete sequence depends on tagger commit hook. setEntriesFetcher order dependency."
     },
 
-    "DOCS/Systems/THREAD TRACE SCHEMA.md": {
+    "DESIGN/Systems/THREAD TRACE SCHEMA.md": {
       "affects": [
-        "DOCS/Systems/EMERGENCE SCHEMA.md"
+        "DESIGN/Systems/EMERGENCE SCHEMA.md"
       ],
       "reason": "window.ThreadTraceUI global used by emergence as bridge. Graph export stub must stay disabled in both. DB version dependency with data.js."
     },
 
-    "DOCS/Domains/Master Domain List.txt": {
+    "DESIGN/Domains/Master Domain List.txt": {
       "affects": [],
       "reason": "Top-level domain registry. Any domain addition, removal, or page code change should be reflected here."
     }

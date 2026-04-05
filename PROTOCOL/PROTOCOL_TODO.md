@@ -99,8 +99,8 @@ any code writing begins. These are not optional.
 
 ## SECTION 2 — FOLDER TREE: VERIFY AND RESOLVE
 
-- [x] DOCS/Systems/ — 20 verified schema/system files confirmed
-- [x] DOCS/Domains/ — 10 group folders confirmed present
+- [x] DESIGN/Systems/ — 20 verified schema/system files confirmed
+- [x] DESIGN/Domains/ — 10 group folders confirmed present
 
 - [x] JS/ — DELETED (was empty)
 - [x] Tools/ — DELETED (was empty)

@@ -4570,3 +4570,108 @@ UNCOMMITTED: YES (this CLOSE entry — included in commit below)
 NEXT_ACTION: Next session: design finish line — work through 19 pre-SOT topics
   (systems/engines, data wiring, housekeeping). Then stress test. Then SOT.
 ---
+
+---
+TIMESTAMP: 2026-04-05 (session 14)
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Session open protocol: CLAUDE.md, ENFORCEMENT.md, SESSION_PROTOCOL.md,
+    GITHUB_PROTOCOL.md all read. SOT_BUILD_TODO spot-check passed — all [x]
+    items have valid SOURCE: lines tracing to DOCS files + Sage confirmations.
+    Disk state verified against session 13 CLOSE record — no discrepancies.
+    Session 13 closed clean.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Design finish line session (19 topics — see memory/project_design_session_agenda.md)
+  - Stress test session
+  - SOT document
+UNCOMMITTED: NO
+NEXT_ACTION: Begin design finish line — 19 pre-SOT topics with Sage
+---
+
+---
+TIMESTAMP: 2026-04-05 (session 14)
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DOCS/ → DESIGN/ — COMPLETE (top-level rename)
+  - DESIGN/Domains/ — COMPLETE (10 numbered folders: 01_Integration through 10_Nexus)
+  - ~50 domain files — COMPLETE (renamed to Domain_Name.txt convention)
+  - ~50 manifest files — COMPLETE (renamed to Manifest_XX_Name.txt convention)
+  - DESIGN/Systems/ — COMPLETE (17 named subfolders created, all files moved in)
+  - SYSTEM_ Tagger.md — COMPLETE (renamed from Tagger System.md)
+  - SYSTEM_ Resonance Engine.md — COMPLETE (renamed from resonance_engine_system.md)
+  - SECTION MAP.md, TAG VOCABULARY.md — COMPLETE (stay at Systems/ root, cross-cutting)
+  - memory/ → .claude/memory/ — COMPLETE (MEMORY.md + arcphase_rot.md moved)
+  - backups/ — DELETED (installers, old index files, ipa-proxy.js — superseded by backup.py + git + B2)
+  - core/ — DELETED (old build JS — no longer needed)
+  - CLAUDE.md — COMPLETE (file state boundaries updated, .claude/ rule added, removed sections updated)
+  - 40 files — COMPLETE (DOCS/ → DESIGN/ path references updated)
+  - 4 files — COMPLETE (Tagger System.md → SYSTEM_ Tagger.md, resonance_engine_system.md → SYSTEM_ Resonance Engine.md references updated)
+COMPLETED:
+  - Full structural reorganization — topic 16 from design finish line agenda
+  - Naming conventions standardized: Domain_Name.txt, Manifest_XX_Name.txt
+  - Domain folders numbered in system order (01–10)
+  - Systems organized into named subfolders (17 system folders)
+  - Two outlier SYSTEM_ files renamed to match pattern
+  - Old folders cleared (backups/, core/, memory/)
+  - Memory moved to .claude/memory/
+  - All DOCS/ path references updated in 40+ files (SESSION_LOG.md historical entries preserved)
+  - CLAUDE.md updated: file boundaries, .claude/ rule, removed folders documented
+  - Note: SESSION_LOG.md historical entries retain old DOCS/ paths (accurate at time of writing)
+    DOCS/ was renamed to DESIGN/ in this session. All prior path references use the old name.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Remaining 18 design finish line topics
+  - Stress test session
+  - SOT document
+UNCOMMITTED: YES
+NEXT_ACTION: Continue design finish line session — 18 remaining topics
+---
+
+---
+TIMESTAMP: 2026-04-05 (session 14)
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-session-plan.md — COMPLETE (created, full design session tracking doc)
+COMPLETED:
+  - Axis engine audit (agenda #1): all 5 lens pages (THR, STR, INF, ECR, SNM) confirmed as
+    deposit surfaces that need engines. Each has: deposit → index through lens → compute
+    patterns → visualize → feed MTM. No independent processing currently exists.
+  - Nexus engine audit (agenda #3): PCV/DTX/SGR well-specified, no changes. WSC and LNV
+    need schemas. WSC gets RESEARCHER NOTE field for Sage participation.
+  - Research methodology gaps identified and designed into execution plan:
+    · Null observations (observation_type: positive | null) — system was confirmation-biased
+    · Baseline computation in every Axis engine — without it, every pattern looks significant
+    · Observation conditions on deposits — researcher state is a variable
+    · Deposit quality signal (deposit_depth field)
+    · External validation via Cosmology group revamp
+  - Cosmology group (pages 34-39) revamp designed:
+    · Investigation + computation surfaces, not just analytical pages
+    · Translation surfaces between field vocabulary and established science
+    · Need computation infrastructure (statistical tests, spectral analysis, p-values)
+    · Shannon information theory and CMB cosmological structure are key frameworks
+    · RCT (38) confirmed as meta-Cosmology (field's own emerging physics)
+    · ART (39) needs revisiting — function unclear
+    · Original science lists predate cleanup — rot check needed
+  - Research assistant (agenda #6) confirmed as biggest open design, gets own session
+  - Full pipeline designed: Axis → MTM → Nexus → Cosmology → feedback loop
+  - Design session plan created with 9 sessions (A through H + D+) covering all work
+    to SOT readiness. Detailed scope, open questions, and reasoning captured per session.
+  - Sage decisions: null obs yes, baselines yes, observation conditions yes (structured
+    fields + freeform), Cosmology revamp yes, WSC researcher participation yes,
+    replication is V2 but foundation in V1, Shannon/CMB are critical frameworks
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Design sessions A through H (tracked in .claude/plans/design-session-plan.md)
+  - Remaining agenda items: #5 resonance, #7 batch, #8 backup wiring, #12 UI decisions,
+    #13 TRIA name, #14 API rewrite, #15 Ven'ai module, #17 stub sweep
+  - Stress test, SOT
+UNCOMMITTED: YES
+NEXT_ACTION: Design sessions begin. Session A (deposit schema) is first.
+  Full plan with scope and reasoning: .claude/plans/design-session-plan.md
+---
