@@ -4408,3 +4408,47 @@ NEXT_ACTION: Next session: commit this CLOSE entry, then begin cleanup pass
   (Categories B, C, D from session 9 integrity scan — 13 files, ~195 old refs
   to update). After cleanup: systems verification, V1 scan, SOT.
 ---
+
+---
+TIMESTAMP: 2026-04-05 (session 12 — close)
+TYPE: CLOSE
+FILES_MODIFIED:
+  - TAGGER SCHEMA.md — COMPLETE (2 tags-vocab.js refs replaced)
+  - TAG VOCABULARY.md — COMPLETE (3 tags-vocab.js refs replaced)
+  - EMERGENCE SCHEMA.md — COMPLETE (1 ThreadTraceUI ref replaced)
+  - INTEGRATION DB SCHEMA.md — COMPLETE (1 archive_system.md cross-ref fixed)
+  - SYSTEM_ FastAPI.md — COMPLETE (1 origin_type=lattice→parallax_event)
+  - DRIFT TAXONOMY SCHEMA.md — COMPLETE (6 refs: IDB→PostgreSQL, data.js→FastAPI, mtm.js→service)
+  - SIGNAL GRADING SCHEMA.md — COMPLETE (5 refs: same pattern)
+  - PATTERN CONVERGENCE SCHEMA.md — COMPLETE (5 refs: same pattern)
+  - METAMORPHOSIS SCHEMA.md — COMPLETE (~23 refs: IDB→PostgreSQL, MTM.runSynthesis()→endpoint, FILES→backend paths)
+  - SYSTEM_ Metamorphosis.md — COMPLETE (~21 refs: synced to schema)
+  - DAILY NEXUS ROUTINE SCHEMA.md — COMPLETE (~11 refs: MTM.runSynthesis()→endpoint, IDB→PostgreSQL, FILES→backend paths)
+  - SYSTEM_ Daily Nexus Routine.md — COMPLETE (~8 refs: synced to schema)
+  - SYSTEM_ Archive.md — COMPLETE (~23 refs: IDB→PostgreSQL throughout, data.js→FastAPI, index.html→Svelte)
+  - SYSTEM_ Integration.md — COMPLETE (~12 refs: data.js→FastAPI, TaggerBus/CompositeIdBus→store/component, FILES→backend paths)
+  - SYSTEM_ Integration DB.md — COMPLETE (1 runSynthesis()→endpoint ref)
+  - SECTION MAP.md — COMPLETE (2 schema.js refs replaced)
+  - CLAUDE.md — COMPLETE (infrastructure→COMPLETE, PLANNED→SKELETON, OLD BUILD updated, graph export invariant updated)
+  - backend/config.py — COMPLETE (stale Stage 7 comment removed)
+  - PROTOCOL/SESSION_LOG.md — COMPLETE
+COMPLETED THIS SESSION:
+  - Full deep audit: scanned all 30 DOCS/Systems files + CLAUDE.md + backend/ for old architecture refs
+  - Cleanup plan developed: 6 chunks with intermittent audits, canonical replacement mapping table
+  - Cleanup pass executed: 18 files, ~138 old refs replaced, 6 audits all passed
+  - Final sweep post-commit: zero stale refs (3 deliberate transitional notes remain by design)
+  - Late catch: CLAUDE.md KEY INVARIANTS graph export stub (emergence.js, thread_trace_ui.js) — fixed with original names tagged
+  - 2 commits pushed:
+    34258e3 cleanup pass: remove all old architecture refs from DOCS — 18 files, ~137 refs
+    b663f8b fix: update stale JS filenames in CLAUDE.md KEY INVARIANTS
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Systems verification run
+  - V1 scan
+  - SOT document
+UNCOMMITTED: YES (this CLOSE entry)
+NEXT_ACTION: Next session begins systems verification run — cross-check all
+  SCHEMA/SYSTEM_ pairs for consistency, verify OWNS/DOES NOT OWN boundaries,
+  confirm FILES tables match planned architecture. Then V1 scan, then SOT.
+---
