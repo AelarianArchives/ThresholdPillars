@@ -248,7 +248,7 @@ corruption across core systems. Infrastructure changed from browser app
    Full-stack architecture: FastAPI backend, Svelte frontend, PostgreSQL
    + pgvector, SQLite operational DB, Ollama + nomic-embed-text embeddings.
    Seven stages, each: install → verify → update/create DOCS → commit.
-   Working plan: .claude/plans/velvety-tumbling-acorn.md
+   Working plan: .claude/plans/infrastructure-build-plan.md
    DOCS must be updated to reflect the new architecture before SOT.
    This stage must be fully closed before step 3 begins. No exceptions.
 
@@ -361,7 +361,7 @@ src/routes/+layout.svelte — shared shell wrapping all pages
 ```
 
 None exist yet. Build order follows SOT verification.
-Full planned structure in .claude/plans/velvety-tumbling-acorn.md.
+Full planned structure in .claude/plans/infrastructure-build-plan.md.
 
 ---
 

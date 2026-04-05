@@ -1,6 +1,0 @@
-2026-03-26 02:36:56,057 — === BACKUP STARTED ===
-2026-04-03 01:10:56,708 — === BACKUP STARTED ===
-2026-04-03 01:12:53,836 — USB: Failed — 'charmap' codec can't encode character '\u2192' in position 21: character maps to <undefined>
-2026-04-03 01:15:39,905 — GitHub: Pushed successfully.
-2026-04-03 01:15:42,989 — Backblaze: No exports folder found, skipping.
-2026-04-03 01:15:42,989 — === BACKUP COMPLETE ===
