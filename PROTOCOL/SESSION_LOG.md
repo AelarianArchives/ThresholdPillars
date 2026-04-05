@@ -3367,3 +3367,33 @@ NOT_STARTED:
 UNCOMMITTED: YES
 NEXT_ACTION: SOT_BUILD_TODO complete. SOT document can now be written.
 ---
+
+---
+TIMESTAMP: 2026-04-04 (session 5 — close)
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DOCS/Systems/SECTION MAP.md — COMPLETE
+      SEED AFFINITIES section added: 50 entries with source column.
+  - DOCS/SOT_BUILD_TODO.md — COMPLETE
+      Item 5 fully [x]. All Items 0–5 now complete.
+  - PROTOCOL/SESSION_LOG.md — COMPLETE (this CLOSE entry)
+COMPLETED THIS SESSION:
+  - SOT_BUILD_TODO Item 5 — Domain Seed Affinities
+      50 sections × up to 3 signal seeds each, priority ordered.
+      2 manifest-explicit (ECR, MTM). 46 derived from manifest OBJECTIVEs. 2 empty arrays (INT, LNV).
+      3 corrections after objective-level audit: ORC s19→s08, ECH s16→s14, WSC reordered.
+      Cross-check passed: 19 of 20 signal seeds used, all in TAG VOCABULARY.md.
+  - SOT_BUILD_TODO fully complete — all Items 0–5 [x]
+  - SOT gate open. All prerequisites met.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - UI layout considerations for 50 sections + special pages (next session)
+  - Infrastructure audit: credentials, data durability, CI/CD, test infra, deployment (next session)
+  - SOT document (blocked on UI/infrastructure decisions from next session)
+UNCOMMITTED: NO (committed this close)
+NEXT_ACTION: Next session opens with UI layout audit and infrastructure planning.
+  Determine which UI decisions affect schema/data structure before SOT.
+  Infrastructure conversation: credentials migration, data layer durability,
+  CI/CD, test infra, deployment plan. Then SOT.
+---
