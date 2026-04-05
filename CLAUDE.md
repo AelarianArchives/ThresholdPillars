@@ -371,9 +371,9 @@ Full planned structure in .claude/plans/infrastructure-build-plan.md.
 
 - INT gateway: nothing enters the archive without INT provenance. No exceptions
 - MTM never receives deposits. Synthesis only, at session close via DNR
-- Graph export is stubbed in both emergence.js and thread_trace_ui.js.
-  Stays disabled until route is live. Update both files together — never one
-  without the other
+- Graph export is stubbed in both emergence service (was emergence.js) and
+  Thread Trace component (was thread_trace_ui.js). Stays disabled until
+  route is live. Update both together — never one without the other
 - Relational threads fall back silently to TEMPORAL when linkedEntries is not
   populated. When this fires, name it in the UI
 - Split deposit targets confirm sequentially, one at a time. Never
