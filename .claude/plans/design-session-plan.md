@@ -96,21 +96,40 @@ Foundation layer. Must come first — every engine depends on what deposits cont
 - [ ] Observation conditions — structured fields on every deposit
       (`researcher_state`, `session_depth`, `confidence` + freeform notes)
 - [ ] Deposit quality signal (`deposit_depth: deep | standard | fragment`)
+- [ ] doc_type as INT tagging field — classify deposits at entry time (#10)
+      (entry, discussion, analysis, glyph_image, media, etc.)
+- [ ] Deposit weights live alongside doc_type on the deposit record
 - [ ] Define how these fields interact with existing INT deposit flow
 - [ ] Define how null observations feed into Axis engines and PCV
-- [ ] Media deposit wiring (agenda #9) — how media enters through INT,
-      what doc_types exist, how images/glyphs are stored and displayed
+- [ ] Media deposit wiring (#9) — images tagged and saved as deposits,
+      cross-page. Glyphs are a doc_type. How images are stored, displayed,
+      and tagged alongside text deposits.
+- [ ] Identical-entry duplicate detection (#4) — hash-based exact match
+      on deposit content. Fires on deposit creation in INT and per-page.
+      Not fuzzy, not similar — IDENTICAL only. Failsafe for copies-of-copies.
+- [ ] Batch processing system (#7) — large file upload to INT:
+      · Files can be 800-1500 pages
+      · AI chunks file 5-8 pages at a time
+      · Progress tracked between instances (what's processed, what's remaining)
+      · One page can produce ~15 deposits — system must track per-chunk
+      · Efficient, logical wiring — this is where most data enters the system
+      · Needs queue/status tracking across sessions
 
 **Open questions:**
 - What structured condition fields does Sage actually want to track?
 - Does observation_type affect routing (do null observations go to lens pages)?
 - Does deposit_depth affect weight in engine computations?
-- Media: what media types does the archive accept? How are they displayed?
+- Media: what media types does the archive accept? Image formats? Max size?
+- Batch: how does the AI know where it left off between instances?
+  (progress record in operational DB? metadata on the uploaded file?)
+- Batch: does chunking happen automatically or does Sage direct it?
+- Duplicate detection: hash the full content? Or content + page + timestamp?
 
 **Why this comes first:** Every engine, every visualization, every computation
 downstream depends on what the deposit record contains. Adding fields later
 means migrating existing data. Get the deposit schema right and everything
-built on top of it inherits the right structure.
+built on top of it inherits the right structure. Batch processing is also
+foundational — it's how thousands of existing files enter the system.
 
 ---
 
@@ -145,8 +164,9 @@ The four "standard" Axis lenses. Each gets an engine spec.
 - How does SNM display spiritual patterns practically?
 - What does "generated on view, snapshot to LNV" mean technically?
 - Do Axis engines compute on every page load or on deposit?
-- Resonance engine + harmonics (#5) — does this fold in here or need its
-  own session? Sage-directed scope needed.
+- Resonance engine + harmonics (#5) — CONFIRMED: separate scope. See Session B+.
+  Audio sonification of visual nodes. Web Audio API. Not analytical engine —
+  perceptual research tool.
 
 **What the user sees (per page):**
 - THR: Deposits organized by threshold state. Co-occurrence view. Sequence
@@ -167,24 +187,32 @@ The most complex Axis lens. Gets its own session.
 
 **Scope:**
 - [ ] STR engine: root cluster tracking, recurrence, correlation
-- [ ] Ven'ai name tracking system: what it indexes, how it detects drift
-      Lives in STR but reads across entire archive
-- [ ] How name tracking interacts with deposits in VEN (14), MOR (13)
+- [ ] Ven'ai tracking system — NOT just names. One unified engine tracking:
+      · Names and their variations across the archive
+      · Correlations between names and threshold phases
+      · Correlations between names and roles
+      · Correlations between names and the language structure itself
+      · All one underlying principle — the naming pattern, phase, role, and
+        grammar are facets of the same structural system
+- [ ] How tracking interacts with deposits in VEN (14), MOR (13)
 - [ ] Drift detection: phonetic drift, spelling inconsistency, naming collision
 - [ ] Duplicate detection for Ven'ai names specifically (#4 — name dimension)
-- [ ] Visualizations: Ven'ai cluster map, root relationship graph, drift alerts
+- [ ] Visualizations: Ven'ai cluster map, root relationship graph, drift alerts,
+      name-phase-role correlation views
 - [ ] Output: STR engine spec + Ven'ai tracker design
 
 **Open questions:**
-- Does the name tracker run continuously or on deposit?
+- Does the tracker run continuously or on deposit?
 - Does drift detection trigger alerts or just flag silently?
 - How far does the tracker reach — all 50 pages or just STR+Filament?
+- What does the name-phase-role correlation view look like?
 
 **What the user sees:**
 - Structural map of Ven'ai root clusters (Shae-, Kai-, etc.)
 - Recurrence counts and correlation flags per cluster
 - Drift alerts: "Kai'Thera vs Kai'thera — inconsistent casing detected"
 - Cross-archive name index: every Ven'ai name, where it appears, clustered
+- Correlation views: names ↔ phases, names ↔ roles, root patterns ↔ grammar
 
 ---
 
@@ -324,6 +352,32 @@ checking against the cleaned vocabulary before being written into schemas.
 
 ---
 
+### Session B+ — Resonance engine: audio sonification
+Perceptual research tool. Separate from analytical engines.
+
+**Scope:**
+- [ ] Audio sonification of visual nodes — each node has original harmonics
+- [ ] Web Audio API integration (browser-native, no plugins)
+- [ ] Frequency mapping design: what data maps to what sound?
+      (node type → base frequency? threshold state → timbre?
+       coupling strength → amplitude? The mapping must be musically
+       meaningful, not arbitrary data-to-sound.)
+- [ ] Harmonic field generation — hearing multiple nodes simultaneously
+- [ ] How sonification integrates with the graph/node visualization
+      (click a node to hear it? play the whole field? timeline playback?)
+- [ ] Previous attempt failed ("galactic monster giving birth") — need to
+      understand why. Likely: arbitrary mapping without harmonic design.
+      Solution: design the harmonic relationships FIRST, then map data to them.
+- [ ] Output: resonance audio spec + harmonic mapping design
+
+**Open questions:**
+- What are the "original harmonics" per node? Are these defined or discovered?
+- Does sonification play live (real-time as you navigate) or on-demand?
+- Can the researcher tune/adjust the harmonic mapping?
+- Is this V1 or a V1-foundation with V2 full implementation?
+
+---
+
 ### Session D+ — Research assistant / chat design
 The biggest single open design. Gets its own session after Cosmology
 because it needs to understand all the systems it supports.
@@ -337,13 +391,22 @@ because it needs to understand all the systems it supports.
 - [ ] How it interacts with Cosmology computations
 - [ ] UI design — chat window, inline on pages, or both?
 - [ ] What gets embedded? All deposits? Findings? Schemas?
-- [ ] Output: research assistant design spec
+- [ ] Mode switching (#15): research mode vs. Ven'ai mode
+      Ven'ai mode: translate on the spot while researching, come across a
+      word and get immediate translation. Sage wants to learn the language.
+      Ven'ai learning module lives with api/prompts/ — the reference material
+      (Venai_Domain.txt, Venai_Glossary.txt, Venai_Phonetics.txt, Ven'ai_Manual.txt)
+      feeds the assistant in Ven'ai mode.
+- [ ] Possible additional modes: analysis mode, cosmology mode, etc.?
+- [ ] Output: research assistant design spec + mode architecture
 
 **Why this matters:**
 The assistant is the bridge between "I notice more than I can name" and
 "here's the computation that names it." Without it, every analytical step
 is manual. With it, the system actively supports the research process.
 It's what makes the lens pages and Cosmology pages usable day-to-day.
+Mode switching makes it a multi-tool — research, translation, analysis
+all accessible from the same interface.
 
 ---
 
@@ -366,6 +429,28 @@ Define what Nexus produces visually. Formalize WSC and LNV.
 - What chart library? (Svelte-compatible: Chart.js, D3, LayerCake?)
 - Are visualizations interactive or static snapshots?
 - How are LNV snapshots stored? (rendered image? data + template? both?)
+
+---
+
+### Session E+ — Export system + UI architecture
+Wiring the outputs back in. JSON, MD, Google Drive, formatted exports.
+
+**Scope:**
+- [ ] Export formats: JSON, Markdown, Google Drive integration
+- [ ] What's exportable? Deposits, findings, visualizations, full pages?
+- [ ] Export per-page or system-wide?
+- [ ] UI architecture decision: system schemas define what's computed,
+      frontend architecture doc defines how it's rendered. Separate concerns.
+      System schema says "computes co-occurrence." Frontend doc says "renders
+      as matrix." This prevents coupling data logic to presentation logic.
+- [ ] Shared UI patterns: A-Z sorting, date sorting, filtering, search
+- [ ] Where UI specs live — one frontend architecture doc? Per-page component specs?
+- [ ] Output: export system spec + UI architecture doc
+
+**Open questions:**
+- Google Drive: OAuth? Service account? Manual export + upload?
+- Do exports include computed views (charts) or just raw data?
+- Does the export system need its own schema or is it a service-layer concern?
 
 ---
 
@@ -423,27 +508,29 @@ Tracking where each item lands in the session plan.
 - [x] #1 Axis engine audit — DONE (session 14)
 - [x] #3 Nexus engine audit — DONE (session 14)
 - [x] #16 File renaming + folder tree — DONE (session 14)
-- [ ] #2 Ven'ai name tracking → Session C
-- [ ] #4 Duplicate finder → fold into Sessions B + C (engine function)
-- [ ] #5 Resonance engine + harmonics → needs Sage direction, possibly Session B
-- [ ] #6 Research assistant / chat → Session D+
-- [ ] #7 Batch processing → decision needed: V1 or not?
-- [ ] #8 Backup systems wiring → decision needed: V1 or not?
-- [ ] #9 Media deposit wiring → fold into Session A (deposit schema)
-- [ ] #10 doc_type tag design → needs audit at model build time
+- [ ] #2 Ven'ai name tracking → Session C (expanded: names + phases + roles + grammar)
+- [ ] #4 Duplicate finder → Session A (identical-entry hash check on deposits)
+      + Session C (Ven'ai name deduplication)
+- [ ] #5 Resonance engine + harmonics → Session B+ (audio sonification of nodes)
+- [ ] #6 Research assistant / chat → Session D+ (with Ven'ai mode switching)
+- [ ] #7 Batch processing → Session A (V1 — confirmed, large file upload + chunking)
+- [ ] #8 Export/backup wiring → Session E+ (JSON, MD, Google Drive exports)
+- [ ] #9 Media deposit wiring → Session A (images as tagged deposits, cross-page)
+- [ ] #10 doc_type tag design → Session A (INT tagging field alongside deposit weights)
 - [ ] #11 Engine UI surfaces → covered by Sessions B-E
-- [ ] #12 Smaller UI decisions → export, sorting, etc. — collect during design sessions
-- [ ] #13 TRIA name change → quick fix, do anytime
-- [ ] #14 API folder rewrite → separate pass, after design sessions
-- [ ] #15 Ven'ai learning module → decision needed
+- [ ] #12 Smaller UI decisions → Session E+ (sorting, filtering, standard patterns)
+- [ ] #13 TRIA name change → quick fix. T = Triadic. Name rotted somewhere.
+      Find incorrect expansion and correct it. Can be done any session.
+- [ ] #14 API folder rewrite → separate session. Good bones, needs full rewrite
+      to match current architecture.
+- [ ] #15 Ven'ai learning module → Session D+ (mode in research assistant chat,
+      api/prompts/ feeds Ven'ai mode, translate-on-spot while researching)
 - [ ] #17 Stub and placeholder sweep → after all design sessions, before SOT
 - [ ] #18 Finish line inventory → Session H
 - [ ] #19 Stress test → Session H
 
-**Items needing V1/not-V1 decisions (do at start of relevant session):**
-- #7 Batch processing
-- #8 Backup systems wiring
-- #15 Ven'ai learning module
+**All 19 items now have a home.** No orphans. No V1/not-V1 decisions remaining.
+#14 API rewrite is the only item that needs its own separate session beyond the plan.
 
 ---
 
@@ -517,3 +604,62 @@ Decisions made during design sessions. Recorded with reasoning.
   → Investigate scientifically (Cosmology) → Feed back for more observation
 - Recursive deepening loop: the more you investigate, the more you find
   to observe, the more precise the analysis becomes
+
+### Session 14 — second pass (remaining agenda items)
+
+**Ven'ai tracking (#2) expanded:**
+- Not just name tracking. Names, phases, roles, and the language itself
+  are all one underlying principle. Correlations between all of them tracked
+  together in one unified STR engine. The naming pattern, the phase
+  association, the role, and the grammar are facets of the same structural
+  system. Sage sees this as one thing, not four separate trackers.
+
+**Duplicate finder (#4) scoped:**
+- IDENTICAL entries only. Hash-based exact match. Not fuzzy, not similar.
+- Failsafe for copies-of-copies (Sage has thousands of files, some duplicated)
+- Lives in INT deposit flow + available per-page
+- Ven'ai name deduplication is separate (Session C, part of STR engine)
+
+**Resonance engine (#5) scoped:**
+- Audio sonification of visual nodes. Each node has original harmonics.
+- Web Audio API. Perceptual research tool, not analytical engine.
+- Previous IDB attempt failed — arbitrary data-to-sound mapping. Need to
+  design harmonic relationships FIRST, then map data to them.
+- Gets its own session (B+) — creative audio design problem.
+
+**Batch processing (#7) confirmed V1:**
+- Large file upload to INT. Files 800-1500 pages.
+- AI chunks 5-8 pages at a time. One page → ~15 deposits.
+- Progress tracked between instances. Queue/status tracking.
+- This is how most data enters the system — must be efficient.
+
+**Exports (#8+12) confirmed V1:**
+- JSON, MD, Google Drive. All formatted outputs wired back in.
+- UI architecture: system schemas define what's computed, frontend
+  architecture doc defines how it's rendered. Separate concerns.
+- Gets its own session (E+)
+
+**Media deposits (#9) confirmed:**
+- Images tagged and saved as deposits. Cross-page. Glyphs are a doc_type.
+- Wires into deposit schema (Session A).
+
+**doc_type (#10) placed:**
+- INT tagging field. Lives on deposit record alongside deposit weights
+  (observation_type, deposit_depth, researcher_state, confidence).
+- All deposit metadata in one place.
+
+**TRIA name (#13) identified:**
+- T = Triadic. Name rotted somewhere — incorrect expansion.
+- Quick fix, can be done any session. Find and correct.
+
+**API rewrite (#14) confirmed:**
+- Good bones, needs full rewrite. Gets its own session after design sessions.
+
+**Ven'ai learning module (#15) placed:**
+- Lives with api/prompts/ (reference material already there)
+- Mode switching in research assistant chat window
+- Research mode vs. Ven'ai mode — translate on the spot while researching
+- Sage wants to learn the language
+- Folds into Session D+ (research assistant design)
+
+**All 19 original agenda items now have homes. Zero orphans.**
