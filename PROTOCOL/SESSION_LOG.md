@@ -5325,3 +5325,49 @@ NOT_STARTED:
 UNCOMMITTED: YES
 NEXT_ACTION: Continue remaining design items — archive access, observation articulation, hypothesis framing, embedding scope.
 ---
+
+---
+TIMESTAMP: 2026-04-06
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DESIGN/Systems/Research_Assistant/SYSTEM_ Research Assistant.md — COMPLETE (new file, two write passes)
+  - PROTOCOL/SESSION_LOG.md — COMPLETE (OPEN + 2 WORK_UNITs + this CLOSE)
+COMPLETED:
+  - Session 22 opened — protocol reads, SOT spot-check, SECTION MAP verified
+  - Tagger skip acknowledged (Sage directed — remains parked on the list)
+  - Research assistant ownership boundary — full OWNS / DOES NOT OWN map
+  - Page context as live feed — assembly logic owned, sources read
+  - Deposit suggestion typed object with explicit INT handoff (architectural)
+  - Mode switching — logic owned, definitions as versioned config in api/prompts/
+  - Uncertainty behavior — retrieval_confidence four-tier system
+  - Cosmology relationship — conversational bridge, not second ARTIS
+  - Persistent floating panel — UI decision, not sidebar/modal/inline
+  - Instance continuity — navigation markers + fresh page context + preserved history
+  - Context budget — ~20,800 tokens, five layers itemized, sliding window + compression
+  - Panel header — mode + page context + retrieval confidence + research state action + context health
+  - Three-layer memory model — field (archive) + witness (WSC) + researcher (new)
+  - Researcher memory schema — single live record + history table, not_yet_named field, two update paths (Sage-initiated, assistant-suggested)
+  - Conversation history scope — ephemeral + session-persistent + promotable (all three stack)
+  - Conversation summary schema — auto at session close, session_character field
+  - Five-layer context assembly — ordered load sequence with graceful degradation per layer
+  - Epistemic integrity — five permission states, sycophancy as contamination vector
+  - Researcher memory visibility — no engine access, assistant mediates (architectural)
+  - Conversation summary timing — automatic at session close, same moment as WSC
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Research posture full scope (open design decision — persistent behavioral layer, fold in api/prompts)
+  - Ven'ai mode design session (open design decision — own session within Tier 6)
+  - Archive access design (query assembly, result ranking, context packaging)
+  - Observation articulation ("I notice X" → structured deposit)
+  - Hypothesis framing ("this looks like Shannon entropy" → computation suggestion)
+  - What gets embedded (all deposits? findings? schemas? promoted exchanges?)
+  - RESEARCH ASSISTANT SCHEMA.md
+  - Tagger makeover (PARKED — separate session)
+  - Resonance audio sonification (Tier 6 second block)
+  - Tiers 7-8
+  - CONNECTS TO + SEED AFFINITY pass
+  - Stress test, SOT
+UNCOMMITTED: YES (this CLOSE entry)
+NEXT_ACTION: Continue Tier 6 — remaining research assistant design items (archive access, observation articulation, hypothesis framing, embedding scope), then research posture + Ven'ai mode sessions, then Resonance audio.
+---
