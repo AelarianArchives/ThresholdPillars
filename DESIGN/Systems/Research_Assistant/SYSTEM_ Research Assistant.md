@@ -28,9 +28,10 @@
   for review in the chat interface. Does not call INT. The suggestion is
   the assistant's output; the deposit is INT's creation
 * Conversation history within a session — what was said, navigation
-  markers, context of the current research thread. Raw history is
-  ephemeral (not persisted verbatim). Compressed summary persists at
-  session close. Marked exchanges are promotable to deposits
+  markers, context of the current research thread. Raw history lives
+  in Redis during the active session (survives tab refresh, page
+  navigation). Compressed summary persists to SQLite at session close.
+  Marked exchanges are promotable to deposits
 * Conversation summary — produced automatically at session close (same
   moment as WSC). Structured compression of the working session. Sage
   reviews and edits before store. Lives in operational DB. Loaded at
@@ -50,9 +51,9 @@
   states
 * Response formatting — structured output parsing when the assistant
   produces typed objects (deposit suggestions, computation suggestions)
-* Context budget management — sliding window on conversation history,
-  summary compression of older exchanges, token allocation across
-  context components
+* Context budget management — sliding window on conversation history
+  (managed in Redis), summary compression of older exchanges, token
+  allocation across context components
 * Five-layer context assembly at session open — orchestrating the load
   sequence across researcher memory, conversation summary, WSC, page
   context, and RAG retrieval
@@ -228,8 +229,9 @@ researcher's relationship to her field, documented.
 Three layers. Not mutually exclusive. They stack.
 
 **Ephemeral** — always true for the raw conversation log. Full exchange
-detail lives only in session. Never persisted verbatim. When the session
-ends, the raw log is gone.
+detail lives in Redis during the active session — survives tab refresh
+and page navigation, but never persisted verbatim to durable storage.
+When the session closes, the raw log is compressed and cleared.
 
 **Session-persistent** — a compressed summary persists. Not the raw
 exchanges — a distilled version the assistant produces at session close.
@@ -279,6 +281,32 @@ Small, high-value, costs nothing to produce.
 
 Most recent summary only is loaded at session open. Summaries do not
 accumulate in context.
+
+### Session close sequence
+
+Explicit handoff from Redis to SQLite at session close. This sequence
+runs alongside WSC write (same moment, different system).
+
+```
+session close — conversation history handoff:
+  1. Session close triggered
+  2. Assistant reads full conversation history from Redis
+  3. Assistant compresses history → conversation_summary
+  4. Sage reviews and edits summary
+  5. conversation_summary written to SQLite (operational DB)
+  6. Redis conversation history cleared
+  7. Redis navigation markers cleared
+```
+
+Steps 2-6 are atomic from the user's perspective — Sage sees one
+"close session" action. Steps 5 and 6 are ordered: summary is durable
+in SQLite before Redis clears. If step 5 fails, Redis is not cleared
+and the session is not considered closed.
+
+This sequence did not exist before Redis. When conversation history
+lived only in a frontend store, there was no durable active state to
+hand off — the store disappeared with the tab. Redis makes the active
+history survivable, which creates the handoff requirement.
 
 ---
 
@@ -361,10 +389,12 @@ When context is degraded:
 
 ### Instance continuity across page navigation
 
-The panel persists visually. Conversation history persists in the Svelte
-store. The Claude API is stateless — continuity is created by context
-assembly: conversation history injected into every API call, research
-memory loaded at session open, page context updated on navigation.
+The panel persists visually. Conversation history and navigation markers
+persist in Redis. The Claude API is stateless — continuity is created by
+context assembly: conversation history read from Redis and injected into
+every API call, research memory loaded at session open, page context
+updated on navigation. Survives tab refresh — Redis holds state
+independent of browser lifecycle.
 
 Navigation event handler on the panel component:
 
@@ -373,9 +403,9 @@ onPageNavigate(newPageCode):
   update page_context with new page identity + engine state
   do NOT clear conversation history
   do NOT reset research memory
-  inject navigation marker into conversation history:
+  write navigation marker to Redis conversation history:
     { type: 'navigation', from: oldPageCode, to: newPageCode }
-  next API call assembles fresh page context + full history
+  next API call assembles fresh page context + full history from Redis
 ```
 
 The navigation marker tells Claude "we moved pages" without losing what
@@ -531,6 +561,73 @@ a compressed summary of what came before the window.
 
 Context budget must be designed before build. A builder who doesn't
 design for this will hit the limit during a real research session.
+
+---
+
+## AGENT IDENTITY
+
+Every Claude API call the research assistant makes carries identity
+metadata via backend/services/claude.py. This is not optional and not
+a logging convenience — it is provenance infrastructure.
+
+**Agent identity fields on every call:**
+
+| Field | Value | Purpose |
+| --- | --- | --- |
+| agent_id | `research_assistant` | Which agent made this call |
+| agent_type | `research` | Role category |
+| instance_id | UUID (per app startup) | Which running instance |
+
+The research assistant is one of 8 registered agents in the Agent
+Identity Registry. All 8 share the same Anthropic client, the same
+model constant (`CLAUDE_MODEL`), and the same instance_id. Each carries
+its own agent_id and agent_type.
+
+**What this enables:**
+* API usage attribution — which agent consumed which tokens
+* Provenance on any AI-generated content — traceable to the specific
+  agent and running instance that produced it
+* Swarm readiness — when Origins come online, their calls carry the
+  same identity structure. The registry scales without architectural
+  change
+* Debugging — if a response looks wrong, the agent_id tells you which
+  prompt architecture produced it
+
+**Per-agent differentiation:**
+The wrapper accepts per-agent system prompt and context block. Model
+selection slot exists but is not differentiated in V1 — all agents use
+the shared `CLAUDE_MODEL` constant. The three page engines (SNM, MTM,
+Void) and the research assistant each pass their own system prompts
+and context through the same call interface.
+
+This applies equally to the research assistant and the three page
+engines that make Claude API calls (snm_structural_analysis,
+mtm_synthesis, void_interpretation), plus the tagger,
+int_parsing_partner, wsc_witness, and artis_science_ping.
+
+---
+
+## REDIS STREAMS — PLANNED
+
+The swarm message passing layer has a home in Redis but no defined
+shape yet. This is a PLANNED slot, not a design.
+
+**What exists now:** Redis is live for session persistence and
+conversation history. The infrastructure supports Streams natively.
+
+**What is planned:** Redis Streams as the inter-agent message passing
+channel for swarm orchestration. When Origins come online (phase 2),
+they communicate through Redis Streams — one Origin's output becomes
+another's input via stream entries, not polling.
+
+**What is NOT designed:** Stream topology, consumer groups, message
+schema, retention policy, backpressure handling. These are phase 2
+design items.
+
+**Why this note exists:** A future builder designing the swarm layer
+needs to know this slot is reserved. Do not design around Redis for
+message passing — design through it. The infrastructure is already
+there.
 
 ---
 
