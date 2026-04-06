@@ -5241,3 +5241,57 @@ NOT_STARTED:
 UNCOMMITTED: YES (this CLOSE entry)
 NEXT_ACTION: Tagger makeover first (parked from this session), then Tier 6 design.
 ---
+
+---
+TIMESTAMP: 2026-04-06
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Protocol reads: CLAUDE.md, ENFORCEMENT.md, SESSION_PROTOCOL.md, GITHUB_PROTOCOL.md
+  - SOT_BUILD_TODO spot-check: all [x] items verified with valid SOURCE: lines
+  - SECTION MAP verified: page 39 = artis/ART/ARTIS (consistent with session 21)
+  - DESIGN/Systems/ state confirmed: 18 system folders + SECTION MAP.md + TAG VOCABULARY.md
+  - DESIGN/Domains/ state confirmed: 10 group folders (01-10)
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Tier 6 design (Research assistant + Resonance audio) — starting this session
+  - Tagger makeover (PARKED — Sage directed skip, proceed to Tier 6)
+  - Tiers 7-8
+  - CONNECTS TO + SEED AFFINITY pass (before Tier 8)
+  - Stress test, SOT
+UNCOMMITTED: NO
+NEXT_ACTION: Begin Tier 6 design — Research assistant + Resonance audio sonification.
+---
+
+---
+TIMESTAMP: 2026-04-06
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/Research_Assistant/SYSTEM_ Research Assistant.md — COMPLETE (initial write — ownership boundaries + confirmed design decisions)
+COMPLETED:
+  - Research assistant ownership boundary — OWNS and DOES NOT OWN fully defined
+  - Page context as live feed architecture — assembly logic owned, sources read
+  - Deposit suggestion typed object with explicit INT handoff — architectural boundary, not behavioral
+  - Mode switching architecture — logic owned, definitions as external versioned config in api/prompts/
+  - Uncertainty behavior — retrieval_confidence four-tier system (high/medium/low/none)
+  - Cosmology relationship — conversational bridge, not second ARTIS
+  - UI decision — persistent floating panel with page navigation continuity
+  - Instance continuity — navigation markers, fresh page context, preserved history
+  - Context budget — ~19,500 tokens, sliding window + summary compression
+  - Panel header — mode label + page context + retrieval confidence indicator
+IN_PROGRESS:
+  - Conversation history scope decision (Sage working on this now)
+NOT_STARTED:
+  - Research memory layer schema
+  - Research posture full scope
+  - Ven'ai mode design session
+  - Archive access design (query assembly, result ranking, context packaging)
+  - Observation articulation ("I notice X" → deposit)
+  - Hypothesis framing ("this looks like Shannon entropy" → computation)
+  - What gets embedded
+  - RESEARCH ASSISTANT SCHEMA.md
+UNCOMMITTED: YES
+NEXT_ACTION: Resolve conversation history scope, then continue remaining design items.
+---
