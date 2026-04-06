@@ -4972,19 +4972,245 @@ library.
 
 ---
 
-### Cross-cutting Cosmology items
+### Page-by-page investigation surfaces — CONFIRMED
 
-- [ ] Shannon/information theory integration — where it lives, what it computes
-- [ ] CMB/cosmological structure integration — where it lives, what it computes
-- [ ] The INF → Cosmology handoff:
-      INF (Tier 3) surfaces which science is relevant at the Axis level
-      during deposit processing. ARTIS Layer 1 pings scientific frameworks
-      at the Cosmology level when Sage investigates. Different scope,
-      different trigger. **Boundary confirmation needed.**
-- [ ] Rot check: review science lists against cleaned tag vocabulary.
-      Sage's original science lists predate the tag vocabulary cleanup.
-      Some items retired during rot cleanup (safety_node_geometry removed,
-      some threshold constants). Sciences may be valid; names may not.
+**HCO (34) — Harmonic Cosmology:** CONFIRMED session 20.
+Investigation frame: field patterns through wave mechanics, harmonics,
+signal processing. Asks: does this pattern have harmonic structure, and
+what does that structure correspond to in established wave science?
+
+Primary ARTIS computations:
+  · scipy.fft.fft — Fourier decomposition (what frequencies exist?)
+  · scipy.signal.welch — power spectral density (energy concentration?)
+  · scipy.stats.entropy — Shannon entropy (information structure vs noise?)
+  · numpy array ops — spectral comparison against known distributions
+  · scipy.stats.chi2_contingency — harmonic co-occurrence significance
+
+Two-panel layout: field pattern (left) + harmonic analysis (right).
+Signature visualization: frequency spectrum with labeled Hz peaks.
+Shannon on HCO: entropy of signal distributions, information content.
+CMB on HCO: power spectrum analysis borrowed from CMB methodology.
+
+**COS (35) — Coupling / Oscillation:** CONFIRMED session 20.
+Investigation frame: field patterns through coupled oscillator dynamics,
+phase-locking, cross-frequency coupling. Asks: are these field elements
+coupled, what kind, how strong?
+
+Primary ARTIS computations:
+  · scipy.stats.pearsonr — linear coupling strength
+  · scipy.stats.spearmanr — monotonic coupling (non-linear)
+  · numpy.correlate — cross-correlation (time-lagged coupling)
+  · scipy.stats.chi2_contingency — co-occurrence significance
+  · scipy.signal.coherence — phase coherence at specific frequencies
+
+Two-panel layout: field pattern with pairs/groups (left) + coupling
+analysis (right). Signature visualization: correlation scatter plot.
+
+COS-specific schema note: cosmology_findings.deposit_ids is string[]
+(minimum 1). COS submits 2+ for coupled pairs/groups. All other pages
+submit 1. Array handles both without schema fork.
+
+COS-specific computation note: cross_correlation requires time_axis
+parameter specifying deposit ordering:
+  time_axis: created_at | instance_context | manual
+  manual_order: string[] — required if time_axis = manual
+  Default: instance_context (field time, not researcher time).
+
+**CLM (36) — Celestial Mechanics:** CONFIRMED session 20.
+Investigation frame: field patterns through geometry, topology, orbital
+dynamics, spatial structure. Asks: does this pattern have geometric
+structure that corresponds to known celestial/mathematical models?
+
+Primary ARTIS computations:
+  · scipy.spatial.distance.cdist — distance matrix in feature space
+  · scipy.spatial.distance.cosine — vector similarity
+  · scipy.cluster.hierarchy — hierarchical clustering
+  · scipy.stats.chi2_contingency — spatial co-occurrence
+  · scipy.stats.ks_2samp — distribution comparison against reference
+
+Two-panel layout: field pattern (left) + geometric analysis (right).
+Signature visualization: cluster dendrogram / distance heatmap.
+CMB on CLM: large-scale structure organization analysis.
+
+CLM-specific computation note: distance/similarity computations require
+vector representation of deposits. Input contract:
+  vector_type: embedding | tag | custom
+  custom_fields: string[] — required if vector_type = custom
+  Default: embedding (already generated, stored, semantically meaningful).
+  CLM has dependency on embedding pipeline — embedding_status: complete
+  required on participating deposits. Warning surfaced on missing/pending.
+
+CLM-specific computation note: KS test requires reference distribution.
+Uses artis_reference_distributions registry (see ARTIS tables below).
+
+**NHM (37) — Neuro-Harmonics:** CONFIRMED session 20.
+Investigation frame: field patterns through neural dynamics, cognitive
+models, information theory. Asks: does this pattern behave like a
+neural/cognitive system, and what does information theory reveal?
+
+Primary ARTIS computations:
+  · scipy.stats.entropy — Shannon entropy (information structure)
+  · custom on scipy.stats.entropy — mutual information (shared information)
+  · scipy.stats.entropy(p, q) — KL divergence (distribution difference)
+  · scipy.stats.chi2_contingency — neural-pattern co-occurrence
+  · scipy.stats.ks_2samp — distribution comparison against neural models
+  · phi_proxy — custom implementation (mutual information partitioning
+    approximation). Output labeled explicitly: "phi approximation, not
+    IIT phi." True IIT phi flagged as future ARTIS computation addition.
+
+Two-panel layout: field pattern (left) + neural/information analysis
+(right). Signature visualization: entropy comparison bar (observed vs
+random vs structured — three bars, gaps are the signal).
+Shannon's primary investigation surface — asks the questions Shannon
+answers most directly.
+
+NHM also draws from artis_reference_distributions registry for KL
+divergence and KS test references (neural model baselines).
+
+---
+
+### cosmology_findings schema — CONFIRMED
+
+    cosmology_findings:
+      finding_id:              auto
+      page_code:               HCO | COS | CLM | NHM | RCT
+      deposit_ids:             string[]    — minimum 1. COS submits 2+
+      framework:               string
+      hypothesis:              string
+      computation_snapshot_id:  string      — FK to ARTIS snapshot
+      result_summary:          string      — Sage's interpretation
+      values:                  jsonb       — p-values, coefficients, etc.
+      confidence:              float       — Sage's assessment (research
+                                             significance, not computed)
+      external_reference_id:   string | null
+      nexus_eligible:          boolean
+      status:                  draft | confirmed | superseded | abandoned
+      superseded_by:           string | null
+      abandoned_reason:        string | null
+      created_at:              timestamp
+      updated_at:              timestamp
+
+    Multiples allowed per deposit-framework pair.
+    computation_snapshot_id is the differentiator.
+    confidence is Sage's assessment — statistical significance (p-values)
+    is in values jsonb, research significance is confidence float.
+    abandoned = dead end. superseded = replaced by better finding.
+    Both are research data.
+
+**Finding card layout — CONFIRMED:**
+Four zones: identity (top) → framework + hypothesis → computation
+(with snapshot link) → result + confidence + reference. Three action
+buttons: Mark nexus-eligible, Confirm, Abandon.
+
+**Finding placement — CONFIRMED:**
+Both inline indicator on deposit card ("3 findings" → expand) AND
+separate findings panel. Inline keeps connection visible; panel gives
+room for computation work.
+
+---
+
+### ARTIS full scope — CONFIRMED
+
+**Five tables:**
+
+    artis_computation_snapshots   — every computation run, inputs,
+                                    outputs, parameters, timestamp
+    artis_external_references     — external reference registry
+                                    (doi, url, summary, title, accessed)
+    science_domain_mappings       — tag-to-domain-to-page-to-computation
+                                    lookup with confidence, active,
+                                    proposed_by, computation_hints
+    artis_layer2_snapshots        — Claude science framing responses,
+                                    permanent, prompt-versioned,
+                                    no content duplication (deposit_id ref)
+    artis_reference_distributions — named numerical distributions for
+                                    comparison computations (KS test,
+                                    KL divergence). Cross-page resource.
+                                    Serialized numpy arrays.
+
+**Twelve endpoint contracts:**
+
+    POST /artis/compute              — execute computation
+    POST /artis/ping/tags            — Layer 1 tag mapping
+    POST /artis/ping/content         — Layer 2 Claude framing
+    POST /artis/ping/suggest         — Layer 3 computation suggestion
+    GET  /artis/snapshots/{id}       — retrieve computation snapshot
+    GET  /artis/references           — query external reference registry
+    POST /artis/references           — add external reference
+    GET  /artis/mappings             — retrieve science domain mappings
+    POST /artis/mappings             — create mapping
+    PATCH /artis/mappings/{id}       — confirm/decline mapping
+    GET  /artis/distributions        — list reference distributions
+    POST /artis/distributions        — add reference distribution
+
+**Computation library:**
+
+V1 implementations:
+  · scipy.stats.entropy — Shannon entropy
+  · scipy.fft.fft — Fourier decomposition
+  · scipy.signal.welch — power spectral density
+  · scipy.stats.pearsonr — Pearson correlation
+  · scipy.stats.spearmanr — Spearman rank correlation
+  · scipy.stats.chi2_contingency — co-occurrence significance
+  · scipy.spatial.distance — distance/similarity metrics
+  · scipy.signal.coherence — phase coherence
+  · scipy.stats.ks_2samp — distribution comparison (KS test)
+  · scipy.stats.entropy(p, q) — KL divergence
+  · numpy.correlate — cross-correlation
+  · frequency_ratio_analysis — custom, frequency ratios against known
+    resonance structures (integer, golden, Tribonacci)
+  · phi_proxy — custom, mutual information partitioning approximation.
+    Output labeled: "phi approximation, not IIT phi"
+
+Interfaces defined, implementations PLANNED:
+  · tribonacci_convergence — blocked on field energy model formalization
+  · lagrange_stability — blocked on field energy model formalization
+  · true IIT phi — computationally intractable, future approximation
+
+**ARTIS navigation — CONFIRMED:**
+  · Panel: persistent "ARTIS" button in every Cosmology page header.
+    Opens as right-side panel over current page. Sage never navigates
+    away during investigation.
+  · Sidebar: ARTIS appears under Cosmology with engine page visual type
+    (Tier 2), visually distinct from investigation pages. Direct access
+    for mapping management, reference registry, engine health, ad hoc
+    computation.
+
+**ARTIS documents:**
+    SYSTEM_ARTIS.md     — ownership boundaries, API surface, rules
+    ARTIS_SCHEMA.md     — full table schemas, endpoint contracts,
+                          computation library, science ping pipeline spec
+
+---
+
+### Cross-cutting Cosmology items — ALL RESOLVED
+
+- [x] Shannon/information theory integration — **RESOLVED.** No home page.
+      Framework in ARTIS computation library, available to all pages.
+      Shannon's primary investigation surface is NHM (asks the questions
+      Shannon answers most directly). HCO uses Shannon for signal entropy.
+      Tags in s34 (Signal Entropy) and s37 (Information-Theoretic).
+
+- [x] CMB/cosmological structure integration — **RESOLVED.** No home page.
+      Framework in ARTIS computation library, available to all pages.
+      HCO uses CMB methodology (power spectrum analysis). CLM uses CMB
+      large-scale structure organization. Tags in s38 (Cosmological
+      Structure).
+
+- [x] INF → Cosmology handoff — **CONFIRMED CLEAN.**
+      INF (Tier 3): flags scientific domains during deposit processing,
+      automatic, Axis level, output = tags on deposit.
+      ARTIS Layer 1: pings frameworks when Sage investigates, on demand,
+      Cosmology level, output = framework candidates with computation
+      suggestions. Different scope, trigger, output, consumer. Tags
+      flow downstream from INF to ARTIS — no overlap.
+
+- [x] Rot check — **PASSED.** All science lists verified against TAG
+      VOCABULARY.md. 2 drops from NHM: "systems theory" (covered by
+      Dynamical Systems Theory), "cognitive science" (covered by
+      Cognitive Field Theory + specific sub-fields). Zero contamination
+      from pre-cleanup vocabulary. Shannon (s34, s37) and CMB (s38)
+      fully present in tag vocabulary — load-bearing frameworks confirmed.
 
 **Layer ↔ Page relationships (reference):**
   l01 Coupling → COS (primary home)
@@ -4994,17 +5220,18 @@ library.
   Sciences cross layer boundaries — that's a feature, not a problem.
   Cross-layer scientific connections are findings about the field.
 
-### Open questions (Tier 5) — status
+### Open questions (Tier 5) — ALL RESOLVED
 
 - [x] Computation tools? → **scipy/numpy on FastAPI backend. CONFIRMED.**
 - [x] External reference format? → **doi + url + summary (req) + title +
       accessed. CONFIRMED.**
 - [x] Cosmology findings feed back to Nexus? → **Yes. nexus_eligible flag
       + cosmology_provenance on PCV. CONFIRMED.**
-- [ ] How does the research assistant (Tier 6) interact with Cosmology
+- [x] How does the research assistant (Tier 6) interact with Cosmology
       computations? → **Parked for Tier 6.**
-- [ ] What does a Cosmology finding look like on screen? → **OPEN.**
-      cosmology_findings table schema not yet defined.
+- [x] What does a Cosmology finding look like on screen? → **CONFIRMED.**
+      Four-zone card (identity, framework+hypothesis, computation, result+
+      confidence+reference). Inline indicator + separate findings panel.
 - [x] ART (39) — what is it for? → **ARTIS computation engine. CONFIRMED.**
 
 ### Cascade flags (end-of-tier cleanup)
@@ -5012,12 +5239,10 @@ library.
 1. SECTION MAP — page 39: section_id artifacts → artis, name Artifacts →
    ARTIS. Seed affinities → empty (engine page, no deposits).
 2. LNV schema (Tier 4) — entry_type enum expands by 2: cosmology_finding,
-   rct_residual. Content jsonb shapes for both defined above.
+   rct_residual. Content jsonb shapes defined in RCT section above.
 3. PCV schema (Tier 4) — cosmology_provenance: boolean +
    cosmology_finding_ref: string | null added. Third provenance type.
 4. Manifest_39 — full rewrite from Artifacts to ARTIS.
-5. INF → ARTIS boundary — confirmation needed that scope/trigger
-   distinction is clean.
 
 ### Pipeline segment defined here
 
@@ -5033,6 +5258,8 @@ identified → ARTIS computation quantifies → rct_residual created →
 routes to LNV (entry_type: rct_residual) → accumulation tracked in
 RCT → threshold → Sage prompted → optional standard finding produced
 → finding routes to LNV + PCV.
+
+**TIER 5 DESIGN: COMPLETE.** All items confirmed session 20.
 
 ---
 
@@ -5231,7 +5458,8 @@ Items that don't belong to a single tier or can be done at any point.
       · Tier 2: Void page manifest + schema slot
       · Tier 3: 5 Axis engine schemas (THR, STR, INF, ECR, SNM)
       · Tier 4: WSC schema, LNV schema, Void engine schema
-      · Tier 5: Cosmology engine schemas (HCO, COS, CLM, NHM, RCT, possibly ART)
+      · Tier 5: ARTIS schema (5 tables, 12 endpoints), cosmology_findings,
+        rct_residual, page investigation surfaces (HCO, COS, CLM, NHM, RCT)
       · Tier 6: Research assistant spec, resonance audio spec
       · Update existing schemas with new fields where needed at each tier
 
@@ -5556,3 +5784,85 @@ UI architecture foundation:
 - Shared UI patterns (sort, filter, search) documented once
 - Page types get different control sets where function demands it
 - Written at frontend build time, informed by these design decisions
+
+### Session 20 (2026-04-06)
+
+**Tier 5 — full design completed:**
+
+ART → ARTIS transformation:
+- Page 39 transforms from Artifacts (retired) to ARTIS: Analytical Research
+  and Theory Infrastructure for Science. Computation engine for all Cosmology
+  pages. Page code stays ART. section_id → artis. Display name → ARTIS.
+- Engine page (no deposits, no seed affinities). Two zones: computation
+  workbench (~60%) + registry and health (~40%).
+- 5 tables: artis_computation_snapshots, artis_external_references,
+  science_domain_mappings, artis_layer2_snapshots, artis_reference_distributions.
+- 12 API endpoints. Full ownership boundaries defined (6 OWNS, 6 DOES NOT OWN).
+- Science ping pipeline: Layer 1 (tag mapping, deterministic) → Layer 2
+  (Claude framing, on demand) → Layer 3 (computation suggestion).
+- Navigation: panel from Cosmology page headers + sidebar with engine visual type.
+- Layer 2 snapshots: permanent retention, prompt-versioned, no content duplication.
+- Science domain mappings: Claude-proposes, Sage-confirms pattern. confidence
+  float, computation_hints jsonb, active boolean.
+- Reference distribution registry: named numpy arrays for KS test and KL
+  divergence comparisons. Cross-page resource (CLM + NHM + others).
+
+RCT corrected:
+- RCT is NOT meta-Cosmology, NOT synthesis capstone. Parallel investigation
+  surface. Manifest was already correct; build plan description was wrong.
+- Three functions: science ping (with second question about unexplained
+  residual), residual detection (rct_residual output type), cross-archive
+  recurrence.
+- Three-panel layout: field pattern (left), science ping + computation
+  (center), residual panel (right).
+- rct_residual routes to LNV immediately. Accumulation tracked in RCT.
+
+Computation infrastructure:
+- scipy/numpy on FastAPI backend. 13 V1 implementations + 3 PLANNED interfaces.
+- computation_snapshot on every finding (inputs, function, parameters, raw output).
+- frequency_ratio_analysis: custom, V1. phi_proxy: custom, V1 (labeled as
+  approximation). tribonacci_convergence + lagrange_stability: interfaces
+  defined, implementations blocked on field energy model. True IIT phi: future.
+- V2 definition clarified: V2 = swarm-ready, not a feature/data gate.
+
+cosmology_findings schema:
+- deposit_ids: string[] (min 1, COS submits 2+). framework, hypothesis,
+  computation_snapshot_id, result_summary, values (jsonb), confidence (Sage's
+  assessment), external_reference_id, nexus_eligible, status (draft | confirmed
+  | superseded | abandoned), superseded_by, abandoned_reason.
+- Finding card: 4 zones + 3 action buttons. Placement: inline indicator on
+  deposit + separate findings panel.
+
+External reference format:
+- doi (opt) + url (opt) + summary (required) + title (opt) + accessed (opt).
+- Summary is embeddable and RCT-readable.
+
+Nexus feedback loop:
+- nexus_eligible flag on Cosmology findings. Sage-controlled gate.
+- cosmology_provenance + cosmology_finding_ref on PCV. Third provenance type.
+- Circularity protection in prompt.
+
+Page investigation surfaces (all confirmed):
+- HCO: wave mechanics / harmonics / signal processing. Fourier, Welch, entropy.
+  Signature viz: frequency spectrum.
+- COS: coupled oscillator / phase-locking / coupling. Pearson, Spearman,
+  cross-correlation (time_axis parameter), coherence. Signature viz: scatter plot.
+  deposit_ids array for pairs/groups.
+- CLM: geometry / topology / orbital / spatial. Distance matrix, clustering, KS
+  test. Signature viz: dendrogram / heatmap. Embedding vectors as default
+  (dependency on embedding pipeline). Reference distribution registry for KS.
+- NHM: neural / cognitive / information theory. Shannon entropy, mutual info,
+  KL divergence, phi proxy. Signature viz: entropy comparison bar (3 bars).
+  Shannon's primary investigation surface.
+
+Cross-cutting items resolved:
+- Shannon/CMB: no home page, frameworks in ARTIS library.
+- INF → ARTIS boundary: confirmed clean (different scope, trigger, output).
+- Rot check: passed. 2 drops from NHM (systems theory, cognitive science).
+  Zero contamination. Shannon (s34, s37) and CMB (s38) confirmed in tag vocab.
+
+Cascade flags for cleanup:
+1. SECTION MAP — page 39 update (section_id, name, seed affinities empty)
+2. LNV schema — 2 new entry_types (cosmology_finding, rct_residual)
+3. PCV schema — cosmology_provenance (third provenance type)
+4. Manifest_39 — full rewrite
