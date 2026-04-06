@@ -1,155 +1,403 @@
+╔══════════════════════════════════════════════════════════════╗
+║  DAILY NEXUS ROUTINE SCHEMA  ·  DNR  ·  V1                  ║
+║  /DESIGN/Systems/Daily_Nexus_Routine/                        ║
+║  Mechanical spec — pipeline sequence, payloads, store,       ║
+║  retry, session window, failure modes.                       ║
+║  Architectural description in SYSTEM_ Daily Nexus Routine.md ║
+╚══════════════════════════════════════════════════════════════╝
 
-
-╔══════════════════════════════════════════════════════════════╗ ║ DAILY NEXUS ROUTINE SCHEMA · DNR · v1 ║ ║ /DESIGN/systems/daily\_nexus\_routine\_schema\_v1.md ║ ╚══════════════════════════════════════════════════════════════╝
 
 OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-OWNS The Close Session button — global dropdown, every page Sequence orchestration — step order definition and enforcement Session record — creation, status tracking, failure typing Handoff timing — awaiting MTM completion before LNV fires Failure flagging — detecting, typing, and writing failure state LNV failure notification — what LNV receives on MTM failure Retry surface — surfacing retry prompt in LNV, firing new run lnv\_routing\_status trigger — after LNV confirms receipt of each Finding, DNR triggers the FastAPI service layer to write lnv\_routing\_status → deposited and lnv\_deposit\_id on the findings record. DNR owns this trigger. The FastAPI service layer owns the write.
+OWNS
+Session-close pipeline mechanics — step execution, write ordering
+In-progress guard — check, timeout, recovery
+routine_sessions store — field definitions, status transitions
+LNV success payload — full shape specification
+LNV failure notification payload — full shape specification
+Retry mechanics — session window assembly, dedup array, window ceiling
+Named constants — timeout, window max
+Known failure modes — all guards and recovery paths
 
-DOES NOT OWN MTM synthesis logic — owned by MTM synthesis service (backend/services/mtm.py) Findings content or structure — owned by MTM schema LNV deposit writing — owned by LNV WSC — Witness Scroll is not part of this Routine. It is a separate act that follows session close. It is not triggered, sequenced, or owned here. PostgreSQL reads or writes — owned by FastAPI service layer (backend/services/) Routing authority — owned by SOT
+DOES NOT OWN
+Pipeline architectural identity — owned by SYSTEM_ Daily Nexus Routine.md
+MTM synthesis logic — owned by METAMORPHOSIS SCHEMA.md
+Findings content or structure — owned by METAMORPHOSIS SCHEMA.md
+LNV deposit writing — owned by LNV
+WSC — sovereign, not part of this pipeline
+PostgreSQL reads or writes — owned by FastAPI service layer
+Routing authority — owned by SOT
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ROUTINE DEFINITION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-The Daily Nexus Routine is the architectural close sequence that runs between the Axis and Nexus layers at session close. It fires the MTM synthesis cycle and routes its output to LNV in guaranteed order with guaranteed completion handling.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NAMED CONSTANTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-It is not a summary function. It is not a prompt. It is a defined contract between MTM and LNV that executes the same way every time, regardless of what the session contained.
+DNR_INPROGRESS_TIMEOUT_MS
+  Maximum time an in_progress routine_session record can exist
+  before DNR treats it as interrupted without requiring app restart.
+  If an in_progress record is older than this threshold and no MTM
+  resolution has arrived, DNR writes status → failed,
+  failure_type → interrupted, surfaces retry. Same recovery path
+  as NexusRoutine.init(). Calibration item at build time — the
+  mechanism is defined here, the value is tuned at build.
 
-WSC is not part of this Routine. Witness Scroll is a separate act that follows the Routine's completion. The Routine does not trigger WSC, prompt WSC, or wait for WSC. WSC remains sovereign.
+DNR_DEDUP_WINDOW_MAX
+  Maximum number of prior failed sessions included in the
+  prior_mtm_session_ids dedup array. When the session window
+  exceeds this count, DNR includes the N most recent failed
+  sessions only and logs that the window was truncated.
+  Truncation noted on routine_session record:
+  dedup_window_truncated → true. LNV surfaces this when true —
+  Sage knows the dedup pass was partial and semantic overlap from
+  older sessions is possible. Calibration item at build time.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SESSION DEFINITION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-A session is the working period between two Routine runs. It has no formal open event — it begins when the previous Routine run completes. It ends when Close Session is pressed.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THE CLOSE SESSION BUTTON — MECHANICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-The Routine may run more than once in a day. Each run is a discrete session record. There is no one-per-day constraint.
+Lives in the global dropdown. Available from every page.
 
-A session may contain zero deposits to the Axis lens pages. The Routine still runs if triggered. MTM will read what exists and either produce Findings or produce none. Both are valid outcomes. Neither is an error.
+ON PRESS:
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ THE CLOSE SESSION BUTTON ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Check in-progress guard: if most recent routine_session status
+   is in_progress AND record age < DNR_INPROGRESS_TIMEOUT_MS,
+   does not fire. Surfaces status indicator.
+   If in_progress AND record age >= DNR_INPROGRESS_TIMEOUT_MS,
+   treats as interrupted (see INTERRUPTED RUN RECOVERY below).
+2. Create routine_session record. Write status → in_progress.
+   Write triggered_at = timestamp.
+3. Execute the session-close pipeline (see below).
+4. Write routine_session to final status.
 
-The Close Session button lives in the global dropdown. The same dropdown that carries the media intake trigger. Available from every page in the archive.
+GUARD — NO CONCURRENT RUNS: in_progress check runs before any new
+session record is created. No duplicate runs.
 
-Consistent position and label across all pages. Does not interfere with any page's primary deposit flow. It is a session-level architectural action, not a page-level function.
 
-WHAT IT DOES ON PRESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SESSION-CLOSE PIPELINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. Checks whether a Routine run is already in\_progress. If yes: does not fire a second run. Surfaces a status indicator — Routine already running. No duplicate runs.  
-2. Creates a session record. Writes status → in\_progress.  
-3. Triggers the MTM synthesis endpoint (POST /mtm/synthesize). Awaits resolution.  
-4. On MTM resolution: proceeds to LNV notification step.  
-5. Writes session record to final status.
+Strict order. Each step resolves before the next fires. Never
+runs in parallel. Named by function, not count — Tier 4 may add
+a Void session-close pulse check as an additional step.
 
-GUARD — NO CONCURRENT RUNS If status of the most recent session record is in\_progress, the button does not fire a new run. The in\_progress check runs before any new session record is created.
+STEP 1 — MTM SYNTHESIS
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ TWO-STEP SEQUENCE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Trigger: POST /mtm/synthesize
+  On retry: pass prior_mtm_session_ids array (see RETRY)
+  On clean run: pass no options
+  Await completion. MTM returns result object:
 
-Strict order. Step 2 does not fire until Step 1 resolves — success or failure. The sequence never runs in parallel.
+    {
+      status:                'complete' | 'failed'
+      failure_type:          null | 'pre_synthesis' | 'mid_synthesis'
+      findings:              Finding[]
+      findings_count:        integer
+      findings_dropped:      integer
+      mtm_session_id:        string
+      synthesis_duration_ms: integer
+    }
 
-STEP 1 — MTM SYNTHESIS Trigger the MTM synthesis endpoint (POST /mtm/synthesize). On retry: pass prior\_mtm\_session\_ids array (see RETRY). On clean run: pass no options. Await completion. MTM runs its full synthesis cycle — reads all five lens pages, calls Claude API, produces Findings, writes to PostgreSQL. The synthesis endpoint returns a result object:
+  On resolution: write mtm_session_ref on routine_session record.
+  Write synthesis_duration_ms on routine_session record (same
+  moment, before LNV notification fires).
+  Proceed to Step 2.
 
-{  
-  status:           'complete' | 'failed'  
-  failure\_type:     null | 'pre\_synthesis' | 'mid\_synthesis'  
-  findings:         array of Finding records produced  
-                    (may be empty on failure or clean run  
-                    with no patterns)  
-  findings\_count:   integer — count of findings array  
-  findings\_dropped: integer — candidates not written,  
-                    zero on clean runs  
-  mtm\_session\_id:   the synthesis\_session record id  
-}
+STEP 2 — LNV NOTIFICATION
 
-The Routine does not inspect Findings content. It receives the result object and passes it to Step 2\.
+  Fires after MTM resolves, regardless of MTM status. LNV always
+  receives — success or failure.
 
-STEP 2 — LNV NOTIFICATION Fires after the MTM synthesis endpoint resolves, regardless of MTM status. LNV always receives. Even on failure.
+  On MTM status 'complete':
+    Assemble and send LNV success payload (see below).
+    After LNV confirms receipt of each Finding, trigger FastAPI
+    service layer to write lnv_routing_status → deposited and
+    lnv_deposit_id on each findings record.
+    Write lnv_notified → true on routine_session.
+    Write retry_available → false.
+    Write status → complete on routine_session.
 
-On MTM status 'complete': DNR sends LNV the success payload: { type: 'mtm\_complete' mtm\_session\_id: the synthesis\_session record id findings: array of Finding records findings\_count: integer findings\_dropped: integer If findings\_count is 0 and findings\_dropped \> 0, LNV surfaces: Synthesis complete — \[n\] candidate(s) produced, none written. Review session logs. } After LNV confirms receipt of each Finding, DNR triggers the FastAPI service layer to write lnv\_routing\_status → deposited and lnv\_deposit\_id on each findings record. Then writes lnv\_notified → true on routine\_session. Then writes retry\_available → false. Then writes status → complete on routine\_session.
+  On MTM status 'failed':
+    Assemble and send LNV failure notification payload (see below).
+    After LNV confirms receipt:
+    Write lnv_notified → true on routine_session.
+    Write retry_available → true.
+    Write status → failed on routine_session.
 
-On MTM status 'failed': DNR sends LNV the failure payload. See LNV FAILURE NOTIFICATION PAYLOAD below. After LNV confirms receipt, DNR writes lnv\_notified → true on routine\_session. Then writes retry\_available → true. Then writes status → failed on routine\_session.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ FAILURE HANDLING ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LNV SUCCESS PAYLOAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Two failure types. They are not the same event. Both are named, typed, and handled explicitly.
+What LNV receives when MTM status is 'complete':
 
-FAILURE TYPE: pre\_synthesis Condition: MTM could not read one or more lens pages before synthesis began. No Findings were produced. LNV receives: empty findings array · failure\_type: 'pre\_synthesis' · mtm\_session\_id · retry prompt. LNV displays: MTM synthesis did not start — \[reason\]. Retry available.
+    {
+      type:                  'mtm_success'
+      mtm_session_id:        string
+      findings:              Finding[]
+      findings_count:        integer
+      findings_dropped:      integer
+      synthesis_duration_ms: integer
+      dedup_skipped:         boolean
+    }
 
-FAILURE TYPE: mid\_synthesis Condition: All five lens pages were read. Claude API failed partway through. Some Findings may exist. LNV receives: partial findings array (whatever was produced before failure) · failure\_type: 'mid\_synthesis' · mtm\_session\_id · retry prompt. LNV displays: MTM synthesis incomplete — partial Findings received. \[count\] Finding(s) produced before failure. Retry available.
+If findings_count is 0 and findings_dropped > 0, LNV surfaces:
+"Synthesis complete — [n] candidate(s) produced, none written.
+Review session logs."
 
-FAILED SESSION RECORDS ARE NEVER OVERWRITTEN A failed synthesis\_session record is the accurate record of what happened. It is not corrected retroactively. Retry creates a new session record. The failed record stands. The ledger reflects what actually happened.
+If dedup_skipped is true, LNV surfaces: "Deduplication did not
+run — findings may contain duplicates from prior failed sessions."
 
-RETRY Surfaced in two places after any MTM failure:
+LNV pattern-matches on type: 'mtm_success' to distinguish from
+failure payloads. Symmetric with the failure payload — both are
+typed objects, never inferred from absence of fields.
 
-LNV — a flagged failure entry displays the failure type, findings count produced before failure, and an inline Retry button. Sage sees exactly what happened and can act from there without navigating away.
 
-Global dropdown — Retry Session Close appears in the dropdown while retry\_available is true. Sage can retry from any page without navigating to LNV first.
-
-Both surfaces call NexusRoutine.retry(). The previous failed session's mtm\_session\_id is passed to MTM so deduplication runs against already-produced Findings before anything new is written or routed. Partial data from a failed mid\_synthesis run is never duplicated in LNV on retry.
-
-Retry does not bypass the in\_progress guard. A new session record is created on every retry. The previous failed record is never modified. Retry Session Close disappears from the dropdown when a successful run completes.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ STORE: routine\_sessions ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-id — auto
-
-triggered\_at — timestamp Written when Close Session fires. Never updated.
-
-status — enum: in\_progress | complete | failed in\_progress: sequence executing. complete: both steps resolved successfully. failed: MTM returned failed status.
-
-mtm\_session\_ref — references synthesis\_sessions.id Written after the MTM synthesis endpoint resolves. Links this Routine run to the MTM session record. Null until MTM resolves.
-
-lnv\_notified — boolean true after LNV notification step completes, regardless of MTM status. false until Step 2 executes.
-
-failure\_type — enum: null | pre\_synthesis | mid\_synthesis | interrupted null on complete runs. pre\_synthesis: MTM halted before synthesis began. mid\_synthesis: API failed partway through synthesis. interrupted: app closed or crashed while run was in\_progress. Written by NexusRoutine.init() on stale record detection. Written from MTM result object on failed runs. Written by init() on interrupted runs.
-
-retry\_available — boolean true when status is failed. false on complete runs. Written at Step 2 completion.
-
-created\_at — timestamp Written once at record creation. Never updated.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ LNV FAILURE NOTIFICATION PAYLOAD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LNV FAILURE NOTIFICATION PAYLOAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 What LNV receives when MTM status is 'failed':
 
-{ type: 'mtm\_failure' failure\_type: 'pre\_synthesis' | 'mid\_synthesis' | 'interrupted' mtm\_session\_id: the synthesis\_session record id findings: array — empty or partial findings\_count: integer — count of what was produced findings\_dropped: integer — candidates not written. Surfaces alongside findings\_count so LNV can distinguish a genuine empty from a dropped-all result. retry\_available: true message: human-readable failure description generated from failure\_type }
+    {
+      type:                  'mtm_failure'
+      failure_type:          'pre_synthesis' | 'mid_synthesis'
+                             | 'interrupted'
+      mtm_session_id:        string
+      findings:              Finding[] — empty or partial
+      findings_count:        integer
+      findings_dropped:      integer
+      synthesis_duration_ms: integer
+      retry_available:       true
+      message:               string — human-readable failure
+                             description from failure_type
+    }
 
-LNV holds this payload as a flagged entry. It does not editorialize the failure. It displays what was received, surfaces the failure type and count, and presents the retry prompt. The payload is traceable to the MTM session record via mtm\_session\_id.
+LNV holds this as a flagged entry. It displays what was received,
+surfaces failure type and count, and presents the retry prompt.
+It does not editorialize the failure.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ PUBLIC API ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FAILURE TYPE DISPLAY:
+  pre_synthesis → "MTM synthesis did not start — [reason].
+    Retry available."
+  mid_synthesis → "MTM synthesis incomplete — partial Findings
+    received. [count] Finding(s) produced before failure.
+    Retry available."
+  interrupted → "Session interrupted before completion.
+    Retry available."
 
-NexusRoutine.init() → void Called once at app init. Wires the Close Session button in the global dropdown. Wires the Retry Session Close option in the global dropdown. Checks for any in\_progress session record from a previous interrupted run. If found: — Writes status → failed on the routine\_session record — Writes failure\_type → interrupted on routine\_session — Writes retry\_available → true on routine\_session — If mtm\_session\_ref is not null on the stale record: Writes status → failed on the linked synthesis\_session record in MTM's store. Sends LNV failure notification payload with failure\_type: 'interrupted' and findings\_count from the MTM synthesis\_session record. — If mtm\_session\_ref is null on the stale record: MTM had not yet resolved when the app was interrupted. No MTM session record to update. Sends LNV failure notification payload with failure\_type: 'interrupted', findings\_count: 0, findings\_dropped: 0\. On retry, fires as a clean run — passes no prior\_mtm\_session\_ids. There are no prior Findings to deduplicate against. — Surfaces Retry Session Close in the dropdown. This is the same failure path as any other failed run. No special case logic elsewhere in the system.
 
-NexusRoutine.run() → Promise<void> Called by the Close Session button. Runs the in\_progress guard. Creates routine\_session record. Executes the two-step sequence. Returns when both steps have resolved.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STORE: routine_sessions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-NexusRoutine.retry() → Promise<void> Called from two surfaces: — Inline Retry button on the flagged failure entry in LNV — Retry Session Close option in the global dropdown Both surfaces call the same function. Behavior is identical regardless of where retry was triggered.
+  id                     — auto
 
-SESSION WINDOW — HOW IT IS DETERMINED The current session window is all routine\_session records since the most recent record with status: complete. If no complete record exists, the window is all records. The window closes the moment a run completes successfully. Every failed and interrupted record between the last complete run and now belongs to the current window.
+  triggered_at           — timestamp. Written when Close Session
+                           fires. Never updated.
 
-Reads all routine\_session records in the current window. Reads mtm\_session\_ref from each. Assembles the full prior\_mtm\_session\_ids array from those refs. Excludes any record where mtm\_session\_ref is null — those runs were interrupted before MTM resolved and have no Findings to deduplicate against. Source: routine\_sessions.mtm\_session\_ref on each record in the current window. Never assumed or hardcoded.
+  status                 — enum: in_progress | complete | failed
+                           in_progress: pipeline executing.
+                           complete: all steps resolved successfully.
+                           failed: MTM returned failed status, or
+                           run was interrupted.
 
-Passes prior\_mtm\_session\_ids array to the MTM synthesis endpoint so deduplication runs against cumulative Findings from all prior failed runs — not just the most recent. Partial data from any failed run in the window is never duplicated in LNV on retry.
+  mtm_session_ref        — references synthesis_sessions.id.
+                           Written after MTM resolves. Links this
+                           run to the MTM session record. Null
+                           until MTM resolves.
 
-Does not modify any previous session record. Creates a new routine\_session record. Runs the full two-step sequence from Step 1\. Respects the in\_progress guard — does not bypass it.
+  synthesis_duration_ms  — integer. Wall-clock synthesis time in
+                           milliseconds. Written at same moment as
+                           mtm_session_ref, from MTM result object.
+                           Visible in session history without
+                           requiring a join to synthesis_sessions.
+                           Null if MTM never resolved.
 
-RETRY SESSION CLOSE — DROPDOWN VISIBILITY Retry Session Close appears in the global dropdown only when retry\_available is true on the most recent session record. It disappears when a subsequent Routine run completes with status complete. It is not a permanent dropdown item — it is a recoverable state indicator.
+  lnv_notified           — boolean. true after LNV notification
+                           step completes, regardless of MTM status.
+                           false until Step 2 executes.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ KNOWN FAILURE MODES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  failure_type           — enum: null | pre_synthesis |
+                           mid_synthesis | interrupted
+                           null on complete runs.
+                           pre_synthesis: MTM halted before
+                           synthesis began.
+                           mid_synthesis: API failed partway.
+                           interrupted: app closed/crashed while
+                           run was in_progress, or
+                           DNR_INPROGRESS_TIMEOUT_MS exceeded.
 
-1. BUTTON FIRES WHILE PREVIOUS RUN IS IN\_PROGRESS Two Routine runs execute concurrently. Two session records created for the same working period. MTM fires twice. LNV receives duplicate or overlapping Findings. Guard: in\_progress check runs before any new session record is created. If the most recent session record status is in\_progress, the button does not fire. Status indicator surfaced instead.
+  retry_available        — boolean. true when status is failed.
+                           false on complete runs. Written at
+                           Step 2 completion.
 
-2. MTM COMPLETES BUT LNV NOTIFICATION FAILS Findings exist in PostgreSQL. LNV never receives them. Session record shows complete for MTM but lnv\_notified stays false. No visible failure — Findings exist but are stranded. Guard: lnv\_notified is written only after LNV notification step confirms. Session status is written only after lnv\_notified is true. A session where lnv\_notified is false and mtm\_session\_ref is written is an incomplete run — NexusRoutine.init() checks for this state on app load and surfaces recovery.
+  dedup_window_truncated — boolean. true when the retry session
+                           window exceeded DNR_DEDUP_WINDOW_MAX
+                           and was truncated to the N most recent
+                           failed sessions. false on all other
+                           runs. Null on clean first runs.
+                           LNV surfaces when true.
 
-3. RETRY FIRED BEFORE FAILURE\_TYPE IS WRITTEN Retry fires on an incomplete failure record. The new run creates a session that references unresolved state. Guard: retry\_available is only set to true after failure\_type is written and lnv\_notified is true. The retry prompt does not surface in LNV until the failure notification payload has been fully written.
+  created_at             — timestamp. Written once at record
+                           creation. Never updated.
 
-4. SESSION RECORD STATUS NOT UPDATED AFTER COMPLETION Session remains in\_progress indefinitely. The in\_progress guard blocks all future Routine runs. Archive cannot close a session. Guard: session status is always written as the final step of NexusRoutine.run(). If the run throws before reaching the status write, NexusRoutine.init() detects the stale in\_progress record on next app load and resolves it.
 
-5. FAILED SESSION RECORD OVERWRITTEN ON RETRY The ledger no longer reflects what actually happened in the failed run. Provenance gap. Guard: retry always creates a new routine\_session record. The failed record is read-only after status is written. No update path exists for completed or failed records.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INTERRUPTED RUN RECOVERY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ FILES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Two recovery paths. Both produce the same failure state.
+
+AT APP LOAD (NexusRoutine.init()):
+  Checks for any routine_session record with status in_progress.
+  If found:
+    Write status → failed on routine_session.
+    Write failure_type → interrupted.
+    Write retry_available → true.
+
+  If mtm_session_ref is not null (MTM had resolved before crash):
+    Write status → failed on the linked synthesis_session.
+    Send LNV failure notification with failure_type: interrupted
+    and findings_count from the MTM synthesis_session record.
+
+  If mtm_session_ref is null (MTM had not yet resolved):
+    No MTM session record to update.
+    Send LNV failure notification with failure_type: interrupted,
+    findings_count: 0, findings_dropped: 0.
+    On retry: fires as clean run — passes no prior_mtm_session_ids.
+
+IN-SESSION TIMEOUT (DNR_INPROGRESS_TIMEOUT_MS):
+  If an in_progress record is older than the timeout threshold
+  and no MTM resolution has arrived: same recovery path as init().
+  Write status → failed, failure_type → interrupted. Surface retry.
+  No app restart required.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RETRY MECHANICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Surfaced in two places: LNV inline Retry button, Global dropdown
+Retry Session Close. Both call NexusRoutine.retry(). Behavior is
+identical regardless of caller.
+
+SESSION WINDOW DETERMINATION:
+
+  The current session window is all routine_session records since
+  the most recent record with status: complete. If no complete
+  record exists, the window is all records. The window closes the
+  moment a run completes successfully.
+
+  DNR reads all routine_session records in the current window.
+  Reads mtm_session_ref from each. Assembles prior_mtm_session_ids
+  array from those refs. Excludes any record where mtm_session_ref
+  is null — those runs were interrupted before MTM resolved and
+  have no Findings to deduplicate against.
+
+WINDOW CEILING (DNR_DEDUP_WINDOW_MAX):
+
+  When the session window exceeds DNR_DEDUP_WINDOW_MAX, DNR
+  includes only the N most recent failed sessions in the dedup
+  array. The truncation is logged. dedup_window_truncated → true
+  written on the new routine_session record. LNV surfaces this
+  so Sage knows the dedup pass was partial.
+
+RETRY EXECUTION:
+
+  Creates a new routine_session record (never modifies previous).
+  Passes prior_mtm_session_ids to MTM synthesis endpoint.
+  Runs the full session-close pipeline from Step 1.
+  Respects the in_progress guard — does not bypass it.
+  Retry Session Close disappears from dropdown when a successful
+  run completes.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PUBLIC API
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NexusRoutine.init() → void
+  Called once at app init. Wires Close Session button. Wires Retry
+  Session Close option. Checks for stale in_progress records and
+  resolves them. Called before the app shell is interactive.
+
+NexusRoutine.run() → Promise<void>
+  Called by Close Session button. Runs in_progress guard (with
+  timeout check). Creates routine_session record. Executes the
+  session-close pipeline. Returns when all steps have resolved.
+
+NexusRoutine.retry() → Promise<void>
+  Called from LNV inline Retry button or Global dropdown Retry
+  Session Close. Assembles prior_mtm_session_ids from current
+  session window (respecting DNR_DEDUP_WINDOW_MAX). Creates new
+  routine_session record. Runs full session-close pipeline.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KNOWN FAILURE MODES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. BUTTON FIRES WHILE PREVIOUS RUN IS IN_PROGRESS
+Two concurrent runs. Duplicate session records. MTM fires twice.
+LNV receives duplicates.
+Guard: in_progress check runs before any new session record is
+created. If most recent status is in_progress and within timeout
+window, button does not fire. Status indicator surfaced.
+
+2. MTM COMPLETES BUT LNV NOTIFICATION FAILS
+Findings exist in PostgreSQL. LNV never receives them. Session
+shows complete for MTM but lnv_notified stays false.
+Guard: lnv_notified written only after LNV notification confirms.
+Session status written only after lnv_notified is true. A session
+where lnv_notified is false and mtm_session_ref is written is an
+incomplete run — NexusRoutine.init() checks for this on app load.
+
+3. RETRY FIRED BEFORE FAILURE_TYPE IS WRITTEN
+Retry fires on incomplete failure record. New run references
+unresolved state.
+Guard: retry_available set to true only after failure_type is
+written and lnv_notified is true. Retry prompt does not surface
+until failure notification payload is fully written.
+
+4. SESSION RECORD NEVER EXITS IN_PROGRESS
+In_progress guard blocks all future runs indefinitely.
+Guard: two recovery paths — NexusRoutine.init() at app load, and
+DNR_INPROGRESS_TIMEOUT_MS for in-session recovery. Both write
+status → failed, failure_type → interrupted. No permanent block.
+
+5. FAILED SESSION RECORD OVERWRITTEN ON RETRY
+Ledger no longer reflects what happened. Provenance gap.
+Guard: retry always creates a new routine_session record. Failed
+records are read-only after status is written. No update path.
+
+6. DEDUP WINDOW GROWS UNBOUNDED
+40+ failed sessions in window. MTM loads all prior findings to
+build dedup Set. Performance degrades.
+Guard: DNR_DEDUP_WINDOW_MAX caps the window. Truncation logged.
+dedup_window_truncated noted on routine_session. LNV surfaces
+when true so Sage knows dedup was partial.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 backend/services/dnr.py
-DNR service — two-step sequence execution, in\_progress guard, session record management, MTM endpoint trigger, LNV failure notification, retry logic, stale in\_progress recovery on init. Status: PLANNED
+  DNR service — session-close pipeline execution, in_progress
+  guard with timeout, session record management, MTM endpoint
+  trigger, LNV notification (success + failure payloads), retry
+  logic with window ceiling, interrupted recovery on init.
+  Status: PLANNED
 
 backend/routes/dnr.py
-FastAPI DNR endpoints — session close trigger, retry trigger, session status query. Status: PLANNED
+  FastAPI DNR endpoints — session close trigger, retry trigger,
+  session status query.
+  Status: PLANNED
 
 frontend/ (DNR components)
-Svelte — Close Session button in global dropdown, Retry Session Close dropdown item, status indicators. Status: PLANNED
-
+  Svelte — Close Session button in global dropdown, Retry Session
+  Close dropdown item, status indicators.
+  Status: PLANNED
