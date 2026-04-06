@@ -22,9 +22,10 @@ OVERVIEW
 TRIGGER
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Event:  INT post-retirement step d
+  Event:  INT post-retirement step 4
           (after retirement_status → complete, after Archives
           page deposit written, after retirement label surfaced)
+          See INTEGRATION SCHEMA.md POST-RETIREMENT SEQUENCE.
 
   The embedding trigger fires last in the post-retirement
   sequence. By this point:
@@ -73,11 +74,20 @@ WHAT GETS EMBEDDED
   - Raw document_text is cleared at retirement step 10 and
     is not available post-retirement
 
-  PHASE 2 CONSIDERATION: deposit-level embedding (individual
-  parsed sections with their signal_tags and summaries) would
-  provide more granular retrieval. Not built at launch. The
-  embeddings table schema supports this via source_type field
-  if added later.
+  SCOPE NOTE: This schema covers ARCHIVE-LEVEL embedding —
+  post-retirement, provenance_summary as input, one embedding
+  per retired document. DEPOSIT-LEVEL embedding (per-deposit,
+  content + tags + doc_type as input, embedding_dirty flag,
+  3-attempt retry, failed_permanent status) is defined in
+  INTEGRATION SCHEMA.md under EMBEDDING PIPELINE. Different
+  scope, different trigger, different input. Both write to
+  the embeddings table but serve different retrieval needs.
+  Archive-level powers broad semantic search across documents.
+  Deposit-level powers granular search within the archive.
+
+  PHASE 2 CONSIDERATION: deposit-level embedding ships V1 per
+  INTEGRATION SCHEMA.md. Origin sovereign retrieval (filtering
+  by owner_origin_id) activates in phase 2.
 
 
 TABLE: embeddings

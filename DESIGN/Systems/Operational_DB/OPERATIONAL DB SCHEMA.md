@@ -167,6 +167,56 @@ TABLE: presence_log
   from SQLite, correlate with PostgreSQL.
 
 
+TABLE: pearls
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  pearl_id           — text, primary key
+                       Format: 'prl_[timestamp]_[rand]'
+
+  content            — text, not null
+                       Could be short — even a few words.
+                       Pre-archive signal capture.
+
+  created_at         — text (ISO timestamp), not null
+                       When Sage captured the Pearl. This value
+                       becomes pearl_captured_at on the deposit
+                       record when the Pearl is promoted through
+                       INT gateway. The gap between Pearl creation
+                       and deposit creation is itself data.
+
+  page_context       — text, nullable
+                       Which page Sage was on when they captured
+                       the Pearl, if any. Informational — does
+                       not constrain promotion routing.
+
+  status             — text, not null
+                       enum: 'active' | 'promoted' | 'archived'
+                       active:   Pearl exists, not yet promoted.
+                                 Stays indefinitely. No auto-expiry.
+                       promoted: Pearl promoted through INT gateway.
+                                 Full deposit fields assigned.
+                                 Entered PostgreSQL as archive entry.
+                       archived: Pearl explicitly dismissed by Sage.
+                                 Not a deletion — record preserved.
+
+  promoted_deposit_id — text, nullable
+                       References the deposit ID created when
+                       this Pearl was promoted. Null until
+                       promotion. Links pre-archive Pearl to its
+                       post-promotion archive entry.
+
+  Pearls are PRE-ARCHIVE. They do not live in PostgreSQL until
+  promoted. This preserves the key invariant: "nothing enters
+  the archive without INT provenance." A Pearl becomes an archive
+  entry only when promoted through INT.
+
+  Unpromoted Pearls stay in SQLite indefinitely. No auto-expiry.
+  Sage decides when (or if) they become deposits.
+
+  See INTEGRATION SCHEMA.md BLACK PEARL PROMOTION FLOW for full
+  promotion mechanics.
+
+
 TABLE: operational_state
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
