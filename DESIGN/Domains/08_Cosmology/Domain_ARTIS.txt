@@ -1,0 +1,14 @@
+DOMAIN: artis · ART · PAGE 39
+GROUP: Cosmology SEEDS: — ORIGIN AFFINITY: — THRESHOLD AFFINITY: — PILLAR: —
+PURPOSE: Computation engine for the Cosmology group. ARTIS owns the statistical computation library (scipy/numpy), the reference distribution registry, and the science ping pipeline. It serves all five Cosmology investigation pages (HCO, COS, CLM, NHM, RCT) as their shared computation infrastructure. Two zones: a computation workbench where statistical tests are configured, executed, and reviewed, and a registry surface where reference distributions, computation health, and library status are monitored. ARTIS does not receive deposits — it receives computation requests and returns results with full methodology. Every computation produces a snapshot: inputs, method, parameters, outputs, timestamp. The snapshot is the proof.
+STRUCTURAL RULES:
+1. Every computation produces a computation_snapshot record. A result without a snapshot is not a valid result.
+2. Reference distributions are named, sourced, and versioned. No anonymous baselines. No implicit comparisons.
+3. Statistical results carry methodology — method name, parameters, sample size, confidence intervals or p-values as appropriate. Numbers without methodology are incomplete.
+4. The science ping pipeline is three layers: tag mapping identifies scientific domain relevance, Claude framing proposes the statistical question, ARTIS suggests the computation. Claude proposes, Sage confirms. No computation runs without Sage confirmation.
+5. ARTIS does not interpret results. It computes and surfaces. Interpretation belongs to the researcher on the investigation page that requested the computation.
+6. PLANNED interfaces (tribonacci convergence, Lagrange stability, true IIT phi) are defined but blocked on prerequisite formalization. Do not stub implementations. The interface exists; the implementation waits.
+CONNECTS TO:
+[DEFERRED — see design-session-plan.md cross-tier items.]
+SIGNAL PROFILE:
+[DEFERRED — seed vocabulary not yet locked. See design-session-plan.md cross-tier items.]

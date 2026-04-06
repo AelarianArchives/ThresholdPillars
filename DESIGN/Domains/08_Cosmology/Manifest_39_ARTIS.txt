@@ -1,0 +1,71 @@
+PAGE 39 · artis · ART · Group 7 · Cosmology
+
+
+VISION
+  The computation engine for the Cosmology group. ARTIS
+  is where field observations meet established science
+  through statistical rigor — not through narrative
+  correspondence. It owns the computation library, the
+  reference distribution registry, and the science ping
+  pipeline that connects researcher intuition to testable
+  mathematics. Every Cosmology investigation page draws
+  its computational capacity from here. The output is
+  numbers with methodology, not claims with conviction.
+
+  ARTIS: Analytical Research and Theory Infrastructure
+  for Science.
+
+
+RESEARCHER TASK
+  Compute · Compare · Validate · Register · Investigate
+
+
+OBJECTIVE
+
+Run and manage the computation infrastructure that serves all five Cosmology investigation pages (HCO, COS, CLM, NHM, RCT). ARTIS owns two zones: a computation workbench where statistical tests are configured, executed, and reviewed, and a registry surface where reference distributions, computation health, and library status are monitored. The computation library (scipy/numpy on FastAPI backend) provides 13 V1 statistical implementations across the Cosmology pages — frequency ratio analysis, correlation matrices, KS/KL divergence tests, Shannon entropy, phi proxy, and others. Three PLANNED interfaces (tribonacci convergence, Lagrange stability, true IIT phi) are defined but blocked on prerequisite formalization. The science ping pipeline runs in three layers: tag mapping identifies scientific domain relevance, Claude framing proposes the statistical question, and ARTIS suggests the computation. Claude proposes, Sage confirms. The reference distribution registry holds named numpy arrays for KS/KL comparisons — shared cross-page resources that multiple investigation surfaces draw from. Every computation produces a snapshot: inputs, method, parameters, outputs, timestamp. The snapshot is the proof. Without it, the result is anecdote.
+
+AI ROLE
+  Execute computations with precision. Surface statistical
+  results with full methodology visible. Maintain the
+  reference distribution registry. When a computation
+  runs, show the math — inputs, method, parameters,
+  result, confidence interval. When a computation cannot
+  run, name exactly what is missing. Never substitute
+  narrative for calculation. Never present a result
+  without its methodology. Never inflate statistical
+  significance beyond what the numbers support.
+
+
+AI FUNCTIONS
+  Compute · Compare · Validate · Register · Surface · Snapshot
+
+
+GOOD OUTPUT
+  Returns statistical results with visible methodology —
+  spectral index values with error bounds, KS test
+  p-values against named reference distributions,
+  correlation coefficients with sample sizes, entropy
+  calculations with base and bin parameters documented.
+  Every result carries a computation snapshot ID that
+  links to the full input/output record. Reference
+  distributions are named, sourced, and versioned.
+  When results are ambiguous, says so with the numbers
+  that make them ambiguous.
+
+
+BAD OUTPUT
+  Narrative claims without computation. "This resonates
+  with cosmic structure" instead of "spectral index
+  n = 0.97 +/- 0.03, KS p = 0.42 against CMB reference."
+  Results presented without methodology. Computations
+  run without snapshots. Reference distributions used
+  without naming the source. Statistical significance
+  inflated or hedged with language instead of bounded
+  with numbers. The failure mode is always the same:
+  replacing math with story.
+
+
+CONNECTS TO
+[DEFERRED — full CONNECTS TO pass scheduled after all schemas
+and manifests are complete. See design-session-plan.md cross-tier items.]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

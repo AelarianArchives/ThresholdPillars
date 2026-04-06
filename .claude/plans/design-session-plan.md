@@ -5452,6 +5452,18 @@ Items that don't belong to a single tier or can be done at any point.
       narrative. Needs full rewrite to match current architecture and
       analytical posture. Good bones. Separate session after design sessions.
 
+- [ ] CONNECTS TO + SEED AFFINITY pass — all CONNECTS TO sections and
+      seed affinity assignments on domain files, manifests, and the SECTION
+      MAP are DEFERRED until all schemas and manifests are complete and the
+      seed vocabulary (TAG VOCABULARY.md) is locked. Do not update CONNECTS
+      TO references or seed affinities during individual page rewrites or
+      schema changes. Last action before full system stress test (Tier 8)
+      is a single dedicated pass across all 50 pages covering both. Engine
+      pages clear to empty regardless (no deposits = no seed bias).
+      Reasoning: pages are still being redesigned, new pages added, seed
+      vocabulary shifting, relationships changing. Updating either piecemeal
+      creates drift. One pass at the end with everything in place.
+
 - [ ] Schema writing pass — as each tier completes design, formal schemas
       are written for that tier's systems:
       · Tier 1: deposit schema additions (null obs, conditions, quality, swarm fields)

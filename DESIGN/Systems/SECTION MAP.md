@@ -51,7 +51,7 @@ Source: individual page manifests (DESIGN/Domains/)
 | 36   | celestial_mech      | CLM       | Celestial Mechanics  | 7     | Cosmology    |
 | 37   | neuroharmonics      | NHM       | Neuroharmonics       | 7     | Cosmology    |
 | 38   | rct                 | RCT       | RCT                  | 7     | Cosmology    |
-| 39   | artifacts           | ART       | Artifacts            | 7     | Cosmology    |
+| 39   | artis               | ART       | ARTIS                | 7     | Cosmology    |
 | 40   | memory_vault        | MVM       | Memory Vault         | 8     | Archive      |
 | 41   | anchors             | ANC       | Anchors              | 8     | Archive      |
 | 42   | liquid_lattice      | LQL       | Liquid Lattice       | 8     | Archive      |
@@ -144,7 +144,7 @@ Empty is intentional — these are structural surfaces with no thematic bias.
 | 36   | celestial_mech      | s17    | s15    | s12    | manifest derive |
 | 37   | neuroharmonics      | s15    | s13    | s02    | manifest derive |
 | 38   | rct                 | s17    | s05    | s16    | manifest derive |
-| 39   | artifacts           | s12    | s05    | s09    | manifest derive |
+| 39   | artis               | —      | —      | —      | empty: engine   |
 | 40   | memory_vault        | s05    | s14    | s12    | manifest derive |
 | 41   | anchors             | s12    | s03    | s15    | manifest derive |
 | 42   | liquid_lattice      | s15    | s19    | s13    | manifest derive |
