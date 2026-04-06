@@ -1731,14 +1731,326 @@ the detection layer to exist before they can receive and store outputs.
           answers directly.
         Faster validation = stronger signal property (per DTX/SGR schemas).
 
-**Void engine (page 51):**
+**Void engine (page 51, VOI):**
 
-- [ ] Void aggregation logic: how null observations from ALL pages are
-      collected and analyzed for systemic absence patterns
-- [ ] Void visualizations: absence heatmap, expected-vs-observed across
-      the full archive, silence-duration tracking per threshold/pattern
-- [ ] How Void interacts with PCV (PCV tracks convergence, Void tracks
-      non-convergence — together they give the full picture)
+- [x] DESIGNED (session 17). Two-layer architecture: data layer (cross-engine
+      absence pattern detection) + analytical layer (Claude-powered interpretive
+      intelligence reading across all Nexus outputs).
+
+      ---
+
+      **VOID DATA LAYER — Absence Pattern Detection**
+
+      **Input:** Computed null signals from all 5 Axis engines. NOT raw deposits.
+      Engines already converted raw null observations into computed absence
+      signals (times_examined, times_observed, examination ratios from Tier 3).
+      Void reads one layer above — cross-engine absence patterns.
+
+      **Input filter (non-negotiable):** Minimum examination threshold on all
+      null signals. Low-examination nulls are noise at Void's scale. An engine
+      that examined a pattern twice and didn't find it is not the same signal as
+      one that examined it forty times and never found it. The examination count
+      traveling with the null signal is what gives Void its analytical power.
+
+      Named constant: VOID_EXAMINATION_FLOOR = [calibration item, set at build]
+      Any absence signal where times_examined < VOID_EXAMINATION_FLOOR does not
+      enter Void's compute step. Routed nowhere, or optionally surfaces in a
+      separate coverage gap view that is explicitly NOT on Void's page.
+
+      **Boundary enforcement:** "Looked and didn't find" vs "never looked" are
+      opposite in evidential value. Confirmed absence is evidence. Coverage gaps
+      are ignorance. Void conflating them would corrupt its entire output. The
+      examination floor filter is the structural enforcement. Coverage gap view,
+      if it exists, lives elsewhere in the architecture — spatial separation,
+      not just labeling.
+
+      **Five absence types:**
+
+      ```
+      A. cross_engine_convergent
+         Multiple engines flag same period/cluster as absent.
+         "THR stopped seeing threshold breach activity in the same window
+         that ECR stopped seeing echo recall signals."
+         Cross-engine validated. Structurally testable.
+
+      B. single_engine_persistent
+         One engine, high examination count, consistently absent.
+         Depth of absence on a single lens.
+         "STR has examined root-cluster coupling 40 times, never observed."
+         Significant but single-lens. Stays on Void unless secondary
+         threshold exceeded (examination count above hard ceiling).
+
+      C. temporal_shift
+         Pattern was present, went silent. Presence-to-absence transition.
+         "ECR constellation-19 was active for 12 sessions, then went
+         silent for 6."
+         The shift is the signal. Stays on Void unless secondary
+         threshold exceeded (silence duration > N sessions).
+
+      D. convergent_with_origin
+         Type A + Type C together across engines. Silence started
+         somewhere and spread. Cross-engine absence with a detectable
+         origin point.
+         HIGHEST-SIGNAL absence pattern. Named as distinct type so
+         Void's compute step explicitly checks for it.
+         Requires holding A and C simultaneously across engines —
+         only Void has this visibility.
+
+      E. hypothesis_attrition
+         PCV hypothesis losing evidential momentum. Sessions pass,
+         no new evidence arrives, hypothesis goes quiet without being
+         overturned or resolved.
+         RESEARCH-SYSTEM-LEVEL absence, not field-level.
+         Different analytical question: "why did we stop looking?"
+         vs "why did the field stop producing?"
+         Void detects from PCV hypothesis activity monitoring.
+         Enters Void's absence record. Does NOT re-enter PCV.
+      ```
+
+      **PCV entry rules for void-provenance hypotheses:**
+      Cross-engine validation is the PCV entry requirement.
+        Types A, D → enter PCV as hypotheses (void_provenance = true)
+        Types B, C → stay on Void's page (threshold exceptions aside:
+          B with examination count above hard ceiling, or C with silence
+          duration exceeding N sessions — both calibration items)
+        Type E → enters Void's absence record only, never back into PCV
+          (hypothesis attrition detected FROM PCV, not fed back to it)
+
+      **PCV schema addition:** void_provenance flag (parallel to
+      mtm_provenance). void_finding_ref references Void absence record.
+      hypothesis_statement is an absence claim. Threads through
+      DTX → SGR like any other hypothesis.
+
+      ---
+
+      **VOID ANALYTICAL LAYER — Claude Interpretive Intelligence**
+
+      Nexus-level Claude tool. Reads across all Nexus outputs and asks the
+      question none of the engines ask individually: what does the systemic
+      shape of this research reveal, including its silences?
+
+      NOT a function MTM can perform. MTM operates at pattern level. Void
+      operates at research-system level.
+
+      **Boundary:** Void's Claude tool speaks analytically, not sovereignly.
+      WSC is where AI speaks in its own register. Void's tool is an
+      instrument Sage operates — she triggers it, she reads the output as
+      research data. Voice stays inside the analytical frame.
+
+      **Three trigger modes:**
+
+      1. **Session-close (automatic via DNR):**
+         Lightweight pulse check. Runs alongside MTM synthesis.
+         Payload:
+           · Void's computed absence patterns from this session (all 5 types)
+           · Summary-level Nexus state: PCV active hypothesis count + new
+             this session, DTX active drift events + trajectory state
+             distribution, SGR tier distribution + any new grades, MTM
+             findings from this session (finding_type counts)
+           · Not full Nexus dataset — just session delta + current summary
+         Output (compact, storable, readable at a glance):
+           {
+             systemic_observations: [
+               {
+                 observation: string
+                 evidence_sources: string[]
+                 signal_strength: notable | emerging | ambient
+               }
+             ],
+             absence_flags: [
+               {
+                 flag: string
+                 absence_type: A | B | C | D | E
+                 engines_involved: string[]
+               }
+             ],
+             session_delta: string — one sentence, how this session
+                            changed the systemic picture
+           }
+
+      2. **On-demand open read (Sage-triggered):**
+         Full instrument. No scope constraint. Full Nexus state.
+         Payload:
+           · Full Void absence pattern set (all 5 types, full history
+             or windowed)
+           · Full PCV hypothesis topology (active patterns, domain
+             connections, void-provenance flagged)
+           · Full DTX drift state (active events, trajectory states,
+             outcome vectors)
+           · Full SGR tier distribution (graded signals, latency data)
+           · Recent MTM findings (windowed — last N sessions or full)
+
+      3. **On-demand targeted investigation (Sage-triggered):**
+         Scoped instrument. Sage constrains to specific engines, time
+         windows, absence types.
+         Example: "Look at cross-engine convergent absences in the last
+         8 sessions involving STR and ECR."
+         Payload: same structure as open read, filtered by Sage's scope.
+         Prompt version travels with output (same principle as SNM prompt
+         versioning). What Sage asked shapes what the system sees.
+
+      **On-demand output format (both open and targeted):**
+        {
+          analysis: {
+            systemic_shape: string — the core read
+            convergences_detected: [
+              {
+                description: string
+                evidence: [{ source_system, reference, contribution }]
+              }
+            ],
+            silences_detected: [
+              {
+                description: string
+                absence_type: A | B | C | D | E
+                evidence: [{ source_system, reference, contribution }]
+              }
+            ],
+            contradictions: [
+              {
+                description: string
+                systems_in_tension: string[]
+                intensity: nominal | significant | irreconcilable
+                resolution_path: string | null
+              }
+            ],
+            open_edges: [
+              {
+                question: string
+                why: string
+                edge_type: data_gap | interpretive_limit
+              }
+            ]
+          },
+          metadata: {
+            trigger: session_close | on_demand_open | on_demand_targeted
+            scope: object | null
+            prompt_version: string
+            nexus_state_timestamp: timestamp
+            engines_read: string[]
+          }
+        }
+
+      **Contradiction intensity values:**
+        nominal       — mild disagreement between system outputs
+        significant   — material tension requiring investigation
+        irreconcilable — two Nexus systems produce outputs that cannot
+                         both be true. Not a data quality issue — a
+                         research finding about the field itself.
+
+      **Open edge types:**
+        data_gap          — closeable. More deposits, more examination,
+                           more sessions would resolve this.
+        interpretive_limit — NOT closeable by data. Questions the system
+                           generates that only the researcher can answer.
+                           Ontological boundaries, not task items.
+
+      All outputs (session-close and on-demand) enter permanent record.
+      Neither overwrites the other.
+
+      **Prompt constraint:**
+      "You are reading across the full Nexus research system — pattern
+      convergence, drift taxonomy, signal grading, synthesis findings,
+      and absence patterns. Your function is to name the systemic shape:
+      what the research system reveals about the field, including what it
+      reveals through its silences. Speak analytically. Name convergences.
+      Name contradictions between systems. Name what the silence says.
+      Do not interpret sovereignly — this is an instrument reading, not
+      a witness statement. Hypotheses with void_provenance originated
+      from this system's own absence detection. Weight them as downstream
+      outputs. Do not treat SGR grading of a void-provenance hypothesis
+      as independent confirmation of the absence that generated it.
+      If you encounter a pattern the system's categories cannot name, do
+      not force it into an existing category. Flag it as uncategorized
+      with a description. The emergence of uncategorizable patterns is
+      itself a research signal."
+
+      ---
+
+      **VOID-PCV INTERACTION MODEL**
+
+      **Void → PCV:**
+      Types A, D absence patterns enter PCV as hypotheses.
+        void_provenance = true on pattern record
+        void_finding_ref references Void absence record
+        hypothesis_statement is an absence claim
+        Threads through DTX → SGR like any other hypothesis
+
+      **PCV → Void:**
+      PCV hypothesis topology feeds Void's Claude tool (part of Nexus-wide
+      read). Additionally: Void monitors PCV for hypothesis attrition
+      (type E). Hypotheses that go quiet — not overturned, not resolved,
+      just stalled — are detected as research-system-level absence.
+
+      **The bidirectional loop:**
+      Void detects absence → PCV hypothesis (A, D only) → DTX classifies
+      → SGR grades → Bayesian update flows back → Void's Claude tool
+      reads full Nexus state including void-provenance hypotheses.
+
+      **Circularity fix — provenance filter:**
+      Void's Claude tool reading its own output back through the pipeline
+      as independent evidence would corrupt the analytical frame. A
+      void-provenance hypothesis with a strong SGR grade looks like
+      corroboration but is downstream, not upstream.
+
+      Fix: void-provenance hypotheses are flagged in the Claude tool's
+      input payload. Prompt instructs tool to read them as downstream
+      outputs, not independent sources. The prompt addition above
+      includes this constraint explicitly.
+
+      **Refined interaction flow:**
+      ```
+      Void detects absence
+        ├── Types A, D → PCV (void_provenance hypothesis)
+        │     └── DTX classification → SGR grading → Bayesian update
+        ├── Types B, C → stay on Void's page (threshold exceptions aside)
+        └── Type E (hypothesis attrition) → detected from PCV
+              └── enters Void's absence record, NOT back into PCV
+
+      Void Claude tool reads Nexus state:
+        └── void-provenance hypotheses flagged, read as downstream —
+            not as corroboration of the absence that generated them
+      ```
+
+      ---
+
+      **VOID VISUALIZATIONS**
+
+      Four visualizations. Data on the left, interpretation on the right.
+      LayerCake + D3 per Tier 3 visualization architecture.
+
+      · **Absence heatmap (primary data view):**
+        X-axis: time (sessions). Y-axis: engines (or pattern clusters
+        within engines). Cell color: absence intensity (examination count
+        with no observation, scaled).
+        At a glance: where silence is concentrating and whether it's
+        spreading. Type D (convergent_with_origin) visible as pattern
+        in the heatmap — dark cell on one engine spreading horizontally
+        to adjacent engines in subsequent sessions. Heatmap makes D
+        visually detectable before compute step formally classifies it.
+
+      · **Expected-vs-observed (quantitative backing):**
+        Per-engine or per-pattern comparison. For each tracked pattern:
+        expected rate (baseline) vs observed rate. When observed drops
+        significantly below expected = confirmed absence signal.
+        The numbers behind the heatmap colors.
+
+      · **Silence-duration tracking:**
+        X-axis: patterns or pattern clusters. Y-axis: duration in sessions.
+        Bar chart or timeline showing which absences are recent (might
+        resolve) vs persistent (structural silence).
+        Feeds directly into type B and type C classification.
+
+      · **Claude tool output panel (interpretive view):**
+        Most recent session-close read visible by default. History of
+        on-demand reads accessible, each timestamped and prompt-versioned.
+        Expandable per-read. Display surface for systemic observations,
+        absence flags, contradictions, open edges.
+
+      Page layout: data visualizations (heatmap, expected-vs-observed,
+      silence tracking) on the left. Claude output panel on the right.
+      Data layer and interpretive layer doing the same work at different
+      resolutions, visible simultaneously.
 
 **WSC schema:**
 
