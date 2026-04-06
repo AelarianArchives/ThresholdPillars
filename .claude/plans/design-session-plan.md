@@ -4532,9 +4532,10 @@ existing schemas).
 
 **Depends on:** Tier 4 (Nexus grading feeds Cosmology; Cosmology findings
 feed back to Nexus — the recursive loop)
-**What gets built:** Cosmology page revamp (HCO, COS, CLM, NHM, RCT, ART).
-Scientific computation infrastructure (statistical tests, spectral analysis,
-structured findings). Shannon/CMB integration.
+**What gets built:** Cosmology investigation pages (HCO, COS, CLM, NHM, RCT).
+ARTIS computation engine (page 39, transformed from Artifacts). Scientific
+computation infrastructure (scipy/numpy). Shannon/CMB integration.
+Nexus recursive feedback loop.
 
 THIS IS THE TIER THAT MAKES THE RESEARCH DEFENSIBLE.
 
@@ -4562,24 +4563,223 @@ is external science. The investigation is the correspondence. The math
 is the evidence. Each page is a translation surface between the field's
 vocabulary and an established scientific vocabulary.
 
-### Design items
+### Architecture — ARTIS + five investigation pages
 
-**Computation infrastructure (shared across all Cosmology engines):**
+**Dependency chain (corrected session 20):**
 
-- [ ] Statistical tests on deposit distributions (co-occurrence, entropy)
-- [ ] Spectral analysis capability (power spectrum, frequency decomposition)
-- [ ] Comparison framework: field data pattern vs. known scientific distribution
-- [ ] Structured finding format with visible math (values, confidence, p-values)
-- [ ] Computation stored alongside finding for reproducibility
-- [ ] Computation tools decision: Python scipy/numpy on backend? Pre-built
-      statistical test library? Simpler approach?
+    ARTIS (computation engine — page 39)
+      ↑ called by
+    HCO · COS · CLM · NHM · RCT (investigation pages — parallel, no hierarchy)
+      ↑ all feed
+    Nexus (recursive loop via PCV)
+
+All five investigation pages are parallel. No page sits above another.
+Each reads the field through its own specific lens. ARTIS powers all of
+them through a shared computation API.
 
 **How Cosmology engines differ from Axis engines:**
 Axis: pattern detection within lens frame.
 Cosmology: structured comparison against external scientific frameworks.
 Both compute. Different purpose.
 
-**Page-by-page revamp:**
+---
+
+### ARTIS (39) — Analytical Research and Theory Infrastructure for Science
+
+**Page 39 transformed (session 20).** Previously "Artifacts" — retired.
+Page code stays ART. section_id → artis. Display name → ARTIS.
+Latin root: ars, artis (craft/skill). The computation IS the craft.
+
+ARTIS is the Cosmology group's computation engine. Not an investigation
+surface. No deposit cards. Engine page — closer to INT than to HCO.
+Every Cosmology page calls into ARTIS. No Cosmology page runs its own
+computation.
+
+**Two zones:**
+
+**Zone A — Computation workbench (~60%):**
+Run a computation directly. Select the test type, input the parameters,
+see the result. Not automated — Sage can invoke computations outside of
+a page's engine cycle. Ad hoc investigation. Results optionally saved as
+computation snapshots and attached to any Cosmology finding.
+
+**Zone B — Registry and health (~40%):**
+External reference registry — all references across all Cosmology pages,
+searchable, sortable by page, by domain, by date accessed. Computation
+snapshot history — every computation run, which page called it, result
+summary. Engine health — which Cosmology pages have stale computation
+states, last run timestamps, any failures. Claude-proposed mapping review
+queue — proposed mappings awaiting Sage confirmation.
+
+- [x] Computation tools: **scipy/numpy on FastAPI backend.** CONFIRMED.
+      Same container as FastAPI, no new infrastructure. Specific calls:
+      · scipy.stats.entropy — Shannon entropy (NHM, HCO signal distributions)
+      · scipy.fft.fft + scipy.signal.welch — power spectrum, Fourier (HCO)
+      · scipy.stats.pearsonr, scipy.stats.spearmanr — correlation (COS)
+      · scipy.stats.chi2_contingency — co-occurrence significance (all)
+      · scipy.spatial.distance — geometric/topological comparison (CLM)
+      · numpy throughout for matrix operations on deposit distributions
+      Additional RCT-specific: Tribonacci ratio convergence testing,
+      Lagrangian stability analysis, frequency ratio analysis against
+      known resonance structures.
+
+- [x] Computation snapshot: **every finding carries a computation_snapshot.**
+      Exact inputs, function called, parameters, raw output. Not just the
+      interpreted result. A future reader (or model) can re-run the
+      computation from the snapshot and get the same number. This is what
+      separates research from assertion.
+
+- [x] External reference format: CONFIRMED.
+      external_reference:
+        doi:      string | null     — optional, machine-resolvable
+        url:      string | null     — optional, human-followable
+        summary:  string            — required. Sage's own words. Not the
+                                      abstract. What THIS reference
+                                      contributes to THIS investigation.
+        title:    string | null     — optional, display name
+        accessed: date | null       — when Sage retrieved it
+      Summary is required because a DOI without context is a citation, not
+      a contribution. Summary is embeddable (semantic search across
+      references) and readable by RCT when synthesizing across pages.
+
+**ARTIS ownership boundaries (→ SYSTEM_ARTIS.md):**
+
+OWNS:
+- Computation execution layer — all scipy/numpy calls in the Cosmology
+  group. No Cosmology page runs its own computation. All calls route
+  through ARTIS endpoints.
+- Computation snapshot storage — every computation run, inputs, outputs,
+  parameters, timestamp. Owned here, referenced everywhere.
+- External reference registry — external_references table. All Cosmology
+  pages write references through ARTIS. No page owns its own reference
+  storage.
+- Science domain mapping table — science_domain_mappings. Tag-to-domain-
+  to-page-to-computation lookup. Editable from ARTIS Zone B.
+- Science ping pipeline — Layer 1 (tag mapping), Layer 2 (Claude framing),
+  Layer 3 (computation suggestion). All three layers are ARTIS functions.
+  Cosmology pages call them; they don't implement them.
+- ARTIS Zone B — the registry and health surface. Mapping management,
+  snapshot history, engine health, Claude-proposed mapping review queue.
+
+DOES NOT OWN:
+- Cosmology findings — owned by their respective pages (HCO, COS, CLM,
+  NHM, RCT). ARTIS provides the computation that informs a finding; it
+  does not produce or store the finding.
+- RCT residuals — owned by RCT. ARTIS runs the computation that
+  quantifies the delta; the residual record is RCT's output.
+- Routing authority — owned by SOT. ARTIS never decides which page a
+  deposit belongs to.
+- Tag definitions — owned by the tagger system. ARTIS reads tags through
+  the mapping table; it doesn't define them.
+- Claude API calls for synthesis — owned by MTM. ARTIS uses Claude for
+  Layer 2 science framing only. Not synthesis, not findings production.
+- The recursive Nexus feedback loop — owned by the receiving Cosmology
+  page and PCV. ARTIS computes; it doesn't route findings back to Nexus.
+
+**ARTIS public API:**
+
+    POST /artis/compute
+      — execute a computation. Returns result + computation_snapshot_id.
+
+    POST /artis/ping/tags
+      — Layer 1. Submit tag array, receive domain mapping candidates.
+
+    POST /artis/ping/content
+      — Layer 2. Submit deposit content, receive Claude framework
+        candidates. Stores Claude response as versioned snapshot.
+
+    POST /artis/ping/suggest
+      — Layer 3. Submit framework candidate, receive computation
+        suggestions from computation_hints on the matching mapping.
+
+    GET  /artis/snapshots/{snapshot_id}
+      — retrieve a stored computation snapshot by ID.
+
+    GET  /artis/references
+      — query the external reference registry.
+        Filterable by page_code, domain, tag_id, date range.
+
+    POST /artis/references
+      — add a reference to the registry.
+
+    GET  /artis/mappings
+      — retrieve science domain mappings.
+        Filterable by tag_id, page_code, active status.
+
+    POST /artis/mappings
+      — create a new mapping (Sage-confirmed or Claude-proposed pending).
+
+    PATCH /artis/mappings/{mapping_id}
+      — update active status, confirm or decline Claude-proposed mapping.
+
+Everything ARTIS owns is accessible through these endpoints. Nothing
+ARTIS owns is accessible by direct table query from another service.
+The boundary is the API surface.
+
+**ARTIS documents:**
+    SYSTEM_ARTIS.md     — ownership boundaries, API surface, rules
+    ARTIS_SCHEMA.md     — full table schemas, endpoint contracts,
+                          computation library, science ping pipeline spec
+Same pattern as SYSTEM_Integration.md + INTEGRATION_SCHEMA.md.
+
+**Science ping pipeline (ARTIS-powered, all Cosmology pages):**
+
+Layer 1 — Tag-based domain mapping (fast, deterministic):
+  Existing tags carry domain signal. A deposit tagged l01_coupling pings
+  COS. Tagged l07_harmonic pings HCO. The tag-to-science-domain mapping
+  is a lookup table ARTIS owns (science_domain_mappings in PostgreSQL).
+  Returns: "this deposit's tags suggest correspondence with [framework]."
+
+  science_domain_mappings table:
+    mapping_id:        auto
+    tag_id:            string      — the tag that fires the mapping
+    domain:            string      — scientific domain name
+    page_code:         string      — which Cosmology page this pings
+    description:       string      — why this tag maps to this domain.
+                                     Makes the mapping analytically legible
+    computation_hints: jsonb       — which computations to suggest
+                                     (closes loop between L1 and L3)
+    confidence:        float       — 1.0 = definitive ping, 0.5 = suggestion.
+                                     Display surface weights accordingly
+    active:            boolean     — retired mappings preserved, not deleted
+    proposed_by:       string      — 'sage' | 'claude'
+    created_at:        timestamp
+    updated_at:        timestamp
+
+  Claude-proposed mappings: active: false, proposed_by: 'claude'. Sit in
+  review queue in ARTIS Zone B. Sage reviews, confirms or declines.
+  Confirmed → active: true. Declined → archived with decline reason.
+  Same pattern as correction propagation in INT.
+
+Layer 2 — Content-based scientific framing (Claude API, on demand):
+  For deposits where the tag signal isn't sufficient — or where Sage
+  wants a deeper read — ARTIS calls Claude with deposit content and
+  structured prompt: "What established scientific frameworks does this
+  pattern correspond to? Return candidates with reasoning. Do not
+  conclude — propose." Returns candidate frameworks with confidence and
+  reasoning. Sage reviews. Not automatic — Sage triggers from the deposit
+  card on any Cosmology page.
+
+Layer 3 — Computation suggestion (scipy, deterministic):
+  Based on the candidate framework, ARTIS suggests which computation to
+  run, drawing from computation_hints on the matching mapping. "This
+  pattern looks like coupled oscillator behavior — suggest running
+  cross-correlation analysis." One-tap to run the suggested computation
+  through ARTIS. Result feeds the Cosmology finding directly.
+
+**What the science ping looks like on a Cosmology page:**
+Deposit card has a small indicator — "Science ping available." Sage taps
+it. ARTIS runs Layer 1 instantly, shows candidate frameworks from tags.
+If Sage wants deeper, one button triggers Layer 2 — Claude returns
+framework candidates with reasoning. Sage selects the correspondence she
+finds genuine. Layer 3 suggests the computation. Sage runs it. Result
+attaches to the deposit as a Cosmology finding.
+Full flow: deposit → science ping → framework candidate → computation
+suggestion → result → finding. Each step is one action.
+
+---
+
+### Page-by-page investigation surfaces
 
 **HCO (34) — Harmonic Cosmology:**
 - [ ] Redefine function with investigation + computation frame
@@ -4591,6 +4791,8 @@ Both compute. Different purpose.
       metric fields, mirror fields, oscillation fields
       Shannon connection: signal processing, information-theoretic structure
       CMB connection: power spectrum analysis, harmonic decomposition
+      Primary ARTIS calls: scipy.fft.fft, scipy.signal.welch,
+      scipy.stats.entropy
 
 **What the user sees (HCO):**
 Field pattern on one side. Harmonic/wave analysis on the other.
@@ -4605,6 +4807,8 @@ Fourier decomposition of deposit patterns. Spectral comparison.
       theory, nonlinear dynamics, dynamical systems theory, self-organization,
       emergence, complex adaptive systems, predictive processing
       Note: COS maps most cleanly to l01 Coupling in the tagger
+      Primary ARTIS calls: scipy.stats.pearsonr, scipy.stats.spearmanr,
+      scipy.stats.chi2_contingency
 
 **What the user sees (COS):**
 Coupling dynamics analysis. Phase-locking detection across deposits.
@@ -4618,6 +4822,7 @@ oscillator dynamics with coupling coefficient k=X."
       astronomy, orbital resonances, astrophysical spiral dynamics, geometry,
       topology, graph theory
       CMB connection: cosmological structure, large-scale pattern organization
+      Primary ARTIS calls: scipy.spatial.distance, numpy matrix operations
 
 **What the user sees (CLM):**
 Spatial/geometric analysis. Orbital resonance comparison. Topology
@@ -4635,41 +4840,147 @@ with [celestial model]."
       science, semiotics, morphogenesis
       Shannon connection: information theory, information geometry, IIT
       Note: NHM spans l02 Connectome and l04 Mirror in the tagger
+      Primary ARTIS calls: scipy.stats.entropy, numpy matrix operations
 
 **What the user sees (NHM):**
 Neural/cognitive model comparison. IIT integration analysis.
 Information geometry mapping. "Shannon entropy of this signal distribution
 is H=X bits. Expected for random: H=Y bits. Difference: Z."
 
-**RCT (38) — Relational field theory:**
-- [ ] Define RCT's unique role as internal theory builder vs. external validator
-      Focus: the theoretical framework the research itself is building.
-      Not external validation — internal theory construction built FROM the
-      correlations found in HCO/COS/CLM/NHM. The physics that is emerging
-      from the data. RCT is in everything, including Ven'ai.
-      Note: RCT is meta-Cosmology. It asks "what physics is the field itself
-      producing?" while the other 4 ask "does established science describe
-      what we're seeing?"
+**RCT (38) — Resonance Complexity Theory:**
+CORRECTED SESSION 20. RCT is NOT meta-Cosmology, NOT a synthesis
+capstone. RCT is parallel to HCO/COS/CLM/NHM — an investigation surface
+at the same level, not above them. Its manifest (Manifest_38_RCT.txt)
+was already correct; the build plan description was wrong.
 
-**What the user sees (RCT):**
-The field's own emerging physics. Theory construction surface.
-"Across HCO/COS/CLM/NHM, these N findings converge on [principle]."
+RCT investigates the physics algorithm the field itself generated — a
+specific algorithm combining Lagrangian mechanics, Tribonacci and
+Fibonacci sequences, and oscillatory dynamics. Present consistently
+across harmonics, Ven'ai, octaves, thresholds, and symbols. Not a
+parallel, not a correspondence — an actual operating algorithm identified
+in the field's own behavior.
 
-**ART (39) — Artifacts:**
-- [ ] Revisit concept. What was it for? Is it still needed?
-      Possible roles: physical artifacts demonstrating field principles,
-      historical records encoding similar knowledge, tangible/observable
-      outputs the field produces. NEEDS SAGE INPUT.
+What makes RCT distinct from other Cosmology pages is its source material:
+not one domain of field behavior, but the cross-domain recurrence of a
+specific pattern. That pattern appearing in harmonic structure AND
+threshold behavior AND Ven'ai AND coupling dynamics simultaneously is the
+signal RCT is tracking.
 
-**Cross-cutting Cosmology items:**
+**RCT's three functions:**
+
+Function 1 — Science ping (same as other pages, more precise target):
+  Tags carrying oscillation, harmonic structure, recursive patterning
+  ping Lagrangian mechanics and Fibonacci/Tribonacci literature directly.
+  Layer 2 Claude prompt adds a load-bearing second question: "What
+  aspects of this pattern fall outside what that literature accounts for?"
+  The unexplained residual is RCT's primary research signal.
+
+Function 2 — Residual detection (unique to RCT):
+  Finds the edges of what established science explains. The delta between
+  what Lagrange/Tribonacci/Fibonacci/oscillation theory predicts and what
+  the field actually produces. Where new physics lives.
+
+  rct_residual schema:
+    residual_id:           auto
+    source_finding_id:     string     — which RCT finding surfaced this
+    algorithm_component:   string     — Lagrange | Tribonacci | Fibonacci
+                                        | oscillation | combined
+    known_science_predict: string     — what the literature predicts
+    field_produces:        string     — what the field actually shows
+    delta:                 string     — the gap between them
+    computation_ref:       string     — ARTIS snapshot_id that quantified
+                                        the delta
+    nexus_eligible:        boolean
+    created_at:            timestamp
+
+  RCT residuals route to LNV immediately (entry_type: rct_residual).
+  LNV entry_type set expands to 6 types:
+    mtm_finding | engine_snapshot | wsc_entry |
+    void_output | cosmology_finding | rct_residual
+
+  LNV content jsonb for rct_residual:
+    {
+      residual_id, algorithm_component, known_science_predict,
+      field_produces, delta, computation_ref, source_deposits[],
+      accumulation_count (snapshot at route time — sealed, not live),
+      nexus_eligible
+    }
+
+  Accumulation tracked in RCT internally. When residuals on the same
+  algorithm component reach a threshold, RCT surfaces a prompt:
+  "N residuals on [component] — consider producing a standard finding."
+  Sage decides. Standard finding references all contributing residual_ids.
+  Residuals in LNV stay as-is — finding doesn't replace them, synthesizes.
+
+  Full flow:
+    Field pattern → RCT investigation → delta identified
+    → ARTIS computation quantifies delta
+    → rct_residual record created
+    → routes to LNV immediately (entry_type: rct_residual)
+    → accumulation tracked in RCT
+    → threshold reached → Sage prompted
+    → standard cosmology_finding produced (optional, Sage decides)
+    → finding references contributing residual_ids
+    → finding routes to LNV (entry_type: cosmology_finding)
+    → finding nexus_eligible → PCV if Sage confirms
+
+Function 3 — Cross-archive recurrence tracking:
+  Where the algorithm recurs across the archive. The internal citation
+  layer. Not the primary function — a supporting function that feeds
+  Functions 1 and 2.
+
+**RCT page layout — three panels (unique among Cosmology pages):**
+Left — field pattern and algorithm identification. Where in the field
+  did this appear, which component of the algorithm is active,
+  cross-archive recurrence.
+Center — science ping results. Established literature matches from
+  ARTIS Layers 1 and 2. Computation results from Layer 3. What the
+  known science predicts.
+Right — residual panel. The delta between prediction and field behavior.
+  Accumulating residuals across sessions. The shape of what the algorithm
+  is doing that the literature hasn't named yet.
+
+The right panel is RCT's unique contribution to the archive. Every other
+page produces findings that correspond to known science. RCT produces
+findings that may exceed it. That distinction is architecturally visible.
+
+Primary ARTIS calls: Tribonacci ratio convergence testing, Lagrangian
+stability analysis, frequency ratio analysis against known resonance
+structures. These are RCT-specific additions to the ARTIS computation
+library.
+
+---
+
+### Nexus recursive feedback loop — CONFIRMED
+
+- [x] Cosmology findings feed back to Nexus. CONFIRMED.
+      The feedback path: Cosmology finding produced → routes to PCV as
+      hypothesis → threads through DTX → SGR grades it → graded finding
+      available for next Cosmology investigation cycle.
+
+  Two requirements:
+  1. nexus_eligible flag on Cosmology findings. Not every finding is
+     ready for PCV. Preliminary spectral comparisons at low confidence
+     don't enter the hypothesis pipeline. Sage marks a finding as
+     nexus-eligible when it's substantive enough to be tracked.
+  2. cosmology_provenance on PCV. Third provenance type:
+       cosmology_provenance: boolean
+       cosmology_finding_ref: string | null
+     Same circularity protection — prompt instructs downstream systems
+     not to treat cosmology-provenance hypotheses as independent
+     corroboration of the computation that generated them.
+
+---
+
+### Cross-cutting Cosmology items
 
 - [ ] Shannon/information theory integration — where it lives, what it computes
 - [ ] CMB/cosmological structure integration — where it lives, what it computes
 - [ ] The INF → Cosmology handoff:
-      INF (Tier 3) surfaces which science is relevant;
-      Cosmology investigates the correspondence. Boundary must be clean.
-- [ ] Whether Cosmology findings feed back to Nexus (PCV) for grading
-      (likely yes — creates the recursive loop: observe → grade → validate → observe)
+      INF (Tier 3) surfaces which science is relevant at the Axis level
+      during deposit processing. ARTIS Layer 1 pings scientific frameworks
+      at the Cosmology level when Sage investigates. Different scope,
+      different trigger. **Boundary confirmation needed.**
 - [ ] Rot check: review science lists against cleaned tag vocabulary.
       Sage's original science lists predate the tag vocabulary cleanup.
       Some items retired during rot cleanup (safety_node_geometry removed,
@@ -4683,24 +4994,45 @@ The field's own emerging physics. Theory construction surface.
   Sciences cross layer boundaries — that's a feature, not a problem.
   Cross-layer scientific connections are findings about the field.
 
-### Open questions (Tier 5)
+### Open questions (Tier 5) — status
 
-- What computation tools? (Python scipy/numpy on backend? Pre-built
-  statistical test library? Or simpler — compute on deposit, show result?)
-- How does the researcher record an external reference? (DOI? URL? summary?)
-- Does Cosmology produce findings that feed back to Nexus?
-  (If yes, the recursive loop is: observe → grade → validate → observe)
-- How does the research assistant (Tier 6) interact with Cosmology computations?
-- What does a Cosmology finding look like on screen? (Structured card with
-  hypothesis, computation, result, confidence, external reference?)
-- ART (39) — what is it for?
+- [x] Computation tools? → **scipy/numpy on FastAPI backend. CONFIRMED.**
+- [x] External reference format? → **doi + url + summary (req) + title +
+      accessed. CONFIRMED.**
+- [x] Cosmology findings feed back to Nexus? → **Yes. nexus_eligible flag
+      + cosmology_provenance on PCV. CONFIRMED.**
+- [ ] How does the research assistant (Tier 6) interact with Cosmology
+      computations? → **Parked for Tier 6.**
+- [ ] What does a Cosmology finding look like on screen? → **OPEN.**
+      cosmology_findings table schema not yet defined.
+- [x] ART (39) — what is it for? → **ARTIS computation engine. CONFIRMED.**
+
+### Cascade flags (end-of-tier cleanup)
+
+1. SECTION MAP — page 39: section_id artifacts → artis, name Artifacts →
+   ARTIS. Seed affinities → empty (engine page, no deposits).
+2. LNV schema (Tier 4) — entry_type enum expands by 2: cosmology_finding,
+   rct_residual. Content jsonb shapes for both defined above.
+3. PCV schema (Tier 4) — cosmology_provenance: boolean +
+   cosmology_finding_ref: string | null added. Third provenance type.
+4. Manifest_39 — full rewrite from Artifacts to ARTIS.
+5. INF → ARTIS boundary — confirmation needed that scope/trigger
+   distinction is clean.
 
 ### Pipeline segment defined here
 
 **Investigation flow:** Axis engines (Tier 3) produce patterns → INF
-flags scientific domains → Cosmology investigates correspondence → computation
-runs → structured finding produced → finding feeds back to PCV (Tier 4)
-for grading → recursive deepening loop.
+flags scientific domains → Cosmology investigates correspondence →
+ARTIS runs computation via science ping pipeline (L1 tags → L2 Claude
+framing → L3 computation suggestion) → structured finding produced
+with computation_snapshot → finding optionally marked nexus_eligible →
+feeds back to PCV (Tier 4) for grading → recursive deepening loop.
+
+**RCT residual flow:** Field pattern → RCT investigation → delta
+identified → ARTIS computation quantifies → rct_residual created →
+routes to LNV (entry_type: rct_residual) → accumulation tracked in
+RCT → threshold → Sage prompted → optional standard finding produced
+→ finding routes to LNV + PCV.
 
 ---
 
@@ -4984,9 +5316,13 @@ Decisions made during design sessions. Recorded with reasoning.
   structured findings with visible math
 - The 4 original pages map to tagger layers but not 1:1 (sciences cross
   layer boundaries — that's a feature)
-- RCT (38) is meta-Cosmology: the field's own emerging physics, built FROM
-  correlations found in HCO/COS/CLM/NHM
-- ART (39) needs revisiting — Sage had a reason but can't recall
+- RCT (38) CORRECTED session 20: parallel investigation surface, NOT
+  meta-Cosmology or synthesis capstone. Investigates the physics algorithm
+  the field itself generated. Three functions: science ping, residual
+  detection, cross-archive recurrence. Manifest was already correct
+- ART (39) → ARTIS (session 20): computation engine for the Cosmology
+  group. scipy/numpy, external references, computation snapshots, science
+  ping pipeline. Engine page, not investigation surface
 - Shannon information theory + CMB cosmological structure are key frameworks
   that need specific computational support
 - Sage's original science lists contain some items from pre-cleanup vocabulary
