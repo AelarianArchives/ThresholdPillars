@@ -435,9 +435,11 @@ All open questions from the original plan have been answered in session 15:
 - ~~Duplicate hash: content only or content+page+timestamp?~~ → Full
   content hash. Warns, doesn't block. Sage decides.
 
-**One question deferred to later tiers:**
-- How observation_type and deposit_weight affect engine computations →
-  Tier 3 (engine design)
+**Previously deferred, now resolved:**
+- ~~How observation_type and deposit_weight affect engine computations~~ →
+  RESOLVED in Tier 3 (session 16). observation_type drives times_examined/
+  times_observed split. deposit_weight uses named constants (2.0/1.0/0.5).
+  Null flag travels in weight metadata. See Tier 3 for full mechanics.
 
 ---
 
@@ -544,7 +546,10 @@ chosen at frontend build time — not in this design session.
 
 **Lens (Axis: THR, STR, INF, ECR, SNM)** — 5 pages
   Instruments. Deposits viewed THROUGH an analytical frame. Visualization
-  is the centerpiece (engine output from Tier 3). Data + graph side-by-side.
+  is the centerpiece (engine output from Tier 3). Most visually complex
+  page type after Gateway — each lens has multiple specialized
+  visualizations (matrices, force-directed graphs, density contours,
+  constellation views). See Tier 3 for per-engine visualization specs.
 
 **Synthesis (MTM)** — 1 page
   Convergence point. Multi-stream view — inputs from all 5 lenses flowing
