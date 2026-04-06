@@ -1610,9 +1610,126 @@ the detection layer to exist before they can receive and store outputs.
 
 **Nexus engine visualizations:**
 
-- [ ] PCV visualizations: hypothesis board, cross-domain pattern map
-- [ ] DTX visualizations: drift timeline, trajectory probability distributions
-- [ ] SGR visualizations: score radar charts, tier dashboard, grade latency
+- [x] DESIGNED (session 17). All three Nexus engines. LayerCake + D3 per
+      Tier 3 visualization architecture (SVG instrument category).
+
+      **PCV — Pattern Convergence (page 50):**
+
+      Two views: card board (primary working surface) + network graph
+      (secondary analytical view). Toggle or tab, not one replacing the other.
+
+      · **Card board (primary):**
+        Each active hypothesis is a card. Filterable, sortable.
+        Card shows:
+          hypothesis_id
+          hypothesis_statement (truncated, expand on click)
+          domain_of_origin as colored badges (page-type hue from Tier 2)
+          status: active | archived
+          MTM provenance flag — visually distinct badge (MTM-generated
+            vs direct observation). Filterable and sortable as first-class
+            dimension — "which hypotheses did the system generate vs which
+            came from direct observation" is a research question.
+          created_at (date)
+        Filters: by domain, by status, by MTM provenance, by date range
+        Sort: by date, by domain count, by MTM provenance
+        Click expands: full hypothesis_statement, source_signals with
+          page_code and deposit_id links, coupling_vector, interval,
+          DTX/SGR thread (drift event status, current grade if exists)
+
+      · **Network graph (secondary):**
+        Domains as nodes, hypotheses as weighted edges.
+        Each domain (page) is a node positioned in the graph.
+        Each hypothesis connecting two or more domains becomes an edge
+          (or weighted edge when multiple hypotheses connect the same pair).
+        Edge thickness = hypothesis count between those domains.
+        Visual answers: which domains talk to each other most, which are
+          isolated, where convergence is densest, where structural holes are.
+        Click an edge → see the hypotheses connecting those two domains.
+        Isolated nodes (domains with no cross-domain hypotheses) are
+          immediately visible — analytically significant.
+        Data mapping: domain_of_origin on each pattern defines which nodes
+          to connect, pattern count gives edge weight.
+
+      ---
+
+      **DTX — Drift Taxonomy (page 48):**
+
+      Two visualizations: drift timeline (primary) + trajectory probability
+      display (stacked bar default, ternary plot deep-dive).
+
+      · **Drift timeline:**
+        Horizontal timeline. Time on x-axis, each active drift event as
+        a lane (swim-lane layout).
+        Per-event lane:
+          Color coded by trajectory_state:
+            Escalating | Stabilizing | Oscillating | Fragmenting | Contained
+          Start marker at detection_session
+          End marker at validation_session (if resolved) with outcome_label
+          Lane length = grade latency (detection to validation).
+            Longer lane = slower validation = weaker signal property.
+            Visually encodes grade latency without a separate chart.
+          Classification badges on hover/expand: initiation_source,
+            trajectory_pattern, threshold_interaction, signature_pattern
+        Temporal story at a glance: what was detected when, how long events
+        take to resolve, which trajectory states dominate the current window.
+
+      · **Trajectory probability — stacked bar (default):**
+        One three-segment horizontal bar per active event.
+        Segments: p_resolve | p_collapse | p_stable
+        As Bayesian updates arrive from SGR, segments shift.
+        Scannable across many events — "where does each event stand now?"
+        Good for comparing current state of all active events side by side.
+
+      · **Trajectory probability — ternary plot (deep-dive):**
+        Three-axis probability space (resolve / collapse / stable).
+        Each event is a point. Historical positions trace the inference
+        trajectory — how the system's confidence about this event evolved
+        as Bayesian updates accumulated.
+        Shows the *path* of inference, not just the current state.
+        **Navigation:** accessible directly from drift timeline. Click a
+        drift event's lane → opens its ternary trail. Timeline is the
+        entry point, ternary is the depth. Drill-down, not separate tool.
+
+      ---
+
+      **SGR — Signal Grading (page 49):**
+
+      Three visualizations: score radar (per-signal), tier dashboard
+      (aggregate), grade latency distribution.
+
+      · **Score radar chart:**
+        One radar per graded signal. Four axes:
+          structural_impact · cross_domain_resonance ·
+          predictive_validity · temporal_stability
+        Polygon shape shows signal profile: balanced (even polygon) vs
+          skewed (one weak dimension pulling tier down).
+        Lowest-qualifying dimension visually distinct — highlighted axis
+          or different color segment. Shows *why* a signal is at its tier.
+        Tier boundary rings on the radar: concentric rings showing where
+          S/A/B/C thresholds fall on each axis. The polygon's relationship
+          to the rings makes tier derivation visible without reading numbers.
+
+      · **Tier dashboard:**
+        Two layers — header summary + distribution over time.
+        Header (always visible): four numbers with tier labels.
+          S: n | A: n | B: n | C: n
+          Current counts. "Where are we now."
+        Main chart: stacked area over time (x-axis = sessions or months,
+          y-axis = signal count, color = tier).
+          Shows whether research is producing stronger signals over time.
+          S-tier accumulating? B-tier getting promoted? The trend is the signal.
+          "Where are we going."
+        Header and chart are not competing views — two layers of the
+          same question.
+
+      · **Grade latency distribution:**
+        Histogram or density plot.
+        X-axis: latency in days (detection to validation).
+        Y-axis: count / frequency.
+        Optionally split by tier — do S-tier signals resolve faster than
+          B-tier? That correlation is a research question the visualization
+          answers directly.
+        Faster validation = stronger signal property (per DTX/SGR schemas).
 
 **Void engine (page 51):**
 
