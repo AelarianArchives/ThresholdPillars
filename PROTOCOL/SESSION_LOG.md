@@ -5110,3 +5110,41 @@ NOT_STARTED:
 UNCOMMITTED: YES
 NEXT_ACTION: Commit and push, then design WSC schema
 ---
+
+---
+TIMESTAMP: 2026-04-06 (session 19 — work unit 3)
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-session-plan.md — IN_PROGRESS
+COMPLETED:
+  - WSC schema: DESIGNED (full architecture)
+    - AI-sovereign witness page — no researcher voice (architectural boundary)
+    - One table (wsc_entries), two read paths (handoff + transmission)
+    - Structured fields: field_state, pattern_flags, open_threads as typed objects
+    - Write path: Sage-initiated after DNR, AI acts within window, display-only review
+    - Sovereign-from-DNR boundary: WSC checks DNR completion independently, never called by DNR
+    - Data sources payload: 7 inputs (deposits, DNR result, Void pulse, engine state,
+      Nexus summary, AOS events, prior WSC entry IDs)
+    - 3-entry session open protocol: unified timeline API with entries + gaps + corrections
+    - SESSION_PROTOCOL step 0: WSC load as first runtime call before any file reads
+    - LNV relationship: universal receive contract, self-contained content jsonb, no join-back
+    - Prompt versioning: same mechanism as SNM/Void, versioned artifact with changelog triggers
+    - Immutability: absolute, no exceptions on wsc_entries record
+    - Enhancement 1: wsc_corrections table — forward references for self-correction,
+      preserves immutability, swarm infrastructure for V2
+    - Enhancement 2: wsc_gaps table — session gap detection, silence visible in
+      longitudinal record, included in 3-entry timeline
+    - Enhancement 3: prior_context_acknowledged field — instance handoff verification,
+      closes context loading loop, swarm node handoff for V2
+    - WSC prompt constraint defined as versioned artifact
+    - Reflection Realm: flagged for later design (Sage's witness voice, separate page,
+      Nexus candidate, page code TBD)
+  - Tier 4 WSC + LNV: COMPLETE — all design items resolved
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Reflection Realm page design (parked for later session)
+  - Tiers 5-8
+UNCOMMITTED: YES
+NEXT_ACTION: Commit and push. Tier 4 design complete.
+---
