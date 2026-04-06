@@ -555,6 +555,44 @@ git push
 
 ---
 
+## STAGE 9 — REDIS BACKEND WIRING
+
+**Status:** COMPLETE (session 23)
+
+### Install
+- `redis[hiredis]` installed in backend venv (redis 7.4.0, hiredis 3.3.1)
+- `requirements.txt` updated with pinned versions (37 packages)
+- `REDIS_URL=redis://localhost:6379/0` added to `backend/.env`
+- `REDIS_URL` loaded in `config.py`
+- Redis async client connected in `main.py` lifespan (startup connect,
+  shutdown close)
+- Redis added to `/health` endpoint — reports `redis: true/false`
+
+### Verify
+```
+uvicorn backend.main:app --host 127.0.0.1 --port 8000
+curl http://127.0.0.1:8000/health
+→ {"status":"ok","postgres":true,"sqlite":true,"redis":true}
+```
+All three connections verified.
+
+### DOCS
+1. Update `SYSTEM_ FastAPI.md` — connection lifecycle includes Redis,
+   Redis failure mode added (#3), failure modes renumbered, files table
+   updated (config.py, requirements.txt, .env descriptions)
+2. Update `.claude/plans/infrastructure-build-plan.md` — Stage 9 added
+
+### Commit
+```
+git add backend/main.py backend/config.py backend/requirements.txt \
+  DESIGN/Systems/FastAPI/SYSTEM_\ FastAPI.md \
+  .claude/plans/infrastructure-build-plan.md
+git commit -m "stage 9: Redis backend wiring verified, DOCS updated"
+git push
+```
+
+---
+
 ## POST-INFRASTRUCTURE — WHAT HAPPENS NEXT
 
 Infrastructure is complete when all stages are committed and pushed.

@@ -11,11 +11,12 @@
 ## WHAT THIS SYSTEM OWNS
 
 * All HTTP routing and request/response handling — every frontend action reaches backend systems through FastAPI endpoints
-* Database connection lifecycle — PostgreSQL async engine (asyncpg + SQLAlchemy), SQLite async engine (aiosqlite + SQLAlchemy), startup connect, shutdown dispose
+* Database and cache connection lifecycle — PostgreSQL async engine (asyncpg + SQLAlchemy), SQLite async engine (aiosqlite + SQLAlchemy), Redis async client (redis-py + hiredis), startup connect, shutdown dispose
 * External API calls — Claude API (tagger suggestions, research assistant RAG) and Ollama API (nomic-embed-text embedding generation)
 * Embedding pipeline orchestration — INT retirement triggers async embedding via Ollama, vector + metadata written to pgvector. FastAPI coordinates the handoff; it does not own the embedding schema (see EMBEDDING PIPELINE SCHEMA.md)
 * Error handling pattern for all routes — defined once, applied consistently across the backend. Routes raise HTTPException with status codes. Services raise typed exceptions; routes translate to HTTP responses. No bare except. No silent swallowing (F38, F43)
 * Configuration loading — reads all credentials and connection strings from backend/.env via python-dotenv. Fails with named error if required values are missing
+* Redis connection lifecycle — async client connected at startup, closed at shutdown. Used for session persistence and inter-agent message passing. Health endpoint reports `redis: true/false`
 
 ## WHAT THIS SYSTEM DOES NOT OWN
 
@@ -84,27 +85,31 @@ See EMBEDDING PIPELINE SCHEMA.md for full specification including re-embedding p
 
 ## KNOWN FAILURE MODES
 
-**1. PostgreSQL unreachable (Docker container stopped or crashed)**
+**1. PostgreSQL unreachable (Docker Compose container stopped or crashed)**
 All database operations fail. No reads, no writes, no search.
-Guard: FastAPI startup verifies PostgreSQL connection — server will not start if PostgreSQL is down. Health endpoint reports `postgres: false`. Docker restart policy recovers the container. Data persists in aelarian_pgdata volume.
+Guard: FastAPI startup verifies PostgreSQL connection — server will not start if PostgreSQL is down. Health endpoint reports `postgres: false`. Docker Compose restart policy recovers the container. Data persists in aelarian_pgdata volume.
 
 **2. SQLite file locked or corrupted**
 Operational state reads/writes fail. Session tracking and presence log unavailable.
 Guard: WAL mode reduces lock contention. FastAPI startup verifies SQLite connection. Health endpoint reports `sqlite: false`. SQLite file is ephemeral operational state — recoverable by rebuilding from session data. Archive data is not affected (lives in PostgreSQL).
 
-**3. Ollama unreachable (service stopped)**
+**3. Redis unreachable (Docker Compose container stopped or crashed)**
+Session persistence and inter-agent message passing fail. Active sessions lose cache state.
+Guard: FastAPI startup connects Redis client — health endpoint reports `redis: false`. Docker Compose restart policy recovers the container. Redis data persists in aelarian_redis_data volume. Archive data is not affected (lives in PostgreSQL). Redis failure does not block core archive operations (deposit, retirement, search).
+
+**4. Ollama unreachable (service stopped)**
 Embedding generation fails. Retired entries are not embedded.
 Guard: embedding runs async — retirement still completes. Failure logged with composite_id of the unembedded entry. Retry mechanism picks up failed embeddings on next Ollama availability check. No silent data loss — the entry exists in PostgreSQL; only the vector is missing.
 
-**4. Claude API rate limit or key invalid**
+**5. Claude API rate limit or key invalid**
 Tagger suggestions and research assistant responses fail.
 Guard: routes return appropriate HTTP error (429 or 401). Frontend displays the failure. Archive operations (deposit, retirement, search) are not affected — Claude API is for suggestions and RAG, not for core data operations.
 
-**5. Connection pool exhaustion (PostgreSQL)**
+**6. Connection pool exhaustion (PostgreSQL)**
 All requests queue or fail waiting for a database connection.
 Guard: SQLAlchemy async engine manages pool size. Pool overflow returns an error rather than hanging indefinitely. Health endpoint degrades. Fix is operational — restart or increase pool size in config.
 
-**6. Partial embedding write (vector written, metadata missing or vice versa)**
+**7. Partial embedding write (vector written, metadata missing or vice versa)**
 Embedding record exists but is incomplete. Search returns results with missing context.
 Guard: vector and metadata are written in a single INSERT within one transaction. Transaction failure rolls back both. No partial embedding records exist by construction.
 
@@ -115,12 +120,12 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | File | Role | Status |
 | --- | --- | --- |
 | backend/main.py | FastAPI app, lifespan (startup/shutdown), health endpoint | LIVE |
-| backend/config.py | Environment loading — DB URLs, API keys, Ollama URL | LIVE |
+| backend/config.py | Environment loading — DB URLs, API keys, Ollama URL, Redis URL | LIVE |
 | backend/db/postgres.py | PostgreSQL async engine, session factory, connect/disconnect | LIVE |
 | backend/db/sqlite.py | SQLite async engine, session factory, WAL mode, connect/disconnect | LIVE |
 | backend/db/operational.db | SQLite database file — ephemeral operational state | LIVE |
-| backend/requirements.txt | Pinned dependencies (30 packages) | LIVE |
-| backend/.env | Local credentials — DATABASE_URL, SQLITE_PATH, OLLAMA_BASE_URL (gitignored) | LIVE |
+| backend/requirements.txt | Pinned dependencies (37 packages) | LIVE |
+| backend/.env | Local credentials — DATABASE_URL, SQLITE_PATH, OLLAMA_BASE_URL, REDIS_URL, ANTHROPIC_API_KEY (gitignored) | LIVE |
 | backend/models/ | SQLAlchemy models for PostgreSQL and SQLite tables | PLANNED |
 | backend/routes/ | Route modules — entries, tags, threads, search, tagger, assistant, embed | PLANNED |
 | backend/routes/swarm/ | Reserved namespace — phase 2 | RESERVED |

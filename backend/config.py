@@ -27,3 +27,6 @@ OLLAMA_BASE_URL: str = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434
 
 # Claude API
 ANTHROPIC_API_KEY: str = os.environ.get("ANTHROPIC_API_KEY", "")
+
+# Redis
+REDIS_URL: str = os.environ.get("REDIS_URL", "redis://localhost:6379/0")

@@ -1,16 +1,24 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from redis.asyncio import Redis
 
+from backend.config import REDIS_URL
 from backend.db import postgres, sqlite
+
+redis_client: Redis | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup: connect to both databases. Shutdown: disconnect cleanly."""
+    """Startup: connect to databases and Redis. Shutdown: disconnect cleanly."""
+    global redis_client
     await postgres.connect()
     await sqlite.connect()
+    redis_client = Redis.from_url(REDIS_URL, decode_responses=True)
     yield
+    if redis_client:
+        await redis_client.aclose()
     await sqlite.disconnect()
     await postgres.disconnect()
 
@@ -20,9 +28,10 @@ app = FastAPI(title="Aelarian Archives", lifespan=lifespan)
 
 @app.get("/health")
 async def health():
-    """Verify both database connections are live."""
+    """Verify database and Redis connections are live."""
     pg_ok = False
     sqlite_ok = False
+    redis_ok = False
 
     try:
         from sqlalchemy import text
@@ -42,5 +51,12 @@ async def health():
     except Exception:
         pass
 
-    status = "ok" if (pg_ok and sqlite_ok) else "degraded"
-    return {"status": status, "postgres": pg_ok, "sqlite": sqlite_ok}
+    try:
+        if redis_client:
+            await redis_client.ping()
+            redis_ok = True
+    except Exception:
+        pass
+
+    status = "ok" if (pg_ok and sqlite_ok and redis_ok) else "degraded"
+    return {"status": status, "postgres": pg_ok, "sqlite": sqlite_ok, "redis": redis_ok}
