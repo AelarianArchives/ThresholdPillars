@@ -215,6 +215,25 @@ wellness check when ingesting raw source material.
       precision risk, easier to read and override. Engines (Tier 3)
       decide how to use the weight value.
 
+- [x] `pearl_captured_at: timestamp | null` — DESIGNED (session 19).
+      Null for all non-Pearl deposits (manual, batch-parsed). Populated
+      on Pearl promotion with the Pearl record's `created_at` value —
+      when Sage actually noticed the signal, not when it entered the
+      archive.
+      Why this matters: for temporal analysis downstream (engines, MTM,
+      Void), the deposit's `created_at` records when it entered the
+      archive. `pearl_captured_at` records when the signal first appeared
+      to the researcher. The gap between the two is itself data — how
+      long a noticing sat as raw Pearl before becoming a formal deposit.
+      Required field on the promotion path — populated from Pearl
+      record's `created_at` before deposit creation. Not optional, not
+      backfillable.
+      Engine/MTM behavior: engines and MTM use `created_at` for
+      computational ordering (when the deposit entered the analytical
+      corpus). `pearl_captured_at` is metadata — it travels with the
+      deposit for provenance and temporal analysis but does not change
+      how engines process the deposit.
+
 **Swarm foundation fields (new — session 14 confirmed, session 15 designed):**
 
 - [x] `authored_by` — DESIGNED. Which AI instance or human created this.
@@ -331,10 +350,29 @@ The Integration page is a collaborative workstation with two panels.
 
       Corrections travel as a distilled ruleset, not raw conversation
       history (context window blows up). The distillation process has
-      three steps:
+      four steps:
 
       1. Sage corrects a deposit field during review (edit fires
          correction event)
+      1a. **Immediate active-rule conflict check:** correction checked
+          against `active_rules` before distillation begins. If the
+          correction contradicts an active rule:
+          · Conflict surfaced immediately: "Your correction conflicts
+            with active rule: [rule text]. Is the rule wrong, or is
+            this a one-off?"
+          · **Sage options:**
+            - **Rule is wrong** → active rule moved to `superseded_rules`
+              with `superseded_by: correction_event_id`. Correction
+              proceeds to distillation (step 2). The resulting candidate
+              enters `active_rules` without a second contradiction check
+              at the candidate gate (conflict already resolved).
+            - **One-off exception** → active rule stays. Correction
+              applies to this deposit only. No distillation — the
+              correction does not produce a candidate rule.
+              `exception_logged: true` on the correction record so the
+              calibration view can track how often a rule produces
+              exceptions.
+          · If no conflict with active rules: proceed to step 2.
       2. AI distills the correction into a candidate rule
       3. Candidate rule shown to Sage for one-tap confirm or edit
          BEFORE it enters active_rules
@@ -346,11 +384,11 @@ The Integration page is a collaborative workstation with two panels.
       every rule manually it adds cognitive load mid-flow. This is the
       middle path.)
 
-      **Contradiction detection (load-bearing):**
+      **Contradiction detection — candidate gate (load-bearing):**
 
       Before a confirmed rule enters active_rules, it is checked against
-      all existing rules for conflict. If the incoming rule contradicts
-      an existing one:
+      all existing active_rules for conflict. If the incoming candidate
+      contradicts an active rule:
       · Conflict flagged to Sage with both rules shown side-by-side
       · Sage confirms which rule takes precedence
       · Superseded rule moved to superseded_rules (retained for history,
@@ -358,6 +396,17 @@ The Integration page is a collaborative workstation with two panels.
       · Do NOT auto-resolve — contradictions are Sage's decision
       A late-session rule silently conflicting with an earlier one makes
       the entire ruleset incoherent. This check prevents that.
+
+      **Two conflict checks exist — different inputs, different failure
+      modes:**
+      · Step 1a (correction-time): catches "this correction directly
+        contradicts active rule X." Runs before distillation.
+      · This gate (candidate-time): catches "the distilled rule
+        contradicts active rule Y that the original correction didn't
+        touch." Runs after distillation and Sage confirmation. Covers
+        the case where distillation produces a rule broader than the
+        original correction, hitting a different active rule.
+      Both are needed. Neither subsumes the other.
 
         correction_context:
           session_id: string
@@ -745,8 +794,9 @@ archive entry only when promoted through INT.
   - status: `active | promoted | archived`
 
 **Promotion flow:**
-Pearl promoted → sent to INT gateway → full deposit fields assigned
-(doc_type, tags, routing, composite ID) → enters PostgreSQL as a
+Pearl promoted → `pearl_captured_at` populated from Pearl's `created_at`
+→ sent to INT gateway → full deposit fields assigned (doc_type, tags,
+routing, composite ID, pearl_captured_at) → enters PostgreSQL as a
 real deposit. Pearl record marked `promoted` with link to deposit ID.
 
 **Lifecycle:** Unpromoted Pearls stay in operational DB indefinitely.
@@ -943,6 +993,22 @@ become deposits. `archived` status for Pearls Sage explicitly dismisses.
       — edits before approve don't trigger re-queue, only the approve
       action triggers the initial embed with the final field values.
 
+      **Engine stale flag on post-creation edit (session 19):**
+
+      Post-creation edits to tags mark engines on the deposit's assigned
+      pages as stale. Same stale flag mechanism as new deposit arrival
+      (Tier 3 hybrid compute trigger). Edit to tags changes what the
+      engine would index — engine's cached computation is no longer
+      current.
+
+      Scope: tags only. Notes edits do not affect engine computation.
+      Content and routing are not editable post-creation (Tier 2 deposit
+      card: "Edit access for tags and notes only").
+
+      `embedding_dirty` (above) handles the vector pipeline. This rule
+      handles the engine pipeline. Both fire on the same trigger (tag
+      edit), target different systems.
+
       **Storage:** vector stored with deposit_id as primary key reference.
       Deposit record holds embedding_id, embedding_status, and
       embedding_dirty. They are linked, not co-located — the deposit
@@ -1061,6 +1127,27 @@ All open questions from the original plan have been answered in session 15:
 - Enhancement 09: prompt version changelog triggers → RESOLVED. Three
   trigger types (Sage-directed, calibration-triggered, manual) defined
   once, applied to parsing partner (Tier 1) and SNM (Tier 3).
+
+**Gap resolutions (session 19 — cross-tier audit):**
+- ~~Correction-vs-active-rule conflict undetected~~ → RESOLVED. Step 1a
+  immediate active-rule conflict check at correction time, before
+  distillation. Two-check system: step 1a catches correction-vs-active,
+  candidate gate catches candidate-vs-active from broader distillation.
+  See INT Parsing Partner correction propagation.
+- ~~Engine stale flag not triggered on post-deposit tag edit~~ → RESOLVED.
+  Tag edits mark engines on assigned pages as stale, same mechanism as
+  new deposit arrival. See Embedding Pipeline section.
+- ~~Black Pearl capture timestamp lost on promotion~~ → RESOLVED.
+  `pearl_captured_at: timestamp | null` on deposit record, populated on
+  promotion from Pearl's `created_at`. See Universal metadata fields and
+  Black Pearl promotion flow.
+- ~~Instance registry write path undefined~~ → RESOLVED. Sage manual
+  creation via curation panel, one active instance at a time, prospective
+  transitions. See Tier 2 Instance Context section.
+- ~~Type E reactivation flow unspecified~~ → RESOLVED. Sage-triggered
+  from Void page, researcher_deprioritised only, PCV hypothesis restored
+  to active, Void record preserved with reactivation timestamp.
+  See Tier 4 Void engine Type E.
 
 ---
 
@@ -1581,6 +1668,41 @@ chosen at frontend build time — not in this design session.
       Auto-populated on INT entry from currently active instance. Sage
       can manually assign or reassign — nonlinear data may surface in a
       different instance than it originated.
+
+      **Instance registry write path (session 19):**
+
+      **Who creates instances:** Sage. Manual creation only. Instances
+      are research-level decisions about phase boundaries — the system
+      cannot determine when a phase period begins or ends without Sage's
+      judgment.
+
+      **Creation surface:** Curation panel (Tier 2, system-level curation
+      operations). Instance management section alongside tag, page,
+      session, and deposit operations. Fields: label, phase_state,
+      date_range start. Date_range end is nullable — an open instance
+      has no end date yet.
+
+      **Active instance:** One instance is marked `active: true` at any
+      time. New deposits on INT auto-populate `instance_context` from
+      the active instance. Sage can override per-deposit during review
+      (nonlinear data may belong to a prior instance).
+
+      **Instance transitions:** Sage closes the current instance (sets
+      date_range end) and opens a new one. Closing an instance does not
+      retroactively change deposits already assigned to it. The
+      transition is prospective — it changes what future deposits
+      default to.
+
+      **Startup state:** V1 launches with at least one instance
+      pre-created by Sage before first deposit. No deposits should enter
+      the system without an active instance to populate from — INT
+      gateway validates `instance_context` is non-null at deposit
+      creation (Step 1 validation in atomicity boundary).
+
+      **What is NOT auto-generated:** Instances are not created by
+      phase_state changes on deposits. A deposit with a new phase_state
+      landing in an existing instance is normal — instances span phase
+      transitions, they don't map 1:1.
 
 ---
 
@@ -2912,11 +3034,27 @@ the detection layer to exist before they can receive and store outputs.
       · Mode 2 — gap resolution:
         Input: declared_gaps from Brief
         Each gap declares expected_engine + reference_anchor
-        Operation: pull deposits from expected_engine's indexed set within
-          reference_anchor that did NOT contribute to any flagged pattern
-          above synthesis threshold. Exclusion step required: filter out
-          deposit_ids already present in any pattern above threshold.
+        Operation: pull deposits from expected_engine's indexed set
+          (current compute cycle) within reference_anchor that did NOT
+          contribute to any flagged pattern above synthesis threshold.
+          Exclusion step required: filter out deposit_ids already present
+          in any pattern above threshold.
         Output: deposits the engine held but didn't elevate
+
+        **Source set: engine's indexed set, not full page deposits
+        (session 19).** Mode 2's gap claim must be built on the same
+        dataset as Pass 1's pattern claim. The baseline that produced
+        the patterns in Pass 1 was calculated from the engine's indexed
+        set. If Mode 2 pulls deposits the baseline doesn't account for,
+        the gap claim is built on a different dataset than the pattern
+        claim — the two passes become internally inconsistent.
+
+        Practical note: MTM runs at session close, and session close
+        triggers engine recompute. By the time MTM synthesizes, all
+        stale engines should have recomputed from the full page. The
+        indexed set and full page converge at session close. But stated
+        as indexed set — correct in principle, and safe if an engine
+        recompute fails before MTM runs.
 
       Selection writes: convergence_deposits_pulled, gap_deposits_pulled
       (separate counts — performance signal + analytical signal)
@@ -2986,10 +3124,42 @@ the detection layer to exist before they can receive and store outputs.
           — links confirmed/complicated findings to unresolved questions
           — the open_question also exists as its own Finding record
           — relationship is structural, not narrative
+        resolves_open_question:  finding_id | null
+          — on verdicts that resolve a prior open_question Finding
+          — the resolved Finding gets resolved: true, resolved_by
+            pointing back here (session 19)
         content_fingerprint:     string
         lnv_routing_status:      pending | deposited | failed
         lnv_deposit_id:          references LNV deposit | null
         created_at:              timestamp
+
+        # Open question lifecycle (session 19)
+        # These fields exist on ALL Findings but are only populated
+        # on finding_type: open_question
+        resolved:                boolean — default false
+        resolved_by:             finding_id | null — the Finding that
+                                   resolved this question (created in a
+                                   subsequent synthesis session)
+        resolved_at:             timestamp | null — when resolution
+                                   occurred. Duration open (resolved_at
+                                   minus created_at) is a queryable
+                                   research signal — questions that stay
+                                   open across many sessions are different
+                                   from questions that resolve in the
+                                   next cycle.
+
+      **Open question resolution rule (session 19):**
+      When a subsequent MTM synthesis produces a verdict on a previously
+      open_question Finding, a NEW Finding is created (the verdict).
+      The old open_question record is never overwritten — it stays as
+      historical record. The new Finding carries
+      `resolves_open_question: finding_id` linking back. The old record
+      gets `resolved: true`, `resolved_by: [new finding id]`,
+      `resolved_at: [timestamp]`.
+
+      Both records stand in the ledger. The open_question shows the
+      system's state of knowledge at the time. The resolving Finding
+      shows what changed. Immutability is preserved.
 
       **Content Fingerprinting (two-pass):**
       Hash input encodes three dimensions:
@@ -3308,6 +3478,35 @@ the detection layer to exist before they can receive and store outputs.
          hypothesis to active status in PCV with its full prior history
          intact. Keeps field-level and meta-level absence cleanly
          separated in the data model.
+
+         **Reactivation flow (session 19 — researcher_deprioritised
+         only):**
+
+         Applies only when `attrition_reason: researcher_deprioritised`.
+         Field silence hypotheses are not reactivatable — their
+         attrition is evidential, not attentional.
+
+         Trigger: Sage, from Void's page. Reactivation button on the
+         Type E absence record card. Not available from PCV — Void
+         detected the attrition, Void is where it's reversed.
+
+         On reactivate:
+         1. PCV hypothesis status restored to `active` with full prior
+            history intact (no re-creation, no new hypothesis record)
+         2. Void Type E record gets `reactivated_at: timestamp` and
+            `reactivated: true` — record stays as historical artifact,
+            never deleted
+         3. Void Type E record display updates to show
+            "Reactivated [date]" alongside original detection
+
+         What does NOT happen: reactivation does not create a new PCV
+         hypothesis. Does not re-enter PCV creation flow. Does not
+         generate a new Void finding. It restores what was already there.
+
+         Constraint: a reactivated hypothesis that attrites again
+         produces a new Type E record. The prior reactivated record
+         stands. Each attrition-reactivation cycle is its own record
+         in Void.
       ```
 
       **PCV entry rules for void-provenance hypotheses:**
@@ -3621,25 +3820,305 @@ the detection layer to exist before they can receive and store outputs.
 
 **LNV schema:**
 
-- [ ] Receive contract: how LNV accepts visualization snapshots from all pages
-- [ ] Provenance tracking: which page, which engine, which session
-- [ ] Visualization storage: rendered image? data + template? both?
-- [ ] "Generated on view, snapshot to LNV" technical spec:
-      How engine-generated visualizations are captured and stored
+- [x] DESIGNED (session 19). Single-table architecture with type
+      discrimination. LNV is both a display surface (gallery) AND a data
+      source (PCV reads MTM Findings from LNV). Receive contract and read
+      contract designed together.
 
-### Open questions (Tier 4)
+      ---
 
-- What chart library? (Decision may already be made in Tier 3.)
-- Are visualizations interactive or static snapshots?
-- How are LNV snapshots stored? (rendered image? data + template? both?)
-- Does every session close snapshot ALL pages or only pages with new data?
+      **LNV ARCHITECTURE — SINGLE TABLE, TYPE-DISCRIMINATED**
+
+      One table. All LNV content shares the same provenance fields. The
+      gallery treats all types uniformly. PCV can filter by type. One
+      receive endpoint handles everything.
+
+      **lnv_entries table:**
+
+        lnv_entry_id:    auto
+        entry_type:      mtm_finding | engine_snapshot | wsc_entry
+                         | void_output
+        source_system:   string — which system produced this
+                         (mtm | thr | str | inf | ecr | snm | wsc
+                         | void | pcv | dtx | sgr)
+        source_page:     page_code | null — which page this originated
+                         from (null for cross-page outputs like MTM)
+        session_ref:     string | null — which session produced this
+        prompt_version:  string | null — for AI-authored types (wsc,
+                         void, mtm). Null for engine_snapshot.
+        content:         jsonb — type-specific payload (shapes below)
+        sage_note:       string | null — optional at capture time
+        created_at:      timestamp
+
+      **Content jsonb shapes per entry_type:**
+
+      mtm_finding:
+        {
+          finding_id:            string — references findings table
+          finding_type:          confirmed | complicated | overturned
+                                 | open_question
+          title:                 string
+          content:               string
+          provenance:            object — full provenance chain from
+                                 Finding record
+          prompt_versions:       { pass_1: string, pass_2: string }
+          attached_open_question: finding_id | null
+          resolves_open_question: finding_id | null
+        }
+
+      engine_snapshot:
+        {
+          engine:                thr | str | inf | ecr | snm
+          computation_snapshot_id: string — links to Tier 3 snapshot
+          template_ref:          string — which visualization component
+                                 renders this (e.g., "thr_cooccurrence_matrix",
+                                 "ecr_constellation", "inf_density_field")
+          visualization_data:    object — the data the template renders
+                                 from (positions, values, scales, color
+                                 mappings — everything needed to
+                                 reconstruct the visualization)
+          deposit_count:         integer — corpus size at capture time
+          baseline_scope:        page
+        }
+
+      wsc_entry:
+        {
+          wsc_entry_id:          string — references wsc_entries table
+          wsc_subtype:           handoff | transmission
+          title:                 string — entry summary for gallery card
+          entry_timestamp:       string — the WSC entry's own timestamp
+        }
+
+      void_output:
+        {
+          trigger:               session_close | on_demand_open
+                                 | on_demand_targeted
+          scope:                 object | null — for targeted reads
+          systemic_observations: array
+          absence_flags:         array
+          contradictions:        array
+          open_edges:            array
+          engines_read:          string[]
+        }
+
+      ---
+
+      **RECEIVE CONTRACT**
+
+      POST /api/lnv/receive
+
+      Request:
+        {
+          entry_type:     mtm_finding | engine_snapshot | wsc_entry
+                          | void_output
+          source_system:  string
+          source_page:    page_code | null
+          session_ref:    string | null
+          prompt_version: string | null
+          content:        jsonb — shape must match entry_type
+          sage_note:      string | null
+        }
+
+      Response — success:
+        {
+          lnv_entry_id:  string
+          entry_type:    string
+          status:        received
+          created_at:    timestamp
+        }
+
+      Response — failure:
+        {
+          error_code:    validation_failed | type_mismatch
+                         | content_schema_invalid
+          message:       string
+        }
+
+      **Validation:** content jsonb validated against the expected shape
+      for the declared entry_type. A request with entry_type: mtm_finding
+      but content missing finding_type is rejected. Type-shape mismatch
+      is a hard failure, not a warning.
+
+      **Who calls this endpoint:**
+      · DNR calls it for mtm_finding entries (after MTM synthesis)
+      · Engine visualization capture calls it for engine_snapshot entries
+        (Sage-triggered from any Axis or Nexus engine page)
+      · WSC write path calls it for wsc_entry entries (after WSC entry
+        written)
+      · Void session-close and on-demand outputs call it for void_output
+        entries
+
+      All callers use the same endpoint. No bespoke pipes.
+
+      ---
+
+      **READ CONTRACT**
+
+      GET /api/lnv/entries
+
+      Query parameters:
+        entry_type:     filter by type (optional, repeatable for
+                        multiple types)
+        source_system:  filter by source (optional)
+        source_page:    filter by page code (optional)
+        session_ref:    filter by session (optional)
+        limit:          integer (default 50, max 200)
+        offset:         integer (default 0)
+        sort:           created_at_desc | created_at_asc
+                        (default: created_at_desc)
+
+      Response:
+        {
+          entries:       array of lnv_entries records
+          total:         integer — total matching count
+          limit:         integer
+          offset:        integer
+        }
+
+      **Who calls this endpoint:**
+      · LNV page (gallery display — all types, chronological)
+      · PCV (reads mtm_finding entries as pre-processed input)
+      · Dashboard (reads recent entries for signal surface)
+      · Any system that needs to query LNV's consolidated output
+
+      ---
+
+      **SNAPSHOT STORAGE DECISION**
+
+      Store data plus template, not rendered images.
+
+      Rendered images are large, non-queryable, and break if the
+      template changes. Data plus template means the visualization
+      re-renders from stored data, can be queried analytically, and
+      stays correct if the display layer improves.
+
+      The gallery thumbnail generates at display time from stored data —
+      not a stored file. This is the right call for a system intended to
+      feed model training downstream.
+
+      **template_ref:** string identifier that maps to a Svelte
+      visualization component. The component knows how to render from
+      the visualization_data object. If the component is updated, all
+      historical snapshots re-render with the improved display. The data
+      is canonical. The rendering is current.
+
+      **"Generated on view, snapshot to LNV" flow:**
+      1. Sage views an engine page → visualization renders from
+         computed data (Tier 3 hybrid compute)
+      2. Sage triggers capture (button on visualization)
+      3. System serializes: visualization_data + template_ref +
+         computation_snapshot_id + optional sage_note
+      4. POST /api/lnv/receive with entry_type: engine_snapshot
+      5. LNV entry created. Gallery card shows thumbnail re-rendered
+         from stored data.
+
+      Not automatic at session close. Sage-triggered only. The
+      researcher decides what's worth preserving — the system doesn't
+      fill LNV with noise.
+
+      ---
+
+      **SESSION-CLOSE SNAPSHOT POLICY**
+
+      Session close does NOT automatically snapshot all engine pages.
+      Only Sage-triggered captures enter LNV as engine_snapshot entries.
+
+      What DOES enter LNV at session close (via DNR):
+      · MTM Findings (automatic, via DNR two-step sequence)
+      · Void session-close pulse check output (automatic)
+
+      What enters LNV outside session close:
+      · Engine visualization snapshots (Sage-triggered, any time)
+      · WSC entries (after DNR completes, via WSC write path)
+      · Void on-demand read outputs (Sage-triggered)
+
+      ---
+
+      **LNV PAGE — GALLERY DISPLAY**
+
+      Page type: Output (from Tier 2 page identity system). Gallery
+      layout. Snapshot cards in responsive grid (2-3 columns).
+
+      **Gallery card:**
+
+      ┌─────────────────────────────────────────────────┐
+      │ [ENTRY_TYPE BADGE]  [SOURCE_SYSTEM]  [DATE]     │
+      │                                                  │
+      │ Visualization thumbnail (re-rendered from data)  │
+      │   OR Finding title + excerpt                     │
+      │   OR WSC entry summary                           │
+      │   OR Void observation summary                    │
+      │                                                  │
+      │ [SAGE_NOTE excerpt if present]                   │
+      │ [PROMPT_VERSION badge if AI-authored]            │
+      └─────────────────────────────────────────────────┘
+
+      **Expand on click:** full content. For engine_snapshot: full-size
+      visualization re-rendered from data. For mtm_finding: full Finding
+      with provenance chain. For wsc_entry: full WSC entry text. For
+      void_output: full analytical output with all sections.
+
+      **Filters:** by entry_type, by source_system, by source_page, by
+      date range. All combinable.
+
+      **Sort default:** chronological (most recent first). Overridable.
+
+      **Sage-facing surfaces:**
+      · Entry type badges with plain language:
+        mtm_finding → "MTM Finding"
+        engine_snapshot → "Visualization"
+        wsc_entry → "Witness Scroll"
+        void_output → "Void Analysis"
+      · Prompt version visible on AI-authored entries
+      · Sage note visible when present
+
+### Resolved questions (Tier 4)
+
+- ~~What chart library?~~ → RESOLVED (Tier 3). LayerCake + D3.
+- ~~Are visualizations interactive or static snapshots?~~ → RESOLVED
+  (session 19). Data + template. Re-renderable at display time —
+  effectively interactive. Stored data is canonical, rendering is current.
+- ~~How are LNV snapshots stored?~~ → RESOLVED (session 19). Data +
+  template in jsonb. Not rendered images. Queryable, re-renderable,
+  future-proof for model training pipeline.
+- ~~Does every session close snapshot ALL pages or only pages with new
+  data?~~ → RESOLVED (session 19). Session close does NOT auto-snapshot
+  engine pages. Only Sage-triggered captures enter LNV. MTM Findings and
+  Void pulse checks enter automatically via DNR.
+
+**Gap resolutions (session 19 — Tier 4):**
+- ~~Mode 2 gap resolution pulls from wrong deposit set~~ → RESOLVED.
+  Pull from engine's indexed set in current compute cycle, not full page.
+  Gap claim built on same dataset as pattern claim. See MTM Selection
+  Function.
+- ~~Open_question Finding lifecycle undefined~~ → RESOLVED. New Finding
+  created on resolution, old stays as historical. resolved/resolved_by/
+  resolved_at fields on Finding record. Immutability preserved. See
+  Finding Production section.
+- ~~LNV receive contract undefined (build blocker)~~ → RESOLVED. Single
+  lnv_entries table, type-discriminated. POST /api/lnv/receive universal
+  endpoint. GET /api/lnv/entries read contract for PCV and all consumers.
+  Data + template storage. See LNV schema above.
 
 ### Pipeline segment defined here
 
 **Synthesis + detection flow:** Axis engine outputs (Tier 3) → MTM
-synthesis at session close → Nexus engines detect/classify/grade patterns →
-Void detects absence patterns → LNV stores visualization snapshots →
-WSC records AI witness perspective.
+synthesis at session close (two-pass: engine hypothesis → deposit
+verification → Finding production with open_question lifecycle) →
+DNR routes Findings to LNV via POST /api/lnv/receive (entry_type:
+mtm_finding) → Void session-close pulse check output routes to LNV
+(entry_type: void_output) → Nexus engines detect/classify/grade →
+WSC entry written after DNR completes → routes to LNV (entry_type:
+wsc_entry).
+
+**Engine snapshot flow:** Sage views engine page → visualization renders
+→ Sage triggers capture → data + template_ref serialized → POST
+/api/lnv/receive (entry_type: engine_snapshot) → gallery card in LNV.
+
+**LNV read flow:** PCV queries GET /api/lnv/entries?entry_type=mtm_finding
+→ reads pre-processed Findings as input for hypothesis detection.
+Dashboard queries for recent entries. LNV page displays all types in
+gallery.
 
 **Nexus internal flow:** PCV → DTX ↔ SGR (already mostly defined in
 existing schemas).

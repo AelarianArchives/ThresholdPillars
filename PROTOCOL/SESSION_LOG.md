@@ -5045,3 +5045,68 @@ NEXT_ACTION: Session 19 opens with cross-tier audit (verify 1,598 new lines agai
   Tiers 3-4 existing content). Then continue Tier 4: WSC and LNV schemas. After
   Tier 4 complete: Tier 5 (Cosmology engines + computation infrastructure).
 ---
+
+---
+TIMESTAMP: 2026-04-05 (session 19 — open)
+TYPE: OPEN
+FILES_MODIFIED:
+  - none yet
+COMPLETED:
+  - none
+IN_PROGRESS:
+  - Cross-tier conflict audit (Tiers 1-4 wiring check)
+NOT_STARTED:
+  - WSC schema (Tier 4 remaining)
+  - LNV schema (Tier 4 remaining)
+  - Tiers 5-8
+UNCOMMITTED: NO
+NEXT_ACTION: Run cross-tier audit, then design WSC and LNV schemas
+---
+
+---
+TIMESTAMP: 2026-04-06 (session 19 — work unit 1)
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-session-plan.md — IN_PROGRESS
+COMPLETED:
+  - Cross-tier conflict audit: 12 interaction points checked, 10 clean, 5 gaps found and resolved
+    - Gap 1: engine stale flag on post-deposit tag edit (Tier 1, embedding pipeline)
+    - Gap 2: Type E hypothesis reactivation flow (Tier 4, Void engine)
+    - Gap 3: correction-vs-active-rule conflict check at correction time (Tier 1, INT parsing partner)
+    - Gap 4: instance registry write path (Tier 2, instance context)
+    - Gap 5: Black Pearl capture timestamp preservation on promotion (Tier 1, deposit record + promotion flow)
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - WSC schema (Tier 4 remaining)
+  - LNV schema (Tier 4 remaining)
+UNCOMMITTED: YES
+NEXT_ACTION: Design WSC and LNV schemas
+---
+
+---
+TIMESTAMP: 2026-04-06 (session 19 — work unit 2)
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-session-plan.md — IN_PROGRESS
+COMPLETED:
+  - LNV schema: DESIGNED (full architecture)
+    - Single lnv_entries table with entry_type discrimination
+    - 4 entry types: mtm_finding, engine_snapshot, wsc_entry, void_output
+    - Content jsonb shapes defined per type
+    - Receive contract: POST /api/lnv/receive (universal endpoint)
+    - Read contract: GET /api/lnv/entries (PCV query path, dashboard, gallery)
+    - Snapshot storage: data + template, not rendered images
+    - Session-close policy: no auto-snapshot, Sage-triggered captures only
+    - Gallery display spec with card layout and filters
+  - MTM Mode 2 gap resolution: indexed set, not full page deposits
+  - Open_question Finding lifecycle: resolved/resolved_by/resolved_at fields,
+    resolves_open_question on resolving Finding, immutability preserved
+  - All 4 Tier 4 open questions resolved
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - WSC schema (Tier 4 remaining)
+UNCOMMITTED: YES
+NEXT_ACTION: Commit and push, then design WSC schema
+---
