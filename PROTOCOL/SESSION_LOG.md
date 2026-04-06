@@ -5148,3 +5148,38 @@ NOT_STARTED:
 UNCOMMITTED: YES
 NEXT_ACTION: Commit and push. Tier 4 design complete.
 ---
+
+---
+TIMESTAMP: 2026-04-06 (session 19 — close)
+TYPE: CLOSE
+FILES_MODIFIED:
+  - .claude/plans/design-session-plan.md — IN_PROGRESS (Tier 4 complete, source_format json added)
+  - PROTOCOL/SESSION_LOG.md — COMPLETE
+COMPLETED THIS SESSION:
+  - Cross-tier conflict audit: 12 interaction points, 5 gaps found and closed
+    (engine stale on tag edit, Type E reactivation, correction-vs-active-rule,
+    instance registry write path, Black Pearl timestamp preservation)
+  - LNV schema: single lnv_entries table, type-discriminated, receive + read contracts,
+    data + template storage, session-close policy, gallery display spec
+  - MTM Mode 2 gap: indexed set source, not full page
+  - Open_question Finding lifecycle: resolved/resolved_by/resolved_at
+  - WSC schema: AI-sovereign witness, absolute immutability, wsc_corrections table,
+    wsc_gaps table, prior_context_acknowledged, 3-entry timeline API, prompt versioning,
+    sovereign-from-DNR boundary, write path, LNV self-contained content
+  - Reflection Realm: identified as new page for Sage's witness voice, flagged for later
+  - source_format: json added to deposit record enum
+  - Tier 4 design: COMPLETE (all 5 items resolved across sessions 17-19)
+  - Total this session: 11 gaps closed, 2 full schemas designed, 3 WSC enhancements,
+    ~1,000 lines added across 2 commits + this close commit
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Reflection Realm page design (parked — Sage confirming page placement)
+  - Tier 5 (Cosmology engines + computation infrastructure)
+  - Tiers 6-8
+  - Stress test, SOT
+UNCOMMITTED: YES (this CLOSE entry + source_format addition — included in commit below)
+NEXT_ACTION: Session 20 opens Tier 5 — Cosmology engines + computation infrastructure.
+  This is the tier that makes the research defensible. Full plan at
+  .claude/plans/design-session-plan.md.
+---

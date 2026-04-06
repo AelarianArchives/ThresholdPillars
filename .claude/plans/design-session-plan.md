@@ -173,6 +173,7 @@ Every deposit in the archive carries these fields. Grouped by purpose.
         `image` — photograph / image file
         `audio` — audio recording
         `file` — uploaded document (PDF, etc.)
+        `json` — structured JSON data file (session 19)
 
 - [x] `source_type: field | generated` — EXISTING (ENFORCEMENT.md F26+F10).
       Non-nullable on every entry. Schema-level enforcement. Entries
