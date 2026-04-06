@@ -1,417 +1,496 @@
-╔══════════════════════════════════════════════════════════════╗ ║ EMERGENCE SCHEMA · v1 ║ ║ /DESIGN/systems/emergence\\\_schema\\\_v1.md ║ ╚══════════════════════════════════════════════════════════════╝
-
+╔══════════════════════════════════════════════════════════════╗
+║  EMERGENCE SCHEMA  ·  V1                                    ║
+║  /DESIGN/Systems/Emergence/EMERGENCE SCHEMA.md               ║
+║  Mechanical spec — detectors, finding shape, commit hook,    ║
+║  nudge, Claude API, severity, failure modes.                 ║
+║  Architectural description in SYSTEM_ Emergence.md.          ║
+╚══════════════════════════════════════════════════════════════╝
 
 
 OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-
-
-OWNS Seven-detector pattern analysis engine — runs as FastAPI service-layer analysis (backend/services/emergence.py), using pgvector similarity queries for cross-entry pattern detection Three-mode overlay — translation · timeline · trace (Svelte components) On-demand finding narratives via Claude API (routed through backend/services/claude.py) Proactive nudge — scheduled pattern scan with cooldown, triggered by FastAPI Thread Trace bridge — hands off findings to Thread Trace Svelte component for thread navigation Graph export — assembles ThreadGraphPayload for the graph page Findings persistence — findings write through FastAPI to PostgreSQL (findings table)
-
-
-
-DOES NOT OWN Tag session logic or pipeline — owned by tagger service (backend/services/claude.py, backend/routes/tagger.py) Thread navigation or overlay — owned by Thread Trace Svelte component and thread trace service Database schema definitions — owned by SQLAlchemy models (backend/models/) and INTEGRATION DB SCHEMA.md Writes to entries — read-only analysis layer. Never modifies what it reads. Entry schema — owned by SQLAlchemy models (backend/models/)
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SEVEN DETECTORS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-Each detector runs across the tag set and entry corpus passed to runDetectors(). Each produces zero or more findings. All findings share the canonical finding shape defined below.
-
-
-
-All threshold values are calibration constants. Starting reference values are given here. All are marked PLANNED — confirm at build.
-
-
-
-1\. CLUSTER ━━━━━━━━━━ Builds a co-occurrence graph from tag → entry membership. Tags that appear together in entries form connected components. Components above the minimum size threshold are flagged as cluster findings.
-
-
-
-CLUSTER\\\_MIN\\\_SIZE \\= 3 Minimum tags to flag a component as a cluster. PLANNED — confirm at build.
-
-
-
-Finding meaning: these tags consistently co-occur. They activate together. The pattern is structural, not coincidental.
-
-
-
-2\. BRIDGE NODE ━━━━━━━━━━━━━━ Identifies tags with high bridgeScore — tags that connect otherwise separate clusters. A bridge node sits between two or more distinct communities in the co-occurrence graph. Its removal would disconnect them.
-
-
-
-BRIDGE\\\_THRESHOLD \\= 0.65 bridgeScore above this \\= bridge node. PLANNED — confirm at build.
-
-
-
-Finding meaning: this tag is load-bearing. It is the connective tissue between domains that would otherwise not touch. High structural significance.
-
-
-
-3\. HIGH INFLUENCE ━━━━━━━━━━━━━━━━━ Identifies tags with high equilibriumState — tags whose activation reliably precedes or accompanies activation of many other tags. Influence is not the same as frequency. A tag can appear rarely and still carry high influence if its appearances consistently pull other tags into activation.
-
-
-
-INFLUENCE\\\_THRESHOLD \\= 0.78 equilibriumState above this \\= high influence. PLANNED — confirm at build.
-
-
-
-Finding meaning: when this tag appears, the field moves.
-
-
-
-4\. CROSS-CATEGORY ━━━━━━━━━━━━━━━━━ Identifies pairs of tags from different seeds or pillars that share entries above the minimum threshold. Cross-category findings surface connections the routing architecture did not predict — places where field signal is crossing structural boundaries.
-
-
-
-CROSS\\\_CAT\\\_MIN\\\_ENTRIES \\= 2 Minimum shared entries to flag a cross-category link. PLANNED — confirm at build.
-
-
-
-Finding meaning: two structurally separate domains are touching in the field. This is the interference pattern PCV reads.
-
-
-
-5\. DRIFT ━━━━━━━━ Identifies tags that were active in recent phases but have faded — their presence is declining across the phase window. Drift findings name what is losing signal rather than gaining it.
-
-
-
-DRIFT\\\_PHASE\\\_WINDOW \\= 2 Phases back to check for fading tag presence. PLANNED — confirm at build.
-
-
-
-Finding meaning: this tag was load-bearing and is receding. DTX receives these findings as named drift events for trajectory classification.
-
-
-
-6\. VOID ZONE ━━━━━━━━━━━━ Identifies sections with low tag coverage — sections where entries exist but are not being tagged, or are being tagged at a rate far below the corpus average. A void zone is a gap in the signal map.
-
-
-
-VOID\\\_COVERAGE\\\_FLOOR \\= 0.3 Sections with \\< 30% tagged entries \\= void zone. PLANNED — confirm at build.
-
-
-
-Finding meaning: there is field activity here that the tagging system has not reached. The data exists. The routing does not.
-
-
-
-7\. NPA SPIKE ━━━━━━━━━━━━ Identifies sessions where non-primary arc tags dominate — where the tags activated do not align with the primary arc of the active section. A spike suggests the session is producing signal outside the expected routing path.
-
-
-
-NPA\\\_SPIKE\\\_RATIO \\= 0.4 Non-primary arc tags \\> 40% of session \\= spike. PLANNED — confirm at build.
-
-
-
-Finding meaning: the field is producing signal that is not landing where the architecture expects it. May indicate an emergent routing need or a misaligned section assignment.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SEVERITY CRITERIA ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-Severity is not an aesthetic judgment. It is a structural assessment based on the finding's scope, persistence, and routing implications.
-
-
-
-low Pattern is present but narrow in scope. Affects a single section or a small tag subset. No evidence of cross-domain propagation. Watchlist only — no immediate routing action required.
-
-
-
-medium Pattern spans multiple sections or involves a structurally significant node. Appears in more than one detection pass. Cross-domain signal present but not yet convergent. Worth tracking actively — may escalate.
-
-
-
-high Pattern is system-wide or involves a bridge node or high-influence tag. Appears consistently across multiple sessions or phases. Cross-domain convergence confirmed or strongly indicated. Requires routing attention — input to DTX classification and SGR grading.
-
-
-
-ASSIGNMENT RULE ━━━━━━━━━━━━━━━ Severity is assigned by the detector at finding creation time. It is not retrospectively adjusted by the Emergence system. SGR re-evaluates signal weight against documented outcomes independently.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ FINDING SHAPE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-All seven detectors produce findings in this canonical shape. No detector may deviate from this structure.
-
-
-
-{ id string 'emg\\\_\\\[timestamp\\]\\\_\\\[rand\\]' Unique per finding per detection pass.
-
-
-
-type            string    'cluster' | 'bridge' |  
-
-&nbsp;                         'influence' |  
-
-&nbsp;                         'cross\\\_category' |  
-
-&nbsp;                         'drift' | 'void' |  
-
-&nbsp;                         'npa\\\_spike'
-
-
-
-title           string    Human-readable label for  
-
-&nbsp;                         the finding.
-
-
-
-description     string    Structural description of  
-
-&nbsp;                         what was detected.
-
-
-
-severity        string    'low' | 'medium' | 'high'  
-
-&nbsp;                         Assigned at creation.  
-
-&nbsp;                         Never changed by this system.
-
-
-
-metrics         object    Numeric values from the  
-
-&nbsp;                         detector calculation.  
-
-&nbsp;                         e.g. { bridgeScore: 0.72,  
-
-&nbsp;                                entryCount: 14 }
-
-
-
-involvedTags    object\\\[\\]  Tags implicated in the  
-
-&nbsp;                         finding.
-
-
-
-involvedEntries object\\\[\\]  Entries implicated in the  
-
-&nbsp;                         finding. This is what Thread  
-
-&nbsp;                         Trace reads when building an  
-
-&nbsp;                         Emergence thread from a  
-
-&nbsp;                         finding.
-
-
-
-canTrace        boolean   True if Thread Trace  
-
-&nbsp;                         component can open a thread  
-
-&nbsp;                         from this finding. Gates the  
-
-&nbsp;                         "Trace this pattern" button  
-
-&nbsp;                         in the overlay.
-
-
-
-}
-
-
-
-PERSISTENCE RULE ━━━━━━━━━━━━━━━━ Findings write through FastAPI to the PostgreSQL findings table (see INTEGRATION DB SCHEMA.md). Each detection pass writes its findings to the database with full provenance: finding id, type, severity, metrics, involved tags, involved entries. Thread Trace reads findings from PostgreSQL when building threads. Findings are queryable across sessions — they are not ephemeral.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ THREE OVERLAY MODES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-All three modes render inside the same overlay shell. Tab navigation switches modes without closing the overlay.
-
-
-
-translation Renders the findings from the most recent tag session — what the current set of tags produced across the seven detectors. Primary mode after a tag commit. Shows finding cards with metrics, involved tags, severity, and trace button.
-
-
-
-timeline Renders entries bucketed by time period. Shows how pattern activity has distributed across the corpus chronologically. Primary mode for phase-level pattern review.
-
-
-
-trace Focused mode opened from a specific finding — either via the trace button on a finding card or via openFromFinding(). Shows the thread of entries and tags implicated in that finding. Hands off to the Thread Trace Svelte component for full thread navigation.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ CLAUDE API INTEGRATION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-Model: claude-sonnet-4-20250514 Used for all Emergence API calls.
-
-
-
-ON-DEMAND FINDING NARRATIVES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Triggered by requestNarrative(finding). Produces a finding narrative in the language of the framework — a translation of what the detector already measured, expressed using framework terminology.
-
-
-
-This is not interpretation added to the finding. It is a translation of what the detector measured. The narrative does not expand beyond the finding's metrics, involved tags, and structural description.
-
-
-
-PROACTIVE NUDGE ━━━━━━━━━━━━━━━ Scheduled. Runs automatically after a detection pass if findings above a significance threshold are present and the cooldown has elapsed.
-
-
-
-NUDGE\\\_COOLDOWN\\\_MS \\= 4 min (240000ms) Minimum interval between proactive nudge calls. PLANNED — confirm at build.
-
-
-
-NUDGE\\\_INIT\\\_DELAY\\\_MS \\= 4000ms Delay before first scan after app load. PLANNED — confirm at build.
-
-
-
-Behavior: — Surfaces a single high-significance finding as a non-blocking notification. — Does not open the overlay. — Invites attention without demanding it.
-
-
-
-DEDUPLICATION RULE ━━━━━━━━━━━━━━━━━━ Findings already surfaced in the current session are tracked by key (type::title). The nudge does not repeat findings the user has already seen in this session. \\\_seenKeys holds the session-scoped set. Never cleared mid-session.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ PUBLIC API ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-BACKEND ENDPOINTS ━━━━━━━━━━━━━━━━━━
-
-All emergence operations route through FastAPI. The service reads entries and tags directly from PostgreSQL — no injected fetcher pattern. Representative endpoints — full contracts defined at build time against SOT.
+OWNS
+Eight detectors — algorithms, thresholds, calibration constants
+Finding shape — canonical record structure for all detectors
+emergence_findings PostgreSQL table — distinct from MTM's findings table
+Severity criteria — assignment rules per detector
+Commit hook — change significance filter, detection sequence
+Claude API integration — narrative endpoint, nudge scan, model constant
+Proactive nudge — per-severity cooldown, suppression list, dedup
+Change significance filter — skip logic for minor edits
+Detection config versioning — tracking which config produced which findings
+LNV routing — payload shape for POST /api/lnv/receive
+Known failure modes — all guards and recovery paths
+
+DOES NOT OWN
+Architectural identity — owned by SYSTEM_ Emergence.md
+Nexus feed definitions — owned by SYSTEM_ Emergence.md
+Tag pipeline — owned by tagger service
+Thread Trace navigation — owned by Thread Trace
+Entry schema — owned by INTEGRATION DB SCHEMA.md
+MTM findings table — owned by MTM
+Routing authority — owned by SOT
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NAMED CONSTANTS — ALL CALIBRATION ITEMS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Detector thresholds:
+  CLUSTER_MIN_SIZE       = 3      — minimum tags per cluster component
+  BRIDGE_THRESHOLD       = 0.65   — bridgeScore cutoff
+  INFLUENCE_THRESHOLD    = 0.78   — equilibriumState cutoff
+  CROSS_CAT_MIN_ENTRIES  = 2      — minimum shared entries
+  VOID_COVERAGE_FLOOR    = 0.3    — tagged entry ratio floor (30%)
+  NPA_SPIKE_RATIO        = 0.4    — non-primary arc tag ratio (40%)
+  DRIFT_PHASE_WINDOW     = 2      — phases back for drift check
+  NULL_CLUSTER_MIN_SIZE  = 3      — minimum null observations per
+                                    cluster. PLANNED — dependent on
+                                    null observation data model.
+
+Nudge:
+  NUDGE_COOLDOWN_HIGH_MS = 240000 — 4 min. High-severity findings.
+  NUDGE_COOLDOWN_LOW_MS  = 600000 — 10 min. Low/medium severity.
+  NUDGE_INIT_DELAY_MS    = 4000   — delay before first scan after
+                                    app load.
+
+Detection:
+  WEIGHT_DETECTION       = true   — apply deposit_weight multipliers
+                                    in detection computations.
+                                    Toggle for calibration.
+  DETECTION_SKIP_THRESHOLD        — change significance filter.
+                                    Minor edits (weight adjustment,
+                                    note edit) skip detection pass.
+                                    Significant changes (new tag,
+                                    routing change, new deposit,
+                                    doc_type change) always fire.
+                                    Calibration item at build.
+
+Model:
+  EMERGENCE_NARRATIVE_MODEL       — Claude model for all Emergence
+                                    API calls (narrative + nudge).
+                                    Defined once in constants file,
+                                    referenced everywhere. Update
+                                    this constant when model changes.
+                                    Do not embed string literals in
+                                    individual endpoints.
+
+All starting reference values are PLANNED — confirm at build.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EIGHT DETECTORS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Each detector runs across the tag set and entry corpus passed to
+runDetectors(). Each produces zero or more findings. All findings
+share the canonical finding shape defined below.
+
+When WEIGHT_DETECTION is true, all detectors apply deposit_weight
+multipliers from the deposit record (high: 2.0, standard: 1.0,
+low: 0.5). A cluster built from high-weight analyses and hypotheses
+is structurally more significant than the same cluster built from
+raw entry fragments. Particularly load-bearing for bridge and
+influence detectors.
+
+1. CLUSTER
+  Builds a co-occurrence graph from tag → entry membership. Tags
+  that appear together in entries form connected components.
+  Components above CLUSTER_MIN_SIZE are flagged as cluster findings.
+
+2. BRIDGE NODE
+  Identifies tags with high bridgeScore — tags that connect
+  otherwise separate clusters. A bridge node sits between two or
+  more distinct communities in the co-occurrence graph. Its removal
+  would disconnect them. Threshold: BRIDGE_THRESHOLD.
+
+3. HIGH INFLUENCE
+  Identifies tags with high equilibriumState — tags whose activation
+  reliably precedes or accompanies activation of many other tags.
+  Influence is not frequency. Threshold: INFLUENCE_THRESHOLD.
+
+4. CROSS-CATEGORY
+  Identifies pairs of tags from different seeds or pillars that
+  share entries above CROSS_CAT_MIN_ENTRIES. Surfaces connections
+  the routing architecture did not predict.
+
+5. DRIFT
+  Identifies tags active in recent phases that have faded — presence
+  declining across DRIFT_PHASE_WINDOW. Names what is losing signal.
+
+6. VOID ZONE
+  Identifies sections with tagged entry ratio below
+  VOID_COVERAGE_FLOOR. Gaps in the signal map. Void zone findings
+  route to the dashboard coverage gap view — NOT to the Void engine
+  page (VOI). VOI aggregates confirmed observational absence. Void
+  zones are coverage gaps. Structurally distinct.
+
+7. NPA SPIKE
+  Identifies sessions where non-primary arc tags exceed
+  NPA_SPIKE_RATIO. Signal landing outside expected routing path.
+
+8. NULL CLUSTER — PLANNED
+  Runs a second pass on null-observation entries only. Clusters of
+  null observations around specific tag sets — the researcher
+  consistently looking for patterns and finding nothing. Produces
+  cluster_null findings. Feeds directly into the Void engine.
+  NULL_CLUSTER_MIN_SIZE as calibration constant. Dependent on null
+  observation data model confirmation at build time.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEVERITY CRITERIA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Severity is a structural assessment based on scope, persistence,
+and routing implications. Not aesthetic.
+
+  low     — narrow scope, single section or small tag subset,
+            no cross-domain propagation. Watchlist only.
+
+  medium  — spans multiple sections or involves significant node,
+            appears in more than one detection pass, cross-domain
+            signal present but not yet convergent. Track actively.
+
+  high    — system-wide or involves bridge/high-influence tag,
+            consistent across multiple sessions or phases,
+            cross-domain convergence confirmed or strongly indicated.
+            Input to DTX classification and SGR grading.
+
+Severity assigned by detector at creation time. Not retrospectively
+adjusted by this system. SGR re-evaluates independently.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINDING SHAPE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+All detectors produce findings in this canonical shape:
+
+    {
+      id:                     string — 'emg_[timestamp]_[rand]'
+      type:                   string — 'cluster' | 'bridge' |
+                              'influence' | 'cross_category' |
+                              'drift' | 'void' | 'npa_spike' |
+                              'cluster_null'
+      title:                  string — human-readable label
+      description:            string — structural description
+      severity:               string — 'low' | 'medium' | 'high'
+      metrics:                object — numeric values from detector.
+                              Always includes doc_type_distribution
+                              (see below).
+      involvedTags:           object[] — tags implicated
+      involvedEntries:        object[] — entries implicated. This is
+                              what Thread Trace reads.
+      canTrace:               boolean — gates "Trace this pattern"
+                              button
+      detection_config_version: string — version marker of the
+                              calibration constants active at
+                              detection time. Maps to a stored
+                              config record.
+    }
+
+DOC_TYPE_DISTRIBUTION IN METRICS:
+
+Every finding's metrics object includes:
+
+    doc_type_distribution: {
+      observation: integer,
+      analysis: integer,
+      hypothesis: integer,
+      entry: integer,
+      discussion: integer,
+      transcript: integer,
+      glyph: integer,
+      media: integer,
+      reference: integer
+    }
+
+Counts of involvedEntries by doc_type. A cluster where 80% of
+entries are hypotheses means something different than one where 80%
+are transcripts. PCV and DTX read this downstream — they know what
+the finding was built from without re-querying the corpus.
+
+DETECTION CONFIG VERSIONING:
+
+detection_config_version is a snapshot marker of the calibration
+constants active when the finding was produced. When Sage looks at
+findings longitudinally, she can see which were produced under
+which detection configuration. Calibration changes become visible
+in the historical record rather than silently redefining what old
+findings mean.
+
+Same principle as prompt versioning in SNM and Void. The detection
+config includes: all threshold constants, WEIGHT_DETECTION state,
+EMERGENCE_NARRATIVE_MODEL, and any prompt template versions.
+
+PERSISTENCE:
+
+Findings write to the emergence_findings PostgreSQL table (distinct
+from MTM's findings table). Each detection pass writes findings with
+full provenance. Findings are persistent and queryable across
+sessions — not ephemeral.
+
+LNV ROUTING:
+
+Emergence findings route to LNV via POST /api/lnv/receive with
+entry_type: emergence_finding.
+
+    {
+      entry_type:     "emergence_finding"
+      source_system:  "emergence"
+      source_page:    null
+      content: {
+        finding_id:   string
+        type:         string
+        title:        string
+        description:  string
+        severity:     string
+        metrics:      object (includes doc_type_distribution)
+        involvedTags: object[]
+        detection_config_version: string
+      }
+    }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMMIT HOOK — onTagSessionComplete()
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After every panel save, the frontend evaluates whether a detection
+pass should fire.
+
+CHANGE SIGNIFICANCE FILTER:
+
+Before the detection pass fires, the commit delta is evaluated
+against DETECTION_SKIP_THRESHOLD:
+
+  Significant changes — always fire full detection pass:
+    New tag added, tag removed, routing change, new deposit,
+    doc_type change, observation_type change.
+
+  Minor changes — skip detection pass, return cached findings:
+    Tag weight adjustment only, note edit only, no new tags,
+    no routing changes.
+
+This is not premature optimization. At scale, detection on every
+minor edit becomes a real performance problem. The filter is in the
+schema before build so the builder doesn't retrofit it later.
+
+DETECTION SEQUENCE (when significance filter passes):
+
+1. Entry saved via POST /entries/ — written to PostgreSQL.
+2. Tagger store clears suggestion result.
+3. Frontend calls POST /entries/{id}/detect with entry id.
+4. Emergence service queries fresh entry corpus from PostgreSQL.
+   Includes the just-committed entry (CORPUS FRESHNESS RULE).
+5. All detectors run against tags and fresh corpus. Findings
+   written to emergence_findings with detection_config_version.
+6. If overlay is open, frontend refreshes with new findings.
+7. Proactive nudge evaluated (see PROACTIVE NUDGE below).
+
+CORPUS FRESHNESS RULE:
+
+The detection pass always queries entries fresh from PostgreSQL.
+Never cached data. The entry that just triggered the commit is the
+reason the analysis is running — running detectors on a corpus that
+does not yet include that entry is structurally incorrect. One
+database query per significant commit. This is acceptable. The
+freshness rule is non-negotiable.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CLAUDE API INTEGRATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Model: EMERGENCE_NARRATIVE_MODEL (named constant). Used for all
+Emergence API calls.
+
+ON-DEMAND FINDING NARRATIVES:
+
+Triggered by requestNarrative(finding). Returns a narrative that
+translates the structural finding into framework language — what
+the detector measured, expressed using Threshold Pillars terminology.
+
+Not interpretation. Translation. The narrative does not expand
+beyond the finding's metrics, involved tags, and structural
+description.
+
+PROACTIVE NUDGE:
+
+Runs after a detection pass if findings above significance threshold
+are present and the cooldown has elapsed.
+
+Per-severity cooldown:
+  High severity: NUDGE_COOLDOWN_HIGH_MS (shorter — surface quickly)
+  Low/medium: NUDGE_COOLDOWN_LOW_MS (longer — don't spam)
+
+Behavior:
+  Surfaces a single highest-significance unseen finding as a
+  non-blocking notification. Does not open the overlay. Invites
+  attention without demanding it.
+
+Finding deduplication:
+  _seenKeys tracks findings by type::title within the session.
+  Nudge does not repeat findings already seen. Never cleared
+  mid-session.
+
+SESSION-SCOPED SUPPRESSION:
+
+Sage can dismiss a nudge type for the remainder of the session
+with one action. suppressed_types: string[] held in session state
+(not persisted — session-scoped only). Nudge check filters against
+suppressed types before surfacing. Suppression clears on next
+session open — the nudge system resets clean.
+
+A system that Sage can't silence becomes noise. A system she can
+silence on demand gets listened to.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THREE OVERLAY MODES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+All three render inside the same overlay shell. Tab navigation
+switches modes without closing the overlay.
+
+  translation — findings from the most recent detection pass.
+    Primary mode after tag commit. Finding cards with metrics,
+    involved tags, severity, doc_type distribution, trace button.
+
+  timeline — entries bucketed by time. Structural view of when
+    signal arrived and how it distributed across phases and
+    sections.
+
+  trace — findings with Thread Trace integration foregrounded.
+    Trace buttons prominent. openFromFinding() opens directly
+    in this mode.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THREAD TRACE BRIDGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+openFromFinding() hands off to the Thread Trace Svelte component,
+passing finding data. Svelte resolves component imports at build
+time — no circular dependency concern.
+
+canTrace gates the "Trace this pattern" button. In Svelte
+architecture, components are always available once mounted — the
+gate is effectively always true when the app is running.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PUBLIC API
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BACKEND ENDPOINTS:
 
 POST /entries/{id}/detect — run detection pass
-Triggered after tag commit. Runs all seven detectors against the current entry corpus using pgvector similarity queries. Writes findings to PostgreSQL. Returns findings array.
+  Triggered after significant tag commit. Runs all detectors
+  against current corpus. Writes findings to emergence_findings.
+  Returns findings array. Skipped if change significance filter
+  determines the edit was minor.
 
 GET /entries/findings — query findings
-Returns findings filtered by type, severity, section, or time range. Supports pagination. Findings are persistent and queryable across sessions.
+  Returns findings filtered by type, severity, section, time range,
+  or detection_config_version. Supports pagination. Findings are
+  persistent and queryable across sessions.
 
 POST /entries/findings/{id}/narrative — request finding narrative
-Triggers Claude API call via backend/services/claude.py. Returns narrative text — a translation of what the detector measured, not interpretation beyond the finding's metrics.
+  Triggers Claude API call via EMERGENCE_NARRATIVE_MODEL. Returns
+  narrative text.
 
 GET /entries/findings/nudge — proactive nudge check
-Returns the highest-significance unseen finding if cooldown has elapsed. Does not repeat findings already surfaced in the current session.
-
-FRONTEND INTERFACE ━━━━━━━━━━━━━━━━━━━━
-
-Svelte Emergence component — three overlay modes (translation, timeline, trace), finding cards, trace button, nudge notification. Calls FastAPI endpoints via API client. Representative interface — full implementation defined at frontend build time.
-
-open(mode) — opens overlay in 'translation' | 'timeline' | 'trace' mode
-openFromFinding(finding) — opens overlay in 'trace' mode focused on a specific finding
-requestNarrative(finding) — calls POST /entries/findings/{id}/narrative, displays result
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ COMMIT HOOK — onTagSessionComplete() ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-After every panel save, the frontend triggers a detection pass. The pattern:
-
-1. Frontend reads current suggestion from tagger store. Tags captured before clear.
-2. Entry saved via POST /entries/ to FastAPI — written to PostgreSQL.
-3. Tagger store clears suggestion result.
-4. Frontend calls POST /entries/{id}/detect with the entry id.
-5. Emergence service runs all seven detectors against the current corpus.
-6. Findings written to PostgreSQL. Response returned to frontend.
-7. If overlay is open, frontend refreshes with new findings.
-8. Proactive nudge evaluated — if warranted, nudge notification surfaces.
-
-The detection pass does not read from the tagger store. Tags are already persisted on the entry in PostgreSQL at step 2. The service reads the full corpus from PostgreSQL directly.
-
-CORPUS FRESHNESS RULE ━━━━━━━━━━━━━━━━━━━━━ The detection pass always queries entries fresh from PostgreSQL. It does not rely on cached data.
-
-The entry that just triggered the commit is the reason the analysis is running — running detectors on a corpus that does not yet include that entry is structurally incorrect. The finding produced would miss the most relevant connection.
-
-The performance cost is one database query per commit. This is acceptable. The freshness rule is non-negotiable.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ THREAD TRACE BRIDGE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-openFromFinding() hands off to the Thread Trace Svelte component, passing the finding data. The Svelte component import handles the dependency — no circular dependency concern (Svelte resolves component imports at build time, not at runtime).
-
-canTrace GATE ━━━━━━━━━━━━━ canTrace on a finding gates the "Trace this pattern" button in the overlay. The button renders when the Thread Trace component is available. In the Svelte architecture, components are always available once mounted — the gate is effectively always true when the app is running.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ NEXUS FEED ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-PATTERN CONVERGENCE (PCV · 50\\) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Reads: cluster · bridge · cross-category findings as interference pattern data.
-
-
-
-These three detector types produce the cross-domain signal PCV is designed to receive. A cross-category finding that tags from s04 and s15 share entries is exactly the kind of structural relationship PCV aligns on shared axes. Emergence names these findings with precision. PCV interprets them. Emergence does not.
-
-
-
-DRIFT TAXONOMY (DTX · 48\\) ━━━━━━━━━━━━━━━━━━━━━━━━━ Reads: drift findings as named drift events for trajectory classification.
-
-
-
-Emergence detects that a tag is fading. DTX classifies whether that fading is linear escalation, oscillation, fragmentation, or containment. The drift detector produces the event. DTX provides the taxonomy. DTX also receives the phase window and entry context embedded in the finding — that is the raw state data its classification runs against.
-
-
-
-LIBER NOVUS (LNV · 47\\) ━━━━━━━━━━━━━━━━━━━━━━━ Receives: processed Emergence findings routed through Thread Trace or deposited directly as part of the Daily Nexus Routine.
-
-
-
-Findings land on LNV with provenance intact: finding id, type, severity, involved tags, and the session context in which they were produced. LNV holds them without editorializing. Findings are traceable to the detection pass that produced them.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ KNOWN FAILURE MODES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-1\. EMERGENCE SERVICE UNREACHABLE FastAPI emergence endpoints are down. Detection passes do not run. Findings are not generated. Proactive nudge never fires. Guard: frontend displays error state when detection endpoint returns HTTP error. Entry save is not blocked — entries save without triggering detection. Missing findings are visible as gaps in the findings timeline.
-
-2\. DETECTION PASS ON STALE CORPUS If the detection service queries entries before the just-committed entry is visible in PostgreSQL, the detector pass misses the most relevant connection. Finding produced is structurally incomplete. Guard: detection runs after the entry write transaction commits. The service queries entries fresh from PostgreSQL at the start of every detection pass. Never use cached data at commit time.
-
-3\. PGVECTOR QUERY TIMEOUT Similarity queries across a large corpus exceed the query timeout. Detection pass returns partial or no results. Guard: pgvector queries use appropriate index (IVFFlat or HNSW) for performance. Query timeout returns error, not partial results. Frontend surfaces the timeout. Retry is safe — detection is idempotent.
-
-4\. FINDINGS NOT DEDUPED ACROSS NUDGE CALLS Same finding surfaces as a nudge multiple times in one session. User sees repeated notifications for the same pattern. Guard: seen keys tracked by type::title within the session. Nudge only fires for findings with keys not yet seen.
-
-5\. GRAPH EXPORT BEFORE GRAPH PAGE EXISTS Graph page route is a stub. Routing there before the page is built produces dead navigation. Guard: graph export remains disabled until the graph route is live. Graph export button state follows Thread Trace's coordination — Emergence does not independently enable graph export. GRAPH_PAGE_PATH imported from frontend/src/lib/config.ts.
-
-6\. CLAUDE API FAILURE DURING NARRATIVE REQUEST Claude API is unreachable or rate-limited when a finding narrative is requested. Guard: endpoint returns appropriate HTTP error. Finding data is still available — only the narrative translation is missing. Frontend displays the finding without narrative and allows retry.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ CALIBRATION VARIABLES — ALL PLANNED ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-CLUSTER\\\_MIN\\\_SIZE minimum cluster component size BRIDGE\\\_THRESHOLD bridgeScore cutoff INFLUENCE\\\_THRESHOLD equilibriumState cutoff CROSS\\\_CAT\\\_MIN\\\_ENTRIES minimum shared entries VOID\\\_COVERAGE\\\_FLOOR tagged entry ratio floor NPA\\\_SPIKE\\\_RATIO non-primary arc tag ratio DRIFT\\\_PHASE\\\_WINDOW phases back for drift check NUDGE\\\_COOLDOWN\\\_MS minimum nudge interval NUDGE\\\_INIT\\\_DELAY\\\_MS first scan delay after load
-
-
-
-All starting reference values documented in detector sections above. All subject to calibration at build.
-
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ FILES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
-
-| File | Role | Status |
-| --- | --- | --- |
-| backend/services/emergence.py | Seven detectors, pgvector similarity queries, finding persistence, proactive nudge scheduling | PLANNED |
-| backend/routes/emergence.py | FastAPI endpoints — detect, query findings, narrative request, nudge check | PLANNED |
-| frontend emergence components | Svelte — three overlay modes (translation, timeline, trace), finding cards, trace button, nudge notification | PLANNED |
-
+  Returns highest-significance unseen finding if per-severity
+  cooldown has elapsed and type is not in suppressed_types.
+
+POST /entries/findings/nudge/suppress — suppress nudge type
+  Adds a finding type to session-scoped suppressed_types list.
+  Clears on next session open.
+
+FRONTEND INTERFACE:
+
+Svelte Emergence component. Calls FastAPI endpoints via API client.
+
+  open(mode) — opens overlay in translation | timeline | trace
+  openFromFinding(finding) — opens overlay in trace mode
+  requestNarrative(finding) — calls narrative endpoint
+  suppressNudgeType(type) — suppresses nudge type for session
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KNOWN FAILURE MODES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. EMERGENCE SERVICE UNREACHABLE
+FastAPI endpoints down. Detection passes don't run. Findings not
+generated. Guard: frontend displays error state. Entry save is not
+blocked. Missing findings visible as gaps in the findings timeline.
+
+2. DETECTION PASS ON STALE CORPUS
+Detection queries before just-committed entry is visible in
+PostgreSQL. Guard: detection runs after entry write transaction
+commits. Always queries fresh. Never cached data at commit time.
+
+3. PGVECTOR QUERY TIMEOUT
+Similarity queries exceed timeout on large corpus. Guard: pgvector
+queries use appropriate index (IVFFlat or HNSW). Timeout returns
+error, not partial results. Retry is safe — detection is idempotent.
+
+4. FINDINGS NOT DEDUPED ACROSS NUDGE CALLS
+Same finding surfaces repeatedly. Guard: _seenKeys tracked by
+type::title within session. Per-severity cooldown prevents rapid
+re-fire. Session-scoped suppression gives Sage control.
+
+5. GRAPH EXPORT BEFORE GRAPH PAGE EXISTS
+Graph route is a stub. Guard: graph export disabled until graph
+route is live. Follows Thread Trace's coordination.
+
+6. CLAUDE API FAILURE DURING NARRATIVE
+API unreachable or rate-limited. Guard: endpoint returns HTTP error.
+Finding data still available. Frontend displays finding without
+narrative and allows retry.
+
+7. DETECTION PASS ON MINOR EDIT
+Full seven-detector pass fires on weight adjustment or note edit.
+Identical findings produced. Wasted computation.
+Guard: change significance filter evaluates commit delta before
+detection fires. Minor changes return cached findings.
+
+8. HISTORICAL FINDINGS COMPARED ACROSS CONFIG VERSIONS
+Bridge finding from BRIDGE_THRESHOLD = 0.65 compared to one from
+0.58. Not directly comparable but nothing marks the difference.
+Guard: detection_config_version on every finding record. Sage can
+see which config produced which findings. Calibration changes are
+visible in the historical record.
+
+9. EMERGENCE FINDINGS COLLISION WITH MTM FINDINGS TABLE
+Both systems write "findings." Different shapes, different
+provenance, different consumers. Silent collision at build time.
+Guard: Emergence writes to emergence_findings. MTM writes to
+findings. INTEGRATION DB SCHEMA lists both tables with distinct
+ownership.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+backend/services/emergence.py
+  Eight detectors, pgvector queries, finding persistence to
+  emergence_findings, proactive nudge with per-severity cooldown,
+  change significance filter, detection config versioning,
+  deposit_weight application.
+  Status: PLANNED
+
+backend/routes/emergence.py
+  FastAPI endpoints — detect, query findings, narrative, nudge
+  check, nudge suppress.
+  Status: PLANNED
+
+frontend emergence components
+  Svelte — three overlay modes (translation, timeline, trace),
+  finding cards with doc_type distribution, trace button, nudge
+  notification with session-scoped suppression.
+  Status: PLANNED

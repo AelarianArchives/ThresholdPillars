@@ -12,7 +12,7 @@
 
 * Database layer (PostgreSQL) — all read and write operations across every table in the archive
 * Schema versioning via Alembic migrations — every table change is a versioned migration
-* Table ownership for: root_entries · file_assets · manifest_sessions · archives · system_counters · routine_sessions · synthesis_sessions · findings · drift_events · patterns
+* Table ownership for: root_entries · file_assets · manifest_sessions · archives · system_counters · routine_sessions · synthesis_sessions · findings · drift_events · patterns · emergence_findings · embeddings
 * arc_seq counter operations — increment, checkpoint write, checkpoint clear
 * Chunk queue derivation — computing next_chunk, page_start, page_end, queue_done
 * Write path execution for every system — FastAPI service layer executes the write; the owning system owns the decision to write
@@ -64,6 +64,7 @@ Each table lists who decides what is written and what the FastAPI service layer 
 | findings | MTM | record creation, fingerprint write; DNR triggers lnv_routing_status and lnv_deposit_id writes |
 | drift_events | DTX | record creation, trajectory_state, outcome_vector, outcome_label, grade_latency |
 | patterns | PCV | record creation, status transitions |
+| emergence_findings | Emergence | record creation, detection config version write |
 | embeddings | Embedding pipeline | vector write with metadata after INT retirement (async) |
 
 The service layer never initiates a write based on its own judgment. Every write is triggered by the owning system.
@@ -93,6 +94,8 @@ The service layer never initiates a write based on its own judgment. Every write
 **drift_events** — DTX drift classification records. One per classified drift event. Carries four required classification dimensions, live trajectory_state, outcome_vector, and grade_latency.
 
 **patterns** — PCV pattern records. One per observed cross-domain pattern. Carries hypothesis_id (the structural thread to DTX and SGR), source_signals, and hypothesis_statement.
+
+**emergence_findings** — Emergence detection findings. Distinct from findings (MTM). Different record shape, different provenance chain, different downstream consumers. One per detected pattern per detection pass. Carries finding type, severity, metrics with doc_type_distribution, detection_config_version. See EMERGENCE SCHEMA.md.
 
 ---
 
