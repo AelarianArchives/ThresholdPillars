@@ -1,8 +1,10 @@
-╔══════════════════════════════════════════════════════════════╗
-║  EMBEDDING PIPELINE SCHEMA  ·  v1                           ║
-║  /DESIGN/systems/embedding_pipeline_schema_v1.md              ║
-║  Ollama + nomic-embed-text · pgvector · FastAPI async       ║
-╚══════════════════════════════════════════════════════════════╝
+# EMBEDDING PIPELINE SCHEMA
+
+## V1
+
+## /DESIGN/Systems/Embedding_Pipeline/EMBEDDING PIPELINE SCHEMA.md
+
+Ollama + nomic-embed-text · pgvector · FastAPI async
 
 
 OVERVIEW

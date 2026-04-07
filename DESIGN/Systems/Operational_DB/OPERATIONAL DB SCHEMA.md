@@ -1,8 +1,10 @@
-╔══════════════════════════════════════════════════════════════╗
-║  OPERATIONAL DB SCHEMA  ·  v1                               ║
-║  /DESIGN/systems/operational_db_schema_v1.md                  ║
-║  SQLite · backend/db/operational.db                         ║
-╚══════════════════════════════════════════════════════════════╝
+# OPERATIONAL DB SCHEMA
+
+## V1
+
+## /DESIGN/Systems/Operational_DB/OPERATIONAL DB SCHEMA.md
+
+SQLite · backend/db/operational.db
 
 
 OVERVIEW

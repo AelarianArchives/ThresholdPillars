@@ -1,4 +1,8 @@
-﻿╔══════════════════════════════════════════════════════════════╗ ║ DRIFT TAXONOMY SCHEMA · DTX · v1 ║ ║ /DESIGN/systems/drift_taxonomy_schema_v1.md ║ ╚══════════════════════════════════════════════════════════════╝
+﻿# DRIFT TAXONOMY SCHEMA
+
+## DTX · V1
+
+## /DESIGN/Systems/Drift_Taxonomy/DRIFT TAXONOMY SCHEMA.md
 
 OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

@@ -19,7 +19,7 @@
 * Tagger panel UI — sends section context to `/tagger/` endpoint, displays returned tag suggestions. Does not resolve tags or apply routing rules (owned by TAGGER SCHEMA.md)
 * Deposit panel UI — collects researcher input, sends to `/entries/` endpoint. Does not validate archive semantics (owned by INTEGRATION SCHEMA.md pipeline)
 * Thread trace display — reads thread data from `/threads/` endpoint, renders thread visualization. Does not build or classify threads (owned by THREAD TRACE SCHEMA.md)
-* Resonance canvas — Svelte component rendering the resonance engine visualization. Data fetched via API. Node positions and animation state managed in Svelte store. Implementation details defined in RESONANCE ENGINE SCHEMA.md
+* Resonance canvas — Svelte component rendering the resonance engine visualization. Data fetched via API. Node positions and animation state managed in Svelte store. Implementation details defined in RESONANCE ENGINE PHYSICS SPEC.md
 
 ## WHAT THIS SYSTEM DOES NOT OWN
 

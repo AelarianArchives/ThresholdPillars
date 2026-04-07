@@ -1,4 +1,8 @@
-﻿╔══════════════════════════════════════════════════════════════╗ ║ PATTERN CONVERGENCE SCHEMA · PCV · v1 ║ ║ /DESIGN/systems/pattern_convergence_schema_v1.md ║ ╚══════════════════════════════════════════════════════════════╝
+﻿# PATTERN CONVERGENCE SCHEMA
+
+## PCV · V1
+
+## /DESIGN/Systems/Pattern_Convergence/PATTERN CONVERGENCE SCHEMA.md
 
 OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

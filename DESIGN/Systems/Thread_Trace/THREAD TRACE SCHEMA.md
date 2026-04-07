@@ -1,10 +1,12 @@
-╔══════════════════════════════════════════════════════════════╗
-║  THREAD TRACE SCHEMA  ·  V1                                 ║
-║  /DESIGN/Systems/Thread_Trace/THREAD TRACE SCHEMA.md         ║
-║  Mechanical spec — builders, seed resolution, filter bar,    ║
-║  sequences, tables, edge labels, routing snapshot.           ║
-║  Architectural description in SYSTEM_ Thread Trace.md.       ║
-╚══════════════════════════════════════════════════════════════╝
+# THREAD TRACE SCHEMA
+
+## V1
+
+## /DESIGN/Systems/Thread_Trace/THREAD TRACE SCHEMA.md
+
+Mechanical spec — builders, seed resolution, filter bar, sequences, tables,
+edge labels, routing snapshot. Architectural description in
+SYSTEM_ Thread Trace.md.
 
 
 OWNERSHIP BOUNDARIES

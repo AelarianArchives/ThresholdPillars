@@ -1,10 +1,12 @@
-╔══════════════════════════════════════════════════════════════╗
-║  RESONANCE ENGINE PHYSICS SPEC  ·  V1                       ║
-║  /DESIGN/Systems/Resonance_Engine/                           ║
-║  Physics mechanics — formulas, node registry, animation,     ║
-║  calibration constants, sequences, failure modes.            ║
-║  Architectural description in SYSTEM_ Resonance Engine.md.   ║
-╚══════════════════════════════════════════════════════════════╝
+# RESONANCE ENGINE PHYSICS SPEC
+
+## V1
+
+## /DESIGN/Systems/Resonance_Engine/RESONANCE ENGINE PHYSICS SPEC.md
+
+Physics mechanics — formulas, node registry, animation, calibration constants,
+sequences, failure modes. Architectural description in
+SYSTEM_ Resonance Engine.md.
 
 
 OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

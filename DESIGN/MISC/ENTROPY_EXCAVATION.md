@@ -84,6 +84,127 @@ a VERIFIED file, the VERIFIED file wins.
     blocked until retry clears VEN on failure.
     Cross-file scan: 33 references across 14 files — all clean
 
+  SYSTEM_ Research Assistant.md
+    Verified: 2026-04-07
+    Scope: scanner findings are false positives — "23 sections" refers to
+    research posture document sections (not archive sections), "RESEARCH
+    ASSISTANT SCHEMA.md" is a planned file (not yet written, forward ref)
+    Entropy scan: 3 findings (all false positives)
+
+  RESEARCH ASSISTANT EMBEDDING SCOPE.md
+    Verified: 2026-04-07
+    Scope: cross-file fixes from MTM rewrite (finding_type→title+source_page_codes)
+    and Emergence (seven→eight detectors). Pre-existing phantom ref
+    "PIPELINE SCHEMA.md" is shorthand for EMBEDDING PIPELINE SCHEMA.md.
+    BUILD FLAG on field name is false positive.
+    Entropy scan: 2 findings (both false positives/pre-existing)
+
+  RESEARCH ASSISTANT COSMOLOGY BRIDGE.md
+    Verified: 2026-04-07
+    Scope: 0 real findings. Scanner phantom "ARCHIVE ACCESS.md" is
+    truncated match — actual text says "RESEARCH ASSISTANT ARCHIVE ACCESS.md"
+    which exists.
+    Entropy scan: 1 finding (false positive)
+
+  RESEARCH ASSISTANT ARCHIVE ACCESS.md
+    Verified: 2026-04-07
+    Scope: 0 findings. No changes required.
+    Entropy scan: 0 findings (2026-04-07)
+
+  RESEARCH ASSISTANT OBSERVATION ARTICULATION.md
+    Verified: 2026-04-07
+    Scope: 0 findings. No changes required.
+    Entropy scan: 0 findings (2026-04-07)
+
+  RESEARCH ASSISTANT HYPOTHESIS FRAMING.md
+    Verified: 2026-04-07
+    Scope: 0 findings. No changes required.
+    Entropy scan: 0 findings (2026-04-07)
+
+  RESEARCH ASSISTANT RESEARCH POSTURE.md
+    Verified: 2026-04-07
+    Scope: 0 findings. No changes required.
+    Entropy scan: 0 findings (2026-04-07)
+
+  SYSTEM_ Frontend.md
+    Verified: 2026-04-07
+    Scope: targeted fix — phantom ref "RESONANCE ENGINE SCHEMA.md" corrected
+    to "RESONANCE ENGINE PHYSICS SPEC.md"
+    Entropy scan: 0 findings (2026-04-07)
+
+  SYSTEM_ FastAPI.md
+    Verified: 2026-04-07
+    Scope: 0 findings. No changes required.
+    Entropy scan: 0 findings (2026-04-07)
+
+  SYSTEM_ Composite ID.md
+    Verified: 2026-04-07
+    Scope: 0 findings. No changes required.
+    Entropy scan: 0 findings (2026-04-07)
+
+  SIGNAL GRADING SCHEMA.md
+    Verified: 2026-04-07
+    Scope: targeted fix — box-drawing header replaced, old file path corrected
+    Entropy scan: 0 findings (2026-04-07)
+
+  PATTERN CONVERGENCE SCHEMA.md
+    Verified: 2026-04-07
+    Scope: targeted fix — box-drawing header replaced, old file path corrected
+    Entropy scan: 0 findings (2026-04-07)
+
+  DRIFT TAXONOMY SCHEMA.md
+    Verified: 2026-04-07
+    Scope: targeted fix — box-drawing header replaced, old file path corrected
+    Entropy scan: 0 findings (2026-04-07)
+
+  RESONANCE ENGINE PHYSICS SPEC.md
+    Verified: 2026-04-07
+    Scope: targeted fix — box-drawing header replaced
+    Gate: SPEC → BUILD → AUDIT → PASS
+    Entropy scan: 0 findings (2026-04-07)
+
+  SYSTEM_ Resonance Engine.md
+    Verified: 2026-04-07
+    Scope: 0 findings pre-audit. No changes required.
+    Entropy scan: 0 findings (2026-04-07)
+
+  OPERATIONAL DB SCHEMA.md
+    Verified: 2026-04-07
+    Scope: targeted fix — box-drawing header replaced, old file path corrected
+    Gate: SPEC → BUILD → AUDIT → PASS
+    Entropy scan: 0 findings (2026-04-07)
+
+  EMBEDDING PIPELINE SCHEMA.md
+    Verified: 2026-04-07
+    Scope: targeted fix — box-drawing header replaced, old file path corrected
+    Gate: SPEC → BUILD → AUDIT → PASS
+    Entropy scan: 0 findings (2026-04-07)
+
+  DAILY NEXUS ROUTINE SCHEMA.md
+    Verified: 2026-04-07
+    Scope: targeted fix — box-drawing header replaced
+    Gate: SPEC → BUILD → AUDIT → PASS
+    Entropy scan: 0 findings (2026-04-07)
+
+  SYSTEM_ Daily Nexus Routine.md
+    Verified: 2026-04-07
+    Scope: 0 findings pre-audit. 1 scanner false positive on lnv_notified
+    flag field name.
+    Entropy scan: 1 finding (false positive)
+
+  THREAD TRACE SCHEMA.md
+    Verified: 2026-04-07
+    Scope: targeted fix — box-drawing header replaced
+    Gate: SPEC → BUILD → AUDIT → PASS
+    Entropy scan: 0 findings (2026-04-07)
+    Cross-file scan: 1 external reference — clean
+
+  SYSTEM_ Thread Trace.md
+    Verified: 2026-04-07
+    Scope: 0 findings pre-audit. No cascade from THREAD TRACE SCHEMA fix.
+    Gate: verified by entropy scan — no changes required
+    Entropy scan: 0 findings (2026-04-07)
+
   ARCHIVE SCHEMA.md
     Verified: 2026-04-07
     Scope: targeted fixes — box-drawing header replaced, V2 version ref

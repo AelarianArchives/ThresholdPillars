@@ -1,4 +1,8 @@
-﻿╔══════════════════════════════════════════════════════════════╗ ║ SIGNAL GRADING SCHEMA · SGR · v1 ║ ║ /DESIGN/systems/signal_grading_schema_v1.md ║ ╚══════════════════════════════════════════════════════════════╝
+﻿# SIGNAL GRADING SCHEMA
+
+## SGR · V1
+
+## /DESIGN/Systems/Signal_Grading/SIGNAL GRADING SCHEMA.md
 
 OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

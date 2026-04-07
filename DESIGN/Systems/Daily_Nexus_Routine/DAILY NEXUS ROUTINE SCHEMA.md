@@ -1,10 +1,11 @@
-╔══════════════════════════════════════════════════════════════╗
-║  DAILY NEXUS ROUTINE SCHEMA  ·  DNR  ·  V1                  ║
-║  /DESIGN/Systems/Daily_Nexus_Routine/                        ║
-║  Mechanical spec — pipeline sequence, payloads, store,       ║
-║  retry, session window, failure modes.                       ║
-║  Architectural description in SYSTEM_ Daily Nexus Routine.md ║
-╚══════════════════════════════════════════════════════════════╝
+# DAILY NEXUS ROUTINE SCHEMA
+
+## DNR · V1
+
+## /DESIGN/Systems/Daily_Nexus_Routine/DAILY NEXUS ROUTINE SCHEMA.md
+
+Mechanical spec — pipeline sequence, payloads, store, retry, session window,
+failure modes. Architectural description in SYSTEM_ Daily Nexus Routine.md.
 
 
 OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
