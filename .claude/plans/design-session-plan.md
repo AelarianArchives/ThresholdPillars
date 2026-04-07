@@ -5492,7 +5492,9 @@ Items that don't belong to a single tier or can be done at any point.
         deposit_weight, correction_context, prompt_versions, INT manifest rewrite
       · Tier 2: COMPLETE (session 26) — Void page, Pearl extensions,
         instances, annotations, aos_records, SYSTEM_ Frontend.md full rewrite
-      · Tier 3: 5 Axis engine schemas (THR, STR, INF, ECR, SNM)
+      · Tier 3: COMPLETE (session 27) — shared engine computation, 5 Axis
+        engine schemas, Ven'ai service, 8 PostgreSQL tables, stale flags,
+        Mirror Dynamics 5th domain, 17 frontend viz components
       · Tier 4: WSC schema, LNV schema, Void engine schema
       · Tier 5: ARTIS schema (5 tables, 12 endpoints), cosmology_findings,
         rct_residual, page investigation surfaces (HCO, COS, CLM, NHM, RCT)
@@ -5924,12 +5926,9 @@ cross-map all references, entropy scan after every pass. One file at a time.
 |------|---------|--------|--------|
 | 1 | Deposits table, observation_presence rename, deposit_weight in tagger, INT manifest, prompt_versions, correction_context | COMPLETE | 3bebaa5 |
 | 2 | Void page 51, Pearl extensions, instances/annotations/AOS tables, SYSTEM_ Frontend.md full UI architecture | COMPLETE | session 26 |
+| 3 | Shared engine computation, 5 Axis engine schemas (THR, ECR, INF, STR, SNM), Ven'ai service, 8 PostgreSQL tables, stale flags, visualization architecture, Mirror Dynamics (5th INF domain), 17 frontend components | COMPLETE | session 27 |
 
 ### REMAINING TIERS
-
-| Tier | Content | Depends on |
-|------|---------|------------|
-| 3 | 5 Axis engine schemas (THR, STR, INF, ECR, SNM), Ven'ai service, computation foundation, visualization architecture | Tier 2 |
 | 4 | WSC schema, LNV schema, Void engine schema, MTM wiring, Nexus engines | Tier 3 |
 | 5 | ARTIS schema (5 tables, 12 endpoints), cosmology_findings, rct_residual, investigation surfaces | Tier 4 |
 | 6 | Research assistant spec, resonance audio spec | Tier 5 |
