@@ -5942,7 +5942,7 @@ cross-map all references, entropy scan after every pass. One file at a time.
 | 2 | Void page 51, Pearl extensions, instances/annotations/AOS tables, SYSTEM_ Frontend.md full UI architecture | COMPLETE | session 26 |
 | 3 | Shared engine computation, 5 Axis engine schemas (THR, ECR, INF, STR, SNM), Ven'ai service, 8 PostgreSQL tables, stale flags, visualization architecture, Mirror Dynamics (5th INF domain), 17 frontend components | COMPLETE | session 27 |
 | 4 | WSC schema, LNV schema, Void engine schema, MTM wiring, Nexus engines (PCV/DTX/SGR cascades) | COMPLETE | session 28 |
-| 5 | ARTIS schema (5 tables, 12 endpoints, 15 computations), ARTIS system doc, Cosmology schema (cosmology_findings + rct_residuals + 5 investigation surfaces), Cosmology system doc, LNV cascade (6 entry types), PCV cascade (cosmology_provenance), Integration DB cascade (7 tables), FastAPI cascade (3 namespaces, 11 files), Frontend cascade (23 components) | COMPLETE | session 29 |
+| 5 | ARTIS schema (5 tables, 12 endpoints, 15 computations), ARTIS system doc, Cosmology schema (cosmology_findings + rct_residuals + 5 investigation surfaces), Cosmology system doc, LNV cascade (6 entry types), PCV cascade (cosmology_provenance), Integration DB cascade (7 tables), FastAPI cascade (3 namespaces, 11 files), Frontend cascade (20 components) | COMPLETE | session 29 |
 
 ### REMAINING TIERS
 | 6 | Research assistant spec, resonance audio spec | Tier 5 |

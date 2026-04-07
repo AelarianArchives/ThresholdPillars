@@ -1790,6 +1790,189 @@ Write authority: DTX service (on every Bayesian update from SGR).
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: embeddings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Vector embeddings for archived entries and deposits.
+Full spec in EMBEDDING PIPELINE SCHEMA.md.
+
+Write authority: embedding pipeline (async, triggered by INT retirement
+or deposit creation).
+
+  id                   — serial, primary key
+  source_ref           — text, NOT NULL (references archives.id or deposits.id)
+  source_type          — text, NOT NULL (archive | deposit)
+  embedding            — vector(768), nullable (null when pending or failed)
+  model                — text, NOT NULL
+  created_at           — timestamp, NOT NULL
+  status               — text, NOT NULL (complete | failed | pending)
+  metadata             — jsonb, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: routine_sessions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DNR session-close records. One per Routine run.
+Full spec in DAILY NEXUS ROUTINE SCHEMA.md.
+
+Write authority: DNR service.
+
+  id                   — serial, primary key
+  triggered_at         — timestamp, NOT NULL
+  status               — text, NOT NULL (in_progress | complete | failed)
+  mtm_session_ref      — integer, nullable, FK → synthesis_sessions
+  synthesis_duration_ms — integer, nullable
+  lnv_notified         — boolean, NOT NULL, default false
+  failure_type         — text, nullable (pre_synthesis | pass_1_failed | mid_synthesis | pass_2_failed | interrupted)
+  retry_available      — boolean, NOT NULL, default false
+  dedup_window_truncated — boolean, nullable
+  void_pulse_completed — boolean, NOT NULL, default false
+  void_output_ref      — integer, nullable, FK → void_outputs
+  created_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: synthesis_sessions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MTM synthesis cycle records. One per synthesis endpoint call.
+Full spec in METAMORPHOSIS SCHEMA.md.
+
+Write authority: MTM service (POST /mtm/synthesize).
+
+  id                   — serial, primary key
+  session_date         — timestamp, NOT NULL
+  status               — text, NOT NULL (in_progress | complete | failed)
+  failure_type         — text, nullable (pre_synthesis | pass_1_failed | mid_synthesis | pass_2_failed)
+  engine_read_started_at — timestamp, nullable
+  engine_read_completed_at — timestamp, nullable
+  pass_1_started_at    — timestamp, nullable
+  pass_1_completed_at  — timestamp, nullable
+  selection_started_at — timestamp, nullable
+  selection_completed_at — timestamp, nullable
+  pass_2_started_at    — timestamp, nullable
+  pass_2_completed_at  — timestamp, nullable
+  pass_1_brief         — jsonb, nullable
+  engines_read         — text[], nullable
+  patterns_filtered_count — integer, nullable
+  deposits_pulled_count — integer, nullable
+  convergence_deposits_pulled — integer, nullable
+  gap_deposits_pulled  — integer, nullable
+  findings_confirmed   — integer, nullable
+  findings_complicated — integer, nullable
+  findings_overturned  — integer, nullable
+  findings_open_question — integer, nullable
+  findings_dropped     — integer, NOT NULL, default 0
+  dedup_skipped        — boolean, nullable
+  pass_1_prompt_version — text, nullable
+  pass_2_prompt_version — text, nullable
+  created_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: findings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MTM Finding records. Written at synthesis time.
+Full spec in METAMORPHOSIS SCHEMA.md.
+
+Write authority: MTM service. DNR writes lnv_routing_status and
+lnv_deposit_id after LNV receipt.
+
+  id                   — serial, primary key
+  synthesis_session_ref — integer, NOT NULL, FK → synthesis_sessions
+  finding_type         — text, NOT NULL (confirmed | complicated | overturned | open_question)
+  title                — text, NOT NULL
+  content              — text, NOT NULL
+  provenance           — jsonb, NOT NULL
+  attached_open_question — integer, nullable, FK → findings (self-ref)
+  resolves_open_question — integer, nullable, FK → findings (self-ref)
+  content_fingerprint  — text, NOT NULL
+  lnv_routing_status   — text, NOT NULL, default 'pending' (pending | deposited | failed)
+  lnv_deposit_id       — integer, nullable, FK → lnv_entries
+  resolved             — boolean, NOT NULL, default false
+  resolved_by          — integer, nullable, FK → findings (self-ref)
+  resolved_at          — timestamp, nullable
+  created_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: patterns
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PCV pattern records. Cross-domain hypotheses.
+Full spec in PATTERN CONVERGENCE SCHEMA.md.
+
+Write authority: PCV service (POST /pcv/patterns).
+
+  id                   — serial, primary key
+  hypothesis_id        — text, NOT NULL, UNIQUE
+  domain_of_origin     — text[], NOT NULL
+  timestamp            — timestamp, NOT NULL
+  interval             — text, nullable
+  coupling_vector      — text, NOT NULL
+  source_signals       — jsonb, NOT NULL
+  hypothesis_statement — text, NOT NULL
+  mtm_provenance       — boolean, NOT NULL, default false
+  mtm_finding_ref      — integer, nullable, FK → findings
+  void_provenance      — boolean, NOT NULL, default false
+  void_finding_ref     — integer, nullable, FK → void_absence_records
+  cosmology_provenance — boolean, NOT NULL, default false
+  cosmology_finding_ref — integer, nullable, FK → cosmology_findings
+  status               — text, NOT NULL, default 'active' (active | archived)
+  created_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: drift_events
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DTX drift classification records. One per classified drift event.
+Full spec in DRIFT TAXONOMY SCHEMA.md.
+
+Write authority: DTX service.
+
+  id                   — serial, primary key
+  hypothesis_ref       — text, NOT NULL, FK → patterns.hypothesis_id
+  initiation_source    — text, NOT NULL (internal_instability | external_perturbation | cross_node_interference | recursion_overload)
+  trajectory_pattern   — text, NOT NULL (linear_escalation | oscillation | fragmentation | cascade | containment)
+  threshold_interaction — text, NOT NULL (sub_threshold | threshold_breach | critical_cascade | irreversible_shift)
+  signature_pattern    — jsonb, NOT NULL
+  trajectory_state     — text, NOT NULL (Escalating | Stabilizing | Oscillating | Fragmenting | Contained)
+  outcome_vector       — jsonb, NOT NULL
+  outcome_label        — text, nullable
+  outcome_observed_at  — timestamp, nullable
+  detection_session    — timestamp, NOT NULL
+  validation_session   — timestamp, nullable
+  grade_latency        — integer, nullable
+  created_at           — timestamp, NOT NULL
+  last_updated         — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: emergence_findings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Emergence detection findings. Distinct from MTM findings.
+Full spec in EMERGENCE SCHEMA.md.
+
+Write authority: Emergence service.
+
+  id                   — text, NOT NULL, primary key (emg_[timestamp]_[rand])
+  type                 — text, NOT NULL (cluster | bridge | influence | cross_category | drift | void | npa_spike | cluster_null)
+  title                — text, NOT NULL
+  description          — text, NOT NULL
+  severity             — text, NOT NULL (low | medium | high)
+  metrics              — jsonb, NOT NULL
+  involvedTags         — jsonb, NOT NULL
+  involvedEntries      — jsonb, NOT NULL
+  canTrace             — boolean, NOT NULL
+  detection_config_version — text, NOT NULL
+  created_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TABLE: artis_computation_snapshots
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -1970,7 +2153,9 @@ backend/models/
   venai_correlations, inf_domain_layers, inf_layer_bridge,
   lnv_entries, void_absence_records, void_outputs,
   wsc_entries, wsc_corrections, wsc_gaps,
-  outcome_vector_history, artis_computation_snapshots,
+  outcome_vector_history, embeddings, routine_sessions,
+  synthesis_sessions, findings, patterns, drift_events,
+  emergence_findings, artis_computation_snapshots,
   artis_external_references, science_domain_mappings,
   artis_layer2_snapshots, artis_reference_distributions,
   cosmology_findings, rct_residuals.

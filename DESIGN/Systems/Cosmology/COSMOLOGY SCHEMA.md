@@ -694,7 +694,7 @@ Files outside this schema that must be updated for Cosmology deployment:
 | INTEGRATION DB SCHEMA.md | Add cosmology_findings + rct_residuals table definitions + write authority rows | Tier 5 cascade |
 | SYSTEM_ Integration DB.md | Add 2 table inventory entries + write authority rows | Tier 5 cascade |
 | SYSTEM_ FastAPI.md | Register Cosmology + RCT endpoints + service files | Tier 5 cascade |
-| SYSTEM_ Frontend.md | Register 11 Cosmology visualization/UI components | Tier 5 cascade |
+| SYSTEM_ Frontend.md | Register 11 Cosmology visualization/UI components (ARTIS SCHEMA registers its own 9 separately) | Tier 5 cascade |
 | ARTIS SCHEMA.md | No changes needed — ARTIS schema is complete and referenced here | N/A |
 
 ---
