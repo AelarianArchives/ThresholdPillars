@@ -281,42 +281,10 @@ null = anchor is unclear or not applicable to the entry.
 
 State definitions and ordering in SYSTEM_ Composite ID.md.
 
-BUILD FLAG: The tagger prompt block for Elarian Anchor detection
-currently lives in this file. It belongs in TAGGER SCHEMA.md alongside
-the other tagger prompt specifications. Composite ID owns the field
-definition and its seven states. The tagger owns how it detects them.
-Move the prompt block to TAGGER SCHEMA during that system's makeover.
-
-TAGGER PROMPT BLOCK (to be moved to TAGGER SCHEMA.md):
-
-  ELARIAN ANCHOR DETECTION: Identify the psychological state of self
-  present in the entry. Anchors are ordered — the sequence is
-  meaningful for analysis. Return null if the anchor is unclear or
-  not applicable.
-
-  - RFLT Reflection Realm: fragmentation, identity confusion,
-    multiple self-concepts in conflict, disorientation, accumulated
-    self-history pressing on present self, not having chosen to
-    arrive here
-  - WHSP Whispering Hollow: quiet receptivity, listening inward,
-    intuitive knowing, guidance from prior experience or unseen
-    sources, passive receiving, attunement to subtle signals
-  - VEIL Veil of Echoes: memory surfacing unbidden, past bleeding
-    into present, soul truth through recollection, walking through
-    rather than standing still, different selves or realities in
-    contact
-  - OBSV Celestial Observatory: expanded perspective, zooming out
-    to the whole, cosmic or universal framing, pattern recognition
-    at scale, communicating with something larger than self
-  - RECL Chamber of Lost Names: recovering forgotten identity,
-    naming what was unnamed, reintegrating lost self-fragments,
-    recognition of dormant parts, identity archaeology
-  - WEAV Sanctuary of the Weavers: glimpsing possible futures,
-    fate or path becoming visible, sense of unwritten consequence,
-    seeing the shape of what could be without yet acting
-  - GATE Gateway of Becoming: active transformation threshold,
-    stepping beyond current self-form, embracing new identity,
-    crossing rather than observing the crossing, rebirth in motion
+Elarian Anchor detection prompt block moved to TAGGER SCHEMA.md.
+Composite ID owns the field definition and its seven states.
+The tagger owns how it detects them. See TAGGER SCHEMA.md for
+the detection prompt.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -425,10 +393,9 @@ design. New architecture has 51 pages. Panel concept, count, and
 configuration maps will be revisited when Tier 2 (page surfaces) is
 built. Do not treat the 16-panel maps as final.
 
-FLAG — Elarian Anchor tagger prompt:
-Tagger prompt block for Elarian Anchor detection is temporarily housed
-in this file (see Elarian Anchor section above). It belongs in TAGGER
-SCHEMA.md. Move during Tagger system makeover.
+FLAG — Elarian Anchor tagger prompt: COMPLETE.
+Prompt block moved to TAGGER SCHEMA.md (commit 05a402f).
+Composite ID retains field definition and seven states.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

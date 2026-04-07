@@ -6,5 +6,9 @@
   "DESIGN/Systems/TAG VOCABULARY.md": {
     "phase": "audit_pass",
     "updated": "2026-04-06 22:06:45"
+  },
+  "DESIGN/Systems/Composite_ID/COMPOSITE ID SCHEMA.md": {
+    "phase": "audit_pass",
+    "updated": "2026-04-06 22:33:44"
   }
 }
