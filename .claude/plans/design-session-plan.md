@@ -1200,12 +1200,11 @@ deposit fields assigned → enters PostgreSQL as archive entry.
 ## BUILD TIER 2 — BLACK PEARL UI + PAGE SURFACES + VOID
 
 **Depends on:** Tier 1 (deposit record shape, INT engine)
-**Status:** PART 1 COMPLETE (session 26). Void page (Domain + Manifest +
-SECTION MAP entry), Pearl extensions (pearl_type, swarm_visible, promoted_via),
-instances table, annotations table, aos_records table — all written.
-PART 2 PENDING: Frontend system doc (SYSTEM_ Frontend.md) — page type system,
-shell/navigation, deposit card, layout anatomy, sub-rhythms. Requires
-infrastructure verification before starting.
+**Status:** COMPLETE (session 26). Part 1: Void page, Pearl extensions,
+instances/annotations/aos_records tables. Part 2: SYSTEM_ Frontend.md
+rewritten with full Tier 2 UI architecture (page types, shell, navigation,
+deposit card, layout anatomy, sub-rhythms, Black Pearl panel, dashboard,
+curation, error states, library requirements).
 
 **What gets built:** The 51 page surfaces that receive deposits from INT.
 Black Pearl UI (accessible from any page + dashboard). Page identity
@@ -5474,9 +5473,8 @@ Items that don't belong to a single tier or can be done at any point.
       are written for that tier's systems:
       · Tier 1: COMPLETE (session 26) — deposits table, observation_presence,
         deposit_weight, correction_context, prompt_versions, INT manifest rewrite
-      · Tier 2: PART 1 COMPLETE (session 26) — Void page (Domain + Manifest +
-        SECTION MAP), Pearl extensions, instances, annotations, aos_records.
-        PART 2 PENDING: Frontend system doc
+      · Tier 2: COMPLETE (session 26) — Void page, Pearl extensions,
+        instances, annotations, aos_records, SYSTEM_ Frontend.md full rewrite
       · Tier 3: 5 Axis engine schemas (THR, STR, INF, ECR, SNM)
       · Tier 4: WSC schema, LNV schema, Void engine schema
       · Tier 5: ARTIS schema (5 tables, 12 endpoints), cosmology_findings,
@@ -5887,3 +5885,118 @@ Cascade flags for cleanup:
 2. LNV schema — 2 new entry_types (cosmology_finding, rct_residual)
 3. PCV schema — cosmology_provenance (third provenance type)
 4. Manifest_39 — full rewrite
+
+
+---
+
+## SESSION HANDOFF — MANIFEST AND SCHEMA BUILD PROCESS
+
+Written session 26 (2026-04-07). This section defines how future sessions
+continue the tier-by-tier manifest and schema build. Non-negotiable process.
+
+### WHAT THIS BUILD PHASE IS
+
+The design is complete (Tiers 1-6, with 7-8 as cleanup). This phase
+materializes design into formal schema and manifest files. For each tier:
+write the schemas, write the manifests, update every file the tier touches,
+cross-map all references, entropy scan after every pass. One file at a time.
+
+### COMPLETED TIERS (do not re-do)
+
+| Tier | Content | Status | Commit |
+|------|---------|--------|--------|
+| 1 | Deposits table, observation_presence rename, deposit_weight in tagger, INT manifest, prompt_versions, correction_context | COMPLETE | 3bebaa5 |
+| 2 | Void page 51, Pearl extensions, instances/annotations/AOS tables, SYSTEM_ Frontend.md full UI architecture | COMPLETE | session 26 |
+
+### REMAINING TIERS
+
+| Tier | Content | Depends on |
+|------|---------|------------|
+| 3 | 5 Axis engine schemas (THR, STR, INF, ECR, SNM), Ven'ai service, computation foundation, visualization architecture | Tier 2 |
+| 4 | WSC schema, LNV schema, Void engine schema, MTM wiring, Nexus engines | Tier 3 |
+| 5 | ARTIS schema (5 tables, 12 endpoints), cosmology_findings, rct_residual, investigation surfaces | Tier 4 |
+| 6 | Research assistant spec, resonance audio spec | Tier 5 |
+| 7 | Dashboard details, notifications, export, pipeline contracts | Tier 6 |
+| 8 | Stress test, stub sweep, finish line, SOT | Tiers 1-7 |
+
+### PROCESS PER TIER (non-negotiable)
+
+1. **Orient.** Read CLAUDE.md, SESSION_PROTOCOL.md, ENFORCEMENT.md. Check
+   SESSION_LOG last entry. Read this plan for the tier's design content.
+   Read the cross-tier schema writing item for what that tier requires.
+
+2. **Audit existing state.** Read every file the tier touches. Compare
+   against the design plan. Identify gaps between what exists and what the
+   design requires. Do NOT assume prior session state is current — verify
+   from disk.
+
+3. **Map scope.** List every file that needs writing or updating. Identify
+   cross-file dependencies. Flag any design ambiguities for Sage's decision.
+   Present the plan and get approval before writing anything.
+
+4. **Execute one file at a time.** Write (or update) one file. Run entropy
+   scan. Cross-map against every file it references. Write SESSION_LOG
+   work unit. Full stop before the next file.
+
+5. **Cross-file verification sweep.** After all files are written, verify
+   all cross-references are consistent. Check field names match across
+   schemas. Check enum values match. Check file references point to files
+   that exist. Entropy scan everything touched.
+
+6. **Commit and push.** One commit per tier (or per tier-part if split).
+   Clear commit message listing what was added/changed.
+
+### RULES THAT APPLY EVERY SESSION
+
+- **One agent, one file, one pass.** No parallel agents. No batch
+  operations. The cross-mapping is the work — parallelism breaks it.
+
+- **observation_type vs observation_presence.** observation_type is a
+  METHODOLOGY field on root_entries and archives (real_time | retrospective).
+  observation_presence is the DEPOSIT-LEVEL null observation field
+  (positive | null). Different tables, different semantics, different names.
+  If you see observation_type in a deposit context, it's wrong.
+
+- **Two doc_type enums.** root_entries.doc_type = source document type
+  (session_transcript | field_note | compiled_research | external_source |
+  glyph_image). deposits.doc_type = individual deposit content type
+  (entry | observation | analysis | hypothesis | discussion | transcript |
+  glyph | media | reference). Do not mix.
+
+- **Seeds and CONNECTS TO are DEFERRED.** All seed affinities and CONNECTS
+  TO sections on domain files and manifests are filled in a single dedicated
+  pass after all schemas and manifests are complete. Do not fill piecemeal.
+
+- **51 pages.** VOI (Void, page 51) is live in SECTION MAP. Scanner
+  baseline may still flag it as phantom — that's a scanner limitation,
+  not a file error.
+
+- **Deposits table is the canonical deposit record.** All downstream
+  systems (engines, MTM, embedding, research assistant) query the deposits
+  table in PostgreSQL. manifest_sessions.deposits[] is staging only.
+
+- **V1 everything.** No version numbers other than V1. Every file written
+  during this rebuild is V1 until app launch.
+
+- **Entropy scan after every file.** No exceptions. A file that hasn't
+  been scanned hasn't been verified.
+
+### WHAT NOT TO DO
+
+- Do not write code. This phase writes DESIGN docs — schemas, manifests,
+  system docs. Code is step 4 (core files from SOT).
+
+- Do not install libraries. Library installation happens at build time
+  (step 4). The frontend system doc notes what's needed but doesn't
+  install it.
+
+- Do not modify files outside the tier's scope. If you find an issue in
+  a file that belongs to a different tier, flag it — don't fix it.
+
+- Do not use multi-agent parallelism. Each file touches many others. One
+  agent writing while another reads produces drift. Sequential execution
+  is the only safe path for cross-mapped schema work.
+
+- Do not skip the SPEC phase. State what each file needs to contain and
+  get Sage's confirmation before writing. No document gets written until
+  its scope is confirmed.
