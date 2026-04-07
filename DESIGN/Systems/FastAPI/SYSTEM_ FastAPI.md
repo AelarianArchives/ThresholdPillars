@@ -41,7 +41,7 @@
 | `/threads/` | Thread trace operations — create, query, filter | PLANNED |
 | `/search/` | Vector similarity search via pgvector | PLANNED |
 | `/tagger/` | Claude API tag suggestions — receives section context, returns candidates | PLANNED |
-| `/assistant/` | Research assistant — RAG pipeline, context retrieval, Claude response | PLANNED |
+| `/assistant/` | Research assistant — RAG pipeline, context retrieval, Claude response, researcher memory, conversation summary, Ven'ai drift. Sub-routes: POST /assistant/query (RAG query + Claude response), GET /assistant/memory (researcher memory read), PUT /assistant/memory (update with history snapshot), GET /assistant/summary (most recent conversation summary), POST /assistant/summary (produce + store at session close), GET /assistant/context (six-layer context assembly for session open), GET /assistant/drift (Ven'ai drift log query) | PLANNED |
 | `/embed/` | Embedding pipeline triggers — async nomic-embed-text via Ollama | PLANNED |
 | `/engines/` | Axis engine endpoints — compute trigger, result read, snapshot read, visualization snapshot capture. Covers all 5 engines (THR, STR, INF, ECR, SNM) | PLANNED |
 | `/engines/snm/` | SNM-specific — Claude snapshot read, prompt management | PLANNED |
@@ -57,6 +57,7 @@
 | `/artis/` | ARTIS computation engine endpoints — compute, science ping pipeline (tags/content/suggest), snapshots, references, mappings, distributions. 12 endpoints | PLANNED |
 | `/cosmology/` | Shared Cosmology investigation endpoints — findings CRUD, confirm/abandon/supersede, nexus-eligible, LNV routing. 8 endpoints | PLANNED |
 | `/rct/` | RCT-specific endpoints — residual creation (auto-routes to LNV), residual query, accumulation counts. 4 endpoints | PLANNED |
+| `/resonance/` | Resonance engine — GET /resonance/node-weights (historical activity scores + connection topology for session open initialization) | PLANNED |
 | `/swarm/` | RESERVED — phase 2 (turn management, presence, autonomous initiation, parallax logging) | RESERVED |
 
 All routes are versioned by namespace, not by URL prefix. No `/v1/` prefix. If the API contract changes, the change is a migration — not a new version namespace.
@@ -153,6 +154,8 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | backend/routes/artis.py | ARTIS endpoints — compute, ping/tags, ping/content, ping/suggest, snapshots, references, mappings, distributions (12 routes) | PLANNED |
 | backend/routes/cosmology.py | Shared Cosmology endpoints — findings CRUD, confirm, abandon, supersede, nexus-eligible, route-lnv (8 routes) | PLANNED |
 | backend/routes/rct.py | RCT endpoints — residuals create, query, single, accumulation (4 routes) | PLANNED |
+| backend/routes/assistant.py | Research assistant endpoints — query, memory CRUD, summary, context assembly, drift log (7 routes) | PLANNED |
+| backend/routes/resonance.py | Resonance engine endpoints — GET /resonance/node-weights (historical weight initialization) | PLANNED |
 | backend/routes/swarm/ | Reserved namespace — phase 2 | RESERVED |
 | backend/services/engine_base.py | Shared engine computation — baseline math, weight application, null handling, signal classification, snapshot write, stale flag check | PLANNED |
 | backend/services/engine_thr.py | THR engine — co-occurrence, presence, sequence | PLANNED |
@@ -179,6 +182,8 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | backend/services/nhm.py | NHM investigation surface — information-theoretic analysis, reference distribution queries | PLANNED |
 | backend/services/claude.py | Claude API client wrapper — agent identity registry (8 agents), shared model constant, call_claude() with metadata tracking | LIVE |
 | backend/services/embedding.py | Ollama embedding integration | PLANNED |
-| backend/services/rag.py | Retrieval-augmented generation pipeline | PLANNED |
+| backend/services/rag.py | Retrieval-augmented generation pipeline — query assembly, hybrid search, cross-encoder re-rank, context packaging | PLANNED |
+| backend/services/researcher_memory.py | Researcher memory — read, update with history snapshot, conversation summary production/storage, Ven'ai drift log persistence | PLANNED |
+| backend/services/resonance.py | Resonance engine service — node weight computation from archive entries, connection strength calculation | PLANNED |
 | backend/services/tag_resolution.py | resolveTagIds() — server-side tag resolution | PLANNED |
 | backend/db/migrations/ | Alembic migration files | PLANNED |

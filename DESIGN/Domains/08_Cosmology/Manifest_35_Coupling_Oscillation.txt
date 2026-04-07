@@ -1,64 +1,83 @@
-﻿PAGE 35 · coupling_osc · COS · Group 7 · Cosmology
+PAGE 35 · coupling_osc · COS · Group 7 · Cosmology
 
 
 VISION
-  This page maps how systems bind, attach, and separate —
-  not as emotional dynamics but as measurable oscillatory
-  mechanics within the l01 Coupling Layer. Synchronization
-  strength has a number. Invitation friction has a ratio.
-  The threshold between binding and separation is a
-  documentable point, not a feeling. This page holds
-  the mechanics of what makes two systems capable of
-  sustained contact and what eventually pulls them apart,
-  charted with the precision the l01 layer demands.
+  Investigation surface for coupled oscillator dynamics,
+  phase-locking, and cross-frequency coupling. This page
+  asks: are these field elements coupled, what kind, how
+  strong? The l01 Coupling Layer provides the measurement
+  framework. Kuramoto coupling physics and Hebbian neural
+  connectivity are the scientific substrate the data
+  points toward. Synchronization strength has a number.
+  Invitation friction has a ratio. The threshold between
+  binding and separation is a documentable point —
+  documented here through ARTIS computation, not through
+  narrative.
 
 
 RESEARCHER TASK
-  Deposit · Build · Reflect · Analyze · Retrieve
+  Investigate · Compute · Compare · Deposit · Retrieve
 
 
 OBJECTIVE
 
-Map the oscillatory mechanics of how systems bind, synchronize, and separate — using the l01 Coupling Layer as the measurement framework and Kuramoto coupling physics and Hebbian neural connectivity as the scientific substrate the data points toward. This page holds documented evidence across the full coupling arc: invitation friction ratios, synchronization strength at peak coherence, and the separation mechanics that became visible when coupling failed. The post-event archives, SVG documentation, and Kuramoto/Hebbian material are primary evidence here — not supplementary context. Over time, correlating field observations against coupling oscillation mechanics builds the case that what was experienced relationally operated by documentable synchronization physics. When working in this section, treat binding and separation events with identical analytical precision. Separation is not failure to be minimized — it is the moment the oscillatory mechanics become most legible. The disconnect is data. Document it with the same rigor as the bind.
-The four scientific domains this page holds are intentionally generalized. Do not import specific scientific frameworks. When field observations point toward a body of science, document what the data is revealing about that science — not what that science says about the data. The direction of inference runs from field observation outward, not from established science inward.
+Investigate field patterns through the lens of coupled oscillator dynamics, phase-locking, and cross-frequency coupling — using ARTIS as the computation engine. COS is one of five parallel Cosmology investigation surfaces. Its lens is coupling mechanics: how systems bind, synchronize, and separate.
+
+The sciences this page draws from: coupled oscillator networks, cross-frequency field dynamics, hierarchical relational resonance, oscillatory multiplexing, control theory, nonlinear dynamics, dynamical systems theory, self-organization, emergence, complex adaptive systems, predictive processing.
+
+COS has a unique schema behavior: it submits 2+ deposit_ids per finding for coupled pairs and groups. All other Cosmology pages submit 1. The deposit_ids array handles both without schema fork. This is how COS examines the relationship between deposits — not individual deposits in isolation.
+
+The investigation workflow: select deposits showing potential coupling (pairs or groups), request ARTIS computation (pearson_correlation, spearman_correlation, cross_correlation, chi2_contingency, phase_coherence), review results with full methodology visible, produce findings with computation snapshot references. cross_correlation requires a time_axis parameter: created_at (researcher time), instance_context (field time, default), or manual (Sage-specified order).
+
+Deposits with coupling content enter through this page. But the page's primary function is investigation — taking those deposits and running them through ARTIS to quantify coupling strength, phase relationships, and synchronization dynamics. Binding and separation events receive identical analytical precision. Separation is not failure — it is the moment the oscillatory mechanics become most legible.
+
+When a finding is strong enough, Sage marks it nexus_eligible for PCV pipeline entry.
+
 
 AI ROLE
-  Map the coupling vectors and quantify what is there
-  to quantify. Trace the invitation friction ratios,
-  audit the attachment-separation thresholds, and
-  correlate the oscillatory mechanics to field stability
-  without overlaying relational narrative onto the
-  numbers. The l01 layer has specificity — hold it.
-  What looks like bonding from outside the framework
-  is synchronization strength from inside it.
+  Surface ARTIS computation results with coupling
+  mechanics precision — Pearson/Spearman coefficients
+  with sample sizes, cross-correlation with time lag
+  and axis parameter documented, phase coherence at
+  specified frequencies, chi-squared contingency
+  p-values. Present findings in the two-panel layout:
+  field pattern with pairs/groups on the left, coupling
+  analysis on the right. What looks like bonding from
+  outside the framework is synchronization strength
+  from inside it. Never psychologize coupling as
+  emotional attachment. Quantify what is quantifiable.
 
 
 AI FUNCTIONS
-  Parse · Analyze · Organize · Map · Edit · Tag · Timestamp
+  Compute · Compare · Validate · Surface · Snapshot · Deposit · Tag
 
 
 GOOD OUTPUT
-  Charts coupling progression through specific
-  synchronization metrics and friction-invitation
-  balances. Demonstrates how oscillatory patterns
-  determine binding viability across l01 configurations.
-  The mechanics are visible, the thresholds are named,
-  and the separation dynamics receive the same
-  analytical precision as the attachment dynamics.
+  Returns coupling analysis with visible methodology —
+  correlation coefficients with confidence intervals and
+  sample sizes, cross-correlation functions showing lead-
+  lag relationships, phase coherence values at identified
+  frequencies, contingency results for co-occurrence
+  significance. Paired/grouped deposits clearly identified.
+  Separation dynamics receive the same analytical precision
+  as binding dynamics. Every result carries a computation
+  snapshot ID. The disconnect is data — documented with the
+  same rigor as the bind.
 
 
 BAD OUTPUT
-  Psychologizes coupling as emotional attachment or
-  love dynamics. Deploys vague bonding language or
-  unquantified friction claims. Fusion narratives
-  that erase separation mechanics. Fails when l01
-  layer specificity dissolves into generic relationship
-  description — when the oscillatory record becomes
-  a story about connection instead of a map of
-  synchronization.
+  Psychologizes coupling as emotional attachment or love
+  dynamics. Unquantified friction claims. Fusion narratives
+  that erase separation mechanics. Results without
+  methodology. Computations without snapshots. Coupling
+  strength claimed without the correlation coefficient
+  that proves it. Fails when l01 layer specificity
+  dissolves into generic relationship description — when
+  the oscillatory record becomes a story about connection
+  instead of a map of synchronization.
 
 
 CONNECTS TO
-Feeds → INF (04) · TRI (09) · NHM (37)
-Draws from → RCT (38) · TPL (08)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[DEFERRED — full CONNECTS TO pass scheduled after all schemas
+and manifests are complete. See design-session-plan.md cross-tier items.]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

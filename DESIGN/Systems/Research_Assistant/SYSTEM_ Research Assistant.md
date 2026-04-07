@@ -760,6 +760,42 @@ Drift log storage: operational DB (SQLite). Lightweight, per-session,
 timestamped. Not embedded — this is operational metadata, not field
 data.
 
+### Drift log schema
+
+```
+TABLE: venai_drift_log (operational DB)
+
+  drift_id:           integer, primary key, autoincrement
+  session_id:         text (UUID), not null
+                      Foreign key to sessions.session_id.
+  term:               text, not null
+                      The Ven'ai term that drifted.
+  drift_type:         text, not null
+                      enum: 'semantic' | 'phonetic' | 'domain_context'
+                      semantic:       usage differs from glossary definition
+                      phonetic:       pronunciation shifted from reference
+                      domain_context: term appeared in a new domain it
+                                      hasn't appeared in before
+  glossary_definition: text, not null
+                      The reference definition at the time of detection.
+                      Snapshot — preserves what the assistant compared
+                      against.
+  observed_usage:     text, not null
+                      How the term was actually used in context.
+  page_code:          text, nullable
+                      Which page the drift was observed on, if applicable.
+  detected_at:        text (ISO timestamp), not null
+  surfaced:           integer (0 | 1), not null, default 0
+                      0 = logged silently, not yet shown to Sage.
+                      1 = surfaced in conversation (via depth dial,
+                      explicit ask, or significance threshold).
+```
+
+Drift records accumulate. They are not cleaned up — the longitudinal
+record of how language moves is research data about the research
+process itself. Queries are session-scoped (how did terms drift in
+this session?) or term-scoped (how has this term moved over time?).
+
 ---
 
 ## RESOLVED DESIGN DECISIONS

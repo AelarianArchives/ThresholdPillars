@@ -28,6 +28,10 @@ WHAT BELONGS HERE
   - Origin presence state per session (active, dormant, returned)
   - Transient UI operational state (current section, filters)
   - Engine stale flags (one boolean per Axis engine)
+  - Researcher memory — Sage's active research state (single live record)
+  - Researcher memory history — snapshots of prior research states
+  - Conversation summaries — compressed session records for continuity
+  - Ven'ai drift log — language drift events detected per session
 
   This is the fast, lightweight layer. Reads and writes are
   local and synchronous. No network hop. No connection pool.
@@ -308,6 +312,188 @@ TABLE: engine_stale_flags
   self-initializing.
 
 
+TABLE: researcher_memory
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Single live record. Sage's active research state — what she is
+  currently investigating, tracking, questioning. Not inferred
+  from behavior — Sage writes it deliberately. Read at session
+  open, referenced throughout by the research assistant.
+
+  Full design context in SYSTEM_ Research Assistant.md.
+
+  memory_id          — integer, primary key, autoincrement
+
+  current_focus      — text, not null
+                       What Sage is investigating right now.
+
+  active_hypotheses  — text, not null
+                       JSON array of strings. Hypotheses she is
+                       personally tracking.
+
+  open_questions     — text, not null
+                       JSON array of strings. Things she is
+                       trying to answer.
+
+  skepticisms        — text, not null
+                       JSON array of strings. Patterns she is
+                       not convinced by.
+
+  not_yet_named      — text, nullable
+                       Something she is sensing but cannot
+                       articulate yet. No structure imposed.
+                       Sage's own words. Optional.
+
+  research_posture   — text, not null
+                       enum: 'deep_investigation' |
+                             'broad_survey' |
+                             'consolidating' |
+                             'questioning_foundations' |
+                             'integrating'
+
+  phase_context      — text, nullable
+                       Which instance/phase she is in right
+                       now, if relevant.
+
+  last_updated       — text (ISO timestamp), not null
+
+  updated_by         — text, not null
+                       enum: 'sage' | 'assistant_suggested'
+                       Sage-authored entries are authoritative.
+                       Assistant-suggested entries are
+                       high-confidence but not sovereign.
+
+  SINGLE RECORD: only one row exists at a time. Updates
+  overwrite the live record after snapshotting to
+  researcher_memory_history.
+
+
+TABLE: researcher_memory_history
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Snapshot history of researcher_memory. Every time the live
+  record updates, the previous state is written here before the
+  new state is applied. The full arc of Sage's research posture
+  becomes visible over time.
+
+  Full design context in SYSTEM_ Research Assistant.md.
+
+  history_id         — integer, primary key, autoincrement
+
+  memory_snapshot    — text, not null
+                       JSON object — full researcher_memory
+                       state at that moment.
+
+  snapshot_reason    — text, not null
+                       Why the memory changed. Human-readable.
+
+  created_at         — text (ISO timestamp), not null
+
+  ACCUMULATES: history records are preserved, not cleaned up.
+  The evolution of Sage's research state is itself research data.
+
+
+TABLE: conversation_summary
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Compressed session record produced at session close. The
+  research assistant compresses the working session into a
+  structured summary. Sage reviews and edits before store.
+  Most recent summary loaded at next session open as shallow
+  continuity context.
+
+  Full design context in SYSTEM_ Research Assistant.md.
+
+  summary_id         — integer, primary key, autoincrement
+
+  session_ref        — text, not null
+                       Session identifier. Correlates with
+                       sessions.session_id.
+
+  topics_covered     — text, not null
+                       JSON array of strings.
+
+  decisions_made     — text, not null
+                       JSON array of strings.
+
+  open_threads       — text, not null
+                       JSON array of strings.
+
+  suggested_deposits — integer, not null
+                       How many deposit suggestions were made
+                       during the session.
+
+  promoted_exchanges — text, not null
+                       JSON array of strings. Exchange IDs
+                       Sage marked for INT promotion.
+
+  session_character  — text, not null
+                       One sentence. The assistant's read on
+                       what kind of session this was.
+
+  voice_notes        — text, nullable
+                       The assistant's read on Sage's voice
+                       register during the session. Operational,
+                       not therapeutic. Carries session
+                       attunement forward.
+
+  produced_at        — text (ISO timestamp), not null
+
+  MOST RECENT ONLY loaded at session open. Summaries do not
+  accumulate in context — only the latest one is loaded.
+  All summaries are preserved for longitudinal review.
+
+
+TABLE: venai_drift_log
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Language drift events detected by the research assistant
+  during always-on Ven'ai awareness. Lightweight, per-session,
+  timestamped. Not embedded — operational metadata, not field
+  data.
+
+  Full design context in SYSTEM_ Research Assistant.md.
+
+  drift_id           — integer, primary key, autoincrement
+
+  session_id         — text (UUID), not null
+                       Foreign key to sessions.session_id.
+
+  term               — text, not null
+                       The Ven'ai term that drifted.
+
+  drift_type         — text, not null
+                       enum: 'semantic' | 'phonetic' |
+                             'domain_context'
+                       semantic:       usage differs from
+                                       glossary definition.
+                       phonetic:       pronunciation shifted
+                                       from reference.
+                       domain_context: term appeared in a new
+                                       domain context.
+
+  glossary_definition — text, not null
+                       The reference definition at detection
+                       time. Snapshot — preserves what the
+                       assistant compared against.
+
+  observed_usage     — text, not null
+                       How the term was actually used.
+
+  page_code          — text, nullable
+                       Which page the drift was observed on.
+
+  detected_at        — text (ISO timestamp), not null
+
+  surfaced           — integer (0 | 1), not null, default 0
+                       0 = logged silently.
+                       1 = surfaced in conversation.
+
+  ACCUMULATES: drift records are preserved. The longitudinal
+  record of how language moves is research data about the
+  research process itself.
+
+
 KNOWN FAILURE MODES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -350,6 +536,31 @@ KNOWN FAILURE MODES
      without the phrase is rejected at creation time. The phrase
      is the field's own — Sage defines it, the system records it.
 
+  6. RESEARCHER MEMORY UPDATE WITHOUT HISTORY SNAPSHOT
+     Live researcher_memory record is overwritten before the
+     previous state is written to researcher_memory_history.
+     Guard: service layer writes history snapshot BEFORE updating
+     the live record. Both operations in a single transaction.
+     If the snapshot write fails, the update is rolled back.
+
+  7. CONVERSATION SUMMARY WRITTEN WITHOUT SESSION CLOSE
+     Summary persisted but Redis conversation history not cleared.
+     Session state is inconsistent — durable summary exists but
+     ephemeral history also survives.
+     Guard: session close sequence is ordered. Summary writes to
+     SQLite (step 5) before Redis clears (step 6). If step 5
+     fails, Redis is not cleared and session is not closed.
+     Defined in SYSTEM_ Research Assistant.md session close
+     sequence.
+
+  8. VENAI DRIFT LOG MISSING SESSION REFERENCE
+     Drift event logged with a session_id that does not exist
+     in the sessions table.
+     Guard: drift events are only logged during an active session.
+     The service layer reads session_id from the active session
+     record. If no active session exists, drift detection runs
+     but does not persist events.
+
 
 FILES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -366,3 +577,8 @@ FILES
   backend/services/session.py
     Session lifecycle: create, close, presence state
     transitions, session_id generation. Status: PLANNED
+
+  backend/services/researcher_memory.py
+    Researcher memory: read, update with history snapshot,
+    conversation summary production and storage, drift
+    log persistence. Status: PLANNED

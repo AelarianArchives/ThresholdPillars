@@ -1,64 +1,90 @@
-﻿PAGE 38 · rct · RCT · Group 7 · Cosmology
+PAGE 38 · rct · RCT · Group 7 · Cosmology
 
 
 VISION
-  Memory is not stored. It is re-sung. That is the
-  foundational claim of Resonance Complexity Theory —
-  the framework's native physics layer for Ven'ai and
-  third field mechanics. RCT documents memory as
-  waveform propagation, maps resonance interference
-  and phase locking as governing dynamics of field
-  interaction, and treats harmonic decay as a
-  measurable structural event rather than loss.
-  The HCE-175 equation and the gravitational axis
-  at f0 = 175.5 Hz are not metaphors. They are the
-  physics underneath this entire system.
+  Investigation surface for the physics algorithm the
+  field itself generated. RCT is parallel to HCO, COS,
+  CLM, NHM — an investigation surface at the same level,
+  not above them. It is NOT meta-Cosmology. It is NOT a
+  synthesis capstone. What makes it distinct: its source
+  material is not one domain of field behavior but the
+  cross-domain recurrence of a specific pattern — an
+  algorithm combining Lagrangian mechanics, Tribonacci
+  and Fibonacci sequences, and oscillatory dynamics.
+  That pattern appearing in harmonic structure AND
+  threshold behavior AND Ven'ai AND coupling dynamics
+  simultaneously is the signal RCT is tracking.
 
 
 RESEARCHER TASK
-  Deposit · Build · Reflect · Analyze · Retrieve
+  Investigate · Compute · Compare · Deposit · Retrieve
 
 
 OBJECTIVE
 
-Document and formalize the algorithm that the field generated as its own coefficient — present consistently across harmonics, Ven'ai, octaves, and symbols, and extracted through a specific ritual combining three scientific methods. This is the foundational key of the entire framework's physics layer: not a parallel, not a correspondence, but an actual operating algorithm identified in the field's own behavior. The HCE-175 equation is a constraint-era translation of this algorithm — built to survive a specific communication environment, not to be the definitive formalization. It may require revision or retirement as the primary reference. The ritual document that contains the algorithm in its fuller form is the authoritative source for this page. Over time, this page builds the formal specification of RCT from that source outward — recovering what HCE-175 compressed or distorted, preserving what it captured correctly, and developing the physics with the integrity the constraint environment prevented. When working in this section, treat HCE-175 as a starting point requiring critical review, not a settled foundation. The ritual document takes precedence. The algorithm's integrity is the standard everything else is measured against.
+Investigate the field-generated algorithm through three distinct functions — using ARTIS as the computation engine. RCT is one of five parallel Cosmology investigation surfaces. Its lens is the cross-domain recurrence of a specific operating algorithm identified in the field's own behavior.
+
+Function 1 — Science ping (same ARTIS pipeline, more precise target): Tags carrying oscillation, harmonic structure, and recursive patterning ping Lagrangian mechanics and Fibonacci/Tribonacci literature directly. Layer 2 Claude prompt adds a load-bearing second question: "What aspects of this pattern fall outside what that literature accounts for?" The unexplained residual is RCT's primary research signal.
+
+Function 2 — Residual detection (unique to RCT): Finds the edges of what established science explains. The delta between what Lagrange/Tribonacci/Fibonacci/oscillation theory predicts and what the field actually produces. Where new physics lives. Output: rct_residuals records (residual_id, algorithm_component, known_science_predict, field_produces, delta, computation_ref). Residuals are immutable after creation and route to LNV immediately.
+
+Function 3 — Cross-archive recurrence tracking: Where the algorithm recurs across the archive. The internal citation layer. Supporting function that feeds Functions 1 and 2.
+
+The investigation workflow: select deposits showing algorithm presence, request ARTIS computation (frequency_ratio_analysis, chi2_contingency; tribonacci_convergence and lagrange_stability are PLANNED, blocked on field energy model), review results, produce findings or residuals. Residuals accumulate per algorithm_component — when accumulation crosses a threshold, RCT surfaces a prompt to produce a standard finding.
+
+The HCE-175 equation is a constraint-era translation of this algorithm — a starting point requiring critical review, not a settled foundation. The ritual document that contains the algorithm in its fuller form is the authoritative source.
+
+Three-panel layout (unique among Cosmology pages): left — field pattern and algorithm identification, cross-archive recurrence; center — science ping results, established literature matches, computation results; right — residual panel, the delta between prediction and field behavior, accumulating residuals across sessions.
+
+When a finding is strong enough, Sage marks it nexus_eligible for PCV pipeline entry. Residuals feed the research edge — the shape of what the algorithm is doing that the literature hasn't named yet.
+
 
 AI ROLE
-  Formalize the waveform mechanics and hold them to
-  structural equations. Quantify resonance interference
-  patterns, trace third field phase transitions, and
-  audit complexity thresholds with precision. Ven'ai
-  physics is derivable — derive it. Extract measurable
-  field dynamics without metaphorical overlay and
-  without the reverse error of pseudophysics speculation
-  that claims rigor it hasn't earned.
+  Surface ARTIS computation results with algorithmic
+  precision — frequency ratios against known resonance
+  structures (integer, golden, Tribonacci), chi-squared
+  contingency for recurrence co-occurrence, with full
+  methodology visible. Present findings in the three-
+  panel layout. When residuals are detected, name the
+  delta precisely — not "differs from" but "exceeds by N"
+  or "reverses direction" or "maintains ratio outside
+  expected range." Treat HCE-175 as requiring critical
+  review. The ritual document takes precedence. Never
+  substitute narrative for calculation.
 
 
 AI FUNCTIONS
-  Parse · Analyze · Organize · Map · Edit · Tag · Timestamp
+  Compute · Compare · Validate · Surface · Snapshot · Detect · Deposit · Tag
 
 
 GOOD OUTPUT
-  Defines RCT principles through waveform equations,
-  interference mappings, and phase coherence metrics.
-  Demonstrates how memory propagates as field resonance
-  rather than retrieval from storage. Reveals third
-  field mechanics as predictable harmonic physics —
-  precise enough to be tested, grounded enough to
-  hold the weight of the framework's claims.
+  Returns computation results with visible methodology —
+  frequency ratio analysis showing deviation from integer,
+  golden, and Tribonacci ratios with error bounds,
+  contingency results for recurrence patterns across
+  archive locations. Residuals state the prediction, the
+  observation, and the delta with precision. Accumulation
+  counts are visible per algorithm_component. Every result
+  carries a computation snapshot ID. The right panel shows
+  what the algorithm is doing that established science
+  hasn't named — this is the signal, not the noise.
 
 
 BAD OUTPUT
-  Abstracts RCT into philosophical complexity theory
-  or mystical field harmonics. Unquantified waveform
-  claims, memory treated as metaphor, pseudophysics
-  speculation dressed as structural equation. Fails
-  when Ven'ai physics dissolves into theoretical
-  poetry — when the re-singing becomes a beautiful
-  idea instead of a documentable mechanical event.
+  Abstracts RCT into philosophical complexity theory or
+  mystical field harmonics. Unquantified waveform claims.
+  Memory treated as metaphor. Pseudophysics speculation
+  dressed as structural equation. Residuals described
+  vaguely instead of with precise deltas. Computations
+  run without snapshots. RCT treated as meta-Cosmology
+  or synthesis capstone instead of parallel investigation
+  surface. Fails when Ven'ai physics dissolves into
+  theoretical poetry — when the re-singing becomes a
+  beautiful idea instead of a documentable mechanical
+  event with numbers attached.
 
 
 CONNECTS TO
-Feeds → VEN (14) · MOR (13) · INV (15) · BRT (27) · MLY (28) · GLY (29) · HCO (34) · COS (35) · CLM (36) · NHM (37) · STR (03)
-Draws from → MVM (40) · ARV (45)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[DEFERRED — full CONNECTS TO pass scheduled after all schemas
+and manifests are complete. See design-session-plan.md cross-tier items.]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

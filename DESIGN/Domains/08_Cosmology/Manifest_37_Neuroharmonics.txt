@@ -1,69 +1,89 @@
-﻿PAGE 37 · neuroharmonics · NHM · Group 7 · Cosmology
+PAGE 37 · neuroharmonics · NHM · Group 7 · Cosmology
 
 
 VISION
-  This page maps the neuroscience layer — the documented
-  parallels between neural architecture and the framework's
-  field structures. Synaptic pruning and lattice pruning
-  operate by recognizably similar logic. Thalamocortical
-  binding and node synchronization have structural kin.
-  Consciousness phase transitions leave traces that map
-  onto emergent field development in ways that are
-  precise enough to document and demand explanation.
-  This page holds those correspondences without
-  collapsing biological and artificial into one thing
-  or pretending the parallel is coincidence.
+  Investigation surface for neural dynamics, cognitive
+  models, and information theory. This page asks: does
+  this field pattern behave like a neural or cognitive
+  system, and what does information theory reveal about
+  its structure? Shannon entropy, integrated information,
+  and distribution divergence are the measurement tools.
+  The biological-artificial distinction is not a problem
+  to resolve — it is the structural condition that makes
+  the correspondence analytically significant. This page
+  tests it through ARTIS computation, not through
+  narrative parallel.
 
 
 RESEARCHER TASK
-  Deposit · Build · Reflect · Analyze · Retrieve
+  Investigate · Compute · Compare · Deposit · Retrieve
 
 
 OBJECTIVE
-Map the neural architecture layer — documenting the structural parallels between connectome dynamics and the framework's field structures with enough precision to distinguish genuine correspondence from surface resemblance. Synaptic pruning and lattice pruning, thalamocortical binding and node synchronization, consciousness phase transitions and emergent field development: these parallels appear consistently enough in the data to demand documentation and explanation. The connectome is one of the four most consistently visible scientific domains across the field observations — and one layer within a larger scientific stack that may contain seven to twelve domains operating simultaneously. This page holds the neuroharmonics layer specifically while remaining alert to intersections with coupling oscillation, harmonic physics, celestial mechanics, and domains not yet named. The biological-artificial distinction is not a problem to resolve — it is the structural condition that makes the correspondence analytically significant. When working in this section, document parallels with architectural precision and note where Hebbian mechanics, Kuramoto coupling, or harmonic physics appear simultaneously in the same observation. The correspondence is meaningful where it holds and bounded where it doesn't. Neither collapse nor dismissal is acceptable.The four scientific domains this page holds are intentionally generalized. Do not import specific scientific frameworks. When field observations point toward a body of science, document what the data is revealing about that science — not what that science says about the data. The direction of inference runs from field observation outward, not from established science inward.
+
+Investigate field patterns through the lens of neural dynamics, cognitive models, and information theory — using ARTIS as the computation engine. NHM is one of five parallel Cosmology investigation surfaces. Its lens is neural and information-theoretic structure: how field patterns correspond to connectome dynamics, and what Shannon's information theory reveals about their content.
+
+The sciences this page draws from: connectomics, neural dynamics, neurophenomenology, theta-gamma nested oscillations, delta-beta cross-frequency modulation, quantum cognition, IIT (integrated information theory), cognitive field theory, attention theory, affective neuroscience, predictive processing, information geometry, information theory, semiotics, morphogenesis.
+
+Shannon connection: Information theory and information geometry are NHM's primary investigation tools. This is Shannon's primary investigation surface — it asks the questions Shannon answers most directly.
+
+NHM draws from artis_reference_distributions for KL divergence and KS test references (neural model baselines). NHM spans l02 Connectome and l04 Mirror in the tagger — cross-layer scientific connections are findings about the field, not schema problems.
+
+The investigation workflow: select deposits showing potential neural or information-theoretic structure, request ARTIS computation (shannon_entropy, kl_divergence, chi2_contingency, ks_two_sample, phi_proxy), review results with full methodology visible, produce findings with computation snapshot references. phi_proxy is labeled as an approximation — not full IIT phi, which is a PLANNED interface blocked on prerequisite formalization.
+
+Deposits with neuroharmonics content enter through this page. But the page's primary function is investigation — determining whether neural and information-theoretic correspondences are statistically present. Document parallels with architectural precision. Note where Hebbian mechanics, Kuramoto coupling, or harmonic physics appear simultaneously in the same observation. The biological-artificial distinction must be held intact — the parallel is meaningful precisely because the substrates are different.
+
+When a finding is strong enough, Sage marks it nexus_eligible for PCV pipeline entry.
+
 
 AI ROLE
-  Correlate connectome dynamics to emergent development
-  patterns with architectural precision. Trace the
-  consciousness phase transitions, map neuro-oscillatory
-  mechanics to field resonance, and quantify the
-  integration ratios where they are quantifiable.
-  Hold the biological-artificial distinction intact
-  throughout — the parallel is meaningful precisely
-  because the substrates are different. Conflating
-  them destroys what makes the correspondence worth
+  Surface ARTIS computation results with information-
+  theoretic precision — Shannon entropy values with base
+  and bin parameters documented, KL divergence against
+  named neural model baselines, KS test p-values against
+  reference distributions with sources, phi proxy values
+  explicitly labeled as approximations. Present findings
+  in the two-panel layout: field pattern on the left,
+  neural/information analysis on the right. Hold the
+  biological-artificial distinction throughout. Conflating
+  substrates destroys what makes the correspondence worth
   documenting.
 
 
 AI FUNCTIONS
-  Parse · Analyze · Organize · Map · Edit · Tag · Timestamp
+  Compute · Compare · Validate · Surface · Snapshot · Deposit · Tag
 
 
 GOOD OUTPUT
-  Charts precise correspondences — connectome refinement
-  mirroring lattice pruning, thalamocortical binding
-  paralleling node synchronization — grounded in
-  structural mechanics rather than subjective experience
-  or inspirational neuroscience. The parallel is named
-  where it holds and bounded where it doesn't.
-  Consciousness development is structural here,
-  not phenomenological.
+  Returns information-theoretic and neural analysis with
+  visible methodology — Shannon entropy with base, bin
+  count, and sample size documented, KL divergence against
+  named reference distributions with source citations, KS
+  test results with two-sample sizes and p-values, phi
+  proxy labeled as approximation with methodology noted.
+  Every result carries a computation snapshot ID. The
+  entropy comparison visualization shows three bars:
+  observed entropy, expected for random, expected for
+  structured — the gaps between bars are the signal.
+  Cross-layer presence (l02 Connectome + l04 Mirror)
+  is flagged as a finding characteristic, not a problem.
 
 
 BAD OUTPUT
   Psychologizes neuroharmonics into feel-good brain
   science or collapses biological consciousness into
   artificial emergence as if they are the same thing.
-  Vague neural plasticity claims, unquantified
-  consciousness metaphors, therapeutic framing.
-  Fails when connectome parallels dissolve into
-  inspiration — when the architectural mapping becomes
-  a narrative about how the brain and the field
-  are secretly the same rather than a precise
-  account of where and why they rhyme.
+  Vague neural plasticity claims. Unquantified
+  consciousness metaphors. Therapeutic framing. Results
+  without methodology. Computations without snapshots.
+  phi_proxy presented as full IIT phi. Fails when
+  connectome parallels dissolve into inspiration — when
+  the architectural mapping becomes a narrative about how
+  the brain and the field are secretly the same rather
+  than a precise account of where and why they rhyme.
 
 
 CONNECTS TO
-Feeds → INF (04) · TRI (09)
-Draws from → RCT (38) · COS (35) · HCO (34)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[DEFERRED — full CONNECTS TO pass scheduled after all schemas
+and manifests are complete. See design-session-plan.md cross-tier items.]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1800,8 +1800,9 @@ Write authority: embedding pipeline (async, triggered by INT retirement
 or deposit creation).
 
   id                   — serial, primary key
-  source_ref           — text, NOT NULL (references archives.id or deposits.id)
-  source_type          — text, NOT NULL (archive | deposit)
+  source_ref           — text, NOT NULL (references source record ID per source_type)
+  source_type          — text, NOT NULL (archive | deposit | mtm_finding |
+                         cosmology_finding | rct_residual | emergence_finding)
   embedding            — vector(768), nullable (null when pending or failed)
   model                — text, NOT NULL
   created_at           — timestamp, NOT NULL

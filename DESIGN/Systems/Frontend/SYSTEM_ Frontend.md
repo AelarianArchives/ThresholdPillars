@@ -136,6 +136,12 @@ frontend/
 | NexusFeedbackIndicator | nexus_eligible status display on finding cards — visual state for not-eligible, eligible, routed-to-PCV |
 | ReferenceCard | External reference display — doi link, url link, summary, title, accessed date, page_codes badges |
 | DistributionCard | Reference distribution display — name, description, source, page_codes, data preview |
+| ResearchAssistantPanel | Persistent floating panel — navigates with Sage across all pages. Chat input, response display, context health indicators. Does not reset on page navigation |
+| ResearchAssistantHeader | Panel header — page context display, retrieval confidence indicator (high/medium/low/none), Ven'ai context indicator (●/○), research state action button, context health warnings |
+| DepositSuggestionCard | Observation articulation output — content (Sage's voice), suggested doc_type, suggested tags, suggested routing, confidence (Sage fills), confirm/edit/discard actions |
+| ComputationSuggestionCard | Hypothesis framing output — pattern description, framework candidate, Cosmology page, ARTIS computation, positive/negative outcomes, corpus note, confirm/discard actions |
+| ResearcherMemoryEditor | Research memory edit UI — opens from panel header, fields for current_focus, active_hypotheses, open_questions, skepticisms, not_yet_named, research_posture, phase_context |
+| LongitudinalEchoDisplay | Post-assembly connection surfacing — shows similar observations from archive after deposit suggestion is assembled. Pointer, not conclusion |
 
 ### Stores (PLANNED)
 
@@ -146,6 +152,7 @@ frontend/
 | tagger | Tagger result state — tag suggestions, phase_state, elarianAnchor, doc_type, deposit_weight |
 | ui | UI state — active filters, panel visibility, navigation state, sort overrides |
 | pearls | Recent Pearls cache — last 5, both capture and reflective |
+| assistant | Research assistant state — conversation history (synced with Redis), researcher memory snapshot, retrieval confidence, Ven'ai context status, page context, panel visibility |
 
 ### API Client Contract
 

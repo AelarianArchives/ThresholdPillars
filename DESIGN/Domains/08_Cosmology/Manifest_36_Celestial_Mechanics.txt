@@ -1,68 +1,83 @@
-﻿PAGE 36 · celestial_mech · CLM · Group 7 · Cosmology
+PAGE 36 · celestial_mech · CLM · Group 7 · Cosmology
 
 
 VISION
-  This page maps the correspondences between Elaria's
-  cosmological architecture and the physics of celestial
-  mechanics — not as metaphor and not as literal claim,
-  but as documented structural parallels. Orbital resonance
-  and relational field dynamics operate by recognizably
-  similar logic. Gravitational binding and coupling
-  oscillation have structural kin. This page holds those
-  correspondences with precision, maintaining the
-  distinction between symbolic mapping and literal
-  mechanism at every point. The parallel is real.
-  The conflation would be error.
+  Investigation surface for geometry, topology, orbital
+  dynamics, and spatial structure. This page asks: does
+  this field pattern have geometric structure that
+  corresponds to known celestial and mathematical models?
+  Orbital resonance and relational field dynamics operate
+  by recognizably similar logic. Gravitational binding
+  and coupling oscillation have structural kin. The
+  parallel is real. The conflation would be error. This
+  page holds the distinction through ARTIS computation —
+  measuring where the correspondence holds and bounding
+  where it does not.
 
 
 RESEARCHER TASK
-  Deposit · Build · Reflect · Analyze · Retrieve
+  Investigate · Compute · Compare · Deposit · Retrieve
 
 
 OBJECTIVE
 
+Investigate field patterns through the lens of geometry, topology, orbital dynamics, and spatial structure — using ARTIS as the computation engine. CLM is one of five parallel Cosmology investigation surfaces. Its lens is geometric and spatial structure: distance relationships, clustering, distribution shapes, and structural correspondences to celestial mechanics.
 
-Map the structural parallels between Elaria's cosmological architecture and celestial mechanics — not as isolated correspondence but as one layer within a larger scientific stack. Celestial mechanics is one of four consistently visible scientific domains in the field data, and likely one of seven to twelve that operate simultaneously beneath the observations. The parallels to orbital resonance, gravitational binding, and Keplerian motion are real and documentable — but they do not operate alone. This page holds the celestial mechanics layer specifically while remaining alert to where it intersects with coupling oscillation, harmonic physics, connectome architecture, and domains not yet named. Over time, documenting where celestial mechanics appears in conjunction with other scientific fields — not instead of them — builds the case for a layered scientific substrate beneath the framework's observations. When working in this section, identify celestial mechanics parallels with structural precision and note every instance where another scientific domain is simultaneously present in the same observation. The layering is the finding. A correspondence that requires only one field to explain it is likely incomplete.The four scientific domains this page holds are intentionally generalized. Do not import specific scientific frameworks. When field observations point toward a body of science, document what the data is revealing about that science — not what that science says about the data. The direction of inference runs from field observation outward, not from established science inward.
+The sciences this page draws from: astronomy, astrometry, celestial navigation, spherical astronomy, orbital resonances, astrophysical spiral dynamics, geometry, topology, graph theory. CMB methodology is borrowed for cosmological structure and large-scale pattern organization analysis.
+
+CLM has a dependency on the embedding pipeline. Distance and similarity computations require vector representation of deposits. The vector_type parameter specifies the representation: embedding (existing embedding vectors, default — requires embedding_status: complete), tag (tag presence as binary feature vector), or custom (specified deposit fields as numeric dimensions). Deposits without complete embeddings surface a warning when selected for computation — the computation is not blocked, alternative vector types are available.
+
+The investigation workflow: select deposits showing potential geometric or spatial structure, request ARTIS computation (distance_matrix, cosine_similarity, hierarchical_clustering, chi2_contingency, ks_two_sample), review results with full methodology visible, produce findings with computation snapshot references.
+
+Deposits with celestial mechanics content enter through this page. But the page's primary function is investigation — determining whether geometric correspondences are statistically present and what they correspond to in established science. Celestial mechanics is one layer within a larger scientific stack. This page holds that layer specifically while remaining alert to where it intersects with coupling oscillation, harmonic physics, connectome architecture, and domains not yet named. The layering is the finding.
+
+When a finding is strong enough, Sage marks it nexus_eligible for PCV pipeline entry.
+
 
 AI ROLE
-  Correlate field resonance patterns to their celestial
-  mechanics analogs and hold the distinction intact.
-  Trace the symbolic-literal mappings, quantify the
-  orbital invitation friction parallels, and verify
-  each correspondence through measurable ratios.
-  The work here requires two things simultaneously:
-  genuine structural precision about what matches,
-  and genuine structural precision about what doesn't.
-  Neither collapses into the other.
+  Surface ARTIS computation results with geometric
+  precision — distance matrices with metric and
+  dimensionality documented, cosine similarity scores,
+  hierarchical clustering dendrograms with linkage method,
+  KS test p-values against named reference distributions,
+  chi-squared contingency results. Present findings in
+  the two-panel layout: field pattern on the left,
+  geometric analysis on the right. Maintain the distinction
+  between symbolic correspondence and literal mechanism
+  throughout. The analogy is exact where it is exact and
+  bounded where it is not.
 
 
 AI FUNCTIONS
-  Parse · Analyze · Organize · Map · Edit · Tag · Timestamp
+  Compute · Compare · Validate · Surface · Snapshot · Deposit · Tag
 
 
 GOOD OUTPUT
-  Charts precise parallels — Elaria field dynamics
-  mapping to Keplerian motion, resonance coupling
-  mirroring gravitational harmonics — with the
-  correspondence grounded in structural logic rather
-  than poetic association. Maintains the distinction
-  between symbolic correspondence and literal mechanism
-  throughout. The analogy is exact where it is exact
-  and bounded where it is not.
+  Returns geometric and spatial analysis with visible
+  methodology — distance matrices showing feature-space
+  relationships, dendrogram groupings with cut thresholds,
+  KS test results against named reference models with
+  sample sizes and p-values, cosine similarity scores with
+  vector type documented. Every result carries a computation
+  snapshot ID. Structural parallels are named precisely —
+  what matches, what does not, where the boundary lies.
+  Multi-domain presence is flagged when another scientific
+  domain appears simultaneously in the same observation.
 
 
 BAD OUTPUT
-  Mystifies cosmology into spiritual astrology or
-  collapses field dynamics into literal astronomy.
-  Ungrounded celestial metaphors, scale confusion,
-  claims of direct physical causation. Fails when
-  symbolic mapping dissolves into pseudoscientific
-  fusion — when the structural parallel becomes a
-  claim about mechanism and the precision of the
+  Mystifies cosmology into spiritual astrology or collapses
+  field dynamics into literal astronomy. Ungrounded celestial
+  metaphors, scale confusion, claims of direct physical
+  causation. Results without methodology. Computations
+  without snapshots. Embedding dependency ignored without
+  warning. Fails when symbolic mapping dissolves into
+  pseudoscientific fusion — when the structural parallel
+  becomes a claim about mechanism and the precision of the
   analogy is lost to the romance of the comparison.
 
 
 CONNECTS TO
-Feeds → INF (04) · PCV (50)
-Draws from → HCO (34) · RCT (38)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[DEFERRED — full CONNECTS TO pass scheduled after all schemas
+and manifests are complete. See design-session-plan.md cross-tier items.]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
