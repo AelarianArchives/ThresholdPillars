@@ -1,1 +1,10 @@
-{}
+{
+  "DESIGN/Systems/Tagger/SYSTEM_ Tagger.md": {
+    "phase": "spec_pending",
+    "updated": "2026-04-06 20:56:29"
+  },
+  "DESIGN/Systems/TAG VOCABULARY.md": {
+    "phase": "audit_pass",
+    "updated": "2026-04-06 22:06:45"
+  }
+}

@@ -97,7 +97,8 @@ def hash_file(path):
 
 
 def parse_file_list(spec_content, section_header):
-    """Parse file paths from a SPEC section. Expects '- path' format lines."""
+    """Parse file paths from a SPEC section. Expects '- path' format lines.
+    Skips entries starting with N/A or None (case-insensitive)."""
     lines = spec_content.split("\n")
     files = []
     in_section = False
@@ -112,7 +113,7 @@ def parse_file_list(spec_content, section_header):
                 break
             if stripped.startswith("- "):
                 file_path = stripped[2:].strip()
-                if file_path:
+                if file_path and not file_path.lower().startswith(("n/a", "none")):
                     files.append(file_path)
 
     return files
