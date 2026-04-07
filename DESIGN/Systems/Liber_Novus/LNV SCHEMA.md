@@ -1,0 +1,422 @@
+# LIBER NOVUS SCHEMA
+
+## LNV · V1
+
+## /DESIGN/Systems/Liber_Novus/LNV SCHEMA.md
+
+Mechanical spec — single-table type-discriminated architecture, receive
+contract, read contract, content shapes per entry type, snapshot storage,
+session-close policy, gallery display, validation, failure modes.
+Architectural description in SYSTEM_ LNV.md.
+
+---
+
+## OWNERSHIP BOUNDARIES
+
+### OWNS
+
+- lnv_entries PostgreSQL table — single table for all LNV content
+- Receive contract — POST /api/lnv/receive, universal endpoint for all callers
+- Read contract — GET /api/lnv/entries, query endpoint for all consumers
+- Content validation — type-shape matching on receive, hard rejection on mismatch
+- Gallery display — card layout, filtering, sorting, expand-on-click behavior
+- Snapshot storage format — data + template_ref, not rendered images
+
+### DOES NOT OWN
+
+- Finding production — owned by MTM. LNV receives Findings; it does not produce them.
+- Engine computation — owned by individual engine services. LNV stores snapshots; it does not trigger or own computation.
+- WSC entry production — owned by WSC. LNV receives entries; it does not produce them.
+- Void analytical output — owned by Void. LNV receives outputs; it does not trigger analysis.
+- Routing authority — DNR routes MTM Findings to LNV. WSC routes entries to LNV. Void routes outputs to LNV. Engine visualization capture routes snapshots to LNV. LNV does not pull from any system.
+- Content interpretation — LNV holds content in structural juxtaposition. It does not synthesize, interpret, or editorialize across types.
+- Visualization rendering logic — owned by frontend Svelte components. LNV stores the data and template_ref; the component renders.
+
+---
+
+## STRUCTURAL RULES
+
+1. LNV is both a display surface (gallery) and a data source. PCV reads
+   mtm_finding entries from LNV as pre-processed input. Dashboard reads
+   recent entries for signal surface. These are first-class read paths,
+   not secondary uses.
+
+2. One table. All LNV content shares the same provenance fields. The gallery
+   treats all types uniformly. PCV can filter by type. One receive endpoint
+   handles everything.
+
+3. Content validation is a hard gate. A request with entry_type: mtm_finding
+   but content missing finding_type is rejected. Type-shape mismatch is a
+   hard failure, not a warning.
+
+4. LNV does not edit, modify, or enrich content after receipt. What arrives
+   is what is stored. What is stored is what displays. The sealed record
+   principle holds.
+
+5. Engine snapshots store data + template, not rendered images. The gallery
+   thumbnail generates at display time from stored data. The data is
+   canonical. The rendering is current.
+
+6. Session close does NOT automatically snapshot all engine pages. Only
+   Sage-triggered captures enter LNV as engine_snapshot entries.
+
+---
+
+## STORE: lnv_entries
+
+| Field | Type | Description |
+| --- | --- | --- |
+| lnv_entry_id | auto | Primary key |
+| entry_type | enum | `mtm_finding`, `engine_snapshot`, `wsc_entry`, `void_output`. Determines which content shape is expected. |
+| source_system | string | Which system produced this. Values: mtm, thr, str, inf, ecr, snm, wsc, void, pcv, dtx, sgr. |
+| source_page | string / null | Which page this originated from (page_code). Null for cross-page outputs like MTM. |
+| session_ref | string / null | Which session produced this. |
+| prompt_version | string / null | For AI-authored types (wsc, void, mtm). Null for engine_snapshot. |
+| content | jsonb | Type-specific payload. Shape must match entry_type. See CONTENT SHAPES below. |
+| sage_note | string / null | Optional researcher note at capture time. |
+| created_at | timestamp | Written once at record creation. Never updated. |
+
+### Future entry_type expansion
+
+Tier 5 adds two additional entry_type values: `cosmology_finding` and
+`rct_residual`. Content shapes for those types are defined in Tier 5 (ARTIS
+and RCT schemas). The lnv_entries table and receive contract are designed to
+accommodate new types without structural changes — add the enum value and
+define the content shape.
+
+---
+
+## CONTENT SHAPES PER ENTRY TYPE
+
+### mtm_finding
+
+```json
+{
+  "finding_id":             "string — references findings table",
+  "finding_type":           "confirmed | complicated | overturned | open_question",
+  "title":                  "string",
+  "content":                "string",
+  "provenance":             "object — full provenance chain from Finding record",
+  "prompt_versions":        { "pass_1": "string", "pass_2": "string" },
+  "attached_open_question": "finding_id | null",
+  "resolves_open_question": "finding_id | null"
+}
+```
+
+### engine_snapshot
+
+```json
+{
+  "engine":                  "thr | str | inf | ecr | snm",
+  "computation_snapshot_id": "string — links to Tier 3 computation snapshot",
+  "template_ref":            "string — which visualization component renders this",
+  "visualization_data":      "object — positions, values, scales, color mappings",
+  "deposit_count":           "integer — corpus size at capture time",
+  "baseline_scope":          "page"
+}
+```
+
+template_ref examples: `thr_cooccurrence_matrix`, `ecr_constellation`,
+`inf_density_field`, `str_root_cluster_radial`, `snm_correspondence_heatmap`.
+
+template_ref maps to a Svelte visualization component. The component knows how
+to render from the visualization_data object. If the component is updated, all
+historical snapshots re-render with the improved display. The data is canonical.
+The rendering is current.
+
+### wsc_entry
+
+```json
+{
+  "wsc_entry_id":    "string — references wsc_entries table",
+  "wsc_subtype":     "milestone | standard",
+  "entry_timestamp": "string — the WSC entry's own timestamp",
+  "session_summary": "string — full, not truncated. Sealed at store time.",
+  "handoff_note":    "string",
+  "milestone_marker": "{ event, date } | null",
+  "reconstruction_note": "string | null",
+  "open_threads":    "[{ thread, status }]"
+}
+```
+
+wsc_subtype determination:
+- Entry has milestone_marker or reconstruction_note → `milestone`
+  (high-signal longitudinal, higher gallery prominence)
+- Otherwise → `standard`
+
+LNV content jsonb is self-contained. No join-back to wsc_entries required.
+What was stored is what displays, permanently.
+
+### void_output
+
+```json
+{
+  "trigger":               "session_close | on_demand_open | on_demand_targeted",
+  "scope":                 "object | null — for targeted reads",
+  "systemic_observations": "array",
+  "absence_flags":         "array",
+  "contradictions":        "array",
+  "open_edges":            "array",
+  "engines_read":          "string[]"
+}
+```
+
+---
+
+## RECEIVE CONTRACT
+
+### POST /api/lnv/receive
+
+Universal receive endpoint. All callers use this endpoint. No bespoke pipes.
+
+**Request:**
+
+```json
+{
+  "entry_type":     "mtm_finding | engine_snapshot | wsc_entry | void_output",
+  "source_system":  "string",
+  "source_page":    "page_code | null",
+  "session_ref":    "string | null",
+  "prompt_version": "string | null",
+  "content":        "jsonb — shape must match entry_type",
+  "sage_note":      "string | null"
+}
+```
+
+**Response — success:**
+
+```json
+{
+  "lnv_entry_id": "string",
+  "entry_type":   "string",
+  "status":       "received",
+  "created_at":   "timestamp"
+}
+```
+
+**Response — failure:**
+
+```json
+{
+  "error_code": "validation_failed | type_mismatch | content_schema_invalid",
+  "message":    "string"
+}
+```
+
+### Validation
+
+Content jsonb is validated against the expected shape for the declared
+entry_type. Validation checks:
+
+1. entry_type is a recognized value.
+2. content is present and is a valid JSON object.
+3. content contains all required fields for the declared entry_type.
+4. Field types within content match expectations (e.g., finding_type is a valid
+   enum value, not an arbitrary string).
+
+A request that fails any check is rejected with the appropriate error_code.
+Type-shape mismatch is a hard failure, not a warning.
+
+### Who calls this endpoint
+
+| Caller | entry_type | Trigger |
+| --- | --- | --- |
+| DNR | mtm_finding | After MTM synthesis at session close |
+| Engine visualization capture | engine_snapshot | Sage-triggered from any Axis or Nexus engine page |
+| WSC write path | wsc_entry | After WSC entry written |
+| Void session-close | void_output | Automatic at session close |
+| Void on-demand | void_output | Sage-triggered |
+
+---
+
+## READ CONTRACT
+
+### GET /api/lnv/entries
+
+Query endpoint for all consumers.
+
+**Query parameters:**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| entry_type | string (repeatable) | Filter by type. Optional. Multiple values accepted for multi-type queries. |
+| source_system | string | Filter by source system. Optional. |
+| source_page | string | Filter by page code. Optional. |
+| session_ref | string | Filter by session. Optional. |
+| limit | integer | Default 50, max 200. |
+| offset | integer | Default 0. |
+| sort | enum | `created_at_desc` (default), `created_at_asc`. |
+
+**Response:**
+
+```json
+{
+  "entries": "array of lnv_entries records",
+  "total":   "integer — total matching count",
+  "limit":   "integer",
+  "offset":  "integer"
+}
+```
+
+### Who calls this endpoint
+
+| Consumer | Typical query | Purpose |
+| --- | --- | --- |
+| LNV page | All types, chronological | Gallery display |
+| PCV | entry_type=mtm_finding | Pre-processed input for hypothesis detection |
+| Dashboard | Recent entries, all types | Signal surface |
+| Any system | Filtered as needed | Query LNV's consolidated output |
+
+---
+
+## SNAPSHOT STORAGE DECISION
+
+Store data plus template, not rendered images.
+
+Rendered images are large, non-queryable, and break if the template changes.
+Data plus template means the visualization re-renders from stored data, can be
+queried analytically, and stays correct if the display layer improves.
+
+The gallery thumbnail generates at display time from stored data — not a stored
+file. This is the right call for a system intended to feed model training
+downstream.
+
+### "Generated on view, snapshot to LNV" flow
+
+1. Sage views an engine page → visualization renders from computed data
+   (Tier 3 hybrid compute)
+2. Sage triggers capture (button on visualization)
+3. System serializes: visualization_data + template_ref +
+   computation_snapshot_id + optional sage_note
+4. POST /api/lnv/receive with entry_type: engine_snapshot
+5. LNV entry created. Gallery card shows thumbnail re-rendered from stored data.
+
+Not automatic at session close. Sage-triggered only. The researcher decides
+what's worth preserving — the system doesn't fill LNV with noise.
+
+---
+
+## SESSION-CLOSE SNAPSHOT POLICY
+
+Session close does NOT automatically snapshot all engine pages. Only
+Sage-triggered captures enter LNV as engine_snapshot entries.
+
+**What DOES enter LNV at session close (via DNR):**
+- MTM Findings (automatic, via DNR two-step sequence)
+- Void session-close pulse check output (automatic)
+
+**What enters LNV outside session close:**
+- Engine visualization snapshots (Sage-triggered, any time)
+- WSC entries (after DNR completes, via WSC write path)
+- Void on-demand read outputs (Sage-triggered)
+
+---
+
+## LNV PAGE — GALLERY DISPLAY
+
+Page type: Output (from Tier 2 page identity system). Gallery layout. Snapshot
+cards in responsive grid (2-3 columns).
+
+### Gallery card
+
+```
+┌─────────────────────────────────────────────────┐
+│ [ENTRY_TYPE BADGE]  [SOURCE_SYSTEM]  [DATE]     │
+│                                                  │
+│ Visualization thumbnail (re-rendered from data)  │
+│   OR Finding title + excerpt                     │
+│   OR WSC entry summary                           │
+│   OR Void observation summary                    │
+│                                                  │
+│ [SAGE_NOTE excerpt if present]                   │
+│ [PROMPT_VERSION badge if AI-authored]            │
+└─────────────────────────────────────────────────┘
+```
+
+### Expand on click
+
+Full content per type:
+- engine_snapshot: full-size visualization re-rendered from data
+- mtm_finding: full Finding with provenance chain
+- wsc_entry: full WSC entry text
+- void_output: full analytical output with all sections
+
+### Filters
+
+By entry_type, by source_system, by source_page, by date range. All combinable.
+
+### Sort
+
+Default: chronological (most recent first). Overridable to oldest first.
+
+### Sage-facing surfaces
+
+Entry type badges with plain language:
+- mtm_finding → "MTM Finding"
+- engine_snapshot → "Visualization"
+- wsc_entry → "Witness Scroll"
+- void_output → "Void Analysis"
+
+Prompt version visible on AI-authored entries (mtm_finding, wsc_entry,
+void_output). Sage note visible when present.
+
+---
+
+## KNOWN FAILURE MODES
+
+### 1. Content shape does not match declared entry_type
+
+Request claims entry_type: mtm_finding but content is missing finding_type or
+has extra unexpected fields.
+
+**Guard:** Content validation at receive time. Type-shape mismatch returns
+error_code: content_schema_invalid. Entry is not written. Caller receives the
+error and can retry with corrected content.
+
+### 2. Caller sends unrecognized entry_type
+
+A caller sends an entry_type value that LNV does not recognize (e.g., a Tier 5
+type before the enum is expanded).
+
+**Guard:** entry_type validation at receive time. Unrecognized type returns
+error_code: type_mismatch. Entry is not written.
+
+### 3. Duplicate content received
+
+The same Finding, snapshot, or entry is sent to LNV twice (e.g., DNR retries
+after a timeout but LNV already received the first call).
+
+**Guard:** LNV does not deduplicate. Each receive call creates a new
+lnv_entries record. Deduplication responsibility is on the caller — MTM
+deduplicates via content fingerprinting before Findings reach DNR. For other
+types, the caller is responsible for not sending duplicates. If duplicates do
+land in LNV, they are visible in the gallery and Sage can identify and note
+them. This is a known limitation, not a data integrity risk — duplicates are
+annoying but not corrupting.
+
+### 4. Engine snapshot references a deleted or updated visualization component
+
+template_ref points to a Svelte component that has been renamed or removed.
+
+**Guard:** The snapshot's visualization_data is canonical. If the template_ref
+is invalid, the gallery card displays the data in a fallback format (raw JSON
+or table) rather than silently failing. The data is never lost. The rendering
+is recoverable by updating the template_ref mapping.
+
+### 5. LNV receive endpoint unavailable at session close
+
+DNR attempts to route MTM Findings to LNV but the endpoint is down.
+
+**Guard:** DNR handles this failure. MTM Findings are written to the findings
+table regardless of LNV routing. lnv_routing_status stays `pending`. DNR can
+retry routing in a subsequent session. The Findings are preserved even if LNV
+never receives them.
+
+---
+
+## FILES
+
+| File | Role | Status |
+| --- | --- | --- |
+| backend/services/lnv.py | LNV service — receive validation, content shape checking, lnv_entries PostgreSQL writes, read queries with filtering and pagination | PLANNED |
+| backend/routes/lnv.py | FastAPI LNV endpoints — POST /api/lnv/receive, GET /api/lnv/entries | PLANNED |
