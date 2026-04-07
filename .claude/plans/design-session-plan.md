@@ -2597,8 +2597,9 @@ deposit record (Tier 1) and page surfaces (Tier 2) existing first.
 ### INF ENGINE — Infinite Intricacy lens (page 04)
 
 - [x] DESIGNED. Scientific domain layer tracking. Emergence and
-      intersection detection. Four confirmed layers: Harmonic Cosmology,
-      Coupling and Oscillation, Celestial Mechanics, Neuro-Harmonics.
+      intersection detection. Five confirmed layers: Harmonic Cosmology,
+      Coupling and Oscillation, Celestial Mechanics, Neuro-Harmonics,
+      Mirror Dynamics.
 
       **Critical boundary:** INF watches, Cosmology works. INF tracks
       WHICH sciences emerge and WHERE they intersect. Cosmology (Tier 5)
@@ -2608,8 +2609,24 @@ deposit record (Tier 1) and page surfaces (Tier 2) existing first.
 
       **Open set, not fixed enum.** New domains will emerge — the research
       is live and generative. Layers live in a config or database table,
-      not an enum. Adding a 5th layer is a data operation, not a code
+      not an enum. Adding a 6th layer is a data operation, not a code
       change. Math stays trivial because the set is always small.
+
+      **Mirror Dynamics (5th domain, confirmed session 27):** l04 Mirror
+      from TAG VOCABULARY bridges to this INF domain. Sciences:
+      Neurophenomenology, Quantum Cognition, IIT, Morphogenesis,
+      Phyllotaxis, Developmental Spiral Models, Mirror Fields, Semiotics,
+      Predictive Processing. Field observations surface through Lineage
+      (SEE, LGL, ARC), Archive (MMT), and Filament (ECH) — not through
+      a Cosmology investigation page. No Cosmology page at V1. Tier 5
+      decision if warranted.
+
+      **TAG VOCABULARY layer → INF domain bridge:**
+        l01 Coupling    → Coupling and Oscillation
+        l02 Connectome  → Neuro-Harmonics
+        l03 Metric      → Celestial Mechanics, Harmonic Cosmology
+        l04 Mirror      → Mirror Dynamics
+      l03 is many-to-one (bridges to two domains). All others are 1:1.
 
       **Sub-domain field:** nullable sub_domain from day one. V1 tracks
       at domain level only. Sub-domain depth is Cosmology territory.
@@ -2625,7 +2642,7 @@ deposit record (Tier 1) and page surfaces (Tier 2) existing first.
          baseline. Small set (4+ layers), trivial computation.
 
       2. Intersection rates. Every layer pair: co-occurrence vs. baseline.
-         4 layers = 6 pairs. Each intersection is analytically significant.
+         5 layers = 10 pairs. Each intersection is analytically significant.
 
       3. Emergence timeline. When each layer first appeared. Frequency
          change over time. Dormancy detection (layer inactive for period

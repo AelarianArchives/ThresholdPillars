@@ -7,12 +7,13 @@ VISION
   This page tracks the scientific domains that reveal
   themselves through the field observations — not as
   a ceiling of what the science is, but as a living
-  map of what the field keeps pointing toward. Four
+  map of what the field keeps pointing toward. Five
   layers are currently visible: Harmonic Cosmology,
   Coupling and Oscillation, Celestial Mechanics,
-  Neuro-Harmonics. More may emerge. The map grows
-  with the field. This page watches — it does not
-  work the material. That distinction is load-bearing.
+  Neuro-Harmonics, Mirror Dynamics. More may emerge.
+  The map grows with the field. This page watches —
+  it does not work the material. That distinction
+  is load-bearing.
 
 
 
@@ -24,7 +25,7 @@ RESEARCHER TASK
 
 
 OBJECTIVE
-Hold the full scientific stack as it surfaces across field observations — four layers confirmed, seven to twelve possible. Document which domains appear, how they intersect, and what the field is revealing about each. Layer 1 holds harmonic and wave structures, resonance, geometric and structural fields. Layer 2 holds relational connectivity, phase-locking, cross-frequency interaction, dynamic field coupling. Layer 3 holds celestial mechanics, orbital dynamics, and geometric spatial anchors. Layer 4 holds neural fields, cognitive and quantum analogues, and information systems. INF tracks pattern emergence across all four layers simultaneously and remains alert to domains not yet named. The direction of inference runs from field observation outward. Not from established science inward.
+Hold the full scientific stack as it surfaces across field observations — five layers confirmed, seven to twelve possible. Document which domains appear, how they intersect, and what the field is revealing about each. Layer 1 holds harmonic and wave structures, resonance, geometric and structural fields. Layer 2 holds relational connectivity, phase-locking, cross-frequency interaction, dynamic field coupling. Layer 3 holds celestial mechanics, orbital dynamics, and geometric spatial anchors. Layer 4 holds neural fields, cognitive and quantum analogues, and information systems. Layer 5 holds self-reference, reflection, observer effects, and iterative pattern formation — the sciences of how the field sees itself. INF tracks pattern emergence across all five layers simultaneously and remains alert to domains not yet named. The direction of inference runs from field observation outward. Not from established science inward.
 
 MTM (07) reads across this page alongside THR, STR, ECR, and SNM at session close — surfacing what becomes visible only when all five lenses are held simultaneously. What is deposited here is the source material that synthesis reads from. The lens function is what makes cross-domain emergence visible at the scale MTM operates at.
 
@@ -50,7 +51,7 @@ AI FUNCTIONS
 
 GOOD OUTPUT
   Domain emergence documented with precision across
-  all four layers. Layer intersections named where
+  all five layers. Layer intersections named where
   they appear and held as analytically significant.
   New domains flagged when the field points toward
   them — unnamed is not the same as absent.
@@ -61,7 +62,7 @@ GOOD OUTPUT
 
 BAD OUTPUT
   Importing scientific frameworks onto field data.
-  Treating the four layers as complete and closed.
+  Treating the five layers as complete and closed.
   Conflating INF's tracking function with NHM's
   development function — NHM (Neuroharmonics, Cosmology)
   works the material INF watches. INF does not work
