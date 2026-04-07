@@ -1790,6 +1790,160 @@ Write authority: DTX service (on every Bayesian update from SGR).
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: artis_computation_snapshots
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Every computation run in the Cosmology group. Immutable.
+Full spec in ARTIS SCHEMA.md.
+
+Write authority: ARTIS service (POST /artis/compute).
+
+  snapshot_id          — serial, primary key
+  computation_type     — text, NOT NULL
+  caller_page_code     — text, NOT NULL
+  deposit_ids          — text[], NOT NULL
+  inputs               — jsonb, NOT NULL
+  parameters           — jsonb, NOT NULL
+  function_called      — text, NOT NULL
+  raw_output           — jsonb, NOT NULL
+  result_summary       — text, NOT NULL
+  error                — text, nullable
+  duration_ms          — integer, NOT NULL
+  created_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: artis_external_references
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+External reference registry for Cosmology findings.
+Full spec in ARTIS SCHEMA.md.
+
+Write authority: ARTIS service (POST /artis/references).
+
+  reference_id         — serial, primary key
+  doi                  — text, nullable
+  url                  — text, nullable
+  summary              — text, NOT NULL
+  title                — text, nullable
+  accessed             — date, nullable
+  page_codes           — text[], NOT NULL
+  tag_ids              — text[], nullable
+  created_at           — timestamp, NOT NULL
+  updated_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: science_domain_mappings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tag-to-domain-to-page-to-computation lookup for science ping pipeline.
+Full spec in ARTIS SCHEMA.md.
+
+Write authority: ARTIS service (POST/PATCH /artis/mappings).
+
+  mapping_id           — serial, primary key
+  tag_id               — text, NOT NULL
+  domain               — text, NOT NULL
+  page_code            — text, NOT NULL
+  description          — text, NOT NULL
+  computation_hints    — jsonb, NOT NULL
+  confidence           — float, NOT NULL
+  active               — boolean, NOT NULL, default true
+  proposed_by          — text, NOT NULL
+  decline_reason       — text, nullable
+  created_at           — timestamp, NOT NULL
+  updated_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: artis_layer2_snapshots
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Claude science framing responses. Permanent.
+Full spec in ARTIS SCHEMA.md.
+
+Write authority: ARTIS service (POST /artis/ping/content).
+
+  layer2_id            — serial, primary key
+  deposit_id           — text, NOT NULL
+  prompt_version       — text, NOT NULL
+  prompt_text          — text, NOT NULL
+  response             — jsonb, NOT NULL
+  framework_candidates — jsonb, NOT NULL
+  model_version        — text, NOT NULL
+  sage_selection       — text, nullable
+  created_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: artis_reference_distributions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Named numerical distributions for KS/KL comparison computations.
+Full spec in ARTIS SCHEMA.md.
+
+Write authority: ARTIS service (POST /artis/distributions).
+
+  distribution_id      — serial, primary key
+  name                 — text, NOT NULL, UNIQUE
+  description          — text, NOT NULL
+  distribution_data    — jsonb, NOT NULL
+  source               — text, NOT NULL
+  page_codes           — text[], NOT NULL
+  superseded_by        — integer, nullable, FK → artis_reference_distributions
+  created_at           — timestamp, NOT NULL
+  updated_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: cosmology_findings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Shared Cosmology investigation findings, discriminated by page_code.
+Full spec in COSMOLOGY SCHEMA.md.
+
+Write authority: Cosmology page services (hco, cos, clm, nhm, rct).
+
+  finding_id           — serial, primary key
+  page_code            — text, NOT NULL
+  deposit_ids          — text[], NOT NULL
+  framework            — text, NOT NULL
+  hypothesis           — text, NOT NULL
+  computation_snapshot_id — integer, NOT NULL, FK → artis_computation_snapshots
+  result_summary       — text, NOT NULL
+  values               — jsonb, NOT NULL
+  confidence           — float, NOT NULL
+  external_reference_id — integer, nullable, FK → artis_external_references
+  nexus_eligible       — boolean, NOT NULL, default false
+  status               — text, NOT NULL, default 'draft'
+  superseded_by        — integer, nullable, FK → cosmology_findings
+  abandoned_reason     — text, nullable
+  created_at           — timestamp, NOT NULL
+  updated_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: rct_residuals
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RCT residual records — delta between known science and field behavior.
+Full spec in COSMOLOGY SCHEMA.md.
+
+Write authority: RCT service only (POST /rct/residuals).
+
+  residual_id          — serial, primary key
+  source_finding_id    — integer, NOT NULL, FK → cosmology_findings
+  algorithm_component  — text, NOT NULL
+  known_science_predict — text, NOT NULL
+  field_produces       — text, NOT NULL
+  delta                — text, NOT NULL
+  computation_ref      — integer, NOT NULL, FK → artis_computation_snapshots
+  nexus_eligible       — boolean, NOT NULL, default false
+  created_at           — timestamp, NOT NULL
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CHUNK QUEUE DERIVATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -1816,7 +1970,10 @@ backend/models/
   venai_correlations, inf_domain_layers, inf_layer_bridge,
   lnv_entries, void_absence_records, void_outputs,
   wsc_entries, wsc_corrections, wsc_gaps,
-  outcome_vector_history.
+  outcome_vector_history, artis_computation_snapshots,
+  artis_external_references, science_domain_mappings,
+  artis_layer2_snapshots, artis_reference_distributions,
+  cosmology_findings, rct_residuals.
   Status: PLANNED
 
 backend/services/

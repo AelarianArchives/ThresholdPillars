@@ -12,7 +12,7 @@
 
 * Database layer (PostgreSQL) — all read and write operations across every table in the archive
 * Schema versioning via Alembic migrations — every table change is a versioned migration
-* Table ownership for: root_entries · file_assets · manifest_sessions · deposits · archives · prompt_versions · instances · annotations · aos_records · system_counters · routine_sessions · synthesis_sessions · findings · drift_events · patterns · emergence_findings · embeddings
+* Table ownership for: root_entries · file_assets · manifest_sessions · deposits · archives · prompt_versions · instances · annotations · aos_records · system_counters · routine_sessions · synthesis_sessions · findings · drift_events · patterns · emergence_findings · embeddings · artis_computation_snapshots · artis_external_references · science_domain_mappings · artis_layer2_snapshots · artis_reference_distributions · cosmology_findings · rct_residuals
 * arc_seq counter operations — increment, checkpoint write, checkpoint clear
 * Chunk queue derivation — computing next_chunk, page_start, page_end, queue_done
 * Write path execution for every system — FastAPI service layer executes the write; the owning system owns the decision to write
@@ -86,6 +86,13 @@ Each table lists who decides what is written and what the FastAPI service layer 
 | wsc_corrections | WSC service | forward-reference correction creation at entry write time |
 | wsc_gaps | WSC service | gap detection and recording at entry write time |
 | outcome_vector_history | DTX service | vector history write on every Bayesian update from SGR |
+| artis_computation_snapshots | ARTIS service | computation execution, snapshot creation (immutable) |
+| artis_external_references | ARTIS service | reference creation, page_codes/tag_ids updates |
+| science_domain_mappings | ARTIS service | mapping creation, confirm/decline, deactivation |
+| artis_layer2_snapshots | ARTIS service | Claude framing response storage, sage_selection update |
+| artis_reference_distributions | ARTIS service | distribution creation, superseded_by update |
+| cosmology_findings | Cosmology page services (hco, cos, clm, nhm, rct) | finding creation, status transitions, nexus_eligible, LNV routing |
+| rct_residuals | RCT service | residual creation (immutable), LNV routing |
 
 The service layer never initiates a write based on its own judgment. Every write is triggered by the owning system.
 
@@ -143,7 +150,7 @@ The service layer never initiates a write based on its own judgment. Every write
 
 **inf_layer_bridge** — bridge between TAG VOCABULARY routing layers (l01-l04) and INF domain layers. Many-to-many. Composite primary key (tag_layer_id, inf_domain_id). Config table seeded at startup. See INFINITE INTRICACY ENGINE SCHEMA.md.
 
-**lnv_entries** — consolidated output gallery. Single table, type-discriminated (mtm_finding, engine_snapshot, wsc_entry, void_output). Universal receive contract via POST /api/lnv/receive. Content jsonb validated against declared entry_type. Both display surface (gallery) and data source (PCV reads mtm_finding entries). See LNV SCHEMA.md.
+**lnv_entries** — consolidated output gallery. Single table, type-discriminated (mtm_finding, engine_snapshot, wsc_entry, void_output, cosmology_finding, rct_residual). Universal receive contract via POST /api/lnv/receive. Content jsonb validated against declared entry_type. Both display surface (gallery) and data source (PCV reads mtm_finding and cosmology_finding entries). See LNV SCHEMA.md.
 
 **void_absence_records** — cross-engine absence pattern detection. Five types: A (cross_engine_convergent), B (single_engine_persistent), C (temporal_shift), D (convergent_with_origin), E (hypothesis_attrition). Types A and D route to PCV as hypotheses. Carries examination_data, PCV routing status, Type E reactivation tracking. See VOID ENGINE SCHEMA.md.
 
@@ -156,6 +163,20 @@ The service layer never initiates a write based on its own judgment. Every write
 **wsc_gaps** — session gap detection records. Written automatically when a WSC entry is created and the system detects the prior session has no WSC record. Carries sessions_elapsed count. Included in the 3-entry session open timeline. See WSC SCHEMA.md.
 
 **outcome_vector_history** — DTX Bayesian update history for ternary plot visualization. Written on every Bayesian update from SGR alongside the outcome_vector write on drift_events. Carries the full probability vector (p_resolve, p_collapse, p_stable) at each update point. See DRIFT TAXONOMY SCHEMA.md.
+
+**artis_computation_snapshots** — every computation run in the Cosmology group. Immutable after creation (no update, no delete). Carries computation_type, caller_page_code, deposit_ids, inputs, parameters, function_called, raw_output, result_summary, error, duration_ms. Referenced by cosmology_findings.computation_snapshot_id and rct_residuals.computation_ref. See ARTIS SCHEMA.md.
+
+**artis_external_references** — external reference registry for Cosmology findings. Carries doi, url, summary (required), title, accessed, page_codes, tag_ids. Referenced by cosmology_findings.external_reference_id. Shared across all investigation pages. See ARTIS SCHEMA.md.
+
+**science_domain_mappings** — tag-to-domain-to-page-to-computation lookup for the science ping pipeline. Carries tag_id, domain, page_code, description, computation_hints (jsonb), confidence, active, proposed_by (sage/claude), decline_reason. Claude-proposed mappings start inactive; Sage confirms. See ARTIS SCHEMA.md.
+
+**artis_layer2_snapshots** — Claude science framing responses. Permanent retention. Carries deposit_id (reference, not content), prompt_version, prompt_text, response (jsonb), framework_candidates, model_version, sage_selection. See ARTIS SCHEMA.md.
+
+**artis_reference_distributions** — named numerical distributions for KS/KL comparison computations. Carries name (unique), description, distribution_data (jsonb, serialized array), source, page_codes, superseded_by. Cross-page resource. See ARTIS SCHEMA.md.
+
+**cosmology_findings** — shared Cosmology investigation findings, discriminated by page_code. Carries page_code, deposit_ids, framework, hypothesis, computation_snapshot_id (FK), result_summary, values (jsonb), confidence (Sage's assessment), external_reference_id, nexus_eligible, status (draft/confirmed/superseded/abandoned). See COSMOLOGY SCHEMA.md.
+
+**rct_residuals** — RCT residual records. Delta between known science predictions and field behavior. Immutable after creation. Carries source_finding_id (FK to cosmology_findings), algorithm_component, known_science_predict, field_produces, delta, computation_ref (FK to artis_computation_snapshots), nexus_eligible. Routes to LNV immediately on creation. See COSMOLOGY SCHEMA.md.
 
 ---
 

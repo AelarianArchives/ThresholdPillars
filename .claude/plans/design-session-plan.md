@@ -5502,9 +5502,16 @@ Items that don't belong to a single tier or can be done at any point.
       · Tier 3: COMPLETE (session 27) — shared engine computation, 5 Axis
         engine schemas, Ven'ai service, 8 PostgreSQL tables, stale flags,
         Mirror Dynamics 5th domain, 17 frontend viz components
-      · Tier 4: WSC schema, LNV schema, Void engine schema
-      · Tier 5: ARTIS schema (5 tables, 12 endpoints), cosmology_findings,
-        rct_residual, page investigation surfaces (HCO, COS, CLM, NHM, RCT)
+      · Tier 4: COMPLETE (session 28) — WSC schema, LNV schema, Void engine
+        schema, MTM two-pass rewrite, DNR update, PCV/DTX/SGR Nexus cascades,
+        Integration DB + FastAPI + Frontend cascades
+      · Tier 5: COMPLETE (session 29) — ARTIS schema (5 tables, 12 endpoints,
+        15 V1 computations, 3 PLANNED), ARTIS system doc, Cosmology schema
+        (cosmology_findings + rct_residuals + 5 investigation surfaces),
+        Cosmology system doc, LNV cascade (4→6 entry types), PCV cascade
+        (cosmology_provenance third provenance type), Integration DB cascade
+        (7 new tables), FastAPI cascade (3 namespaces, 11 files), Frontend
+        cascade (23 new components), manifest verification pass (34-38)
       · Tier 6: Research assistant spec, resonance audio spec
       · Update existing schemas with new fields where needed at each tier
 
@@ -5934,10 +5941,10 @@ cross-map all references, entropy scan after every pass. One file at a time.
 | 1 | Deposits table, observation_presence rename, deposit_weight in tagger, INT manifest, prompt_versions, correction_context | COMPLETE | 3bebaa5 |
 | 2 | Void page 51, Pearl extensions, instances/annotations/AOS tables, SYSTEM_ Frontend.md full UI architecture | COMPLETE | session 26 |
 | 3 | Shared engine computation, 5 Axis engine schemas (THR, ECR, INF, STR, SNM), Ven'ai service, 8 PostgreSQL tables, stale flags, visualization architecture, Mirror Dynamics (5th INF domain), 17 frontend components | COMPLETE | session 27 |
+| 4 | WSC schema, LNV schema, Void engine schema, MTM wiring, Nexus engines (PCV/DTX/SGR cascades) | COMPLETE | session 28 |
+| 5 | ARTIS schema (5 tables, 12 endpoints, 15 computations), ARTIS system doc, Cosmology schema (cosmology_findings + rct_residuals + 5 investigation surfaces), Cosmology system doc, LNV cascade (6 entry types), PCV cascade (cosmology_provenance), Integration DB cascade (7 tables), FastAPI cascade (3 namespaces, 11 files), Frontend cascade (23 components) | COMPLETE | session 29 |
 
 ### REMAINING TIERS
-| 4 | WSC schema, LNV schema, Void engine schema, MTM wiring, Nexus engines | Tier 3 |
-| 5 | ARTIS schema (5 tables, 12 endpoints), cosmology_findings, rct_residual, investigation surfaces | Tier 4 |
 | 6 | Research assistant spec, resonance audio spec | Tier 5 |
 | 7 | Dashboard details, notifications, export, pipeline contracts | Tier 6 |
 | 8 | Stress test, stub sweep, finish line, SOT | Tiers 1-7 |

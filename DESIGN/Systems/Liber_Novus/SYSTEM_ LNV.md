@@ -17,7 +17,9 @@
 
 ## WHAT THIS SYSTEM DOES NOT OWN
 
-* Finding production — owned by MTM. LNV receives Findings after DNR routes them. LNV does not produce, modify, or interpret Findings.
+* MTM Finding production — owned by MTM. LNV receives Findings after DNR routes them. LNV does not produce, modify, or interpret Findings.
+* Cosmology finding production — owned by Cosmology page services (HCO, COS, CLM, NHM, RCT). LNV receives confirmed findings; it does not produce them.
+* RCT residual production — owned by RCT. LNV receives residuals; it does not produce them.
 * Engine computation — owned by individual engine services (Tier 3). LNV stores snapshots of computed visualizations; it does not trigger or own computation.
 * WSC entry production — owned by WSC. LNV receives entries after WSC write path completes. LNV does not produce or modify WSC entries.
 * Void analytical output — owned by Void. LNV receives outputs after Void session-close or on-demand analysis completes.
@@ -34,7 +36,7 @@ LNV is not just a gallery. It is also a data source.
 
 **Display surface:** The LNV page shows all entry types in a unified gallery. Cards in responsive grid, filterable, sortable. Each card shows type badge, source system, date, content preview, sage note if present, prompt version if AI-authored. Expand on click for full content.
 
-**Data source:** PCV reads mtm_finding entries from LNV as pre-processed input for hypothesis detection. Dashboard reads recent entries for signal surface. Any system can query LNV's consolidated output through the read contract.
+**Data source:** PCV reads mtm_finding entries from LNV as pre-processed input for hypothesis detection. PCV also reads cosmology_finding entries when findings are marked nexus_eligible. RCT reads rct_residual entries for accumulation tracking. Dashboard reads recent entries for signal surface. Any system can query LNV's consolidated output through the read contract.
 
 These are both first-class roles. The read contract exists because LNV is the single place where processed outputs from across the archive land. Systems that need to read those outputs read from LNV — not from the producing systems directly.
 
@@ -42,7 +44,7 @@ These are both first-class roles. The read contract exists because LNV is the si
 
 ## THE SINGLE-TABLE ARCHITECTURE
 
-One table. Four entry types (expanding to six in Tier 5). All types share the same provenance fields (source_system, source_page, session_ref, prompt_version, sage_note). The content field is type-specific jsonb — each entry_type has a defined content shape.
+One table. Six entry types. All types share the same provenance fields (source_system, source_page, session_ref, prompt_version, sage_note). The content field is type-specific jsonb — each entry_type has a defined content shape.
 
 **Why one table:** The gallery treats all types uniformly. Filtering by type is a query parameter, not a table join. PCV's read path (entry_type=mtm_finding) is a single filtered query. Adding a new entry_type requires adding an enum value and defining a content shape — no schema migration, no new tables, no new endpoints.
 
@@ -72,6 +74,8 @@ Engine snapshots are Sage-triggered only. Session close does not automatically s
 - Engine visualization snapshots (Sage-triggered, entry_type: engine_snapshot)
 - WSC entries (after DNR completes, entry_type: wsc_entry)
 - Void on-demand read outputs (Sage-triggered, entry_type: void_output)
+- Cosmology findings (Sage-triggered on confirmed findings, entry_type: cosmology_finding)
+- RCT residuals (automatic on residual creation, entry_type: rct_residual)
 
 ---
 

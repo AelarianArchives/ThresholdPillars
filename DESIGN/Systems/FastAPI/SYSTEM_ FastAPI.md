@@ -54,6 +54,9 @@
 | `/api/lnv/` | LNV universal receive + read contracts — POST /api/lnv/receive, GET /api/lnv/entries | PLANNED |
 | `/void/` | Void engine endpoints — compute (data layer), analyze (analytical layer), reactivate (Type E), absence record + output queries | PLANNED |
 | `/api/wsc/` | WSC witness scroll endpoints — write, recent (3-entry load), entries query, single entry read | PLANNED |
+| `/artis/` | ARTIS computation engine endpoints — compute, science ping pipeline (tags/content/suggest), snapshots, references, mappings, distributions. 12 endpoints | PLANNED |
+| `/cosmology/` | Shared Cosmology investigation endpoints — findings CRUD, confirm/abandon/supersede, nexus-eligible, LNV routing. 8 endpoints | PLANNED |
+| `/rct/` | RCT-specific endpoints — residual creation (auto-routes to LNV), residual query, accumulation counts. 4 endpoints | PLANNED |
 | `/swarm/` | RESERVED — phase 2 (turn management, presence, autonomous initiation, parallax logging) | RESERVED |
 
 All routes are versioned by namespace, not by URL prefix. No `/v1/` prefix. If the API contract changes, the change is a migration — not a new version namespace.
@@ -147,6 +150,9 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | backend/routes/lnv.py | LNV endpoints — POST /api/lnv/receive, GET /api/lnv/entries | PLANNED |
 | backend/routes/void.py | Void engine endpoints — compute, analyze, reactivate, queries | PLANNED |
 | backend/routes/wsc.py | WSC endpoints — write, recent, entries, single entry | PLANNED |
+| backend/routes/artis.py | ARTIS endpoints — compute, ping/tags, ping/content, ping/suggest, snapshots, references, mappings, distributions (12 routes) | PLANNED |
+| backend/routes/cosmology.py | Shared Cosmology endpoints — findings CRUD, confirm, abandon, supersede, nexus-eligible, route-lnv (8 routes) | PLANNED |
+| backend/routes/rct.py | RCT endpoints — residuals create, query, single, accumulation (4 routes) | PLANNED |
 | backend/routes/swarm/ | Reserved namespace — phase 2 | RESERVED |
 | backend/services/engine_base.py | Shared engine computation — baseline math, weight application, null handling, signal classification, snapshot write, stale flag check | PLANNED |
 | backend/services/engine_thr.py | THR engine — co-occurrence, presence, sequence | PLANNED |
@@ -163,6 +169,14 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | backend/services/lnv.py | LNV service — receive validation, content shape checking, entry writes, read queries | PLANNED |
 | backend/services/void.py | Void service — absence detection, five-type classification, Claude tool (3 modes), PCV routing, Type E, reactivation | PLANNED |
 | backend/services/wsc.py | WSC service — payload assembly, Claude API call, entry creation, gap detection, corrections, 3-entry load, LNV routing | PLANNED |
+| backend/services/artis.py | ARTIS service — mapping management, reference registry, snapshot retrieval, science ping pipeline orchestration, Layer 2 Claude calls | PLANNED |
+| backend/services/computation.py | ARTIS computation library — 15 V1 implementations (scipy/numpy), input validation, snapshot creation | PLANNED |
+| backend/services/cosmology.py | Shared Cosmology findings service — create, confirm, abandon, supersede, nexus-eligible, LNV routing | PLANNED |
+| backend/services/rct.py | RCT service — residual creation, accumulation tracking, threshold prompt, LNV routing | PLANNED |
+| backend/services/hco.py | HCO investigation surface — deposit-to-finding workflow, ARTIS computation requests | PLANNED |
+| backend/services/cos.py | COS investigation surface — coupling analysis, multi-deposit findings | PLANNED |
+| backend/services/clm.py | CLM investigation surface — geometric analysis, embedding dependency check | PLANNED |
+| backend/services/nhm.py | NHM investigation surface — information-theoretic analysis, reference distribution queries | PLANNED |
 | backend/services/claude.py | Claude API client wrapper — agent identity registry (8 agents), shared model constant, call_claude() with metadata tracking | LIVE |
 | backend/services/embedding.py | Ollama embedding integration | PLANNED |
 | backend/services/rag.py | Retrieval-augmented generation pipeline | PLANNED |

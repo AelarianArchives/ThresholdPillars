@@ -4,9 +4,9 @@
 
 ## /DESIGN/Systems/Pattern_Convergence/PATTERN CONVERGENCE SCHEMA.md
 
-Mechanical spec — hypothesis record shape, provenance flags, card board and
-network graph visualizations, hypothesis_id format, pattern record creation,
-status transitions, validation, failure modes.
+Mechanical spec — hypothesis record shape, three provenance types (MTM, Void,
+Cosmology), card board and network graph visualizations, hypothesis_id format,
+pattern record creation, status transitions, validation, failure modes.
 
 ---
 
@@ -55,6 +55,13 @@ status transitions, validation, failure modes.
    hypotheses. void_finding_ref links to the originating Void absence record.
    They thread through DTX → SGR like any other hypothesis.
 
+3a. Cosmology findings marked nexus_eligible arrive with cosmology_provenance
+    flag. They are computation-backed hypotheses — structurally distinct from
+    direct observations. cosmology_finding_ref links to the originating
+    cosmology_findings record. They thread through DTX → SGR like any other
+    hypothesis. Circularity protection: downstream systems do not treat these
+    as independent corroboration of the computation that generated them.
+
 4. PCV does not assign significance. PCV does not assign predictive weight. PCV
    does not confirm outcomes. Patterns are observed and logged as structurally
    testable hypotheses. Nothing more.
@@ -70,11 +77,11 @@ status transitions, validation, failure modes.
    interval, name the vector, log the relationship as a hypothesis. The interval
    and coupling vector are required fields, not optional annotations.
 
-8. Provenance flags (mtm_provenance, void_provenance) are first-class metadata.
-   Downstream systems (DTX, SGR, Void's Claude tool, MTM's provenance filter)
-   read these flags to distinguish independent observations from downstream
-   outputs. A hypothesis with mtm_provenance or void_provenance is not
-   independent corroboration of the system that generated it.
+8. Provenance flags (mtm_provenance, void_provenance, cosmology_provenance)
+   are first-class metadata. Downstream systems (DTX, SGR, Void's Claude tool,
+   MTM's provenance filter) read these flags to distinguish independent
+   observations from downstream outputs. A hypothesis with any provenance flag
+   is not independent corroboration of the system that generated it.
 
 ---
 
@@ -109,15 +116,22 @@ must remain stable and unmodified after assignment.
 | mtm_finding_ref | foreign key / null | References findings.id in MTM schema. Null if mtm_provenance is false. |
 | void_provenance | boolean | True if this hypothesis originated from Void absence detection (types A or D). When true, void_finding_ref is required. |
 | void_finding_ref | string / null | References Void absence record. Null if void_provenance is false. |
+| cosmology_provenance | boolean | True if this hypothesis originated from a Cosmology finding marked nexus_eligible. When true, cosmology_finding_ref is required. |
+| cosmology_finding_ref | foreign key / null | References cosmology_findings.finding_id. Null if cosmology_provenance is false. |
 | status | enum | `active`, `archived`. active: pattern is live, feeding DTX. archived: pattern resolved, superseded, or closed by SGR outcome. |
 | created_at | timestamp | Written once at record creation. Never updated. |
 
-### Future provenance expansion
+### Provenance types
 
-Tier 5 adds cosmology_provenance: boolean + cosmology_finding_ref: string / null.
-Third provenance type. Same circularity protection — prompt instructs downstream
-systems not to treat cosmology-provenance hypotheses as independent corroboration
-of the computation that generated them.
+Three provenance types exist on pattern records. Each marks a hypothesis as
+originating from a system output rather than direct observation. Downstream
+systems check these flags to prevent circular confirmation.
+
+| Flag | Source | Ref field | Protection |
+| --- | --- | --- | --- |
+| mtm_provenance | MTM Finding | mtm_finding_ref | Not independent corroboration of MTM synthesis |
+| void_provenance | Void absence detection (types A, D) | void_finding_ref | Not independent corroboration of absence pattern |
+| cosmology_provenance | Cosmology finding (nexus_eligible) | cosmology_finding_ref | Not independent corroboration of the computation that generated it |
 
 ---
 
@@ -141,21 +155,22 @@ Each active hypothesis is a card. Filterable, sortable.
 | status | active / archived |
 | MTM provenance flag | Visually distinct badge. MTM-generated vs direct observation. |
 | Void provenance flag | Visually distinct badge. Void-generated absence claim. |
+| Cosmology provenance flag | Visually distinct badge. Cosmology-finding-generated hypothesis. |
 | created_at | Date |
 
 **Filters:** by domain, by status, by MTM provenance, by void provenance, by
-date range. All combinable.
+cosmology provenance, by date range. All combinable.
 
-**Sort:** by date, by domain count, by MTM provenance.
+**Sort:** by date, by domain count, by provenance type.
 
 **Click expands:** full hypothesis_statement, source_signals with page_code and
 deposit_id links, coupling_vector, interval, DTX/SGR thread (drift event status,
 current grade if exists).
 
 **Provenance as first-class filter dimension:** "Which hypotheses did the system
-generate vs which came from direct observation" is a research question. MTM
-provenance and void provenance are filterable and sortable as first-class
-dimensions — not footnotes.
+generate vs which came from direct observation" is a research question. All
+three provenance types (MTM, Void, Cosmology) are filterable and sortable as
+first-class dimensions — not footnotes.
 
 ### Network graph (secondary)
 
@@ -189,7 +204,7 @@ connect. Pattern count gives edge weight.
 
 1. Receive observation data: domain_of_origin, timestamp, interval (if
    applicable), coupling_vector, source_signals, hypothesis_statement,
-   mtm_provenance flag, void_provenance flag.
+   mtm_provenance flag, void_provenance flag, cosmology_provenance flag.
 
 2. Validate all required fields present — domain_of_origin (min one entry),
    coupling_vector, source_signals (min one entry), hypothesis_statement.
@@ -204,6 +219,10 @@ connect. Pattern count gives edge weight.
 5. If void_provenance true: validate void_finding_ref is present and references
    a valid Void absence record. Reject if absent. No write occurs.
 
+5a. If cosmology_provenance true: validate cosmology_finding_ref is present and
+    references a valid cosmology_findings record with nexus_eligible: true.
+    Reject if absent or if finding is not nexus_eligible. No write occurs.
+
 6. Assign hypothesis_id: query patterns for highest existing SEQ at same
    YYYY-MM. Increment by 1. Start at 1 if none exist.
    Format: H · [YYYY-MM] · [SEQ].
@@ -211,7 +230,7 @@ connect. Pattern count gives edge weight.
 7. Write pattern record: all fields, status → active, created_at = timestamp.
    hypothesis_id is now available for DTX and SGR.
 
-Failure at step 2, 3, 4, or 5: record rejected. No write occurs.
+Failure at step 2, 3, 4, 5, or 5a: record rejected. No write occurs.
 Failure at step 7: PostgreSQL write failure. No partial record written.
 Re-submission required.
 
@@ -232,9 +251,10 @@ Failure at step 2: status remains active. Retry permitted.
 
 Validates all required fields, checks hypothesis_statement for violation
 language, validates mtm_finding_ref when mtm_provenance is true, validates
-void_finding_ref when void_provenance is true, assigns hypothesis_id, writes
-pattern record. Returns hypothesis_id. This is the value DTX receives as
-hypothesis_ref and SGR receives for grading.
+void_finding_ref when void_provenance is true, validates cosmology_finding_ref
+when cosmology_provenance is true (must reference nexus_eligible finding),
+assigns hypothesis_id, writes pattern record. Returns hypothesis_id. This is
+the value DTX receives as hypothesis_ref and SGR receives for grading.
 
 ### PATCH /pcv/patterns/{hypothesis_id}/archive
 
@@ -245,8 +265,8 @@ pattern. No archive without a resolution reference.
 ### GET /pcv/patterns
 
 Query active and/or archived patterns. Filterable by domain_of_origin, status,
-mtm_provenance, void_provenance, date range. Sortable by date, domain count.
-Paginated.
+mtm_provenance, void_provenance, cosmology_provenance, date range. Sortable by
+date, domain count, provenance type. Paginated.
 
 ---
 
@@ -296,6 +316,16 @@ function without the reference.
 **Guard:** when void_provenance is true, void_finding_ref is required and
 validated at record creation. Record rejected if void_finding_ref is absent.
 
+### 5a. cosmology_provenance true with cosmology_finding_ref null or non-nexus finding
+
+Cosmology provenance is claimed but not traceable, or the referenced finding
+is not nexus_eligible. The provenance chain is broken. The circularity filter
+cannot function without the reference.
+
+**Guard:** when cosmology_provenance is true, cosmology_finding_ref is required,
+must reference a valid cosmology_findings record, and that record must have
+nexus_eligible: true. Record rejected if any condition fails.
+
 ### 6. Pattern archived without resolution_ref
 
 Pattern status transitions to archived with no DTX or SGR reference. The
@@ -305,17 +335,18 @@ the pattern closed.
 **Guard:** archive trigger must carry a resolution_ref. Status transition
 without resolution_ref is rejected.
 
-### 7. Void-provenance or MTM-provenance hypothesis treated as independent corroboration
+### 7. Provenance-flagged hypothesis treated as independent corroboration
 
-Downstream systems (SGR, Void's Claude tool, MTM) read a provenance-flagged
-hypothesis as if it were independent evidence of the pattern that generated it.
-Confirmation loop.
+Downstream systems (SGR, Void's Claude tool, MTM, Cosmology) read a
+provenance-flagged hypothesis as if it were independent evidence of the pattern
+that generated it. Confirmation loop.
 
-**Guard:** provenance flags exist precisely for this. All downstream systems
-reading PCV data check mtm_provenance and void_provenance. Prompt instructions
-for Void and MTM explicitly flag these as downstream outputs. SGR grading does
-not treat provenance-flagged hypotheses differently in computation, but the
-grade is legible as "grade of a system-generated hypothesis" through the
+**Guard:** All three provenance flags (mtm_provenance, void_provenance,
+cosmology_provenance) exist precisely for this. All downstream systems reading
+PCV data check these flags. Prompt instructions for Void, MTM, and Cosmology
+explicitly flag provenance-tagged hypotheses as downstream outputs. SGR grading
+does not treat provenance-flagged hypotheses differently in computation, but
+the grade is legible as "grade of a system-generated hypothesis" through the
 provenance chain.
 
 ---

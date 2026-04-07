@@ -4,9 +4,9 @@
 
 ## /DESIGN/Systems/Liber_Novus/LNV SCHEMA.md
 
-Mechanical spec — single-table type-discriminated architecture, receive
-contract, read contract, content shapes per entry type, snapshot storage,
-session-close policy, gallery display, validation, failure modes.
+Mechanical spec — single-table type-discriminated architecture (6 entry types),
+receive contract, read contract, content shapes per entry type, snapshot
+storage, session-close policy, gallery display, validation, failure modes.
 Architectural description in SYSTEM_ LNV.md.
 
 ---
@@ -24,7 +24,9 @@ Architectural description in SYSTEM_ LNV.md.
 
 ### DOES NOT OWN
 
-- Finding production — owned by MTM. LNV receives Findings; it does not produce them.
+- MTM Finding production — owned by MTM. LNV receives MTM Findings; it does not produce them.
+- Cosmology finding production — owned by Cosmology page services (HCO, COS, CLM, NHM, RCT). LNV receives confirmed findings; it does not produce them.
+- RCT residual production — owned by RCT. LNV receives residuals; it does not produce them.
 - Engine computation — owned by individual engine services. LNV stores snapshots; it does not trigger or own computation.
 - WSC entry production — owned by WSC. LNV receives entries; it does not produce them.
 - Void analytical output — owned by Void. LNV receives outputs; it does not trigger analysis.
@@ -67,8 +69,8 @@ Architectural description in SYSTEM_ LNV.md.
 | Field | Type | Description |
 | --- | --- | --- |
 | lnv_entry_id | auto | Primary key |
-| entry_type | enum | `mtm_finding`, `engine_snapshot`, `wsc_entry`, `void_output`. Determines which content shape is expected. |
-| source_system | string | Which system produced this. Values: mtm, thr, str, inf, ecr, snm, wsc, void, pcv, dtx, sgr. |
+| entry_type | enum | `mtm_finding`, `engine_snapshot`, `wsc_entry`, `void_output`, `cosmology_finding`, `rct_residual`. Determines which content shape is expected. |
+| source_system | string | Which system produced this. Values: mtm, thr, str, inf, ecr, snm, wsc, void, pcv, dtx, sgr, hco, cos, clm, nhm, rct. |
 | source_page | string / null | Which page this originated from (page_code). Null for cross-page outputs like MTM. |
 | session_ref | string / null | Which session produced this. |
 | prompt_version | string / null | For AI-authored types (wsc, void, mtm). Null for engine_snapshot. |
@@ -76,11 +78,10 @@ Architectural description in SYSTEM_ LNV.md.
 | sage_note | string / null | Optional researcher note at capture time. |
 | created_at | timestamp | Written once at record creation. Never updated. |
 
-### Future entry_type expansion
+### Entry type expansion history
 
-Tier 5 adds two additional entry_type values: `cosmology_finding` and
-`rct_residual`. Content shapes for those types are defined in Tier 5 (ARTIS
-and RCT schemas). The lnv_entries table and receive contract are designed to
+Tier 5 added two entry_type values: `cosmology_finding` and `rct_residual`.
+Content shapes defined below. The lnv_entries table and receive contract
 accommodate new types without structural changes — add the enum value and
 define the content shape.
 
@@ -161,6 +162,59 @@ What was stored is what displays, permanently.
 }
 ```
 
+### cosmology_finding
+
+Routed when a Cosmology finding is confirmed (status: confirmed). Sage-
+triggered from the finding card or findings panel. Full spec in COSMOLOGY
+SCHEMA.md.
+
+```json
+{
+  "finding_id":              "string — references cosmology_findings table",
+  "page_code":               "HCO | COS | CLM | NHM | RCT",
+  "framework":               "string",
+  "hypothesis":              "string",
+  "computation_snapshot_id": "string — references artis_computation_snapshots",
+  "result_summary":          "string",
+  "values":                  "object — p-values, coefficients, statistical output",
+  "confidence":              "float — Sage's research significance assessment",
+  "external_reference_id":   "string | null",
+  "nexus_eligible":          "boolean",
+  "deposit_ids":             "string[]"
+}
+```
+
+source_system: the page code in lowercase (hco, cos, clm, nhm, rct).
+source_page: the page code (HCO, COS, CLM, NHM, RCT).
+prompt_version: null (not AI-authored).
+
+### rct_residual
+
+Routed immediately on rct_residual creation. Automatic — residuals enter LNV
+as soon as they are detected. Full spec in COSMOLOGY SCHEMA.md.
+
+```json
+{
+  "residual_id":          "string — references rct_residuals table",
+  "algorithm_component":  "lagrange | tribonacci | fibonacci | oscillation | combined",
+  "known_science_predict": "string",
+  "field_produces":        "string",
+  "delta":                 "string",
+  "computation_ref":       "string — references artis_computation_snapshots",
+  "source_deposits":       "string[] — derived from source finding's deposit_ids at route time",
+  "accumulation_count":    "integer — snapshot at route time, sealed",
+  "nexus_eligible":        "boolean"
+}
+```
+
+source_system: rct.
+source_page: RCT.
+prompt_version: null (not AI-authored).
+
+accumulation_count is a snapshot at route time — sealed in the LNV entry, not
+a live counter. Shows how many residuals existed on this algorithm_component
+when this one was created.
+
 ---
 
 ## RECEIVE CONTRACT
@@ -173,7 +227,7 @@ Universal receive endpoint. All callers use this endpoint. No bespoke pipes.
 
 ```json
 {
-  "entry_type":     "mtm_finding | engine_snapshot | wsc_entry | void_output",
+  "entry_type":     "mtm_finding | engine_snapshot | wsc_entry | void_output | cosmology_finding | rct_residual",
   "source_system":  "string",
   "source_page":    "page_code | null",
   "session_ref":    "string | null",
@@ -226,6 +280,8 @@ Type-shape mismatch is a hard failure, not a warning.
 | WSC write path | wsc_entry | After WSC entry written |
 | Void session-close | void_output | Automatic at session close |
 | Void on-demand | void_output | Sage-triggered |
+| Cosmology page service | cosmology_finding | Sage-triggered from finding card (confirmed findings only) |
+| RCT residual service | rct_residual | Automatic on residual creation |
 
 ---
 
@@ -264,7 +320,9 @@ Query endpoint for all consumers.
 | --- | --- | --- |
 | LNV page | All types, chronological | Gallery display |
 | PCV | entry_type=mtm_finding | Pre-processed input for hypothesis detection |
+| PCV | entry_type=cosmology_finding, nexus_eligible filter | Cosmology findings entering Nexus pipeline |
 | Dashboard | Recent entries, all types | Signal surface |
+| RCT | entry_type=rct_residual, source_page=RCT | Residual accumulation tracking |
 | Any system | Filtered as needed | Query LNV's consolidated output |
 
 ---
@@ -340,6 +398,8 @@ Full content per type:
 - mtm_finding: full Finding with provenance chain
 - wsc_entry: full WSC entry text
 - void_output: full analytical output with all sections
+- cosmology_finding: full finding card (framework, hypothesis, computation result, confidence, reference)
+- rct_residual: full residual card (algorithm component, prediction vs observation, delta, computation ref)
 
 ### Filters
 
@@ -356,9 +416,12 @@ Entry type badges with plain language:
 - engine_snapshot → "Visualization"
 - wsc_entry → "Witness Scroll"
 - void_output → "Void Analysis"
+- cosmology_finding → "Cosmology Finding"
+- rct_residual → "RCT Residual"
 
 Prompt version visible on AI-authored entries (mtm_finding, wsc_entry,
-void_output). Sage note visible when present.
+void_output). Not applicable to cosmology_finding or rct_residual (not
+AI-authored). Sage note visible when present.
 
 ---
 
@@ -375,8 +438,8 @@ error and can retry with corrected content.
 
 ### 2. Caller sends unrecognized entry_type
 
-A caller sends an entry_type value that LNV does not recognize (e.g., a Tier 5
-type before the enum is expanded).
+A caller sends an entry_type value that LNV does not recognize (e.g., a future
+type added before the enum is expanded).
 
 **Guard:** entry_type validation at receive time. Unrecognized type returns
 error_code: type_mismatch. Entry is not written.

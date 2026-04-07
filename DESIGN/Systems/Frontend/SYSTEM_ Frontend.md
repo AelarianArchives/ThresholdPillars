@@ -116,6 +116,26 @@ frontend/
 | LnvGalleryCard | LNV gallery card — type badge, source system, date, content preview, sage note, prompt version |
 | LnvGalleryGrid | LNV responsive grid — 2-3 columns, filterable by type/source/page/date, sortable |
 | WscWriteButton | WSC write trigger — available in session close flow and WSC page directly |
+| ARTISWorkbench | ARTIS Zone A — computation workbench, ad hoc computation execution, result display |
+| ARTISRegistryPanel | ARTIS Zone B — mapping management, snapshot history, engine health, reference registry, review queue |
+| ARTISPagePanel | ARTIS right-side panel — opens from Cosmology page headers, Zone B content without navigating away |
+| SciencePingIndicator | Deposit card indicator on Cosmology pages — "Science ping available", triggers Layer 1 |
+| SciencePingFlow | Multi-step ping flow — Layer 1 results → Layer 2 trigger → framework selection → Layer 3 suggestion → compute |
+| ComputationSnapshotCard | ARTIS snapshot display — computation_type, result_summary, duration, expandable to full inputs/parameters/raw_output |
+| MappingReviewCard | Claude-proposed mapping review — confirm/decline actions, confidence display, computation_hints preview |
+| FindingCard | Cosmology finding card — four zones (identity, framework+hypothesis, computation, result+confidence+reference), three action buttons (nexus-eligible, confirm, abandon) |
+| FindingsPanel | Separate findings panel per Cosmology page — all findings for the active page, filterable by status/framework/deposit |
+| FindingInlineIndicator | Deposit card badge on Cosmology pages — "N findings" with expand to finding cards |
+| ResidualPanel | RCT right panel — accumulating residuals by algorithm_component, threshold indicators, synthesis prompt |
+| ResidualCard | Individual RCT residual display — algorithm_component, prediction vs observation, delta, computation ref |
+| CouplingAnalysis | COS-specific visualization — correlation scatter plot, phase coherence display, coupled pair/group selection |
+| HarmonicSpectrum | HCO signature visualization — frequency spectrum with labeled peaks, LayerCake + D3 |
+| CorrelationScatter | COS signature visualization — correlation scatter plot, LayerCake + D3 |
+| ClusterDendrogram | CLM signature visualization — hierarchical clustering dendrogram / distance heatmap, LayerCake + D3 |
+| EntropyComparisonBar | NHM signature visualization — three-bar comparison (observed, random, structured), LayerCake + D3 |
+| NexusFeedbackIndicator | nexus_eligible status display on finding cards — visual state for not-eligible, eligible, routed-to-PCV |
+| ReferenceCard | External reference display — doi link, url link, summary, title, accessed date, page_codes badges |
+| DistributionCard | Reference distribution display — name, description, source, page_codes, data preview |
 
 ### Stores (PLANNED)
 
@@ -570,7 +590,7 @@ Guard: sort overrides stored in UI store per page per session. Reset on session 
 | frontend/src/routes/+layout.svelte | Root layout — shared shell (minimal scaffold) | LIVE |
 | frontend/src/routes/+page.svelte | Root page — dashboard (minimal scaffold) | LIVE |
 | frontend/src/lib/index.ts | Lib barrel export | LIVE |
-| frontend/src/lib/components/ | Shared components (Shell, NavigationSidebar, DepositCard, CompositeId, TaggerPanel, DepositPanel, BlackPearlPanel, Dashboard, CurationPanel, ThreadTrace, ResonanceCanvas, DepositGenealogy, ResearchVelocity, SessionOpening) | PLANNED |
+| frontend/src/lib/components/ | Shared components (Shell, NavigationSidebar, DepositCard, CompositeId, TaggerPanel, DepositPanel, BlackPearlPanel, Dashboard, CurationPanel, ThreadTrace, ResonanceCanvas, DepositGenealogy, ResearchVelocity, SessionOpening, ARTISWorkbench, ARTISRegistryPanel, ARTISPagePanel, SciencePingIndicator, SciencePingFlow, ComputationSnapshotCard, MappingReviewCard, FindingCard, FindingsPanel, FindingInlineIndicator, ResidualPanel, ResidualCard, CouplingAnalysis, HarmonicSpectrum, CorrelationScatter, ClusterDendrogram, EntropyComparisonBar, NexusFeedbackIndicator, ReferenceCard, DistributionCard) | PLANNED |
 | frontend/src/lib/stores/ | Svelte stores (session, entries, tagger, ui, pearls) | PLANNED |
 | frontend/src/lib/api.ts | Fetch wrapper — single interface to FastAPI backend | PLANNED |
 | frontend/src/routes/[...] | 51 page routes — routing strategy TBD | PLANNED |
