@@ -2986,6 +2986,13 @@ computation → correspondence strength, clustering, temporal tracking.
 ## BUILD TIER 4 — MTM WIRING + NEXUS ENGINES + WSC/LNV + VOID ENGINE
 
 **Depends on:** Tier 3 (Axis engines produce outputs to synthesize/detect)
+**Status:** COMPLETE (session 28). All schemas written and verified. MTM
+two-pass rewrite, LNV + Void + WSC new schemas, PCV/DTX/SGR visualization
+updates, DNR pipeline update, cascade updates to Integration DB, FastAPI,
+Frontend. 3 commits: 3af73f3, ed843af, b512f0a. DTX structural rule 7
+corrected for outcome_vector_history. SESSION_PROTOCOL.md step 0 added for
+WSC 3-entry load.
+
 **What gets built:** MTM synthesis wiring to new engine outputs. Nexus
 engine visualizations (PCV, DTX, SGR). Void engine (absence pattern
 detection). WSC and LNV schemas. The detection/classification/grading layer.

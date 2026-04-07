@@ -61,8 +61,9 @@ visualizations, stores, failure modes.
    broke down — is a failure mode. Classify against the defined enums.
 
 7. Bayesian updates arrive from SGR after grading events. outcome_vector is
-   updated at that moment and last_updated is written. Prior vector state is
-   not preserved — the current vector reflects all accumulated evidence.
+   updated at that moment and last_updated is written. The current vector on
+   drift_events reflects all accumulated evidence. Prior vector states are
+   preserved in outcome_vector_history for the ternary plot visualization.
 
 ---
 

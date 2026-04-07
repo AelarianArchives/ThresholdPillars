@@ -78,6 +78,11 @@ is task completion, not operation volume.
 Run at the start of every session, in this order. Do not skip steps.
 Do not reorder.
 
+0. Load 3 most recent WSC entries via GET /api/wsc/recent?limit=3.
+   Read before any other context. This is the AI's self-orientation
+   from its own prior voice. If 0 entries exist (first session), skip
+   this step and proceed to step 1. Note: this step activates when the
+   WSC system is live. Until then, proceed directly to step 1.
 1. Read SESSION_LOG.md
 2. Check the type of the last entry:
    - `CLOSE` — proceed to step 6
