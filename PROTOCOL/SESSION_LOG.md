@@ -7711,3 +7711,41 @@ NOT_STARTED:
 UNCOMMITTED: YES
 NEXT_ACTION: Commit + push, then clean session close
 ---
+
+---
+TIMESTAMP: 2026-04-07 10:58
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DESIGN/Systems/Integration/INTEGRATION DB SCHEMA.md — COMPLETE (deposits table, prompt_versions, correction_context, deposit_ref, instances, annotations, aos_records)
+  - DESIGN/Systems/Integration/INTEGRATION SCHEMA.md — COMPLETE (observation_type → observation_presence rename, 4 locations)
+  - DESIGN/Systems/Integration/SYSTEM_ Integration DB.md — COMPLETE (table inventory + write authority for all new tables)
+  - DESIGN/Systems/Embedding_Pipeline/EMBEDDING PIPELINE SCHEMA.md — COMPLETE (source_type discriminator, updated queries)
+  - DESIGN/Systems/Tagger/TAGGER SCHEMA.md — COMPLETE (deposit_weight: prompt, response, validation)
+  - DESIGN/Domains/01_Integration/Manifest_01_Integration.txt — COMPLETE (full Tier 1 rewrite)
+  - DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT OBSERVATION ARTICULATION.md — COMPLETE (observation_presence cascade)
+  - DESIGN/Systems/Thread_Trace/THREAD TRACE SCHEMA.md — COMPLETE (observation_presence cascade)
+  - DESIGN/Systems/Emergence/EMERGENCE SCHEMA.md — COMPLETE (observation_presence cascade)
+  - DESIGN/Systems/SECTION MAP.md — COMPLETE (VOI entry, 50→51 counts)
+  - DESIGN/Domains/10_Nexus/Domain_Void.txt — COMPLETE (NEW file)
+  - DESIGN/Domains/10_Nexus/Manifest_51_Void.txt — COMPLETE (NEW file)
+  - DESIGN/Systems/Operational_DB/OPERATIONAL DB SCHEMA.md — COMPLETE (Pearl extensions)
+  - DESIGN/Systems/Frontend/SYSTEM_ Frontend.md — COMPLETE (full Tier 2 UI architecture rewrite, 130→480+ lines)
+  - CLAUDE.md — COMPLETE (50→51 pages)
+  - .claude/plans/design-session-plan.md — COMPLETE (Tier 1+2 marked complete, observation_presence fixes, SESSION HANDOFF section added)
+COMPLETED:
+  - Tier 1 manifest and schema build — COMPLETE (commit 3bebaa5)
+  - Tier 2 Part 1 — COMPLETE (commit d04ca30): Void page 51, Pearl extensions, instances/annotations/AOS tables
+  - Tier 2 Part 2 — COMPLETE (commit 8667bd6): SYSTEM_ Frontend.md full UI architecture, session handoff
+  - 5 design decisions locked: standalone deposits table, two doc_type enums, observation_presence rename, correction_context jsonb, prompt_versions table, dedicated AOS service
+  - observation_type → observation_presence cascaded across 7 files
+  - Session handoff documented in design plan for future sessions
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Tier 3: 5 Axis engine schemas + Ven'ai service + computation foundation
+  - Tiers 4-8 per design plan
+  - Remaining entropy outside DESIGN/Systems/: PROTOCOL/, DESIGN/MISC/, api/, CLAUDE.md
+  - Domains rebuild (seed affinity authority still unresolved)
+UNCOMMITTED: YES (this CLOSE entry)
+NEXT_ACTION: Next session reads SESSION HANDOFF in design-session-plan.md before starting Tier 3. Tier 3 depends on Tier 2 (page surfaces exist). Process: orient → audit → map → execute one file at a time → entropy scan → cross-map → commit.
+---
