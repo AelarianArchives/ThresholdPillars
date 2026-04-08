@@ -5,11 +5,14 @@ import {
 	getVelocityGainDb,
 	getClusterGainBoostDb,
 	dbToLinear,
+	applyAmbientMode,
+	getActiveAmbientMode,
 	CLIP_BASE_PATH,
 	MAX_VOICES,
 	VELOCITY_WINDOW_MS,
 	VELOCITY_MAX_STACK_DB,
-	RUPTURE_T3_FADE_MS
+	RUPTURE_T3_FADE_MS,
+	HEARTBEAT_ORIGIN_SPACING_MS
 } from './engine';
 
 describe('engine.ts — clip path resolution', () => {
@@ -182,3 +185,71 @@ describe('engine.ts — constants from spec', () => {
 // - Then pillars (400ms spacing)
 // - Then active seeds weakest→strongest (200ms spacing)
 // - Rupture Tier 3 cancels an active field read
+
+describe('engine.ts — ambient mode constants', () => {
+	it('HEARTBEAT_ORIGIN_SPACING_MS is 500', () => {
+		expect(HEARTBEAT_ORIGIN_SPACING_MS).toBe(500);
+	});
+});
+
+describe('engine.ts — ambient mode state (no AudioContext)', () => {
+	it('starts in notification mode', () => {
+		expect(getActiveAmbientMode()).toBe('notification');
+	});
+
+	it('applyAmbientMode switches to heartbeat', () => {
+		applyAmbientMode('heartbeat', 60000);
+		expect(getActiveAmbientMode()).toBe('heartbeat');
+		// Clean up — heartbeat timer fires but playHeartbeatPulse
+		// is a no-op without AudioContext, so no side effects
+		applyAmbientMode('notification', 60000);
+	});
+
+	it('applyAmbientMode switches to drone', () => {
+		applyAmbientMode('drone', 60000);
+		expect(getActiveAmbientMode()).toBe('drone');
+		applyAmbientMode('notification', 60000);
+	});
+
+	it('applyAmbientMode switches back to notification', () => {
+		applyAmbientMode('heartbeat', 60000);
+		applyAmbientMode('notification', 60000);
+		expect(getActiveAmbientMode()).toBe('notification');
+	});
+
+	it('switching modes clears previous heartbeat (no double timers)', () => {
+		// Switch to heartbeat, then immediately to drone
+		// If heartbeat timer leaked, it would fire later — but without
+		// AudioContext it's a no-op. This test verifies state tracking.
+		applyAmbientMode('heartbeat', 60000);
+		applyAmbientMode('drone', 60000);
+		expect(getActiveAmbientMode()).toBe('drone');
+		applyAmbientMode('notification', 60000);
+	});
+});
+
+// --- Documented test specs for browser-only ambient mode tests ---
+
+// TEST SPEC: heartbeat mode
+// - Switching to heartbeat starts an interval timer at heartbeatIntervalMs
+// - First pulse plays immediately on mode switch
+// - Each pulse plays o01, o02, o03 in succession at 500ms spacing
+// - Switching away from heartbeat clears the interval timer
+// - Switching away aborts any in-progress heartbeat pulse
+// - destroyAudioEngine clears the heartbeat timer
+// - Heartbeat pulse is a no-op if AudioContext is not running
+
+// TEST SPEC: drone mode
+// - Switching to drone sets activeAmbientMode but produces no audio
+// - Blocked on resonance engine field weight data
+// - When field data is available: continuous low-gain playback from weights
+
+// TEST SPEC: notification mode
+// - Default behavior — events trigger clips via audioEventStore subscription
+// - No additional timer or continuous playback
+// - Switching to notification clears any heartbeat timer
+
+// TEST SPEC: settings subscription mode detection
+// - When audioSettingsStore.ambientMode changes, engine calls applyAmbientMode
+// - When heartbeatIntervalMs changes while in heartbeat mode, timer restarts
+//   with new interval

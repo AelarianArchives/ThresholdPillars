@@ -61,7 +61,8 @@ function defaultSettings() {
 			research_memory: true,
 			rupture: true
 		},
-		ambientMode: 'notification' as const
+		ambientMode: 'notification' as const,
+		heartbeatIntervalMs: 60000
 	};
 }
 

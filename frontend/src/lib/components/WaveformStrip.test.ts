@@ -62,7 +62,8 @@ describe('WaveformStrip.svelte', () => {
 				research_memory: true,
 				rupture: true
 			},
-			ambientMode: 'notification'
+			ambientMode: 'notification',
+			heartbeatIntervalMs: 60000
 		});
 		audioPanelOpen.set(false);
 	});

@@ -62,6 +62,16 @@ describe('audio store — settings initial state', () => {
 			).toBe(true);
 		}
 	});
+
+	it('starts with ambient mode notification', () => {
+		const state = get(audioSettingsStore);
+		expect(state.ambientMode).toBe('notification');
+	});
+
+	it('starts with heartbeat interval at 60000ms', () => {
+		const state = get(audioSettingsStore);
+		expect(state.heartbeatIntervalMs).toBe(60000);
+	});
 });
 
 describe('audio store — notification categories', () => {

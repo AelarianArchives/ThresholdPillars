@@ -137,6 +137,7 @@ export interface AudioSettingsState {
 	tierVolume: Record<NodeTier, number>;  // 0.0 - 1.0
 	notificationToggles: Record<NotificationCategory, boolean>;
 	ambientMode: AmbientMode;
+	heartbeatIntervalMs: number;
 }
 
 export const audioSettingsStore = writable<AudioSettingsState>({
@@ -167,5 +168,6 @@ export const audioSettingsStore = writable<AudioSettingsState>({
 		research_memory: true,
 		rupture: true
 	},
-	ambientMode: 'notification'
+	ambientMode: 'notification',
+	heartbeatIntervalMs: 60000
 });

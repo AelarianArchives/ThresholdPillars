@@ -5,6 +5,7 @@ import {
 	audioSettingsStore,
 	EVENT_CATEGORY_MAP,
 	type AudioSettingsState,
+	type AmbientMode,
 	type PlayingVoice
 } from '$lib/stores/audio';
 
@@ -18,6 +19,7 @@ export const VELOCITY_MAX_STACK_DB = 4;
 export const RUPTURE_T3_FADE_MS = 80;
 export const RUPTURE_T2_DURATION_MS = 1500;
 const DECAY_HANDOFF_MS = 500;
+export const HEARTBEAT_ORIGIN_SPACING_MS = 500;
 
 // --- Pure helpers (exported for testing) ---
 
@@ -74,6 +76,11 @@ let settingsUnsub: (() => void) | null = null;
 // Spatial panning hook — set by spatial.ts via registerSpatialPanning
 let getPanValue: ((nodeId: NodeId) => number) | null = null;
 
+// Ambient mode state
+let activeAmbientMode: AmbientMode = 'notification';
+let heartbeatTimerId: ReturnType<typeof setInterval> | null = null;
+let heartbeatAbort: AbortController | null = null;
+
 // --- Node tier lookup ---
 
 const ORIGIN_SET: ReadonlySet<string> = new Set(ORIGIN_IDS);
@@ -118,8 +125,15 @@ export async function initAudioEngine(): Promise<void> {
 
 	// Subscribe to settings store for live updates
 	settingsUnsub = audioSettingsStore.subscribe((s) => {
+		const prevMode = settingsSnapshot.ambientMode;
+		const prevInterval = settingsSnapshot.heartbeatIntervalMs;
 		settingsSnapshot = s;
 		applyMasterMute();
+
+		// Detect ambient mode or heartbeat interval change
+		if (s.ambientMode !== prevMode || (s.ambientMode === 'heartbeat' && s.heartbeatIntervalMs !== prevInterval)) {
+			applyAmbientMode(s.ambientMode, s.heartbeatIntervalMs);
+		}
 	});
 }
 
@@ -556,9 +570,87 @@ export async function playFieldRead(activeSeeds: FieldReadNode[]): Promise<void>
 	}
 }
 
+// --- Ambient mode management ---
+
+function stopHeartbeat(): void {
+	if (heartbeatTimerId !== null) {
+		clearInterval(heartbeatTimerId);
+		heartbeatTimerId = null;
+	}
+	if (heartbeatAbort) {
+		heartbeatAbort.abort();
+		heartbeatAbort = null;
+	}
+}
+
+async function playHeartbeatPulse(): Promise<void> {
+	if (!audioCtx || !loaded || audioCtx.state !== 'running') return;
+
+	// Abort any in-progress pulse before starting a new one
+	if (heartbeatAbort) {
+		heartbeatAbort.abort();
+	}
+	heartbeatAbort = new AbortController();
+	const signal = heartbeatAbort.signal;
+
+	const wait = (ms: number) =>
+		new Promise<void>((resolve, reject) => {
+			const timer = setTimeout(resolve, ms);
+			signal.addEventListener('abort', () => {
+				clearTimeout(timer);
+				reject(new DOMException('Aborted', 'AbortError'));
+			});
+		});
+
+	try {
+		for (const id of ORIGIN_IDS) {
+			if (signal.aborted) return;
+			playNode(id);
+			await wait(HEARTBEAT_ORIGIN_SPACING_MS);
+		}
+	} catch (err) {
+		if (err instanceof DOMException && err.name === 'AbortError') {
+			return;
+		}
+		throw err;
+	} finally {
+		if (heartbeatAbort?.signal === signal) {
+			heartbeatAbort = null;
+		}
+	}
+}
+
+function startHeartbeat(intervalMs: number): void {
+	stopHeartbeat();
+	// Play immediately on mode switch, then repeat at interval
+	playHeartbeatPulse();
+	heartbeatTimerId = setInterval(() => {
+		playHeartbeatPulse();
+	}, intervalMs);
+}
+
+export function getActiveAmbientMode(): AmbientMode {
+	return activeAmbientMode;
+}
+
+export function applyAmbientMode(mode: AmbientMode, intervalMs: number): void {
+	// Clean up previous mode
+	stopHeartbeat();
+
+	activeAmbientMode = mode;
+
+	if (mode === 'heartbeat') {
+		startHeartbeat(intervalMs);
+	}
+	// 'drone' — no-op until resonance engine field data is available
+	// 'notification' — default event-driven behavior, no extra wiring needed
+}
+
 // --- Public: cleanup ---
 
 export function destroyAudioEngine(): void {
+	stopHeartbeat();
+	activeAmbientMode = 'notification';
 	if (eventUnsub) {
 		eventUnsub();
 		eventUnsub = null;
