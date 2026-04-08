@@ -142,6 +142,8 @@ frontend/
 | ComputationSuggestionCard | Hypothesis framing output — pattern description, framework candidate, Cosmology page, ARTIS computation, positive/negative outcomes, corpus note, confirm/discard actions |
 | ResearcherMemoryEditor | Research memory edit UI — opens from panel header, fields for current_focus, active_hypotheses, open_questions, skepticisms, not_yet_named, research_posture, phase_context |
 | LongitudinalEchoDisplay | Post-assembly connection surfacing — shows similar observations from archive after deposit suggestion is assembled. Pointer, not conclusion |
+| AudioPanel | Floating panel — node browser, succession player, field read, waveform visualizer, mix/mute controls. Persists across navigation |
+| WaveformVisualizer | Live oscilloscope-style waveform canvas — AnalyserNode reads audio output, renders bezierCurveTo line with glow. Idle = flat center line |
 
 ### Stores (PLANNED)
 

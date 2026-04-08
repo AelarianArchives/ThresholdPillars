@@ -29,7 +29,7 @@ DOES NOT OWN
 Architectural identity — owned by SYSTEM_ Resonance Engine.md
 Tag pipeline — owned by tagger service
 Entry data — owned by INTEGRATION DB SCHEMA.md
-Audio sonification — planned as separate system (Tier 6)
+Audio sonification — separate system (RESONANCE ENGINE AUDIO SPEC.md)
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

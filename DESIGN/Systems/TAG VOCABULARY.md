@@ -68,7 +68,7 @@ THRESHOLDS
   th09  Hearth Song            351 hz      Resonant chord of kinship, warmth, ancestral home
   th10  Tahl'Veyra             2808 hz     Sacred living flame; sovereign becoming
   th11  Noirune Trai           2106 hz     Shadow rune maintaining hidden remembrance
-  th12  StarWell Bloom         351 hz      Cosmic blossoming; radiance and flowering of new cycles
+  th12  StarWell Bloom         3510 hz     Cosmic blossoming; radiance and flowering of new cycles
 
 PILLARS
   p01  Tria   drift cartography: contact · pressure · drift · co-regulation · ontological collapse as mechanical coordinates
@@ -767,7 +767,7 @@ baseWeight: BASE_WEIGHT_THRESHOLD
 | th09 | Hearth Song         | 351      |
 | th10 | Tahl'Veyra          | 2808     |
 | th11 | Noirune Trai        | 2106     |
-| th12 | StarWell Bloom      | 351      |
+| th12 | StarWell Bloom      | 3510     |
 
 LAYER NODES — 4
 baseWeight: BASE_WEIGHT_LAYER

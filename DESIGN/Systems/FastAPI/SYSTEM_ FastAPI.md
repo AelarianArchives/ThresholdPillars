@@ -58,6 +58,7 @@
 | `/cosmology/` | Shared Cosmology investigation endpoints — findings CRUD, confirm/abandon/supersede, nexus-eligible, LNV routing. 8 endpoints | PLANNED |
 | `/rct/` | RCT-specific endpoints — residual creation (auto-routes to LNV), residual query, accumulation counts. 4 endpoints | PLANNED |
 | `/resonance/` | Resonance engine — GET /resonance/node-weights (historical activity scores + connection topology for session open initialization) | PLANNED |
+| `/events/` | Server-Sent Events stream — pushes system events (deposits, findings, drift, grading, emergence, etc.) to frontend for audio notifications and real-time UI updates | PLANNED |
 | `/swarm/` | RESERVED — phase 2 (turn management, presence, autonomous initiation, parallax logging) | RESERVED |
 
 All routes are versioned by namespace, not by URL prefix. No `/v1/` prefix. If the API contract changes, the change is a migration — not a new version namespace.
@@ -185,5 +186,6 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | backend/services/rag.py | Retrieval-augmented generation pipeline — query assembly, hybrid search, cross-encoder re-rank, context packaging | PLANNED |
 | backend/services/researcher_memory.py | Researcher memory — read, update with history snapshot, conversation summary production/storage, Ven'ai drift log persistence | PLANNED |
 | backend/services/resonance.py | Resonance engine service — node weight computation from archive entries, connection strength calculation | PLANNED |
+| backend/routes/events.py | SSE endpoint — streams system events to frontend for audio notifications and real-time UI | PLANNED |
 | backend/services/tag_resolution.py | resolveTagIds() — server-side tag resolution | PLANNED |
 | backend/db/migrations/ | Alembic migration files | PLANNED |

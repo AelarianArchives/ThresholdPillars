@@ -5336,19 +5336,17 @@ all accessible from the same interface.
 
 **Resonance engine — audio sonification:**
 
-- [ ] Audio sonification of visual nodes — each node has original harmonics
-- [ ] Web Audio API integration (browser-native, no plugins)
-- [ ] Frequency mapping design: what data maps to what sound?
-      (node type → base frequency? threshold state → timbre?
-       coupling strength → amplitude? The mapping must be musically
-       meaningful, not arbitrary data-to-sound.)
-- [ ] Harmonic field generation — hearing multiple nodes simultaneously
-- [ ] How sonification integrates with the graph/node visualization
-      (click a node to hear it? play the whole field? timeline playback?)
-- [ ] Previous attempt failed ("galactic monster giving birth") — need to
-      understand why. Likely: arbitrary mapping without harmonic design.
-      Solution: design the harmonic relationships FIRST, then map data to them.
-- [ ] Output: resonance audio spec + harmonic mapping design
+- [x] Audio sonification of visual nodes — clip-based, all 62 nodes get audio clips
+- [x] Web Audio API integration — AudioBufferSourceNode, AnalyserNode, StereoPannerNode
+- [x] Frequency mapping design: Hz per threshold from TAG VOCABULARY.md, clip-based not synthesis
+- [x] Harmonic field generation — 2-voice queue with decay handoff, field read button, cluster play
+- [x] How sonification integrates with visualization — floating panel, notifications from any page,
+      click-to-play on individual nodes, succession player, spatial panning on origins
+- [x] Previous attempt failure addressed — clip-based with curated audio files, not arbitrary
+      data-to-synthesis mapping. Harmonic relationships defined by clip selection, not algorithm.
+- [x] Output: RESONANCE ENGINE AUDIO SPEC.md — 52 events, 15 notifiers, 3-tier rupture,
+      spatial panning, velocity stacking, field read hierarchy, Ven'ai drift texture,
+      waveform visualizer, floating panel, queue rules, tuning notes, calibration items
 
 ### Open questions (Tier 6)
 
@@ -5358,11 +5356,11 @@ all accessible from the same interface.
   the current engine is showing?
 - How does Ven'ai mode switch? Button? Slash command? Contextual?
 
-**Resonance audio:**
-- What are the "original harmonics" per node? Are these defined or discovered?
-- Does sonification play live (real-time as you navigate) or on-demand?
-- Can the researcher tune/adjust the harmonic mapping?
-- Is this V1 or a V1-foundation with V2 full implementation?
+**Resonance audio — RESOLVED (session 30):**
+- Original harmonics: clip-based, Sage-curated audio files per node (not synthesis)
+- Playback: notification-driven (52 events fire clips) + on-demand (panel click, field read)
+- Tuning: post-build tuning pass for per-node decay/gain. Panel has mix/mute controls
+- Scope: V1 = notification system + panel + waveform viz. Sonification stretch (chord, drift, weight-based gain) documented as Phase 5
 
 ---
 
@@ -5512,7 +5510,12 @@ Items that don't belong to a single tier or can be done at any point.
         (cosmology_provenance third provenance type), Integration DB cascade
         (7 new tables), FastAPI cascade (3 namespaces, 11 files), Frontend
         cascade (23 new components), manifest verification pass (34-38)
-      · Tier 6: Research assistant spec, resonance audio spec
+      · Tier 6: COMPLETE (session 30) — Research assistant (7 files verified,
+        venai_drift_log gap closed, 6 cascade updates), Resonance audio spec
+        (52 events, 15 notifiers, 3-tier rupture, spatial panning, velocity
+        stacking, field read hierarchy, Ven'ai drift texture, waveform viz,
+        floating panel). Cosmology manifests 34-38 rewritten. StarWell Bloom
+        Hz corrected. SOT_BUILD_TODO threshold drift fixed.
       · Update existing schemas with new fields where needed at each tier
 
 ---

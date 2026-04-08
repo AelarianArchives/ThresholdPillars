@@ -26,7 +26,7 @@
 * Entry data or schema — owned by INTEGRATION DB SCHEMA.md
 * Background rendering — if a background visual component exists, it is a separate Svelte component
 * Node content or tag vocabulary — owned by TAG VOCABULARY.md
-* Audio sonification — planned as a separate system (Tier 6)
+* Audio sonification — separate system (RESONANCE ENGINE AUDIO SPEC.md). Shares node registry and weight state, owns all audio playback, notification routing, and panel UI
 
 ---
 
@@ -117,11 +117,15 @@ The sync triggers node weight recalculation, physics update, pulse animation, an
 
 ---
 
-## PLANNED — AUDIO SIBLING (TIER 6)
+## AUDIO SIBLING
 
-The Resonance Engine visual rendering has a planned audio layer (Tier 6 — audio sonification). The visual engine and audio engine are separate systems sharing the same node registry and weight state.
+The Resonance Engine has an audio layer — a clip-based notification and sonification system sharing the same node registry and weight state as the visual engine. Separate system, shared data.
 
-The visual engine does not own audio. When the audio system is built, it reads from the same tagger sync payload and node weight calculations that drive the visual field. No changes to this system are required to support audio — the data is already available at the sync points.
+The visual engine does not own audio. The audio engine reads from the same tagger sync payload and node weight calculations that drive the visual field. No changes to the visual system are required — the data is already available at the sync points.
+
+52 notification events mapped to 15 notifier nodes (3 origins + 12 thresholds) + s20 Rupture three-tier system. Global engine persists across page navigation. Floating panel for controls and waveform visualization.
+
+Full spec in RESONANCE ENGINE AUDIO SPEC.md.
 
 ---
 

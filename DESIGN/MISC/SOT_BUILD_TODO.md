@@ -184,16 +184,16 @@ in TAG VOCABULARY.md).
       SOURCE: RESONANCE ENGINE SCHEMA.md Tier 2 + PAGE 02 · THR Manifest.
       Canonical names confirmed by Sage session 2026-04-04.
         th01 Aetherroot Chord
-        th02 Thren Alae Kai'Reth
-        th03 Orrin Wave
-        th04 Vireth's Anchor
-        th05 Shai'mara Veil
-        th06 Noirune Trai
-        th07 Solenne Arc
-        th08 Tahl'Veyra
-        th09 Esh'Vala Breath
-        th10 Lumora Thread
-        th11 Hearth Song
+        th02 Solenne Arc
+        th03 Thren Alae Kai'Reth
+        th04 Shai'mara Veil
+        th05 Vireth's Anchor
+        th06 Esh'Vala Breath
+        th07 Orrin Wave
+        th08 Lumora Thread
+        th09 Hearth Song
+        th10 Tahl'Veyra
+        th11 Noirune Trai
         th12 StarWell Bloom
 
 - [x] Full tag vocabulary — all tags under each seed with routing records

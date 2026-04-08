@@ -9338,3 +9338,30 @@ TYPE: WORK_UNIT
 FILES_MODIFIED:
   - DESIGN/Domains/08_Cosmology/Manifest_34_Harmonic_Cosmology.txt â€” COMPLETE (REWRITE: investigation surface model â€” ARTIS computation, two-panel...
 ---
+
+---
+TIMESTAMP: 2026-04-08 04:00
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/Resonance_Engine/RESONANCE ENGINE AUDIO SPEC.md — COMPLETE (NEW: 52 events, 15 notifiers, 3-tier rupture, spatial panning, velocity stacking, field read pull hierarchy, Ven'ai drift texture, waveform visualizer, floating panel, queue rules, tuning notes, calibration items, 8 failure modes, 8 planned files)
+  - DESIGN/Systems/Resonance_Engine/SYSTEM_ Resonance Engine.md — COMPLETE (CASCADE: PLANNED audio sibling section updated to reference actual spec, DOES NOT OWN updated)
+  - DESIGN/Systems/Resonance_Engine/RESONANCE ENGINE PHYSICS SPEC.md — COMPLETE (CASCADE: audio reference updated from planned to actual spec)
+  - DESIGN/Systems/TAG VOCABULARY.md — COMPLETE (FIX: StarWell Bloom Hz corrected 351→3510)
+  - DESIGN/MISC/SOT_BUILD_TODO.md — COMPLETE (FIX: threshold ordering corrected to match TAG VOCABULARY.md canonical — drift from session 4)
+  - DESIGN/Systems/FastAPI/SYSTEM_ FastAPI.md — COMPLETE (CASCADE: /events/ SSE route added, routes/events.py added to files table)
+  - DESIGN/Systems/Frontend/SYSTEM_ Frontend.md — COMPLETE (CASCADE: AudioPanel + WaveformVisualizer components added)
+  - .claude/plans/design-session-plan.md — COMPLETE (Tier 6 audio items all [x], open questions resolved, tier tracker updated)
+COMPLETED:
+  - Part B complete: Resonance Engine Audio Spec written from Sage's design work
+  - StarWell Bloom Hz corrected (351→3510) in TAG VOCABULARY.md
+  - SOT_BUILD_TODO threshold ordering drift fixed (10 of 12 IDs were wrong vs TAG VOCABULARY canonical)
+  - 4 cool features added: spatial panning on origins, field read pull hierarchy order, velocity stacking on rapid deposits, Ven'ai drift ambient texture
+  - All cascade updates written (SYSTEM_ Resonance Engine, PHYSICS SPEC, SYSTEM_ FastAPI, SYSTEM_ Frontend, design plan)
+  - Tier 6 design: COMPLETE — all items marked [x] in design plan
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Cross-file verification sweep + commit
+UNCOMMITTED: YES (all Part B changes + fixes)
+NEXT_ACTION: Cross-file verification sweep, then commit and push
+---
