@@ -1,5 +1,5 @@
 import { get } from 'svelte/store';
-import { audioEventStore, NOTIFIER_MAP, ORIGIN_IDS, type AudioEvent, type NodeId } from './events';
+import { audioEventStore, ALL_NODE_IDS, ORIGIN_IDS, type AudioEvent, type NodeId } from './events';
 import {
 	audioPlaybackStore,
 	audioSettingsStore,
@@ -64,8 +64,9 @@ interface Voice {
 
 let activeVoices: Voice[] = [];
 let decayingVoice: Voice | null = null;
-let velocityTracker: Map<string, { count: number; lastFire: number }> = new Map();
+let velocityTracker: Map<string, number[]> = new Map();
 let fieldReadAbort: AbortController | null = null;
+let fieldReadDroneVoices: Voice[] = [];
 let eventUnsub: (() => void) | null = null;
 let settingsSnapshot: AudioSettingsState = get(audioSettingsStore);
 let settingsUnsub: (() => void) | null = null;
@@ -123,8 +124,6 @@ export async function initAudioEngine(): Promise<void> {
 }
 
 async function loadClips(): Promise<void> {
-	const { ALL_NODE_IDS } = await import('./events');
-
 	const loadPromises = ALL_NODE_IDS.map(async (nodeId) => {
 		try {
 			const response = await fetch(getClipPath(nodeId));
@@ -177,20 +176,19 @@ function applyMasterMute(): void {
 // --- Velocity tracking ---
 
 function getVelocityCount(nodeId: string, now: number): number {
-	const entry = velocityTracker.get(nodeId);
-	if (!entry || now - entry.lastFire > VELOCITY_WINDOW_MS) {
-		velocityTracker.set(nodeId, { count: 1, lastFire: now });
-		return 1;
-	}
-	const newCount = entry.count + 1;
-	velocityTracker.set(nodeId, { count: newCount, lastFire: now });
-	return newCount;
+	const fires = velocityTracker.get(nodeId) ?? [];
+	// Keep only fires within the velocity window
+	const recent = fires.filter((t) => now - t < VELOCITY_WINDOW_MS);
+	recent.push(now);
+	velocityTracker.set(nodeId, recent);
+	return recent.length;
 }
 
 // --- Voice queue ---
 
 function computeGain(nodeId: string, clusterSize: number): number {
 	const tier = getNodeTier(nodeId);
+	if (settingsSnapshot.tierMute[tier]) return 0;
 	const tierVol = settingsSnapshot.tierVolume[tier];
 	const now = Date.now();
 	const velocityCount = getVelocityCount(nodeId, now);
@@ -199,7 +197,7 @@ function computeGain(nodeId: string, clusterSize: number): number {
 	return tierVol * dbToLinear(velocityDb + clusterDb);
 }
 
-function createVoice(nodeId: NodeId, gain: number): Voice | null {
+function createVoice(nodeId: NodeId, gain: number, clusterSize: number = 0): Voice | null {
 	if (!audioCtx || !masterGain || !loaded) return null;
 
 	const buffer = clipBuffers.get(nodeId);
@@ -213,6 +211,13 @@ function createVoice(nodeId: NodeId, gain: number): Voice | null {
 
 	const gainNode = audioCtx.createGain();
 	gainNode.gain.setValueAtTime(gain, audioCtx.currentTime);
+
+	// Atmospheric decay tail — fade to 0 over the tail period at end of clip
+	const tailMs = getDecayTailMs(clusterSize);
+	const tailS = tailMs / 1000;
+	const fadeStart = Math.max(0, buffer.duration - tailS);
+	gainNode.gain.setValueAtTime(gain, audioCtx.currentTime + fadeStart);
+	gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + buffer.duration);
 
 	source.connect(gainNode);
 
@@ -244,7 +249,10 @@ function createVoice(nodeId: NodeId, gain: number): Voice | null {
 
 function fadeOutVoice(voice: Voice, durationMs: number): void {
 	if (!audioCtx) return;
-	const endTime = audioCtx.currentTime + durationMs / 1000;
+	const now = audioCtx.currentTime;
+	const endTime = now + durationMs / 1000;
+	voice.gainNode.gain.cancelScheduledValues(now);
+	voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now);
 	voice.gainNode.gain.linearRampToValueAtTime(0, endTime);
 	voice.source.stop(endTime);
 }
@@ -257,7 +265,7 @@ function removeVoice(voice: Voice): void {
 	syncPlaybackStore();
 }
 
-function enqueueVoice(nodeId: NodeId, gain: number): void {
+function enqueueVoice(nodeId: NodeId, gain: number, clusterSize: number = 0): void {
 	// If queue is full, decay the oldest voice
 	if (activeVoices.length >= MAX_VOICES) {
 		const oldest = activeVoices.shift()!;
@@ -269,7 +277,7 @@ function enqueueVoice(nodeId: NodeId, gain: number): void {
 		fadeOutVoice(oldest, DECAY_HANDOFF_MS);
 	}
 
-	const voice = createVoice(nodeId, gain);
+	const voice = createVoice(nodeId, gain, clusterSize);
 	if (voice) {
 		activeVoices.push(voice);
 		syncPlaybackStore();
@@ -294,11 +302,15 @@ function handleRupture(event: AudioEvent): void {
 		activeVoices = [];
 		decayingVoice = null;
 
-		// Cancel active field read
+		// Cancel active field read and stop drone voices
 		if (fieldReadAbort) {
 			fieldReadAbort.abort();
 			fieldReadAbort = null;
 		}
+		for (const drone of fieldReadDroneVoices) {
+			fadeOutVoice(drone, RUPTURE_T3_FADE_MS);
+		}
+		fieldReadDroneVoices = [];
 
 		// Play s20 at max gain with longest decay
 		const voice = createVoice('s20', 1.0);
@@ -310,12 +322,19 @@ function handleRupture(event: AudioEvent): void {
 			syncPlaybackStore();
 		}
 	} else if (tier === 2) {
-		// Truncated clip, hard stop at ~1500ms
+		// Truncated clip, hard stop at ~1500ms with short anti-click fade
 		enqueueVoice('s20', computeGain('s20', 0));
-		// Truncate: stop after RUPTURE_T2_DURATION_MS
 		const latestVoice = activeVoices[activeVoices.length - 1];
 		if (latestVoice && latestVoice.nodeId === 's20' && audioCtx) {
-			const stopTime = audioCtx.currentTime + RUPTURE_T2_DURATION_MS / 1000;
+			const truncateAt = RUPTURE_T2_DURATION_MS / 1000;
+			const antiClickFade = 0.05; // 50ms fade to prevent audio click
+			const fadeStart = audioCtx.currentTime + truncateAt - antiClickFade;
+			const stopTime = audioCtx.currentTime + truncateAt;
+			latestVoice.gainNode.gain.cancelScheduledValues(fadeStart);
+			latestVoice.gainNode.gain.setValueAtTime(
+				latestVoice.gainNode.gain.value, fadeStart
+			);
+			latestVoice.gainNode.gain.linearRampToValueAtTime(0, stopTime);
 			latestVoice.source.stop(stopTime);
 		}
 	} else {
@@ -357,9 +376,10 @@ function handleAudioEvent(event: AudioEvent | null): void {
 		? event.notifier
 		: [event.notifier];
 
+	const clusterSize = notifiers.length > 1 ? notifiers.length : 0;
 	for (const nodeId of notifiers) {
-		const gain = computeGain(nodeId, notifiers.length > 1 ? notifiers.length : 0);
-		enqueueVoice(nodeId, gain);
+		const gain = computeGain(nodeId, clusterSize);
+		enqueueVoice(nodeId, gain, clusterSize);
 	}
 }
 
@@ -393,7 +413,7 @@ export function playNode(nodeId: NodeId, clusterSize: number = 0): void {
 	if (!audioCtx || !loaded) return;
 	if (audioCtx.state !== 'running') return;
 	const gain = computeGain(nodeId, clusterSize);
-	enqueueVoice(nodeId, gain);
+	enqueueVoice(nodeId, gain, clusterSize);
 }
 
 // --- Public: stop all ---
@@ -405,6 +425,11 @@ export function stopAll(): void {
 	if (decayingVoice) {
 		decayingVoice.source.stop();
 	}
+	// Stop field read drone voices
+	for (const voice of fieldReadDroneVoices) {
+		voice.source.stop();
+	}
+	fieldReadDroneVoices = [];
 	activeVoices = [];
 	decayingVoice = null;
 	syncPlaybackStore();
@@ -445,10 +470,11 @@ export async function playFieldRead(activeSeeds: FieldReadNode[]): Promise<void>
 			'th01', 'th02', 'th03', 'th04', 'th05', 'th06',
 			'th07', 'th08', 'th09', 'th10', 'th11', 'th12'
 		];
-		const droneVoices: Voice[] = [];
+		fieldReadDroneVoices = [];
 		for (const id of thresholdIds) {
 			const buffer = clipBuffers.get(id);
 			if (!buffer || !audioCtx || !masterGain) continue;
+			if (settingsSnapshot.tierMute.threshold) continue;
 			const source = audioCtx.createBufferSource();
 			source.buffer = buffer;
 			const gainNode = audioCtx.createGain();
@@ -463,7 +489,12 @@ export async function playFieldRead(activeSeeds: FieldReadNode[]): Promise<void>
 			gainNode.gain.linearRampToValueAtTime(0, fadeEnd);
 			source.start();
 			source.stop(fadeEnd + 0.1);
-			droneVoices.push({ nodeId: id, source, gainNode, startTime: audioCtx.currentTime });
+			const drone: Voice = { nodeId: id, source, gainNode, startTime: audioCtx.currentTime };
+			fieldReadDroneVoices.push(drone);
+			// Self-cleanup on end
+			source.addEventListener('ended', () => {
+				fieldReadDroneVoices = fieldReadDroneVoices.filter((v) => v !== drone);
+			});
 		}
 		await wait(1500);
 
@@ -492,10 +523,24 @@ export async function playFieldRead(activeSeeds: FieldReadNode[]): Promise<void>
 		}
 
 		// 5. Seeds — active only, weakest→strongest, 200ms spacing
+		// Gain proportional to individual seed weight (normalized to max)
 		const sortedSeeds = [...activeSeeds].sort((a, b) => a.weight - b.weight);
+		const maxWeight = sortedSeeds.length > 0
+			? sortedSeeds[sortedSeeds.length - 1].weight
+			: 1;
 		for (const seed of sortedSeeds) {
 			if (signal.aborted) return;
-			playNode(seed.nodeId, sortedSeeds.length);
+			if (!audioCtx || !loaded || audioCtx.state !== 'running') return;
+			const tier = getNodeTier(seed.nodeId);
+			if (settingsSnapshot.tierMute[tier]) {
+				await wait(200);
+				continue;
+			}
+			const weightScale = maxWeight > 0 ? seed.weight / maxWeight : 1;
+			const baseGain = settingsSnapshot.tierVolume[tier];
+			const clusterDb = getClusterGainBoostDb(sortedSeeds.length);
+			const gain = baseGain * weightScale * dbToLinear(clusterDb);
+			enqueueVoice(seed.nodeId, gain, sortedSeeds.length);
 			await wait(200);
 		}
 	} catch (err) {
