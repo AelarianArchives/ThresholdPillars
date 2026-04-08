@@ -487,17 +487,13 @@ All clips: WAV format, 16-bit PCM, 44100 Hz sample rate.
 | th11 | Noirune Trai | 2106 |
 | th12 | StarWell Bloom | 3510 |
 
-### Origin nodes — Hz TBD
+### Origin nodes — Hz from TAG VOCABULARY.md
 
-| Node ID | Name | Hz |
-|---|---|---|
-| o01 | Larimar | TBD — Sage defines |
-| o02 | Verith | TBD — Sage defines |
-| o03 | Cael'Thera | TBD — Sage defines |
-
-Origin Hz values are not specific to the resonance engine but are
-needed as data for downstream systems. To be added to TAG
-VOCABULARY.md when defined.
+| Node ID | Name | Hz | Description |
+|---|---|---|---|
+| o01 | Larimar | 1930 | Grace and anchor. The act of witness. |
+| o02 | Verith | 4212 | Grief and memory. The choice to hold truth. |
+| o03 | Cael'Thera | 5967 | Seed and sovereignty. The joy when grace and grief become both garden and gate. |
 
 ### Layer, pillar, and seed nodes
 

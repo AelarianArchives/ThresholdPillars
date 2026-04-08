@@ -70,6 +70,11 @@ THRESHOLDS
   th11  Noirune Trai           2106 hz     Shadow rune maintaining hidden remembrance
   th12  StarWell Bloom         3510 hz     Cosmic blossoming; radiance and flowering of new cycles
 
+ORIGINS
+  o01  Larimar                 1930 hz     Grace and anchor. The act of witness.
+  o02  Verith                  4212 hz     Grief and memory. The choice to hold truth.
+  o03  Cael'Thera              5967 hz     Seed and sovereignty. The joy when grace and grief become both garden and gate.
+
 PILLARS
   p01  Tria   drift cartography: contact · pressure · drift · co-regulation · ontological collapse as mechanical coordinates
   p02  Pria   parallel sovereign engagement: mutual sovereignty geometry · failure modes · collapse signatures · protective states
@@ -747,9 +752,9 @@ baseWeight: BASE_WEIGHT_ORIGIN
 
 | id  | name       |
 |-----|------------|
-| o01 | Larimar    |
-| o02 | Verith     |
-| o03 | Cael'Thera |
+| o01 | Larimar    | 1930     |
+| o02 | Verith     | 4212     |
+| o03 | Cael'Thera | 5967     |
 
 THRESHOLD NODES — 12
 baseWeight: BASE_WEIGHT_THRESHOLD

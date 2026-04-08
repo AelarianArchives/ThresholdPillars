@@ -9365,3 +9365,106 @@ NOT_STARTED:
 UNCOMMITTED: YES (all Part B changes + fixes)
 NEXT_ACTION: Cross-file verification sweep, then commit and push
 ---
+
+---
+TIMESTAMP: 2026-04-07 23:47
+TYPE: HOOK_BASH
+COMMAND: cd 'C:/Users/sasir/Desktop/Aelarian/Archives' && git commit -m "$(cat <<'EOF'
+Tier 6 Part B: Resonance Engine Audio Spec + fixes + frontend audio deps
+
+New: RESONANCE ENGINE AUDIO SPEC.md â€” 52 notification events mapped to
+15 notifier nodes (3 origins + 12 thresholds) + s20 Rupture three-tier
+syst...
+---
+
+---
+TIMESTAMP: 2026-04-08 00:02
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\TAG VOCABULARY.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:02
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\TAG VOCABULARY.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:02
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Resonance_Engine\RESONANCE ENGINE AUDIO SPEC.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:18
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\Audio\ATTRIBUTION.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:18
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\Audio\Manifest.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:19
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\Audio\Manifest.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:19
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\Audio\Manifest.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:19
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\Audio\Manifest.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:19
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\Audio\Manifest.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:19
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\Audio\Manifest.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:19
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\Audio\Manifest.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:20
+TYPE: HOOK_BASH
+COMMAND: FILE='C:/Users/sasir/Desktop/Aelarian/Archives/Audio/Manifest.md'
+
+# CC0 clips â€” by Freesound ID
+for id in 518706 718293 823227 531269 837379 518704 584307 138587 523980 533203 319253 418150 419146 419147 235339 256921 636455 407379 256228 256247; do
+  sed -i "s|CHECK \\\\u2014 https://freesound.o...
+---
+
+---
+TIMESTAMP: 2026-04-08 00:21
+TYPE: HOOK_BASH
+COMMAND: sed -n '93p' 'C:/Users/sasir/Desktop/Aelarian/Archives/Audio/Manifest.md' | cat -A | head -1
+---
+
+---
+TIMESTAMP: 2026-04-08 00:21
+TYPE: HOOK_BASH
+COMMAND: FILE='C:/Users/sasir/Desktop/Aelarian/Archives/Audio/Manifest.md'
+
+# CC0 clips
+for id in 518706 718293 823227 531269 837379 518704 584307 138587 523980 533203 319253 418150 419146 419147 235339 256921 636455 407379 256228 256247; do
+  sed -i "s|CHECK ..u2014 https://freesound.org/s/${id}/|CC0|g" "$F...
+---
