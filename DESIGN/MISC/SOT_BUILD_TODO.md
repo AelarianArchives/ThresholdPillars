@@ -240,8 +240,8 @@ Required columns per entry:
 
 - [x] section_id format confirmed — lowercase snake_case, derived from domain name
       SOURCE: individual page manifests (DESIGN/Domains/). Sage confirmed 2026-04-04 session 4.
-- [x] All 50 sections extracted into lookup table
-      SOURCE: DESIGN/Systems/SECTION MAP.md — sourced from 50 individual page manifests.
+- [x] All 51 sections extracted into lookup table
+      SOURCE: DESIGN/Systems/SECTION MAP.md — sourced from 51 individual page manifests.
       Master Domain List quarantined (infected). Sage confirmed 2026-04-04 session 4.
 - [x] Lookup table verified against page manifests — all 50 present, no mismatches
       SOURCE: every manifest header cross-checked against SECTION MAP.md. Session 2026-04-04.
@@ -316,8 +316,8 @@ Required per section:
 Three seeds per section, listed in priority order. The ordering is meaningful —
 the first seed carries the most weight when the tagger resolves ambiguous tags.
 
-- [x] Up to 3 seed affinities defined per section, in priority order, for all 50 sections
-      SOURCE: DESIGN/Systems/SECTION MAP.md SEED AFFINITIES section. 50 entries written.
+- [x] Up to 3 seed affinities defined per section, in priority order, for all 51 sections
+      SOURCE: DESIGN/Systems/SECTION MAP.md SEED AFFINITIES section. 51 entries written.
       ECR (05) and MTM (07) sourced from explicit seed references in manifest OBJECTIVE text.
       48 sections derived from manifest OBJECTIVE content (DESIGN/Domains/).
       2 sections recorded as empty array: INT (01) gateway, LNV (47) terminal surface.
@@ -355,6 +355,6 @@ All five items above must be [x] complete. Verify in order:
   2. Section map lookup table written and verified
   3. PHASE_CODES list complete
   4. PAGE_CODES list complete and consistent with section map
-  5. Seed affinities defined for all 50 sections
+  5. Seed affinities defined for all 51 sections
 
 SOT is written after all five are confirmed. Not before.

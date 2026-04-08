@@ -123,7 +123,7 @@ rename operation and the content update happen in the same stage.
 |                               | reserved swarm endpoints, orchestration scope,  |       |
 |                               | swarm API access patterns (timestamped data     |       |
 |                               | retrieval — manual and spontaneous)             |       |
-| SYSTEM_ Frontend.md           | Component architecture, routing (50 pages),    | 6     |
+| SYSTEM_ Frontend.md           | Component architecture, routing (51 pages),    | 6     |
 |                               | Svelte stores, API client layer                 |       |
 | SWARM ARCHITECTURE SCHEMA.md  | Origin identity boundaries, presence states    | 7     |
 |                               | (active/dormant/returned), ownership            |       |
@@ -412,7 +412,7 @@ Confirm: dev server starts, page loads at localhost (default port 5173).
        TaggerPanel, DepositPanel, ThreadTrace, ResonanceCanvas)
      - `src/lib/stores/` — Svelte stores (session state, entry data cache)
      - `src/lib/api.js` — fetch wrapper for FastAPI calls
-     - `src/routes/` — 50 page routes (structure TBD: individual files
+     - `src/routes/` — 51 page routes (structure TBD: individual files
        vs dynamic `[section]` route)
      - `src/routes/+layout.svelte` — shared shell wrapping all pages
    - All data access through API client -> FastAPI. No direct DB access.
@@ -664,7 +664,7 @@ Stage gate closes. Then:
    into the authoritative reference. Blocked until steps 1–2 confirm clean.
 4. **Core files** — backend models, routes, services + frontend components,
    stores, API client. Written from SOT. Every file is V1.
-5. **App running at localhost** — 50 pages navigable, full pipeline working.
+5. **App running at localhost** — 51 pages navigable, full pipeline working.
 
 Nothing from steps 3–5 has been started. Do not begin until infrastructure
 stage gate is closed.

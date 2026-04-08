@@ -157,6 +157,7 @@ Empty is intentional — these are structural surfaces with no thematic bias.
 | 48   | drift_taxonomy      | s20    | s14    | s13    | manifest derive |
 | 49   | signal_grading      | s11    | s10    | s18    | manifest derive |
 | 50   | pattern_convergence | s15    | s17    | s10    | manifest derive |
+| 51   | void                | —      | —      | —      | empty: engine   |
 
 Seeds used: s01–s06, s08–s20 (19 of 20 signal seeds).
 s07 (Dream / Subconscious Thresholds) not assigned as primary affinity to any section.

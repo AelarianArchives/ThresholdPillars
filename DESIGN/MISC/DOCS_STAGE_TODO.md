@@ -189,7 +189,7 @@ Run after Sections 1–5 are complete. Each check is a named pass — read the
 relevant files and confirm. Flag any conflict before marking [x].
 
 - [x] CONNECTS TO bidirectionality — full graph walk
-      Done: all 50 domain files walked. No one-sided relationships found.
+      Done: all 51 domain files walked. No one-sided relationships found.
       Two MDL gaps corrected inline: ECH Draws from now includes VEC (16);
       KIN Feeds now includes VEN (14).
 
@@ -255,7 +255,7 @@ relevant files and confirm. Flag any conflict before marking [x].
       TEMPORAL when linkedEntries is not populated, AND the requirement that the
       fallback is named in the UI when it fires. Both conditions confirmed present.
 
-- [x] Master Domain List — consistency against all 50 domain files
+- [x] Master Domain List — consistency against all 51 domain files
       Done: two gaps found and corrected — ECH (17) CONNECTS TO now includes
       Draws from VEC (16); KIN (20) CONNECTS TO now includes Feeds VEN (14).
       All other domain entries verified consistent with domain files.

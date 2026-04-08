@@ -5485,7 +5485,7 @@ Items that don't belong to a single tier or can be done at any point.
       seed vocabulary (TAG VOCABULARY.md) is locked. Do not update CONNECTS
       TO references or seed affinities during individual page rewrites or
       schema changes. Last action before full system stress test (Tier 8)
-      is a single dedicated pass across all 50 pages covering both. Engine
+      is a single dedicated pass across all 51 pages covering both. Engine
       pages clear to empty regardless (no deposits = no seed bias).
       Reasoning: pages are still being redesigned, new pages added, seed
       vocabulary shifting, relationships changing. Updating either piecemeal
@@ -5691,7 +5691,7 @@ Decisions made during design sessions. Recorded with reasoning.
 - Data model: Tier 1. Per-page UI: Tier 2. Dashboard surface: Tier 7.
 
 **Dashboard confirmed — new root surface:**
-- The meta-layer above the 50 pages. Mission control.
+- The meta-layer above the 51 pages. Mission control.
 - Semantic map, notifications, WSC handoff, Black Pearl, active patterns.
 - Lives at root route (src/routes/+page.svelte).
 - Not a 51st page — the shell that holds the 50.
@@ -5716,7 +5716,7 @@ Decisions made during design sessions. Recorded with reasoning.
 - Tier 7.
 
 **Page identity confirmed:**
-- 50 pages should feel different based on function type.
+- 51 pages should feel different based on function type.
 - Gateway, Lens, Synthesis, Engine, Output, Scroll, Investigation, Domain.
 - Visual language signals function. Not decorative — structural.
 - Tier 2.
