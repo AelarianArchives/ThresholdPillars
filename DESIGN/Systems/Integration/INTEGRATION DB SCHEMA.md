@@ -2128,6 +2128,129 @@ Write authority: RCT service only (POST /rct/residuals).
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: signal_grades
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SGR evidence-locked grading records. One per graded drift event.
+Four-dimension score vector, tier derivation, Bayesian return to DTX.
+Full spec in SIGNAL GRADING SCHEMA.md.
+
+Write authority: SGR service.
+
+  id                   — serial, primary key
+  drift_event_ref      — integer, NOT NULL, FK → drift_events.id
+  hypothesis_ref       — text, NOT NULL, FK → patterns.hypothesis_id
+                         Carried forward from DTX for full chain
+                         traceability: PCV → DTX → SGR.
+  score_vector         — jsonb, NOT NULL
+                         { structural_impact, cross_domain_resonance,
+                           predictive_validity, temporal_stability }.
+                         Each holds the enum value from its grading
+                         dimension. Null on individual fields while
+                         Unrated. All four populated before Rated.
+  grade_rationale      — jsonb, nullable
+                         { impact_rationale, resonance_rationale,
+                           predictive_rationale, stability_rationale }.
+                         One rationale per dimension. Each states
+                         the documented evidence. Required at Rated.
+  tier                 — text, nullable
+                         enum: 'S' | 'A' | 'B' | 'C'
+                         Null while Unrated. Derived from score_vector
+                         per lowest-qualifying-dimension rule.
+  grade_state          — text, NOT NULL, default 'Unrated'
+                         enum: 'Unrated' | 'Rated' | 'Revised'
+  revised_at           — timestamp, nullable
+                         Null until grade_state → Revised.
+  detection_session    — timestamp, NOT NULL
+                         Mirrors drift_events.detection_session.
+                         Written at record creation.
+  validation_session   — timestamp, nullable
+                         Session date at which grading completed.
+                         Null until Rated.
+  grade_latency        — integer, nullable
+                         Days between detection_session and
+                         validation_session. Null until validation.
+                         Signal property.
+  bayesian_return_status — text, NOT NULL, default 'pending'
+                         enum: 'pending' | 'sent' | 'failed'
+                         Tracks whether Bayesian update has been
+                         returned to DTX.
+  bayesian_payload     — jsonb, nullable
+                         { confirmed_outcome, p_resolve_delta,
+                           p_collapse_delta, p_stable_delta }.
+                         Written when bayesian_return_status → sent.
+                         Preserved as record of what was returned.
+  created_at           — timestamp, NOT NULL
+                         Written once at record creation. Never updated.
+  last_updated         — timestamp, NOT NULL
+                         Updated on every state change.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: saved_threads
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Thread Trace saved thread records. One per saved thread. Persistence
+layer for user-saved thread configurations. Thread logic runs in the
+Svelte frontend; persistence is server-side via FastAPI /threads/.
+Full spec in THREAD TRACE SCHEMA.md.
+
+Write authority: Sage (via Thread Trace panel).
+
+  id                   — text, primary key
+                         Format: 'thr_[timestamp]_[rand]'
+  name                 — text, NOT NULL
+                         User-defined at save time.
+  thread_type          — text, NOT NULL
+                         One of the four thread type values
+                         (Temporal, Relational, Cluster, Emergence).
+  seed                 — jsonb, NOT NULL
+                         Serialized seed. Finding objects reduced
+                         to key fields only for JSON safety.
+  entry_ids            — text[], NOT NULL
+                         IDs of entries in the thread at save time.
+  filter_state         — jsonb, nullable
+                         Active filter at save time. Null if tagger
+                         store had no active result.
+  tag_routing_snapshot — jsonb, NOT NULL
+                         Tag routing summary assembled at save time.
+  created_at           — timestamp, NOT NULL
+  last_accessed        — timestamp, NOT NULL
+  is_deleted           — boolean, NOT NULL, default false
+                         Soft delete. Delete endpoint sets true.
+                         List endpoint filters deleted records.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE: thread_annotations
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Thread Trace annotation records. One per annotation on a saved thread.
+Researcher marginalia on thread sequences — methodology notes,
+research observations, open questions. Requires a saved thread.
+Full spec in THREAD TRACE SCHEMA.md.
+
+Write authority: Sage (via Thread Trace panel).
+
+  id                   — text, primary key
+                         Format: 'ann_[timestamp]_[rand]'
+  thread_id            — text, NOT NULL, FK → saved_threads.id
+  text                 — text, NOT NULL
+                         Annotation content.
+  annotation_type      — text, NOT NULL
+                         enum: 'note' | 'observation' | 'question'
+                         note: methodology annotation.
+                         observation: research observation.
+                         question: open question for future
+                         investigation.
+  timestamp            — timestamp, NOT NULL
+  filter_snapshot      — jsonb, NOT NULL
+                         Active filter state AND sequence position
+                         index at the moment the annotation was
+                         written. Captures exact context.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CHUNK QUEUE DERIVATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -2159,7 +2282,8 @@ backend/models/
   emergence_findings, artis_computation_snapshots,
   artis_external_references, science_domain_mappings,
   artis_layer2_snapshots, artis_reference_distributions,
-  cosmology_findings, rct_residuals.
+  cosmology_findings, rct_residuals, signal_grades,
+  saved_threads, thread_annotations.
   Status: PLANNED
 
 backend/services/

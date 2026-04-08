@@ -12,7 +12,7 @@
 
 * Database layer (PostgreSQL) — all read and write operations across every table in the archive
 * Schema versioning via Alembic migrations — every table change is a versioned migration
-* Table ownership for: root_entries · file_assets · manifest_sessions · deposits · archives · prompt_versions · instances · annotations · aos_records · system_counters · routine_sessions · synthesis_sessions · findings · drift_events · patterns · emergence_findings · embeddings · artis_computation_snapshots · artis_external_references · science_domain_mappings · artis_layer2_snapshots · artis_reference_distributions · cosmology_findings · rct_residuals
+* Table ownership for: root_entries · file_assets · manifest_sessions · deposits · archives · prompt_versions · instances · annotations · aos_records · system_counters · routine_sessions · synthesis_sessions · findings · drift_events · patterns · emergence_findings · embeddings · artis_computation_snapshots · artis_external_references · science_domain_mappings · artis_layer2_snapshots · artis_reference_distributions · cosmology_findings · rct_residuals · signal_grades · saved_threads · thread_annotations
 * arc_seq counter operations — increment, checkpoint write, checkpoint clear
 * Chunk queue derivation — computing next_chunk, page_start, page_end, queue_done
 * Write path execution for every system — FastAPI service layer executes the write; the owning system owns the decision to write
@@ -93,6 +93,9 @@ Each table lists who decides what is written and what the FastAPI service layer 
 | artis_reference_distributions | ARTIS service | distribution creation, superseded_by update |
 | cosmology_findings | Cosmology page services (hco, cos, clm, nhm, rct) | finding creation, status transitions, nexus_eligible, LNV routing |
 | rct_residuals | RCT service | residual creation (immutable), LNV routing |
+| signal_grades | SGR service | record creation, score vector writes, tier assignment, grade state transitions, Bayesian return tracking |
+| saved_threads | Sage (via Thread Trace panel) | thread save, touch (last_accessed update), soft delete |
+| thread_annotations | Sage (via Thread Trace panel) | annotation creation on saved threads |
 
 The service layer never initiates a write based on its own judgment. Every write is triggered by the owning system.
 
@@ -177,6 +180,12 @@ The service layer never initiates a write based on its own judgment. Every write
 **cosmology_findings** — shared Cosmology investigation findings, discriminated by page_code. Carries page_code, deposit_ids, framework, hypothesis, computation_snapshot_id (FK), result_summary, values (jsonb), confidence (Sage's assessment), external_reference_id, nexus_eligible, status (draft/confirmed/superseded/abandoned). See COSMOLOGY SCHEMA.md.
 
 **rct_residuals** — RCT residual records. Delta between known science predictions and field behavior. Immutable after creation. Carries source_finding_id (FK to cosmology_findings), algorithm_component, known_science_predict, field_produces, delta, computation_ref (FK to artis_computation_snapshots), nexus_eligible. Routes to LNV immediately on creation. See COSMOLOGY SCHEMA.md.
+
+**signal_grades** — SGR evidence-locked grading records. One per graded drift event. Four-dimension score vector (structural_impact, cross_domain_resonance, predictive_validity, temporal_stability), tier derivation via lowest-qualifying-dimension rule, Bayesian return to DTX. Carries drift_event_ref (FK to drift_events), hypothesis_ref (FK to patterns.hypothesis_id) for full chain traceability PCV → DTX → SGR. See SIGNAL GRADING SCHEMA.md.
+
+**saved_threads** — Thread Trace saved thread records. One per user-saved thread. Carries thread_type (Temporal, Relational, Cluster, Emergence), serialized seed, entry_ids at save time, filter_state, tag_routing_snapshot. Soft delete via is_deleted flag. Thread logic runs in Svelte frontend; persistence is server-side. See THREAD TRACE SCHEMA.md.
+
+**thread_annotations** — Thread Trace annotation records. One per annotation on a saved thread. Researcher marginalia — methodology notes, research observations, open questions. Carries annotation_type (note, observation, question), filter_snapshot capturing exact thread position at annotation time. FK to saved_threads.id. See THREAD TRACE SCHEMA.md.
 
 ---
 
