@@ -32,6 +32,7 @@ async def health():
     pg_ok = False
     sqlite_ok = False
     redis_ok = False
+    errors: dict[str, str] = {}
 
     try:
         from sqlalchemy import text
@@ -39,8 +40,8 @@ async def health():
         async with postgres.engine.connect() as conn:
             await conn.execute(text("SELECT 1"))
             pg_ok = True
-    except Exception:
-        pass
+    except Exception as e:
+        errors["postgres"] = f"{type(e).__name__}: {e}"
 
     try:
         from sqlalchemy import text
@@ -48,15 +49,20 @@ async def health():
         async with sqlite.engine.connect() as conn:
             await conn.execute(text("SELECT 1"))
             sqlite_ok = True
-    except Exception:
-        pass
+    except Exception as e:
+        errors["sqlite"] = f"{type(e).__name__}: {e}"
 
     try:
         if redis_client:
             await redis_client.ping()
             redis_ok = True
-    except Exception:
-        pass
+        else:
+            errors["redis"] = "client not initialized"
+    except Exception as e:
+        errors["redis"] = f"{type(e).__name__}: {e}"
 
     status = "ok" if (pg_ok and sqlite_ok and redis_ok) else "degraded"
-    return {"status": status, "postgres": pg_ok, "sqlite": sqlite_ok, "redis": redis_ok}
+    result: dict = {"status": status, "postgres": pg_ok, "sqlite": sqlite_ok, "redis": redis_ok}
+    if errors:
+        result["errors"] = errors
+    return result

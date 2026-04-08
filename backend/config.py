@@ -27,6 +27,13 @@ OLLAMA_BASE_URL: str = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434
 
 # Claude API
 ANTHROPIC_API_KEY: str = os.environ.get("ANTHROPIC_API_KEY", "")
+if not ANTHROPIC_API_KEY:
+    import warnings
+    warnings.warn(
+        "ANTHROPIC_API_KEY is not set in backend/.env — "
+        "Claude API calls will fail until configured",
+        stacklevel=1,
+    )
 
 # Redis
 REDIS_URL: str = os.environ.get("REDIS_URL", "redis://localhost:6379/0")

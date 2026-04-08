@@ -83,10 +83,26 @@ AGENT_REGISTRY: dict[str, AgentIdentity] = {
 }
 
 # ---------------------------------------------------------------------------
-# Client
+# Client (lazy initialization — created on first call)
 # ---------------------------------------------------------------------------
 
-_client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+_client: AsyncAnthropic | None = None
+
+
+def _get_client() -> AsyncAnthropic:
+    """Return the shared AsyncAnthropic client, creating it on first use.
+
+    Raises RuntimeError if ANTHROPIC_API_KEY is not configured.
+    """
+    global _client
+    if _client is None:
+        if not ANTHROPIC_API_KEY:
+            raise RuntimeError(
+                "ANTHROPIC_API_KEY is not set in backend/.env — "
+                "cannot make Claude API calls without a valid key"
+            )
+        _client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+    return _client
 
 
 async def call_claude(
@@ -140,7 +156,8 @@ async def call_claude(
     if context_block:
         full_system = f"{context_block}\n\n---\n\n{system_prompt}"
 
-    response = await _client.messages.create(
+    client = _get_client()
+    response = await client.messages.create(
         model=model,
         max_tokens=max_tokens,
         system=full_system,
