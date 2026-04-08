@@ -466,7 +466,7 @@ the dominant presence. The crescendo follows the field's own gravity.
 
 ## CLIP MANIFEST
 
-All 62 nodes get audio clips. Path convention: `/Audio/nodes/{nodeId}.wav`
+All 62 nodes get audio clips. Path convention: `/Audio/Nodes/{nodeId}.wav`
 
 All clips: WAV format, 16-bit PCM, 44100 Hz sample rate.
 
@@ -613,5 +613,5 @@ Phase 5 stretch. Continuous mapping of engine state to audio.
 | frontend/src/lib/audio/visualizer.ts | Waveform analyser — AnalyserNode, canvas draw loop, retina support | PLANNED |
 | frontend/src/lib/components/AudioPanel.svelte | Floating panel — node browser, succession player, field read, waveform, controls | PLANNED |
 | frontend/src/lib/stores/audio.ts | Audio state store — playing nodes, queue state, mute state, notification toggles | PLANNED |
-| Audio/nodes/ | Clip files — {nodeId}.wav for all 62 nodes + s20 rupture + drift cue | Sage curating |
+| Audio/Nodes/ | Clip files — {nodeId}.wav for all 62 nodes + s20 rupture + drift cue | Sage curating |
 | backend/routes/events.py | SSE endpoint — streams system events to frontend | PLANNED |

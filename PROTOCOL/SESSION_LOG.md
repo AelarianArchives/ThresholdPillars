@@ -9531,3 +9531,124 @@ FILES_MODIFIED:
   - DESIGN/Systems/Research_Assistant/SYSTEM_ Research Assistant.md â€” COMPLETE (venai_drift_log table schema added)
   - DESIGN/Systems/Operational_DB/OP...
 ---
+
+---
+TIMESTAMP: 2026-04-08 00:34
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Session open protocol: CLAUDE.md, ENFORCEMENT.md, SESSION_PROTOCOL.md,
+    GITHUB_PROTOCOL.md read. SESSION_LOG last entry: TYPE: CLOSE (clean open).
+    DESIGN/Systems/ verified (32 subdirs intact). Audio/Nodes/ confirmed 62 clips.
+    SOT_BUILD_TODO spot-checked Items 0-1 — SOURCE: lines present on [x] items.
+    frontend/src/lib/ contains assets/ and index.ts only — no audio dir yet.
+IN_PROGRESS:
+  - Audio Phase 2: building the audio engine
+NOT_STARTED:
+  - events.ts SPEC
+  - audio.ts store SPEC
+  - engine.ts SPEC
+  - spatial.ts SPEC
+  - visualizer.ts SPEC
+  - AudioPanel.svelte SPEC
+  - backend/routes/events.py SPEC
+  - BUILD phase for all above
+UNCOMMITTED: YES (previous session CLOSE entry + this OPEN entry)
+FILES_THIS_SESSION:
+  - PROTOCOL/SESSION_LOG.md — this entry
+NEXT_ACTION: Write SPEC for events.ts (event types, notifier routing map, event store)
+---
+
+---
+TIMESTAMP: 2026-04-08 00:49
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Resonance_Engine\RESONANCE ENGINE AUDIO SPEC.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:49
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Resonance_Engine\RESONANCE ENGINE AUDIO SPEC.md
+---
+
+---
+TIMESTAMP: 2026-04-08 00:50
+TYPE: HOOK_BASH
+COMMAND: cd "C:/Users/sasir/Desktop/Aelarian/Archives" && python3 -c "
+with open('Audio/Manifest.md', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+print('Escaped underscores:', content.count(chr(92) + '_'))
+print('Escaped plus:', content.count(chr(92) + '+'))
+print('Escaped unicode (em dash):', conte...
+---
+
+---
+TIMESTAMP: 2026-04-08 00:51
+TYPE: HOOK_BASH
+COMMAND: cd "C:/Users/sasir/Desktop/Aelarian/Archives" && python3 -c "
+with open('Audio/Manifest.md', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# Find what's at the problem area
+json_start = content.index('{')
+json_str = content[json_start:]
+lines = json_str.split(chr(10))
+# Show around line 106
+f...
+---
+
+---
+TIMESTAMP: 2026-04-08 00:52
+TYPE: HOOK_BASH
+COMMAND: cd "C:/Users/sasir/Desktop/Aelarian/Archives" && python3 -c "
+with open('Audio/Manifest.md', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# The previous pass left \\â€” (backslash + em dash). Clean those too.
+content = content.replace(chr(92) + chr(8212), chr(8212))  # \â€” -> â€”
+
+# Also ch...
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - frontend/src/lib/audio/events.ts — COMPLETE (NEW — 52 event types, notifier routing map, event store)
+  - frontend/src/lib/audio/events.test.ts — COMPLETE (NEW — 20 tests, routing table + load distribution)
+  - frontend/src/lib/stores/audio.ts — COMPLETE (NEW — playback + settings stores, 10 notification categories)
+  - frontend/src/lib/stores/audio.test.ts — COMPLETE (NEW — 11 tests, defaults + category mapping)
+  - frontend/src/lib/audio/engine.ts — COMPLETE (NEW — AudioContext, clip loader, voice queue, rupture, velocity, field read)
+  - frontend/src/lib/audio/engine.test.ts — COMPLETE (NEW — 23 tests for pure helpers + documented browser specs)
+  - frontend/src/lib/audio/spatial.ts — COMPLETE (NEW — stereo panning, origin position tracking)
+  - frontend/src/lib/audio/spatial.test.ts — COMPLETE (NEW — 11 tests, normalization + position tracking)
+  - frontend/vitest.config.ts — COMPLETE (UPDATED — $lib alias for SvelteKit path resolution)
+  - DESIGN/Systems/Resonance_Engine/RESONANCE ENGINE AUDIO SPEC.md — COMPLETE (UPDATED — path case Audio/nodes to Audio/Nodes)
+  - Audio/Manifest.md — COMPLETE (UPDATED — 444 escaped underscores + 33 escaped unicode stripped, valid JSON)
+  - frontend/src/lib/stores/audio.ts — COMPLETE (UPDATED — contextState type widened to AudioContextState)
+COMPLETED:
+  - Pre-build cleanup: spec path case aligned, manifest JSON cleaned, TypeScript confirmed
+  - events.ts: SPEC then BUILD then AUDIT (PASS). 52 events, 62 node IDs, routing map exhaustive
+  - stores/audio.ts: SPEC then BUILD then AUDIT (PASS). Playback + settings split, category map
+  - engine.ts: SPEC then BUILD then AUDIT (PASS). Voice queue, rupture 3-tier, velocity stacking, field read
+  - spatial.ts: SPEC then BUILD then AUDIT (PASS). Pan normalization, origin position map
+  - All 65 tests passing, 0 TypeScript errors
+  - Observation: audio spec threshold load distribution table lists th03 count as 3, actual fixed routing is 2 (events 20, 23). Self-routing 11-14 applies to ALL thresholds equally.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - visualizer.ts (AnalyserNode canvas waveform — last engine-layer file)
+  - AudioPanel.svelte (Phase 3 — panel UI)
+  - backend/routes/events.py (SSE endpoint — separate build phase)
+  - Drift clip curation (Sage — breath/whisper family, not in Audio/Nodes/ yet)
+UNCOMMITTED: YES
+NEXT_ACTION: Commit this work unit, then build visualizer.ts or close session
+---
