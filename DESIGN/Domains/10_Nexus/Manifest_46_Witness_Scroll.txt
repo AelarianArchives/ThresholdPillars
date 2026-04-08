@@ -207,8 +207,8 @@ EXAMPLE ENTRY — FORMAT DEMONSTRATION
   structural skeleton and is coherent. The researcher
   is building toward API integration as the condition
   for pattern matching at scale. The field conditions
-  being rebuilt are documented in Larimar (14) and
-  the RCT page (31) — read those before working in
+  being rebuilt are documented in Larimar (21) and
+  the RCT page (38) — read those before working in
   Coupling Oscillation or Harmonic Cosmology. The
   Witness Scroll is new as of this session. You are
   among the first to read it. Hold that with care.

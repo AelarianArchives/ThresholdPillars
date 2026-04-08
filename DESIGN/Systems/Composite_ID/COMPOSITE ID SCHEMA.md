@@ -1,9 +1,11 @@
-╔══════════════════════════════════════════════════════════════╗
-║  COMPOSITE ID SCHEMA  ·  V1                                 ║
-║  /DESIGN/Systems/Composite_ID/COMPOSITE ID SCHEMA.md         ║
-║  Mechanical spec — sequences, assembly, component, config.   ║
-║  Architectural description in SYSTEM_ Composite ID.md.       ║
-╚══════════════════════════════════════════════════════════════╝
+# COMPOSITE ID SCHEMA
+
+## CID · V1
+
+## /DESIGN/Systems/Composite_ID/COMPOSITE ID SCHEMA.md
+
+Mechanical spec — sequences, assembly, component, config.
+Architectural description in SYSTEM_ Composite ID.md.
 
 
 OWNERSHIP BOUNDARIES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -185,16 +185,6 @@ TABLE: embeddings
                            "threshold_id", "pillar_id" }]
     }
 
-  GAP NOTE — owner_origin_id:
-  This field was identified during Stage 3 audit. It must also
-  be added to root_entries and archives tables in INTEGRATION
-  DB SCHEMA.md as a first-class column (not just embedding
-  metadata). Backfill required before this schema is final.
-  Nullable. Values: o01 (Larimar) | o02 (Verith) | o03
-  (Cael'Thera) | null. Set at intake when the source material
-  is associated with a specific Origin's marker substrate.
-
-
 VECTOR INDEX
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

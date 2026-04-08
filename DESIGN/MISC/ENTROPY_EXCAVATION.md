@@ -286,67 +286,30 @@ UNVERIFIED — KNOWN ISSUES
 Files with known issues from the rot contamination report (2026-04-06).
 These are not trusted until they pass through the gate.
 
-CRITICAL:
+RESOLVED (session 27 audit remediation, 2026-04-08):
 
-  SYSTEM_ Composite ID.md
-    Audited informally (session 24). No issues found in content.
-    Not formally gated. Box-drawing formatting not present.
-    Elarian Anchor states verified correct (7 codes, descriptions match).
+  All CRITICAL items resolved. The following files were verified
+  through the Entropy Excavation gate and now appear in the
+  VERIFIED section above:
+    SYSTEM_ Composite ID.md, SYSTEM_ Thread Trace.md,
+    THREAD TRACE SCHEMA.md, SYSTEM_ Emergence.md,
+    EMERGENCE SCHEMA.md, DRIFT TAXONOMY SCHEMA.md,
+    EMBEDDING PIPELINE SCHEMA.md, SYSTEM_ Frontend.md,
+    SYSTEM_ FastAPI.md
 
-  SYSTEM_ Thread Trace.md
-    Phantom TAGGER SCHEMA ref (line 27) — now resolved (file exists)
-    Needs formal gate verification
+  HIGH items resolved:
+    API prompts — counts corrected to 51 sections / 9 groups
+    CLAUDE.md — arcPhase reference removed (prior session)
+    SIGNAL GRADING SCHEMA.md — verified clean
+    PATTERN CONVERGENCE SCHEMA.md — verified clean
+    METAMORPHOSIS SCHEMA.md — verified clean
+    Witness Scroll page codes — Manifest_46 corrected (21, 38)
 
-  THREAD TRACE SCHEMA.md
-    Phantom TAGGER SCHEMA ref (line 40) — now resolved (file exists)
-    Box-drawing formatting in header (lines 1-7)
-    Needs formal gate verification
-
-  SYSTEM_ Emergence.md
-    Wrong detector count: "seven detectors" (correct: eight)
-
-  EMERGENCE SCHEMA.md
-    Wrong detector count: "seven-detector pass" (correct: eight)
-    Phantom page code VOI (not in SECTION MAP)
-
-  DRIFT TAXONOMY SCHEMA.md
-    Old file path header: /DESIGN/systems/drift_taxonomy_schema_v1.md
-    Formatting corruption
-
-  EMBEDDING PIPELINE SCHEMA.md
-    Old file path header: /DESIGN/systems/embedding_pipeline_schema_v1.md
-
-  SYSTEM_ Frontend.md
-    Phantom TAGGER SCHEMA ref (line 30) — now resolved
-    Phantom RESONANCE ENGINE SCHEMA ref (line 22)
-    Stale file path headers
-
-  SYSTEM_ FastAPI.md
-    Phantom TAGGER SCHEMA ref (line 25) — now resolved
-    Stale file path headers
-
-HIGH:
-
-  API prompts (api/prompts/)
-    10 stale values: "46 domains" / "8 groups" / wrong group names
+STILL OPEN:
 
   PROTOCOL files
-    7 phantom refs (SCHEMA_PROTOCOL, DEPENDENCY_MAP)
-    6 old-build refs (data.js, emergence.js, window.ThreadTraceUI)
-
-  CLAUDE.md
-    arcPhase reference (line 130)
-
-  SIGNAL GRADING SCHEMA.md (SGR)
-    Formatting corruption
-    Old JS-style public API
-
-  PATTERN CONVERGENCE SCHEMA.md (PCV)
-    Formatting corruption
-    Old JS-style public API
-
-  METAMORPHOSIS SCHEMA.md (MTM)
-    Formatting corruption
+    DEPENDENCY_MAP.json contains only old-build refs.
+    Scheduled for Fix 6 (clear and defer to core files phase).
 
   ARCPHASE_ROT_CLEANUP.md
     Threshold table uses old ID order (Sage handling)
@@ -359,10 +322,6 @@ BLOCKING DECISIONS (not file fixes):
   SEED AFFINITY AUTHORITY
     SECTION MAP and domain files disagree on every section's seed
     affinity. Blocks tagger build. One must be canonical.
-
-  WITNESS SCROLL PAGE CODE DRIFT
-    Manifest_46 lines 210-211: "Larimar (14)" should be (21),
-    "RCT (31)" should be (38)
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

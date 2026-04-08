@@ -446,15 +446,6 @@ CROSS-REFERENCES
       system prompt construction
 
 
-CLEANUP PASS NOTE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  SYSTEM_ FastAPI.md RESERVED SWARM API PATTERNS section
-  states parallax event routing uses origin_type = lattice.
-  Correct value is origin_type = parallax_event. Logged for
-  cleanup pass — not corrected in this stage.
-
-
 FILES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

@@ -162,7 +162,7 @@ Detection logic and tagger prompt block owned by TAGGER SCHEMA.md.
 
 | File | Role | Status |
 | --- | --- | --- |
-| src/lib/components/CompositeId.svelte | Stamp preview rendering, phase select population, mode handling. Included as child in every panel. | PLANNED |
-| src/lib/stores/config.ts | Svelte store for PHASE_CODES and PAGE_CODES from FastAPI | PLANNED |
+| frontend/src/lib/components/CompositeId.svelte | Stamp preview rendering, phase select population, mode handling. Included as child in every panel. | PLANNED |
+| frontend/src/lib/stores/config.ts | Svelte store for PHASE_CODES and PAGE_CODES from FastAPI | PLANNED |
 | backend/services/composite_id.py | Locked stamp assembly — PostgreSQL SEQUENCE, stamp string, child stamps | PLANNED |
 | backend/db/migrations/ | PostgreSQL SEQUENCE definition (ts_sequence) managed via Alembic migration | PLANNED |

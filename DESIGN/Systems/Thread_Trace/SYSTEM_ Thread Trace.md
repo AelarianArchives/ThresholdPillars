@@ -118,9 +118,9 @@ Reads phase_state sequences from Temporal threads. The phase_state transitions b
 
 | File | Role | Status |
 | --- | --- | --- |
-| src/lib/components/ThreadTrace.svelte | Overlay shell, sequence view, graph view, filter bar, annotation layer, entry point bindings | PLANNED |
-| src/lib/thread-trace.ts | Pure logic — four builders, seed resolution, edge labels, routing summary/snapshot, fallback chain | PLANNED |
-| src/lib/stores/thread.ts | Svelte store — session-only thread state | PLANNED |
+| frontend/src/lib/components/ThreadTrace.svelte | Overlay shell, sequence view, graph view, filter bar, annotation layer, entry point bindings | PLANNED |
+| frontend/src/lib/thread-trace.ts | Pure logic — four builders, seed resolution, edge labels, routing summary/snapshot, fallback chain | PLANNED |
+| frontend/src/lib/stores/thread.ts | Svelte store — session-only thread state | PLANNED |
 | backend/routes/threads.py | FastAPI /threads/ — CRUD saved threads, annotations, touch | PLANNED |
 | backend/models/thread.py | SQLAlchemy models — saved_threads, thread_annotations | PLANNED |
 
