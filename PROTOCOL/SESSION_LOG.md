@@ -10088,3 +10088,152 @@ TIMESTAMP: 2026-04-08 03:54
 TYPE: HOOK_WRITE
 FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\stores\audio.test.ts
 ---
+
+---
+TIMESTAMP: 2026-04-08 04:07
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\audio\engine.ts
+---
+
+---
+TIMESTAMP: 2026-04-08 04:07
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\audio\engine.ts
+---
+
+---
+TIMESTAMP: 2026-04-08 04:08
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\AudioPanel.svelte
+---
+
+---
+TIMESTAMP: 2026-04-08 04:08
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\AudioPanel.svelte
+---
+
+---
+TIMESTAMP: 2026-04-08 04:08
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\AudioPanel.test.ts
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - frontend/src/lib/audio/engine.ts — COMPLETE (ambient modes wired, heartbeat timer)
+  - frontend/src/lib/audio/engine.test.ts — COMPLETE (6 ambient mode tests + documented specs)
+  - frontend/src/lib/stores/audio.ts — COMPLETE (heartbeatIntervalMs added)
+  - frontend/src/lib/stores/audio.test.ts — COMPLETE (2 new default tests)
+  - frontend/src/lib/components/WaveformStrip.test.ts — COMPLETE (store reset updated)
+  - frontend/src/lib/components/AudioPanel.test.ts — COMPLETE (store reset + drone disabled test)
+COMPLETED:
+  - Ambient playback modes: notification (existing), heartbeat (60s interval,
+    origins-only o01→o02→o03 at 500ms), drone (stub — mode tracked, no audio)
+  - Engine subscribes to ambientMode + heartbeatIntervalMs via settings store
+  - Heartbeat timer cleared on mode switch, destroy, and abort
+  - Audit fixes: abort controller overwrite guard, activeAmbientMode reset on destroy
+  - Commit db1abac pushed
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - none
+UNCOMMITTED: NO
+NEXT_ACTION: Audio audit fixes
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - frontend/src/lib/audio/engine.ts — COMPLETE (3 audit fixes)
+  - frontend/src/lib/components/AudioPanel.svelte — COMPLETE (drone button disabled)
+  - frontend/src/lib/components/AudioPanel.test.ts — COMPLETE (drone disabled test)
+COMPLETED:
+  - Full audio system audit: 21 findings (6 blocking, 8 gaps, 7 calibration).
+    3 fixable now, rest blocked on systems that don't exist yet.
+  - Fix 1: VELOCITY_GAIN_STEP_DB used in getVelocityGainDb() formula
+  - Fix 2: DECAY_HANDOFF_MS exported for test visibility
+  - Fix 3: Drone mode button disabled with "coming soon" tooltip
+  - Commit 97b68f0 pushed
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - none
+UNCOMMITTED: NO
+NEXT_ACTION: POST-INFRASTRUCTURE verification gates
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - none (read-only audit)
+COMPLETED:
+  - POST-INFRASTRUCTURE verification gate 1: Systems verification — CLEAN.
+    55 files in DESIGN/Systems/ audited. Zero stale IDB/old-architecture
+    references. All docs reflect FastAPI/SvelteKit/PostgreSQL stack.
+  - POST-INFRASTRUCTURE verification gate 2: V1 scan — CLEAN.
+    No legacy version contamination. All "V2" refs are planned swarm
+    phase (future), not rebuild versions.
+  - Infrastructure stage gate CLOSED. SOT authoring unblocked.
+  - Build plan audit completed: identified exact dependency chain
+    SOT → core files → app running. SOT inputs confirmed (17 DOCS
+    operations + SOT_BUILD_TODO items 1-5).
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - SOT authoring (next session)
+UNCOMMITTED: NO
+NEXT_ACTION: Begin SOT authoring
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: CLOSE
+FILES_MODIFIED:
+  - frontend/src/lib/components/WaveformStrip.svelte — COMPLETE (NEW)
+  - frontend/src/lib/components/WaveformStrip.test.ts — COMPLETE (NEW, 12 tests)
+  - frontend/src/lib/components/AudioPanel.svelte — COMPLETE (NEW)
+  - frontend/src/lib/components/AudioPanel.test.ts — COMPLETE (NEW, 16 tests)
+  - frontend/src/lib/audio/engine.ts — COMPLETE (ambient modes + 3 audit fixes)
+  - frontend/src/lib/audio/engine.test.ts — COMPLETE (6 new tests)
+  - frontend/src/lib/stores/audio.ts — COMPLETE (audioPanelOpen, AmbientMode,
+    heartbeatIntervalMs)
+  - frontend/src/lib/stores/audio.test.ts — COMPLETE (2 new tests)
+  - frontend/src/routes/+layout.svelte — COMPLETE (WaveformStrip + AudioPanel wired)
+  - frontend/vitest.config.ts — COMPLETE (browser conditions, $app/environment mock)
+  - frontend/src/lib/__mocks__/app-environment.ts — COMPLETE (NEW)
+  - PROTOCOL/SESSION_LOG.md — this entry
+COMPLETED:
+  - WaveformStrip.svelte: ambient bar, all pages, strip visualizer mode
+  - AudioPanel.svelte: full floating panel, 6 sections, panel visualizer mode
+  - Visualizer singleton handoff between strip and panel
+  - Three ambient modes: notification (existing), heartbeat (wired), drone (stub)
+  - Full audio system audit (21 findings, 3 fixed)
+  - Full build plan audit (dependency chain mapped)
+  - POST-INFRASTRUCTURE verification gates: both CLEAN
+  - Infrastructure stage gate CLOSED — SOT authoring unblocked
+  - 4 commits pushed: 724c8e8, db1abac, 97b68f0, plus this close commit
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - SOT authoring — consolidate 55 verified DESIGN/Systems docs +
+    SOT_BUILD_TODO items into authoritative reference
+  - Core files (backend models, routes, services + frontend components,
+    stores, API client) — blocked on SOT
+  - App running at localhost — blocked on core files
+  - Drone ambient mode audio — blocked on resonance engine field data
+  - Drift clip system — blocked on clip curation (Sage)
+  - Audio Phase 4: tuning pass — blocked on app running
+  - Audio Phase 5: sonification stretch goals
+UNCOMMITTED: YES (this CLOSE entry)
+NEXT_ACTION: Next session opens with SOT authoring. All prerequisites verified.
+  Infrastructure stage gate closed. Read CLAUDE.md, ENFORCEMENT.md,
+  SESSION_PROTOCOL.md, then begin SOT document assembly from:
+  - 55 DESIGN/Systems docs (all verified clean)
+  - SOT_BUILD_TODO items 1-5 (all [x] with valid sources)
+  - infrastructure-build-plan.md (stack decisions, route namespace)
+---
