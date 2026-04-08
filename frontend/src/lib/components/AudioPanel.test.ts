@@ -197,8 +197,21 @@ describe('AudioPanel.svelte', () => {
 		)!;
 		await fireEvent.click(mixHeader);
 
-		await fireEvent.click(getByLabelText('Set ambient mode to Drone'));
-		expect(get(audioSettingsStore).ambientMode).toBe('drone');
+		await fireEvent.click(getByLabelText('Set ambient mode to Heartbeat'));
+		expect(get(audioSettingsStore).ambientMode).toBe('heartbeat');
+	});
+
+	it('drone mode button is disabled', async () => {
+		const { container, getByLabelText } = render(AudioPanel);
+		const headers = container.querySelectorAll('.section-header');
+		const mixHeader = Array.from(headers).find((h) =>
+			h.textContent?.trim() === 'Mix'
+		)!;
+		await fireEvent.click(mixHeader);
+
+		const droneBtn = getByLabelText('Drone mode coming soon');
+		expect(droneBtn).toBeTruthy();
+		expect(droneBtn.hasAttribute('disabled')).toBe(true);
 	});
 
 	it('stubbed sections show Phase 4 message', async () => {

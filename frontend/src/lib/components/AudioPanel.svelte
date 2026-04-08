@@ -271,16 +271,30 @@
 						<div class="mix-row">
 							<span class="mix-label">Ambient Mode</span>
 							<div class="mode-group">
-								{#each (['notification', 'drone', 'heartbeat'] as const) as mode}
-									<button
-										class="mode-btn"
-										class:active={$audioSettingsStore.ambientMode === mode}
-										onclick={() => setAmbientMode(mode)}
-										aria-label="Set ambient mode to {AMBIENT_MODE_LABELS[mode]}"
-									>
-										{AMBIENT_MODE_LABELS[mode]}
-									</button>
-								{/each}
+								<button
+									class="mode-btn"
+									class:active={$audioSettingsStore.ambientMode === 'notification'}
+									onclick={() => setAmbientMode('notification')}
+									aria-label="Set ambient mode to Notification"
+								>
+									Notification
+								</button>
+								<button
+									class="mode-btn disabled"
+									disabled
+									aria-label="Drone mode coming soon"
+									title="Coming soon"
+								>
+									Drone
+								</button>
+								<button
+									class="mode-btn"
+									class:active={$audioSettingsStore.ambientMode === 'heartbeat'}
+									onclick={() => setAmbientMode('heartbeat')}
+									aria-label="Set ambient mode to Heartbeat"
+								>
+									Heartbeat
+								</button>
 							</div>
 						</div>
 					</div>
@@ -627,5 +641,14 @@
 		background: rgba(160, 210, 220, 0.14);
 		color: rgba(160, 210, 220, 0.95);
 		border-color: rgba(160, 210, 220, 0.3);
+	}
+
+	.mode-btn.disabled {
+		color: rgba(160, 210, 220, 0.25);
+		cursor: not-allowed;
+	}
+
+	.mode-btn.disabled:hover {
+		color: rgba(160, 210, 220, 0.25);
 	}
 </style>

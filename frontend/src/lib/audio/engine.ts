@@ -18,7 +18,7 @@ export const VELOCITY_GAIN_STEP_DB = 1;
 export const VELOCITY_MAX_STACK_DB = 4;
 export const RUPTURE_T3_FADE_MS = 80;
 export const RUPTURE_T2_DURATION_MS = 1500;
-const DECAY_HANDOFF_MS = 500;
+export const DECAY_HANDOFF_MS = 500;
 export const HEARTBEAT_ORIGIN_SPACING_MS = 500;
 
 // --- Pure helpers (exported for testing) ---
@@ -35,7 +35,7 @@ export function getDecayTailMs(clusterSize: number): number {
 
 export function getVelocityGainDb(fireCount: number): number {
 	if (fireCount <= 1) return 0;
-	return Math.min(fireCount - 1, VELOCITY_MAX_STACK_DB);
+	return Math.min((fireCount - 1) * VELOCITY_GAIN_STEP_DB, VELOCITY_MAX_STACK_DB);
 }
 
 export function getClusterGainBoostDb(clusterSize: number): number {
