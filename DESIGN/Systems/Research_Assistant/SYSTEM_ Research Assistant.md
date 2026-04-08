@@ -857,3 +857,22 @@ All design items fully specified in standalone specs:
   honesty, swearing, respecting research without pathology, human
   emotions, no performed enthusiasm, no catastrophized absences,
   no pace opinions, holding silence, researcher before research
+
+---
+
+## FILES
+
+| File | Role | Status |
+| --- | --- | --- |
+| DESIGN/Systems/Research_Assistant/SYSTEM_ Research Assistant.md | Primary design doc — ownership boundaries, three-layer memory, researcher memory, conversation history, six-layer context assembly, epistemic integrity, floating panel, context budget, agent identity, Ven'ai integration | V1 |
+| DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT ARCHIVE ACCESS.md | Companion spec — query assembly, hybrid two-pass search, four-weight ranking, retrieval confidence thresholds | V1 |
+| DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT OBSERVATION ARTICULATION.md | Companion spec — noticing → listening → Pearl gate → deposit suggestion → longitudinal echo | V1 |
+| DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT HYPOTHESIS FRAMING.md | Companion spec — hypothesis detection, two-pass retrieval, falsification check, ARTIS handoff | V1 |
+| DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT EMBEDDING SCOPE.md | Companion spec — 5 types embedded V1, 4 excluded, embedding_dirty connection | V1 |
+| DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT COSMOLOGY BRIDGE.md | Companion spec — page orientation, prior computation check, plain language translation | V1 |
+| DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT RESEARCH POSTURE.md | Companion spec — 23 behavioral sections defining the assistant's epistemic and relational posture | V1 |
+| backend/routes/assistant.py | FastAPI endpoints — query, memory CRUD, summary, context assembly, drift log (7 routes) | PLANNED |
+| backend/services/rag.py | RAG pipeline — query assembly, hybrid search, cross-encoder re-rank, context packaging | PLANNED |
+| backend/services/researcher_memory.py | Researcher memory read/update, history snapshot, conversation summary production, Ven'ai drift log persistence | PLANNED |
+| backend/services/claude.py | Shared Claude API client — used by research assistant, tagger, and page engines | LIVE |
+| frontend/src/lib/components/ResearchAssistantPanel.svelte | Persistent floating panel — chat interface, header indicators, research state action | PLANNED |
