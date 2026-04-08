@@ -121,6 +121,14 @@ export const EVENT_CATEGORY_MAP: Record<AudioEventType, NotificationCategory> = 
 	rupture: 'rupture'
 };
 
+// --- Panel Toggle (UI state) ---
+
+export const audioPanelOpen = writable<boolean>(false);
+
+// --- Ambient Modes ---
+
+export type AmbientMode = 'notification' | 'drone' | 'heartbeat';
+
 // --- Settings State (user preferences) ---
 
 export interface AudioSettingsState {
@@ -128,6 +136,7 @@ export interface AudioSettingsState {
 	tierMute: Record<NodeTier, boolean>;
 	tierVolume: Record<NodeTier, number>;  // 0.0 - 1.0
 	notificationToggles: Record<NotificationCategory, boolean>;
+	ambientMode: AmbientMode;
 }
 
 export const audioSettingsStore = writable<AudioSettingsState>({
@@ -157,5 +166,6 @@ export const audioSettingsStore = writable<AudioSettingsState>({
 		pcv_dtx_sgr: true,
 		research_memory: true,
 		rupture: true
-	}
+	},
+	ambientMode: 'notification'
 });

@@ -9838,3 +9838,175 @@ OBSERVATIONS NOT YET ACTED ON:
   - backups/ directory reappeared as untracked. Was listed as removed
     in session 14.
 ---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: OPEN
+FILES_MODIFIED:
+  - none yet
+COMPLETED:
+  - Session open protocol: CLAUDE.md, ENFORCEMENT.md, SESSION_PROTOCOL.md,
+    GITHUB_PROTOCOL.md, SESSION_LOG.md all read. SOT_BUILD_TODO spot-checked
+    — all [x] items have valid SOURCE lines
+CONFIRMED STATE:
+  - Last session closed cleanly (Audio Phase 2 + Phase 3 prep)
+  - Audio engine files on disk (6 source + 5 test): events.ts, engine.ts,
+    spatial.ts, visualizer.ts, colors.ts, stores/audio.ts — 96 tests passing
+  - Visualizer has strip mode ready: createVisualizer(canvas, 'strip')
+  - +layout.svelte is minimal scaffold (favicon + children render)
+  - frontend/src/lib/components/ directory does not exist yet — will create
+  - @testing-library/svelte installed, vitest jsdom environment configured
+  - No page codes involved this session
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - WaveformStrip.svelte — ambient bar (spec approved by Sage this session)
+  - WaveformStrip.test.ts — component tests
+  - +layout.svelte wiring
+  - audioPanelOpen store addition
+UNCOMMITTED: NO
+NEXT_ACTION: Build WaveformStrip.svelte per approved spec
+---
+
+---
+TIMESTAMP: 2026-04-08 03:20
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\stores\audio.ts
+---
+
+---
+TIMESTAMP: 2026-04-08 03:21
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\WaveformStrip.svelte
+---
+
+---
+TIMESTAMP: 2026-04-08 03:21
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\routes\+layout.svelte
+---
+
+---
+TIMESTAMP: 2026-04-08 03:21
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\WaveformStrip.test.ts
+---
+
+---
+TIMESTAMP: 2026-04-08 03:22
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\__mocks__\app-environment.ts
+---
+
+---
+TIMESTAMP: 2026-04-08 03:22
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\vitest.config.ts
+---
+
+---
+TIMESTAMP: 2026-04-08 03:23
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\WaveformStrip.test.ts
+---
+
+---
+TIMESTAMP: 2026-04-08 03:23
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\vitest.config.ts
+---
+
+---
+TIMESTAMP: 2026-04-08 03:24
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\WaveformStrip.svelte
+---
+
+---
+TIMESTAMP: 2026-04-08 03:24
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\WaveformStrip.svelte
+---
+
+---
+TIMESTAMP: 2026-04-08 03:24
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\WaveformStrip.svelte
+---
+
+---
+TIMESTAMP: 2026-04-08 03:24
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\WaveformStrip.svelte
+---
+
+---
+TIMESTAMP: 2026-04-08 03:24
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\src\lib\components\WaveformStrip.test.ts
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - frontend/src/lib/components/WaveformStrip.svelte — COMPLETE (NEW)
+  - frontend/src/lib/components/WaveformStrip.test.ts — COMPLETE (NEW, 12 tests)
+  - frontend/src/lib/stores/audio.ts — COMPLETE (audioPanelOpen writable added)
+  - frontend/src/routes/+layout.svelte — COMPLETE (WaveformStrip wired)
+  - frontend/vitest.config.ts — COMPLETE (browser resolve conditions, $app/environment mock alias)
+  - frontend/src/lib/__mocks__/app-environment.ts — COMPLETE (NEW, SvelteKit test mock)
+COMPLETED:
+  - WaveformStrip.svelte: persistent ambient bar, 44px fixed bottom, full width.
+    Canvas in strip render mode, mute toggle (reads/writes audioSettingsStore.masterMute),
+    panel toggle (reads/writes audioPanelOpen store). Engine init on first click
+    with race condition guard (flag set before await). SSR-safe via {#if browser}.
+  - Visualizer singleton handoff: strip $effect depends on $audioPanelOpen —
+    yields visualizer when panel is open, reclaims when panel closes
+  - 12 component tests: render, canvas, buttons, visualizer lifecycle,
+    engine init, double-click guard, mute toggle, panel toggle, stopPropagation
+  - Vitest config updated for Svelte 5 component testing (browser resolve
+    conditions fix server-side mount error)
+  - AUDIT PASS: 1 bug found and fixed (double-click race condition on engine init)
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - none (AudioPanel next work unit)
+UNCOMMITTED: YES
+NEXT_ACTION: Write AudioPanel WORK_UNIT, commit all
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - frontend/src/lib/components/AudioPanel.svelte — COMPLETE (NEW)
+  - frontend/src/lib/components/AudioPanel.test.ts — COMPLETE (NEW, 15 tests)
+  - frontend/src/lib/stores/audio.ts — COMPLETE (AmbientMode type + ambientMode field added)
+  - frontend/src/routes/+layout.svelte — COMPLETE (AudioPanel conditionally rendered)
+COMPLETED:
+  - AudioPanel.svelte: full floating panel, left-aligned, 440px wide, above strip.
+    Waveform canvas in panel render mode (all 9 effects). 3 origin cards
+    (Larimar/Verith/Cael'Thera) with color indicators and play buttons.
+    6 collapsible sections: Node Browser (62 nodes, tier tabs), Tier Controls
+    (per-tier mute checkboxes + volume sliders), Field Read (playFieldRead button),
+    Mix (master mute + ambient mode selector), Succession Player (stubbed Phase 4),
+    Cluster Play (stubbed Phase 4). Close button. SSR-safe.
+  - AmbientMode type added to store: 'notification' | 'drone' | 'heartbeat',
+    default 'notification'. UI-selectable, not yet wired to engine.
+  - 15 component tests: render, canvas, visualizer lifecycle, origin cards,
+    origin play, close button, section headers, collapse/expand, tier mute,
+    field read, ambient mode, stubbed sections, accessibility
+  - AUDIT PASS: no bugs found. Scroll containment, z-index, store mutations,
+    keyboard accessibility, visualizer handoff all verified
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Three ambient playback modes (engine wiring — notification is current default,
+    drone blocked on resonance engine field data, heartbeat needs interval timer)
+  - Drift clip curation (Sage — breath/whisper family)
+  - Audio Phase 4: tuning pass (requires app running at localhost)
+  - Audio Phase 5: sonification stretch goals
+UNCOMMITTED: YES
+NEXT_ACTION: Commit all session changes, push to GitHub
+---
