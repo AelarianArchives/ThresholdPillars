@@ -48,7 +48,7 @@ against the document if editing.
 
   Navigation + search:
   - [ ] Page sorting — per-group default + per-page override (alphabetical | chronological | manual)
-  - [ ] Search results surface for cross-page queries
+  - [ ] Search results — panel (opens from nav bar global search, click-to-navigate)
 
   Author's Scroll:
   - [ ] Collaborative writing workspace — tiptap editor, 3-panel (reference + scroll + AI), spell check
@@ -61,18 +61,18 @@ against the document if editing.
 
   Research workflow QoL:
   - [ ] Bookmarks — hover-to-bookmark on cards + utility bar viewer for all bookmarks
-  - [ ] Comparison view (side-by-side entries, engine states, snapshots)
+  - ~~Comparison view~~ — REMOVED (session 32). Research assistant handles analytical comparison.
   - [ ] Timeline view — Observatory addition, togglable with semantic map
   - [ ] Tag explorer — utility bar panel, 320 tags visual map, search, click-to-filter
   - [ ] Field Review (replaces Undo) — Observatory node, recall deposits back to INT, no time limit
 
   Power user + daily use:
   - [ ] Keyboard shortcuts — DEFERRED to dedicated session
-  - [ ] Session statistics (shape of work, not content)
+  - ~~Session statistics~~ — REMOVED (session 32). AI + daily snapshot cover this.
   - [ ] Mobile research companion — DEFERRED to dedicated session (read + ask + converse, no deposit)
 
   Ambient:
-  - [ ] Sound state per page (Resonance Engine remembers per page)
+  - ~~Sound state per page~~ — REMOVED (session 32). Drift. Audio engine is global.
 
   Session Seeds:
   - [ ] Verbatim transcript storage — auto-capture (research) + manual import (dev)
@@ -5519,9 +5519,12 @@ wherever it refers to this page.
       when asked — just a query parameter on the API call. Sort toggles
       also available in sidebar header for nav-level sorting.
 
-- [ ] Search results surface — global search (`/`) needs a results view.
-      Cross-page results from text search and vector search. Where do
-      results render? Dedicated results page, overlay, or inline in sidebar?
+- [ ] Search results — panel surface, triggered from global search (`/`)
+      in nav bar. Cross-page results from text search and vector search.
+      Opens as a panel alongside current view (same pattern as Export, Tag
+      Explorer, Bookmarks). Click any result to navigate to that page/deposit.
+      Does not navigate away from current page until user clicks a result.
+      Session 32: Sage confirmed panel approach.
 
 **Author's Scroll (collaborative writing + reconstruction workspace):**
 
@@ -5660,10 +5663,11 @@ wherever it refers to this page.
         Faster than search, more intentional than recent activity.
       Bookmark from anywhere, view from one place.
 
-- [ ] Comparison view — side-by-side surface for two entries, two engine
-      states, or two snapshots from different dates. The research is built
-      on parallax; the UI should support deliberate comparison without
-      two browser tabs. Overlay or split-pane? Modal or page?
+- ~~Comparison view~~ — REMOVED (session 32). Analytical comparison is a
+      research capability, not a UI surface. The research assistant handles
+      this through RAG — cross-page, cross-engine, parameterized by whatever
+      the researcher asks. A split-pane showing two cards adds no value over
+      asking the AI to compare and explain.
 
 - [ ] Timeline view — Observatory addition, not a separate page. Temporal
       view of everything that entered the archive, across all 51 pages,
@@ -5701,12 +5705,10 @@ wherever it refers to this page.
       build the list of what's actually needed and what the shortcut feels
       like. Not designing in a bullet point.
 
-- [ ] Session statistics — end-of-session summary of the shape of work.
-      Deposits made, Pearls promoted, tags suggested vs. accepted, most
-      active pages, time distribution. Not an Observatory metric — a personal
-      researcher mirror. Conversation summary captures content; this
-      captures pattern. Stored in operational DB alongside
-      conversation_summary.
+- ~~Session statistics~~ — REMOVED (session 32). The data (deposit counts,
+      tag acceptance, active pages) already lives in the daily snapshot and
+      is queryable through the research assistant. Dedicated surface adds
+      nothing over "ask the AI" or the daily email summary.
 
 - [ ] Mobile research companion — DEFERRED to dedicated session. Expanded
       beyond read-only to three modes:
@@ -5724,11 +5726,10 @@ wherever it refers to this page.
 
 **Ambient experience:**
 
-- [ ] Ambient sound state per page — Resonance Engine audio configuration
-      remembers itself per page. Walk into ECR and the sound shifts. Walk
-      into Void and it goes quiet. Audio state stored in operational DB
-      (operational_state key-value). The archive breathes differently
-      depending on where you are.
+- ~~Ambient sound state per page~~ — REMOVED (session 32). Drift. Audio
+      engine is global (initializes in +layout.svelte, persists across all
+      navigation). Responds to events, not page identity. Waveform strip is
+      user-controlled open/close. See RESONANCE ENGINE AUDIO SPEC.md.
 
 **Session Seeds (verbatim session transcript storage):**
 

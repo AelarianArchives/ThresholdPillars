@@ -278,16 +278,13 @@ DOMAIN (32 pages across 6 groups)
   | ARV  | Archives          | [TBD]  | [TBD]     | [TBD]| [TBD]  |       |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-AUDIO STATE — per-page ambient config
+~~AUDIO STATE~~ — REMOVED (session 32)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Resonance Engine remembers audio state per page (operational_state
-  key-value in SQLite). Walk into a page and the sound shifts.
-  Controlled via Waveform Strip in utility bar.
-
-  Define per-page audio profiles here once designed.
-
-  [TBD — all pages]
+  Drift. Audio engine is global (initializes in +layout.svelte, persists
+  across all navigation). Responds to events, not page identity. Waveform
+  strip is user-controlled open/close — pages don't configure audio.
+  See RESONANCE ENGINE AUDIO SPEC.md for actual audio architecture.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 NOTES
