@@ -858,8 +858,9 @@ DOCUMENT FLOW:
 
   1.  Sage uploads ONE document at a time (not multiple simultaneously)
   2.  Root stamp created (Composite ID source mode): one per document
-  3.  Document record created in operational DB with: total pages,
-      chunk size, status, root stamp ID
+  3.  Root entry record created (root_entries table, PostgreSQL) with:
+      total pages, chunk size, intake status, root stamp ID.
+      See INTEGRATION DB SCHEMA.md for full table definition.
   4.  AI chunks into 5-8 page batches, numbered in order
   5.  AI parses each chunk → extracts deposits → suggests tags,
       doc_type, source_format, page routing per deposit
@@ -882,37 +883,36 @@ ROLLING BUFFER (AI stays 3-5 chunks ahead):
   chat window is where context flows: Sage explains what the AI is
   seeing, AI incorporates for subsequent parsing.
 
-CHUNK TRACKING (operational DB):
+CHUNK TRACKING:
 
-  Document record:
-    document_id (root stamp)
-    filename / title / notes
-    total_pages
-    chunk_size (5-8 pages)
-    total_chunks
-    status: ingesting | processing | review | complete
+  Table definitions in INTEGRATION DB SCHEMA.md (PostgreSQL):
 
-  Per-chunk record:
-    chunk_id
-    document_id (links to parent)
-    page_range (e.g., pages 1-7)
-    chunk_order (sequence number — preserves order)
-    status: pending | parsing | parsed | review | complete
+    root_entries      — one per source document. Tracks intake status,
+                        chunk_size, total_chunks, chunks_completed,
+                        retirement gate. Status via intake_status
+                        (blob_pending | complete) + retirement_status +
+                        root_integrity.
 
-  Per-deposit record (in review queue):
-    deposit_id
-    chunk_id (links to source chunk)
-    suggested_tags, suggested_doc_type, suggested_source_format
-    suggested_page_target
-    status: pending_review | approved | corrected | skipped |
-            declined | deposited
-    sage_notes (annotations added during review)
+    manifest_sessions — one per chunk work session. Tracks chunk_number,
+                        page_range, chunk_text, session status
+                        (active | complete | deferred | interrupted |
+                        blob_error), nested deposits[] array, stats,
+                        and correction_context (jsonb).
+
+    deposits[]        — nested within manifest_sessions. Per-deposit:
+                        deposit_num, section_id, page_code, status
+                        (pending | confirmed | skipped | deferred),
+                        split_flag, split_targets, notes.
+
+  See INTEGRATION DB SCHEMA.md for complete field definitions,
+  constraints, write ordering, and lifecycle rules.
 
 SESSION PERSISTENCE:
 
-Everything persists in operational DB. Session dies? Next session:
-"Doc X, AI parsed through chunk 47, Sage reviewed through chunk 42,
-5 deposits in review queue, chunks 1-41 fully deposited."
+Everything persists in PostgreSQL. Session dies? Next session reads
+root_entries.chunks_completed and manifest_sessions status to determine
+exact resume point — which chunks are complete, which are in progress,
+which deposits are pending review.
 
 PARENT TAG: One root stamp per DOCUMENT (not per batch/chunk). Every
 child deposit carries root:[PARENT-ID] linking back. Already designed
@@ -925,7 +925,16 @@ BATCH PROCESSING STATE MACHINE
 
 Explicit valid transitions only. No implicit state changes.
 
-CHUNK STATUS TRANSITIONS (valid only — no others permitted):
+These are application-layer workflow phases. The database stores session
+state via manifest_sessions.status (active | complete | deferred |
+interrupted | blob_error) and deposit status (pending | confirmed |
+skipped | deferred). The application layer derives the workflow phase
+from a combination of DB fields — a manifest_session with status
+"active" and no deposits[] populated is in the "parsing" phase; with
+deposits[] populated but unresolved, it is in the "review" phase.
+See INTEGRATION DB SCHEMA.md for the stored state model.
+
+CHUNK WORKFLOW PHASES (valid transitions only — no others permitted):
 
   pending → parsing            — AI begins processing chunk
   parsing → parsed             — successful parse, awaiting review
@@ -933,7 +942,7 @@ CHUNK STATUS TRANSITIONS (valid only — no others permitted):
   parse_failed → parsing       — Sage triggers retry (manual or auto)
   parsed → review              — chunk enters review queue
   review → complete            — Sage approves all deposits from chunk
-  review → partial             — some approved, some declined/skipped
+  review → partial             — some deposits skipped or deferred
   review → parse_failed        — Sage rejects entire parse, triggers
                                  re-parse
   partial → complete           — remaining skipped deposits resolved
@@ -997,7 +1006,7 @@ REVIEW CARD LAYOUT:
   │ Suggested routing: [Page A] [Page B]  (editable) │
   │ Chunk: #N of M  |  Session: [date]               │
   │                                                  │
-  │ [APPROVE] [EDIT] [SKIP] [DECLINE]                │
+  │ [APPROVE] [EDIT] [SKIP]                           │
   └─────────────────────────────────────────────────┘
 
 parse_flags from the chunk surface ABOVE the first deposit card in a
@@ -1045,31 +1054,17 @@ Staleness signal: skipped deposits don't expire (no forced decisions).
 But a skip from 8 months ago may no longer be relevant without being
 wrong. After a configurable window (default: 90 days), a staleness
 indicator appears on the skip. Sage sees the deposit is old and can
-re-queue, decline, or let it sit. Staleness is informational, not an
-expiry. No automatic action taken.
+re-queue or let it sit. Staleness is informational, not an expiry.
+No automatic action taken.
 
     SKIP_STALENESS_WINDOW_DAYS = 90    — named constant, configurable
-
-DECLINE BEHAVIOR:
-
-Decline does NOT delete. It archives with status declined.
-
-    declined:
-      declined_at: timestamp
-      decline_reason: string | null — free text, not coded values
-      recoverable: true             — can be reinstated within 30 days
-      archived_after: 30 days       — moves to cold archive
-
-The distinction: declined means "this shouldn't be a deposit." It's a
-curatorial judgment, not a deletion. The content still exists in the
-chunk's parse record — the chunk is the source, the deposit is the
-derived artifact. Declining the deposit doesn't touch the source chunk.
+                                         (calibration item)
 
 FLAG DISPLAY VALUES (plain language, not raw tokens):
   ambiguous → "Ambiguous boundary"
   needs_context → "Needs more context"
   cross_page → "Routes to multiple pages"
-  skip_reason and decline_reason → free text fields
+  skip_reason → free text field
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1135,20 +1130,26 @@ not live in PostgreSQL until promoted. This preserves the key
 invariant: "nothing enters the archive without INT provenance." A
 Pearl becomes an archive entry only when promoted through INT.
 
-PEARL RECORD:
+PEARL RECORD (full field list — see OPERATIONAL DB SCHEMA.md for
+constraints and defaults):
 
-    pearl_id
-    content (text, could be short — even a few words)
-    created_at (timestamp)
-    page_context (which page Sage was on when captured, if any)
-    status: active | promoted | archived
+    pearl_id             — text, primary key
+    content              — text, not null
+    created_at           — timestamp
+    page_context         — which page Sage was on when captured, nullable
+    status               — active | promoted | archived
+    promoted_deposit_id  — references deposit ID, null until promotion
+    pearl_type           — capture | reflective (default: capture)
+    swarm_visible        — boolean (default: true)
+    promoted_via         — panel | dashboard | null (null until promotion)
 
 PROMOTION FLOW:
 
   Pearl promoted → pearl_captured_at populated from Pearl's created_at
   → sent to INT gateway → full deposit fields assigned (doc_type, tags,
   routing, composite ID, pearl_captured_at) → enters PostgreSQL as a
-  real deposit. Pearl record marked promoted with link to deposit ID.
+  real deposit. Pearl record updated: status → promoted,
+  promoted_deposit_id → new deposit ID, promoted_via → source surface.
 
 LIFECYCLE:
 

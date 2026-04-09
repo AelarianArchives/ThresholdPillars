@@ -13391,3 +13391,235 @@ FILES_MODIFIED:
   - DESIGN/Systems/SECTION MAP.md â€” COMPLETE (VOID promoted to standalone: group â€” , line 66; "2 standalone" line 11)
   - DESIGN/Domains/11_Void/Manifest_5...
 ---
+
+---
+TIMESTAMP: 2026-04-09 14:32
+TYPE: HOOK_BASH
+COMMAND: cd "C:/Users/sasir/Desktop/Aelarian/Archives" && git add "PROTOCOL/SESSION_LOG.md" ".claude/audits/void-promotion-audit-2026-04-09.md" && git commit -m "$(cat <<'EOF'
+Session 38 close: VOID standalone, TRIA closed, scanner fixed, audit plan ready
+
+Clean session close. VOID promoted to standalone acr...
+---
+
+---
+TIMESTAMP: 2026-04-09
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Mandatory reads: CLAUDE.md, RECURSION_REPAIR.md, ENTROPY_EXCAVATION.md, ROT_REGISTRY.md, ROT_OPEN.md, GITHUB_PROTOCOL.md, SESSION_PROTOCOL.md
+  - ROT_OPEN.md: zero open items confirmed
+  - Last entry: TYPE: CLOSE (session 38) — clean start
+IN_PROGRESS:
+  - Design document audit and extraction — Tier 1 (INT Engine + Deposit Foundation)
+NOT_STARTED:
+  - Tier 2 audit (Black Pearl + Pages + Void)
+UNCOMMITTED: NO
+NEXT_ACTION: Read design-session-plan.md Tier 1 (lines 203-1287), cross-reference against 10 verified specs, categorize all claims.
+---
+
+---
+TIMESTAMP: 2026-04-09 14:35
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:/Users/sasir/Desktop/Aelarian/Archives/PROTOCOL/SESSION_LOG.md" << 'LOGEOF'
+
+---
+TIMESTAMP: 2026-04-09
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Mandatory reads: CLAUDE.md, RECURSION_REPAIR.md, ENTROPY_EXCAVATION.md, ROT_REGISTRY.md, ROT_OPEN.md, GITHUB_PROTOCOL.md, SESSION_PROTOC...
+---
+
+---
+TIMESTAMP: 2026-04-09 14:37
+TYPE: HOOK_BASH
+COMMAND: sed -n '902,993p' /c/Users/sasir/Desktop/Aelarian/Archives/.claude/plans/design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:37
+TYPE: HOOK_BASH
+COMMAND: sed -n '994,1050p' /c/Users/sasir/Desktop/Aelarian/Archives/.claude/plans/design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:38
+TYPE: HOOK_BASH
+COMMAND: sed -n '603,724p' /c/Users/sasir/Desktop/Aelarian/Archives/.claude/plans/design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:38
+TYPE: HOOK_BASH
+COMMAND: sed -n '725,820p' /c/Users/sasir/Desktop/Aelarian/Archives/.claude/plans/design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:38
+TYPE: HOOK_BASH
+COMMAND: sed -n '821,901p' /c/Users/sasir/Desktop/Aelarian/Archives/.claude/plans/design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:38
+TYPE: HOOK_BASH
+COMMAND: sed -n '382,602p' /c/Users/sasir/Desktop/Aelarian/Archives/.claude/plans/design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:38
+TYPE: HOOK_BASH
+COMMAND: sed -n '890,1000p' "/c/Users/sasir/Desktop/Aelarian/Archives/DESIGN/Systems/Integration/INTEGRATION DB SCHEMA.md"
+---
+
+---
+TIMESTAMP: 2026-04-09 14:38
+TYPE: HOOK_BASH
+COMMAND: sed -n '613,660p' "/c/Users/sasir/Desktop/Aelarian/Archives/DESIGN/Systems/Integration/INTEGRATION SCHEMA.md"
+---
+
+---
+TIMESTAMP: 2026-04-09 14:39
+TYPE: HOOK_BASH
+COMMAND: sed -n '851,982p' "/c/Users/sasir/Desktop/Aelarian/Archives/DESIGN/Systems/Integration/INTEGRATION SCHEMA.md"
+---
+
+---
+TIMESTAMP: 2026-04-09 14:39
+TYPE: HOOK_BASH
+COMMAND: sed -n '982,1190p' "/c/Users/sasir/Desktop/Aelarian/Archives/DESIGN/Systems/Integration/INTEGRATION SCHEMA.md"
+---
+
+---
+TIMESTAMP: 2026-04-09 14:39
+TYPE: HOOK_BASH
+COMMAND: sed -n '658,850p' "/c/Users/sasir/Desktop/Aelarian/Archives/DESIGN/Systems/Integration/INTEGRATION SCHEMA.md"
+---
+
+---
+TIMESTAMP: 2026-04-09 14:39
+TYPE: HOOK_BASH
+COMMAND: sed -n '519,612p' "/c/Users/sasir/Desktop/Aelarian/Archives/DESIGN/Systems/Integration/INTEGRATION SCHEMA.md"
+---
+
+---
+TIMESTAMP: 2026-04-09 14:44
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\audits\design-doc-audit-tier-1.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:54
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:54
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 14:54
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:07
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:07
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:08
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:08
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:08
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\audits\design-doc-audit-tier-1.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\audits\design-doc-audit-tier-1.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\audits\design-doc-audit-tier-1.md
+---
+
+---
+TIMESTAMP: 2026-04-09 15:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\audits\design-doc-audit-tier-1.md
+---
+
+---
+TIMESTAMP: 2026-04-09
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/Integration/INTEGRATION SCHEMA.md — COMPLETE (5 fixes: batch tracking aligned to DB schema, state machine DB mapping note, declined status removed, Pearl record completed, calibration marker)
+  - .claude/audits/design-doc-audit-tier-1.md — COMPLETE (Tier 1 audit artifact with 2-pass findings, all fixes documented)
+COMPLETED:
+  - Tier 1 deep audit: 13 CONFIRMED, 2 DRIFT (resolved), 4 DEAD, 1 DECISION CONTEXT, 0 DRAFT
+  - 5 fixes to INTEGRATION SCHEMA.md: batch tracking PostgreSQL alignment, state machine workflow phase mapping, declined status removal (stale), Pearl record 9-field completion, calibration marker
+  - Final verification audit: all fixes confirmed clean, zero new issues
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Tier 2 audit (next session)
+UNCOMMITTED: YES
+NEXT_ACTION: Commit all changes, push, close session.
+---
+
+---
+TIMESTAMP: 2026-04-09 15:14
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:/Users/sasir/Desktop/Aelarian/Archives/PROTOCOL/SESSION_LOG.md" << 'LOGEOF'
+
+---
+TIMESTAMP: 2026-04-09
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/Integration/INTEGRATION SCHEMA.md â€” COMPLETE (5 fixes: batch tracking aligned to DB schema, state machine DB mapping note, declined st...
+---
+
+---
+TIMESTAMP: 2026-04-09 15:14
+TYPE: HOOK_BASH
+COMMAND: cd "C:/Users/sasir/Desktop/Aelarian/Archives" && python hooks/entropy_scan.py --close-audit --summary 2>&1
+---
+
+---
+TIMESTAMP: 2026-04-09 15:15
+TYPE: HOOK_BASH
+COMMAND: cd "C:/Users/sasir/Desktop/Aelarian/Archives" && python hooks/entropy_scan.py --close-audit --force --summary 2>&1
+---
