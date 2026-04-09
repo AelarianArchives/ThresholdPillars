@@ -237,6 +237,14 @@ boundaries. These run mechanically — Claude does not invoke them.
   --no-gpg-sign, inline credentials. Soft warns on git add ., push to
   main, non-standard tag names. Checks lockfile existence on npm ci.
 
+**PostToolUse (Write|Edit)** — 2 hooks:
+  `session_log_hook.py` — Appends HOOK_WRITE entry to SESSION_LOG.md
+  for every file write. Also checks DEPENDENCY_MAP.json for cascade
+  alerts (inactive until map is populated in core files phase).
+  `ghost_fix_gate.py` (PostToolUse phase) — Writes a pending ghost fix
+  marker after every Edit. The PreToolUse phase reads this marker and
+  blocks the next write until verified.
+
 **SessionStart** — `hooks/session_start.py`
   Fires when a session begins. Reads SESSION_LOG.md, ROT_OPEN.md, and
   phase_state.json. Outputs a status summary injected into Claude's
