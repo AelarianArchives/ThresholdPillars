@@ -10722,3 +10722,89 @@ TIMESTAMP: 2026-04-08 07:21
 TYPE: HOOK_WRITE
 FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Research_Assistant\SYSTEM_ Research Assistant.md
 ---
+
+---
+TIMESTAMP: 2026-04-08 07:50
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-08 07:50
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-08 08:04
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-08 08:05
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DESIGN/Systems/Swarm/SYSTEM_ Swarm.md — COMPLETE (new, phase 2 RESERVED)
+  - DESIGN/Systems/Engine_Computation/SYSTEM_ Engine Computation.md — COMPLETE (new)
+  - DESIGN/Systems/Threshold_Engine/SYSTEM_ Threshold Engine.md — COMPLETE (new)
+  - DESIGN/Systems/StarRoot_Engine/SYSTEM_ StarRoot Engine.md — COMPLETE (new)
+  - DESIGN/Systems/Infinite_Intricacy_Engine/SYSTEM_ Infinite Intricacy Engine.md — COMPLETE (new)
+  - DESIGN/Systems/Echo_Recall_Engine/SYSTEM_ Echo Recall Engine.md — COMPLETE (new)
+  - DESIGN/Systems/Sat_Nam_Engine/SYSTEM_ Sat Nam Engine.md — COMPLETE (new)
+  - DESIGN/Systems/Embedding_Pipeline/SYSTEM_ Embedding Pipeline.md — COMPLETE (new)
+  - DESIGN/Systems/Operational_DB/SYSTEM_ Operational DB.md — COMPLETE (new)
+  - DESIGN/Systems/Venai_Service/SYSTEM_ Venai Service.md — COMPLETE (new)
+  - DESIGN/Systems/Research_Assistant/SYSTEM_ Research Assistant.md — COMPLETE (FILES table added)
+  - .claude/plans/design-session-plan.md — COMPLETE (quick reference index + 13 new Tier 7 items)
+  - PROTOCOL/SESSION_LOG.md — COMPLETE (OPEN + CLOSE entries)
+COMPLETED:
+  - Fix 8: 10 new SYSTEM_ files (9 from plan + Swarm) + Research Assistant FILES table
+  - Full audit remediation plan now complete (Fixes 1-8, all closed)
+  - Verification sweep: 28 SYSTEM_ files confirmed, all with ownership + FILES tables
+  - Design build plan audit: 61 incomplete items catalogued, quick reference added to top
+  - 13 new Tier 7 design items: page sorting, search results, live write (Author's Scroll),
+    entry editing, bookmarks, comparison view, timeline, tag explorer, undo on deposit,
+    keyboard shortcuts, session statistics, mobile read view, ambient sound per page
+  - Pre-Tier 7 design discussion: utility bar (6 items), page layout review,
+    Author's Scroll naming, waveform strip as independent utility, notification vs chart
+    distinction for cross-page ambient utility
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Tier 5 Cosmology pages (HCO/COS/CLM/NHM) — unchecked in completed tier, needs review
+  - Tier 6 Research Assistant tracker items — work done, 9 checkboxes need updating to [x]
+  - Agenda Item Tracker (#2,#4,#5,#6,#7,#9,#10,#11,#12,#15) — stale, need updating
+  - Tier 7 design session (30 items)
+  - Tier 8 stress test + SOT readiness
+  - Cross-tier: TRIA name fix, API folder rewrite, CONNECTS TO pass, seed affinity authority
+  - ARTIS/Cosmology SYSTEM_ file heading format (OWNS vs WHAT THIS SYSTEM OWNS) — cosmetic
+UNCOMMITTED: NO (after this commit)
+FILES_THIS_SESSION:
+  - 12 files across 3 commits (6494727, ec89753, f0c661e)
+  - Design discussion notes: utility bar, Author's Scroll, waveform strip, page layout
+NEXT_ACTION: Tier 7 design session. Sage has notebook sketches for page layout and panel
+  placement. Utility bar finalized at 6 items (Dashboard, Author's Scroll, Research Assistant,
+  Global Search, Resonance Engine, Waveform Strip). Black Pearl moved to page nav sidebar.
+  Author's Scroll is the writing surface. Design build plan quick reference at top of file
+  orients the session.
+---
+
+---
+TIMESTAMP: 2026-04-09 00:00
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && cat >> PROTOCOL/SESSION_LOG.md << 'CLOSEENTRY'
+
+---
+TIMESTAMP: 2026-04-08
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DESIGN/Systems/Swarm/SYSTEM_ Swarm.md â€” COMPLETE (new, phase 2 RESERVED)
+  - DESIGN/Systems/Engine_Computation/SYSTEM_ Engine Computation.md â€...
+---
