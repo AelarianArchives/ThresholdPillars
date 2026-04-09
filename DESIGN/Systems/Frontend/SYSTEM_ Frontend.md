@@ -15,8 +15,8 @@
 * Component state — Svelte stores for session state, active entry data cache, and UI state (active filters, current section, panel visibility). Stores are the single source of runtime state for the frontend. Components read from stores; they do not hold independent state that other components need
 * Shared layout — `+layout.svelte` shell wrapping all pages. Persistent sidebar navigation, section header, and global UI elements live here
 * API client layer — `src/lib/api.ts` fetch wrapper for all FastAPI calls. Every backend route has one corresponding function in this module. All data access goes through this layer. No direct database access. No direct Ollama calls. No direct Claude API calls. The API client is the only point of contact between frontend and backend
-* Page type system — 8 page types with distinct layout, density, controls, and accent. Pages look different but belong to the same family. Same shell, different internal structure per type
-* Deposit card component — the most common UI element, appears on all 51 pages. Base card with page-type variations
+* Per-page layout specs — defined in PAGE_LAYOUTS.md. Each page has its own layout, density, controls, and accent. Pages look different but belong to the same family. Same shell, different internal structure per page
+* Deposit card component — the most common UI element, appears on all 51 pages. Base card with per-page variations where needed
 * Black Pearl panel — slide-in quick-capture panel accessible from any page
 * Observatory — analytical overview surface (`/observatory`), 8-node constellation
 * Curation panel — system-level archive operations (tag, page, session, deposit operations)
@@ -73,7 +73,7 @@ frontend/
 | --- | --- |
 | Shell | Persistent sidebar navigation, section header, global layout elements |
 | NavigationSidebar | Fixed left sidebar — 9 collapsible groups, pinned utilities, state indicators |
-| DepositCard | Base deposit card with page-type variations — appears on all 51 pages |
+| DepositCard | Base deposit card with per-page variations — appears on all 51 pages |
 | CompositeId | Renders composite ID stamp display |
 | TaggerPanel | Tag suggestion UI — sends context, displays candidates |
 | DepositPanel | Entry input form — collects observation, sends to backend |
@@ -184,53 +184,25 @@ or Svelte action — no heavy library needed.
 
 ---
 
-## PAGE TYPE SYSTEM
+## PER-PAGE LAYOUT
 
-8 page types. Each has distinct layout, density, controls, and accent color.
-Pages look different but belong to the same family — same building,
-different wings. Shared shell (navigation, header), shared typography,
-shared component library. The STRUCTURE inside the shell changes per type.
+Per-page layout specs are defined in PAGE_LAYOUTS.md. That file is the
+authority for what each page looks like — layout, density, controls, accent,
+background, engine component, deposit area, page-specific UI.
 
-Color system: each type gets its own hue/accent. Specific palette chosen
-at frontend build time — not in this design document.
+This section previously contained a "visual type system" (8 type labels:
+Gateway, Lens, Synthesis, Engine, Output, Scroll, Investigation, Domain)
+that was removed in session 33. The type system introduced secondary names
+competing with canonical page names and pre-decided layouts by category
+instead of per-page. See design-session-plan.md session 33 removal notes.
 
-### Gateway (INT) — 1 page
-The workshop. Dense, split-panel, toolbars, active workspace. Most controls
-of any page type. Dual-panel layout designed in INTEGRATION SCHEMA.md.
-No deposit card grid — INT is a workstation, not a reading surface.
+**What is retained:**
 
-### Lens (Axis: THR, STR, INF, ECR, SNM) — 5 pages
-Instruments. Deposits viewed THROUGH an analytical frame. Visualization is
-the centerpiece (engine output from Tier 3). Most visually complex page type
-after Gateway — each lens has multiple specialized visualizations (matrices,
-force-directed graphs, density contours, constellation views).
+Color system — per-page or per-group accents. Valid design decision,
+palette chosen at frontend build time.
 
-### Synthesis (MTM) — 1 page
-Convergence point. Multi-stream view — inputs from all 5 lenses flowing
-into one output. Visual weight on connections between sources. MTM does not
-receive deposits — findings display uses a different component.
-
-### Engine (Nexus: DTX, SGR, PCV, VOI) — 4 pages
-Analytical dashboards. Metrics-forward. Charts, scores, grades, timelines.
-Dense but structured. The "control room" feel.
-
-### Output (LNV) — 1 page
-Gallery. Visual-first. Snapshot cards. Minimal chrome. The work the system
-has produced, displayed clean.
-
-### Scroll (WSC) — 1 page
-Document. Long-form reading surface. Quiet. Sovereign AI voice. Minimal
-controls — this page is for reading, not manipulating. Layout deferred to
-Tier 4 WSC design.
-
-### Investigation (Cosmology: HCO, COS, CLM, NHM, RCT, ART) — 6 pages
-Laboratories. Split view: field data on one side, scientific framework on
-the other. Computation results prominent. The "research bench" feel.
-
-### Domain (32 pages across 6 groups) — shared template with group sub-rhythms
-Deposit surfaces organized by domain topic. Same Domain shell, different
-internal rhythm per group. Like different wings of the same library.
-Sub-rhythms reflect what each group's material actually IS:
+Domain group sub-rhythms — layout characteristics within the 32 Domain
+pages, organized by group:
 
 | Group | Pages | Character | Sub-rhythm |
 |-------|-------|-----------|------------|
@@ -241,9 +213,8 @@ Sub-rhythms reflect what each group's material actually IS:
 | Spiral Phase (6) | GEN, DIV, REC, CNV | Lifecycle, phases | Timeline/sequence emphasis |
 | Archive (8) | MVM, ANC, LQL, ALE, MMT, ARV | Storage, reference | Catalog, browse-heavy |
 
-Sub-rhythms are NOT new page types. Same Domain template, different layout
-density, flow direction, and element prominence per group. Domain pages carry
-a `group_id` that informs their sub-rhythm.
+Sub-rhythms are group-level layout characteristics. Domain pages carry a
+`group_id` that informs their sub-rhythm.
 
 ---
 
@@ -267,7 +238,7 @@ Fixed sidebar nav, ~220px, left side. The only navigation surface for 51 pages.
   7. Cosmology — HCO, COS, CLM, NHM, RCT, ART
   8. Archive — MVM, ANC, LQL, ALE, MMT, ARV
   9. Nexus — WSC, LNV, DTX, SGR, PCV, VOI
-- Pinned utilities (always visible, below groups): INT (Gateway), Observatory, Black Pearl
+- Pinned utilities (always visible, below groups): INT, Observatory, Black Pearl
 - Status indicator (bottom of sidebar)
 - Curation panel trigger (bottom)
 
@@ -277,7 +248,7 @@ Fixed sidebar nav, ~220px, left side. The only navigation surface for 51 pages.
 
 ### Page state indicators
 - New deposit badge: count since last visit, clears on visit
-- Engine stale dot: visible on Lens and Nexus Engine pages only
+- Engine stale dot: visible on pages with engines (THR, STR, INF, ECR, SNM, DTX, SGR, PCV, VOI)
 
 ### Keyboard navigation
 - `/` — focus global search
@@ -290,7 +261,7 @@ Fixed sidebar nav, ~220px, left side. The only navigation surface for 51 pages.
 ## DEPOSIT CARD COMPONENT
 
 The most common UI element — appears on all 51 pages. Base card with
-page-type variations.
+per-page variations.
 
 ### Base card (all pages)
 
@@ -320,46 +291,23 @@ Three provenance icons: INT batch · Manual · Black Pearl promoted
   hypothesis contribution)
 - Annotations (researcher marginalia on this deposit)
 
-### Page-type variations
-- **Lens (Axis):** colored left edge (signal band). Engine-relevant tags prominent. Default sort: engine signal strength
-- **Domain:** chronological default sort. Provenance icon prominent. Sub-rhythm layout applies
-- **Nexus Engine:** compact card (1-line preview). Weight and doc_type prominent. Default sort: deposit weight
-- **Synthesis (MTM):** no deposit cards — findings display component
-- **Investigation (Cosmology):** base card, no variation
-- **Output (LNV):** snapshot card variant — viz thumbnail, not text
-- **Scroll (WSC):** no deposit cards — own entry display (Tier 4)
+### Per-page card variations
+- **THR, STR, INF, ECR, SNM:** colored left edge (signal band). Engine-relevant tags prominent
+- **DTX, SGR, PCV, VOI:** compact card (1-line preview). Weight and doc_type prominent
+- **MTM:** no deposit cards — findings display component
+- **LNV:** snapshot card variant — viz thumbnail, not text
+- **WSC:** no deposit cards — own entry display (Tier 4)
+- **Domain pages:** provenance icon prominent. Sub-rhythm layout applies
+- **HCO, COS, CLM, NHM, RCT, ART:** base card, no variation
 
 ---
 
-## PAGE-TYPE LAYOUT ANATOMY
+## PAGE LAYOUT
 
-Zone structure per page type. All types share the shell (sidebar nav +
-header). The structure INSIDE the shell varies.
-
-**Gateway (INT):** full-width workspace. Dual-panel from Tier 1 fills
-content area. No deposit card grid.
-
-**Lens (Axis):** Zone A (engine viz, ~30% height, collapsible) +
-resizable divider + Zone B (deposit list). Collapsing Zone A gives
-full-height deposits.
-
-**Synthesis (MTM):** 60/40 horizontal split. Left: findings. Right:
-source references (read-only, collapsible).
-
-**Nexus Engine (DTX, SGR, PCV, VOI):** Zone A (metrics dashboard, ~40%,
-fixed) + Zone B (compact deposit list, ~60%, scrollable).
-
-**Output (LNV):** gallery layout. Responsive grid (2-3 columns).
-Snapshot cards with viz thumbnails.
-
-**Scroll (WSC):** single-column reading surface. Minimal controls.
-Layout deferred to Tier 4.
-
-**Investigation (Cosmology):** 60/40 horizontal split. Left: deposits.
-Right: scientific framework panel (read-only, collapsible).
-
-**Domain (all 6 groups):** single zone. Deposit list fills content area.
-Sub-rhythm determines card arrangement within this zone.
+Per-page layout specs are defined in PAGE_LAYOUTS.md. This section
+previously contained a "page-type layout anatomy" organized by type
+labels (Gateway, Lens, Synthesis, etc.) — removed in session 33.
+PAGE_LAYOUTS.md is the authority for per-page layout decisions.
 
 ---
 
@@ -482,13 +430,12 @@ cards + buffer rendered, rest recycled.
 Search result or cross-reference navigates to target page, scrolls to
 target deposit, highlights card (300ms fade). Deposit card ID is the anchor.
 
-### Sort defaults (per page type)
-- Lens: engine signal strength (strongest first)
-- Domain: chronological (newest first)
-- Nexus Engine: deposit weight (highest first)
-- Investigation: chronological
-- Archive: chronological
-- Output (LNV): chronological (most recent first)
+### Sort defaults (per page — defined in PAGE_LAYOUTS.md)
+- THR, STR, INF, ECR, SNM: engine signal strength (strongest first)
+- DTX, SGR, PCV, VOI: deposit weight (highest first)
+- LNV: chronological (most recent first)
+- HCO, COS, CLM, NHM, RCT, ART: chronological
+- Domain pages: chronological (newest first), per-group overrides in PAGE_LAYOUTS.md
 
 All sorts user-overridable. Override persists per page per session.
 

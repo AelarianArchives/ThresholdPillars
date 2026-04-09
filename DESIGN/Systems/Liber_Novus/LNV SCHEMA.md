@@ -372,8 +372,7 @@ Sage-triggered captures enter LNV as engine_snapshot entries.
 
 ## LNV PAGE — GALLERY DISPLAY
 
-Page type: Output (from Tier 2 page identity system). Gallery layout. Snapshot
-cards in responsive grid (2-3 columns).
+Gallery layout. Snapshot cards in responsive grid (2-3 columns).
 
 ### Gallery card
 

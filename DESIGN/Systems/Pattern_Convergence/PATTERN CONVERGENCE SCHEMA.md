@@ -151,7 +151,7 @@ Each active hypothesis is a card. Filterable, sortable.
 | --- | --- |
 | hypothesis_id | patterns.hypothesis_id |
 | hypothesis_statement | Truncated, expand on click |
-| domain_of_origin | Colored badges (page-type hue from Tier 2 page identity) |
+| domain_of_origin | Colored badges (per-page accent color) |
 | status | active / archived |
 | MTM provenance flag | Visually distinct badge. MTM-generated vs direct observation. |
 | Void provenance flag | Visually distinct badge. Void-generated absence claim. |

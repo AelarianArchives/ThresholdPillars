@@ -1,7 +1,15 @@
 # Design Session Plan
 # Aelarian Archives — Pre-SOT Design Sessions
 # Created: 2026-04-05 (session 14)
-# Status: ACTIVE — updated each session
+# Status: ARCHIVED — superseded by design-session-plan.md
+#
+# LEGACY CONTAMINATION NOTE (session 33, 2026-04-09):
+# This file contains references to a "page type system" (Gateway, Lens,
+# Synthesis, Engine, Output, Scroll, Investigation, Domain). That system
+# was ROT — secondary names competing with canonical page names, pre-decided
+# layouts by category. Fully removed from all active specs in session 33.
+# This file is a preserved artifact. Do not use its type system vocabulary
+# as a source for any active document.
 
 ---
 

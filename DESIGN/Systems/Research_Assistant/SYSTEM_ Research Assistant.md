@@ -21,8 +21,9 @@
   Conversational depth dial — Sage directs deeper engagement with the
   language without a formal mode switch
 * Page context assembly — reading current page identity (page_code,
-  section_id, page type), engine state summaries (Lens and Cosmology
-  pages), and active filter state from the tagger store at query time.
+  section_id), engine state summaries (THR, STR, INF, ECR, SNM, DTX,
+  SGR, PCV, VOI, HCO, COS, CLM, NHM pages), and active filter state
+  from the tagger store at query time.
   Injecting them into the prompt context as a live feed rebuilt per
   query. The assistant reads these sources; it does not own them
 * Deposit suggestion object — structured typed output containing content,

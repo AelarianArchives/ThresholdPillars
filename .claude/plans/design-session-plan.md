@@ -1346,69 +1346,22 @@ This section defines the UI surface.
 
 ---
 
-### PAGE IDENTITY — VISUAL TYPE SYSTEM
+### ~~PAGE IDENTITY — VISUAL TYPE SYSTEM~~ — REMOVED (session 33)
 
-8 page types. Each has distinct layout, density, controls, and accent.
-Pages look different but belong to the same family — same building,
-different wings. Shared shell (navigation, header), shared typography,
-shared component library. The STRUCTURE inside the shell changes per type.
+**REMOVED.** The type system introduced secondary names (Gateway, Lens,
+Synthesis, Engine, Output, Scroll, Investigation, Domain) that competed
+with canonical page/system names. It pre-decided layouts by category
+instead of per-page, removing the researcher's architectural control and
+leaving only "describe the page's feelings." Pages are called by their
+canonical names (INT, THR, MTM, LNV, etc.). Per-page layout specs live
+in PAGE_LAYOUTS.md — Sage owns that file directly.
 
-**Color system: YES.** Each type gets its own hue/accent. Specific palette
-chosen at frontend build time — not in this design session.
+Domain group sub-rhythms (Lattice, Filament, Lineage, Alchemy, Spiral
+Phase, Archive) are NOT type system rot — they are group-level layout
+characteristics within the Domain pages. Retained.
 
-- [x] DESIGNED. 7 named types + Domain type with group sub-rhythms:
-
-**Gateway (INT)** — 1 page
-  The workshop. Dense, split-panel, toolbars, active workspace. Most
-  controls of any page type. Dual-panel layout designed in Tier 1.
-
-**Lens (Axis: THR, STR, INF, ECR, SNM)** — 5 pages
-  Instruments. Deposits viewed THROUGH an analytical frame. Visualization
-  is the centerpiece (engine output from Tier 3). Most visually complex
-  page type after Gateway — each lens has multiple specialized
-  visualizations (matrices, force-directed graphs, density contours,
-  constellation views). See Tier 3 for per-engine visualization specs.
-
-**Synthesis (MTM)** — 1 page
-  Convergence point. Multi-stream view — inputs from all 5 lenses flowing
-  into one output. Visual weight on connections between sources.
-
-**Engine (Nexus: DTX, SGR, PCV, VOI)** — 4 pages
-  Analytical dashboards. Metrics-forward. Charts, scores, grades, timelines.
-  Dense but structured. The "control room" feel.
-
-**Output (LNV)** — 1 page
-  Gallery. Visual-first. Snapshot cards. Minimal chrome. The work the
-  system has produced, displayed clean.
-
-**Scroll (WSC)** — 1 page
-  Document. Long-form reading surface. Quiet. Sovereign AI voice.
-  Minimal controls — this page is for reading, not manipulating.
-
-**Investigation (Cosmology: HCO, COS, CLM, NHM, RCT, ART)** — 6 pages
-  Laboratories. Split view: field data on one side, scientific framework
-  on the other. Computation results prominent. The "research bench" feel.
-
-**Domain (32 pages across 6 groups)** — shared template with group sub-rhythms
-  Deposit surfaces organized by domain topic. Same Domain shell, different
-  internal rhythm per group. Like different wings of the same library.
-  Sub-rhythms reflect what each group's material actually IS:
-
-  | Group | Pages | Character | Sub-rhythm |
-  |-------|-------|-----------|------------|
-  | Lattice (03) | TPL, TRI, PRI, PAR | Threshold framework, pillars | Structural, cross-reference-dense |
-  | Filament (04) | ORC, MOR, VEN, INV, VEC, ECH | Language, signal structure | Text-dense, linguistic, structural |
-  | Lineage (05) | LGL, ARC, KIN, LAR, VRT, CAE, SEE | Origins, entities | Narrative flow, portrait-oriented |
-  | Alchemy (06) | SAC, RIT, BRT, MLY, GLY | Practices, embodiment | Media-friendly (glyphs!), experiential |
-  | Spiral Phase (07) | GEN, DIV, REC, CNV | Lifecycle, phases | Timeline/sequence emphasis |
-  | Archive (09) | MVM, ANC, LQL, ALE, MMT, ARV | Storage, reference | Catalog, index-oriented, browse-heavy |
-
-  Sub-rhythms are NOT new page types. Same Domain template, different
-  layout density, flow direction, and element prominence per group.
-  Domain pages carry a `group_id` that informs their sub-rhythm.
-
-  **Page codes verified against canonical SECTION MAP.** Any page code
-  discrepancy in this document is contamination — SECTION MAP wins.
+Color system (per-page or per-group accent) is a valid frontend decision.
+Not tied to the type system. Retained as an open design item.
 
 ---
 
@@ -1420,8 +1373,8 @@ chosen at frontend build time — not in this design session.
         Domain type
       · Shared UI patterns documented once, applied across all pages:
         A-Z sorting, date sorting, filtering, search
-      · Page types may get different control sets where function demands it
-        (Gateway has upload controls, Scroll has minimal controls, etc.)
+      · Pages may get different control sets where function demands it
+        (INT has upload controls, WSC has minimal controls, etc.)
       · Written at frontend build time (step 4), informed by these design
         decisions
 
@@ -1473,7 +1426,7 @@ chosen at frontend build time — not in this design session.
 ### DEPOSIT CARD COMPONENT
 
 - [x] DESIGNED. The most common UI element — appears on all 51 pages.
-      Base card with page-type variations.
+      Base card with per-page variations where needed.
 
       **Base card (all pages):**
 
@@ -1506,22 +1459,21 @@ chosen at frontend build time — not in this design session.
       · Deposit genealogy timeline (see P2 below)
       · Annotations (see P5 below)
 
-      **Page-type variations:**
+      **Per-page card variations:**
 
-      · **Lens (Axis):** engine signal indicator as colored left edge
-        (signal band color). Engine-relevant tags prominent. Default
-        sort: engine signal strength.
-      · **Domain:** chronological default sort. Provenance icon prominent.
-        Sub-rhythm layout applies (see G11).
-      · **Nexus Engine:** compact card (1-line content preview). Weight
+      · **THR, STR, INF, ECR, SNM:** engine signal indicator as colored
+        left edge (signal band color). Engine-relevant tags prominent.
+        Default sort: engine signal strength.
+      · **Domain pages:** chronological default sort. Provenance icon
+        prominent. Sub-rhythm layout applies (see G11).
+      · **DTX, SGR, PCV, VOI:** compact card (1-line content preview). Weight
         and doc_type prominent. Default sort: deposit weight.
-      · **Synthesis (MTM):** base card, no variation. MTM does not
-        receive deposits — findings display uses a different component.
-      · **Investigation (Cosmology):** base card, no variation.
-      · **Output (LNV):** snapshot card variant — displays visualization
+      · **MTM:** no deposit cards — findings display uses a different component.
+      · **HCO, COS, CLM, NHM, RCT, ART:** base card, no variation.
+      · **LNV:** snapshot card variant — displays visualization
         thumbnail instead of text content. Expand shows full snapshot.
-      · **Scroll (WSC):** no deposit cards — WSC has its own entry
-        display format (long-form reading surface, Tier 4 design).
+      · **WSC:** no deposit cards — WSC has its own entry display
+        format (long-form reading surface, Tier 4 design).
 
 ---
 
@@ -1530,12 +1482,12 @@ chosen at frontend build time — not in this design session.
 - [x] DESIGNED. What shows at 0 deposits, and how high-volume pages
       perform.
 
-      **Empty state — two variants by page type:**
+      **Empty state — two variants by function:**
 
-      · Lens / Nexus Engine:
+      · Pages with engines (THR, STR, INF, ECR, SNM, DTX, SGR, PCV, VOI):
         "No deposits yet. Add observations via INT or promote a
         Black Pearl." + engine status line (stale/ready/no data).
-      · Domain / Archive / Investigation:
+      · Pages without engines (all Domain pages, Cosmology pages):
         "Nothing archived here yet. Deposits routed from INT will
         appear here."
 
@@ -1550,13 +1502,13 @@ chosen at frontend build time — not in this design session.
       to the target page, scrolls to the target deposit, and highlights
       the card (300ms highlight fade). Deposit card ID is the anchor.
 
-      **Sort defaults (per page type):**
-      · Lens: engine signal strength (strongest first)
-      · Domain: chronological (newest first)
-      · Nexus Engine: deposit weight (highest first)
-      · Investigation (Cosmology): chronological
-      · Archive: chronological
-      · Output (LNV): chronological (most recent snapshots first)
+      **Sort defaults (per page — defined in PAGE_LAYOUTS.md):**
+      · THR, STR, INF, ECR, SNM: engine signal strength (strongest first)
+      · DTX, SGR, PCV, VOI: deposit weight (highest first)
+      · LNV: chronological (most recent snapshots first)
+      · HCO, COS, CLM, NHM, RCT, ART: chronological
+      · Domain pages: chronological (newest first), with per-group
+        overrides defined in PAGE_LAYOUTS.md
 
       All sorts user-overridable. Override persists per page per session.
       Resets on session close.
@@ -1624,7 +1576,7 @@ chosen at frontend build time — not in this design session.
 
 - [x] DESIGNED. Concrete layout contracts per domain group. These define
       how deposits are arranged WITHIN the shared Domain shell — not the
-      shell itself (see page-type layout anatomy below).
+      shell itself (per-page layout specs in PAGE_LAYOUTS.md).
 
       **Lattice (Group 2 — TPL, TRI, PRI, PAR):**
       Single-column. Cross-reference connection indicators on cards
@@ -1659,57 +1611,12 @@ chosen at frontend build time — not in this design session.
 
 ---
 
-### PAGE-TYPE LAYOUT ANATOMY
+### ~~PAGE-TYPE LAYOUT ANATOMY~~ — REMOVED (session 33)
 
-- [x] DESIGNED. Zone structure per page type. All types share the shell
-      (sidebar nav + header). The structure INSIDE the shell varies.
-
-      **Gateway (INT):** full-width workspace. Shell provides nav and
-      header only. Dual-panel layout from Tier 1 fills the content area.
-      No deposit card grid — INT is a workstation, not a reading surface.
-
-      **Lens (Axis: THR, STR, INF, ECR, SNM):**
-      Zone A (engine visualization, ~30% height, collapsible) + resizable
-      divider + Zone B (deposit list, remaining height). Zone A shows the
-      engine's primary visualization from Tier 3 (matrix, constellation,
-      density field, etc.). Collapsing Zone A gives full-height deposit
-      list. Resizable divider lets Sage tune the balance.
-
-      **Synthesis (Metamorphosis — MTM):**
-      60/40 horizontal split. Left: synthesis surface (findings from
-      two-pass architecture, Tier 4). Right: source references from
-      engine outputs (read-only, collapsible). MTM does not receive
-      deposits — the left panel displays findings, not deposit cards.
-
-      **Nexus Engine (DTX, SGR, PCV, VOI):**
-      Zone A (metrics dashboard, ~40% height, fixed) + Zone B (compact
-      deposit list, ~60% height, scrollable). Zone A shows the engine's
-      visualization suite from Tier 4. Fixed height — metrics always
-      visible, deposits scroll beneath.
-
-      **Output (LNV):**
-      Gallery layout. Snapshot cards in responsive grid (2-3 columns
-      depending on viewport). Each card shows visualization thumbnail,
-      source page, source engine, session date, optional note. Minimal
-      chrome — the work the system has produced, displayed clean.
-
-      **Scroll (WSC):**
-      Single-column reading surface. Full width within shell. Minimal
-      controls — this page is for reading, not manipulating. Layout
-      deferred to Tier 4 WSC design (G21).
-
-      **Investigation (Cosmology: HCO, COS, CLM, NHM, RCT, ART):**
-      60/40 horizontal split. Left: deposit list. Right: scientific
-      framework panel (read-only, collapsible). Framework panel shows
-      the established science context for this page's domain. Collapsing
-      it gives full-width deposit list.
-
-      **Domain (all 6 groups):**
-      Single zone. Deposit list fills content area. Sub-rhythm layout
-      (see above) applies within this zone — the sub-rhythm determines
-      card arrangement, column count, filter prominence, etc. The zone
-      structure is the same for all Domain pages; the internal rhythm
-      changes per group.
+**REMOVED.** Pre-decided layouts per type category. Per-page layout specs
+are Sage's architectural decision, defined in PAGE_LAYOUTS.md. The type
+system this section was organized around has been removed (see PAGE
+IDENTITY removal note above).
 
 ---
 
@@ -2153,29 +2060,29 @@ All open questions answered in session 15:
 - ~~Black Pearl UI?~~ → Floating black star button + keyboard shortcut.
   Minimal quick-capture panel. Recent Pearls on Observatory only.
 - ~~Shared UI patterns?~~ → Consistent base patterns (sort, filter, search)
-  across all pages. Page types get different control sets where function
+  across all pages. Pages get different control sets where function
   demands it.
-- ~~Where do visual specs live?~~ → One frontend architecture doc, structured
-  by type with group sub-rhythms nested inside Domain.
+- ~~Where do visual specs live?~~ → PAGE_LAYOUTS.md (per-page specs) +
+  SYSTEM_ Frontend.md (shared architecture). Domain group sub-rhythms
+  defined in both.
 
 **Gap resolutions (session 18 — Tier 2 quality pass):**
 - ~~No shared shell / navigation~~ → RESOLVED. Fixed sidebar, 9 collapsible
   groups matching canonical domain groups, page state indicators, keyboard
   navigation. See Shared Shell + Navigation Contract.
-- ~~No deposit card component~~ → RESOLVED. Base card with page-type
+- ~~No deposit card component~~ → RESOLVED. Base card with per-page
   variations, three provenance icons, expand behavior, genealogy timeline.
   See Deposit Card Component.
 - ~~No page load / empty state~~ → RESOLVED. Two empty state variants,
-  virtualized list, sort defaults per type, anchor behavior. See Page Load
+  virtualized list, sort defaults per page, anchor behavior. See Page Load
   + Empty State Behavior.
 - ~~Black Pearl panel no interaction spec~~ → RESOLVED. Slide-in panel,
   capture + reflective modes, auto-context, rapid capture flow, promotion
   queue. See Black Pearl Panel — Interaction Spec.
 - ~~Sub-rhythms are vibes not specs~~ → RESOLVED. Concrete layout per
   domain group (6 groups, corrected from 5). See Sub-Rhythm Layout Specs.
-- ~~No page-type layout anatomy~~ → RESOLVED. Zone structure per type
-  (Gateway, Lens, Synthesis, Nexus Engine, Output, Scroll, Investigation,
-  Domain). See Page-Type Layout Anatomy.
+- ~~No page-type layout anatomy~~ → ~~RESOLVED~~ → REMOVED (session 33).
+  Type system removed. Per-page layout specs live in PAGE_LAYOUTS.md.
 - ~~Drifted page codes~~ → RESOLVED. All page codes verified against
   canonical SECTION MAP.md. 9 corrections applied. Missing Lattice group
   (Group 2) added.
@@ -2232,7 +2139,7 @@ Deposit created in INT (Tier 1) → routed to target page(s) →
   duplicate hash checked on page arrival (G18) →
   if duplicate: flagged, Sage resolves (keep_both | keep_original |
     keep_incoming | merge) →
-  if clean: deposit card rendered per page-type variant →
+  if clean: deposit card rendered per page's card variant →
   deposit visible and searchable on page via virtualized list.
 
 **Black Pearl capture (with two modes + promotion):**
@@ -3353,7 +3260,7 @@ the detection layer to exist before they can receive and store outputs.
         Card shows:
           hypothesis_id
           hypothesis_statement (truncated, expand on click)
-          domain_of_origin as colored badges (page-type hue from Tier 2)
+          domain_of_origin as colored badges (per-page accent color)
           status: active | archived
           MTM provenance flag — visually distinct badge (MTM-generated
             vs direct observation). Filterable and sortable as first-class
@@ -4266,7 +4173,7 @@ the detection layer to exist before they can receive and store outputs.
       - Write path (when Sage writes, from where)
       - Relationship to WSC (linked by session_ref, never co-displayed)
       - LNV relationship (if Reflection Realm entries route to LNV)
-      - Page identity (page type assignment)
+      - Page identity (page code, group assignment)
 
       ---
 
@@ -4515,8 +4422,7 @@ the detection layer to exist before they can receive and store outputs.
 
       **LNV PAGE — GALLERY DISPLAY**
 
-      Page type: Output (from Tier 2 page identity system). Gallery
-      layout. Snapshot cards in responsive grid (2-3 columns).
+      Gallery layout. Snapshot cards in responsive grid (2-3 columns).
 
       **Gallery card:**
 
@@ -6366,22 +6272,18 @@ Void (page 51) designed:
 - No renumbering. Build-time artifacts: Domain_Void.txt, Manifest_51_Void.txt
 - Engine/visualization design deferred to Tier 4
 
-Page identity — visual type system designed:
-- 7 named types: Gateway, Lens, Synthesis, Engine, Output, Scroll, Investigation
-- Domain type with 5 group sub-rhythms: Filament (text-dense/linguistic),
-  Lineage (narrative/portrait), Alchemy (media-friendly/experiential),
-  Spiral Phase (timeline/sequence), Archive Group (catalog/index)
-- Sub-rhythms are NOT new page types — same Domain shell, different internal
-  rhythm per group. group_id informs sub-rhythm.
-- Color system: YES (one hue/accent per type, palette at build time)
-- Strong differentiation: different layouts per type, belonging to same family
-- Museum metaphor: same building, different wings
+~~Page identity — visual type system designed~~ — REMOVED (session 33).
+Type system introduced secondary names (Gateway, Lens, Synthesis, etc.)
+that competed with canonical page names. Removed. Per-page layout specs
+live in PAGE_LAYOUTS.md. Domain group sub-rhythms retained (Filament,
+Lineage, Alchemy, Spiral Phase, Archive). Color system retained as open
+design item.
 
 UI architecture foundation:
 - One frontend architecture doc covering all types
-- Structured by type, group sub-rhythms nested inside Domain
+- Per-page specs in PAGE_LAYOUTS.md, group sub-rhythms for Domain pages
 - Shared UI patterns (sort, filter, search) documented once
-- Page types get different control sets where function demands it
+- Pages get different control sets where function demands it
 - Written at frontend build time, informed by these design decisions
 
 ### Session 20 (2026-04-06)

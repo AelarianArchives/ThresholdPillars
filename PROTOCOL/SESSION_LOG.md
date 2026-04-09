@@ -1,6 +1,15 @@
 # SESSION_LOG.md
 # Aelarian Archives — Persistent Session State Record
 # Format defined in SESSION_PROTOCOL.md
+#
+# LEGACY CONTAMINATION NOTE (session 33, 2026-04-09):
+# Historical entries in this log reference a "page type system" with
+# 8 type labels: Gateway, Lens, Synthesis, Engine, Output, Scroll,
+# Investigation, Domain. This system was ROT — it introduced secondary
+# names competing with canonical page names (INT, THR, MTM, LNV, etc.)
+# and pre-decided layouts by category instead of per-page. Fully removed
+# session 33 from all active specs. Do not re-introduce. Pages are called
+# by their canonical names. Per-page layout specs live in PAGE_LAYOUTS.md.
 
 ---
 TIMESTAMP: 2026-04-02
@@ -11712,4 +11721,196 @@ NOT_STARTED:
   - Cross-tier: #13 TRIA name fix, #14 API folder rewrite, CONNECTS TO + seed affinity pass
 UNCOMMITTED: YES
 NEXT_ACTION: Audit schemas for Contract 2 (PCV → DTX ↔ SGR), identify open questions, write contract
+---
+
+---
+TIMESTAMP: 2026-04-09 07:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:57
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:57
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:57
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:58
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:58
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:58
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:58
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:58
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:58
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Liber_Novus\LNV SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:58
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Research_Assistant\SYSTEM_ Research Assistant.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:58
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Pattern_Convergence\PATTERN CONVERGENCE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:59
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:59
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:59
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:59
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:59
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 07:59
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:03
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan-ORIGINAL.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:03
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\PAGE_LAYOUTS.md
 ---
