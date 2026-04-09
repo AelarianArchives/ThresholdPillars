@@ -208,6 +208,18 @@ Read and restated.
 Hooks configured in `.claude/settings.json` that fire at session lifecycle
 boundaries. These run mechanically — Claude does not invoke them.
 
+**PreToolUse (Write|Edit)** — 5 hooks chained:
+  `session_open_gate.py` → `rot_open_gate.py` → `ghost_fix_gate.py` →
+  `recursion_repair_gate.py` → `close_audit_gate.py`
+  Fires before every Write or Edit. Each gate checks a different
+  condition and blocks (exit 2) if violated. All 5 must pass for the
+  write to proceed.
+
+**PreToolUse (Bash)** — `hooks/bash_safety_gate.py`
+  Fires before every Bash command. Hard blocks npm install, --no-verify,
+  --no-gpg-sign, inline credentials. Soft warns on git add ., push to
+  main, non-standard tag names. Checks lockfile existence on npm ci.
+
 **SessionStart** — `hooks/session_start.py`
   Fires when a session begins. Reads SESSION_LOG.md, ROT_OPEN.md, and
   phase_state.json. Outputs a status summary injected into Claude's
@@ -234,10 +246,46 @@ boundaries. These run mechanically — Claude does not invoke them.
   Captures Python and file-writing Bash commands in SESSION_LOG.md as
   HOOK_BASH entries.
 
+**TaskCompleted** — `hooks/self_exam_gate.py`
+  Fires when a task is marked complete. If the task involves self-
+  examination (audit, analysis, verification, comparison, review),
+  blocks completion unless a report artifact exists in `.claude/audits/`
+  written today with required sections: Task, Files examined, Findings,
+  Conclusion. Build tasks that mention audit terminology are excluded
+  (subject starting with build/create/write/update/fix verbs).
+  Addresses F06 (self-validates bad output) — the executor cannot
+  mark examination work complete without producing a record.
+
 **Known limitation:** Cascade detection via DEPENDENCY_MAP.json is
   INACTIVE. The session_log_hook.py CASCADE_ALERT system works but
   DEPENDENCY_MAP.json needs to be populated during the core files
   phase. Until then, cascade detection is behavioral only.
+
+---
+
+## 7. SELF-EXAMINATION ARTIFACT RULE
+
+Any task categorized as self-examination — audit, analysis, verification,
+comparison, review, gap analysis — produces a written artifact or it did
+not happen.
+
+**Artifact requirements:**
+1. Written to `.claude/audits/` directory
+2. Filename: descriptive, date-stamped (e.g., `re-audit-2026-04-09.md`)
+3. Required sections with content:
+   - `## Task` — what was examined and why
+   - `## Files examined` — every file read, with paths
+   - `## Findings` — what was found (stale refs, gaps, clean passes)
+   - `## Conclusion` — summary assessment
+
+**Mechanically enforced:** `self_exam_gate.py` (TaskCompleted hook)
+blocks task completion if no valid artifact exists. The artifact gets
+committed with the session's work — auditable after the fact.
+
+**Why this exists:** F06 — the executor and the verifier are the same
+entity. The artifact does not validate itself. It is a record that Sage
+can read. The hook enforces that the record exists. Sage evaluates
+whether the record is honest.
 
 ---
 

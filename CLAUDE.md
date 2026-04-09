@@ -147,7 +147,7 @@ See PROTOCOL/SESSION_PROTOCOL.md for session open, close, interrupt
 procedures, and session lifecycle hooks. See PROTOCOL/GITHUB_PROTOCOL.md
 for infrastructure, backup enforcement, and permission deny rules.
 See `.claude/settings.json` for the mechanical hook configuration
-(13 hooks across 6 event types) and 14 permission deny rules.
+(14 hooks across 7 event types) and 14 permission deny rules.
 
 ---
 
@@ -218,7 +218,13 @@ Check before implementation begins, not after.
 - **No function is complete until a test spec for it is written in the
   same session.** Implementation and test spec are one work unit.
   A function without a test spec is INCOMPLETE regardless of whether
-  the code itself is correct. See SESSION_PROTOCOL.md section 7.
+  the code itself is correct.
+
+- **Self-examination tasks produce artifacts.** Any task involving audit,
+  analysis, verification, comparison, or review writes a report to
+  `.claude/audits/` with required sections (Task, Files examined,
+  Findings, Conclusion). Mechanically enforced by `self_exam_gate.py`
+  (TaskCompleted hook). See SESSION_PROTOCOL.md section 7.
 
 ---
 

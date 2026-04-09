@@ -117,6 +117,16 @@
           }
         ]
       }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python C:/Users/sasir/Desktop/Aelarian/Archives/hooks/self_exam_gate.py"
+          }
+        ]
+      }
     ]
   }
 }
