@@ -147,7 +147,7 @@ See PROTOCOL/SESSION_PROTOCOL.md for session open, close, interrupt
 procedures, and session lifecycle hooks. See PROTOCOL/GITHUB_PROTOCOL.md
 for infrastructure, backup enforcement, and permission deny rules.
 See `.claude/settings.json` for the mechanical hook configuration
-(14 hooks across 7 event types) and 14 permission deny rules.
+(15 hooks across 7 event types) and 14 permission deny rules.
 
 ---
 

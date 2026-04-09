@@ -41,6 +41,10 @@
           {
             "type": "command",
             "command": "python C:/Users/sasir/Desktop/Aelarian/Archives/hooks/close_audit_gate.py"
+          },
+          {
+            "type": "command",
+            "command": "python C:/Users/sasir/Desktop/Aelarian/Archives/hooks/code_quality_gate.py"
           }
         ]
       },

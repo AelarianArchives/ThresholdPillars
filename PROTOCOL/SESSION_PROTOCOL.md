@@ -208,12 +208,25 @@ Read and restated.
 Hooks configured in `.claude/settings.json` that fire at session lifecycle
 boundaries. These run mechanically — Claude does not invoke them.
 
-**PreToolUse (Write|Edit)** — 5 hooks chained:
+**PreToolUse (Write|Edit)** — 6 hooks chained:
   `session_open_gate.py` → `rot_open_gate.py` → `ghost_fix_gate.py` →
-  `recursion_repair_gate.py` → `close_audit_gate.py`
+  `recursion_repair_gate.py` → `close_audit_gate.py` → `code_quality_gate.py`
   Fires before every Write or Edit. Each gate checks a different
-  condition and blocks (exit 2) if violated. All 5 must pass for the
+  condition and blocks (exit 2) if violated. All 6 must pass for the
   write to proceed.
+
+  `code_quality_gate.py` is the prevention gate. It scans the CONTENT
+  being written and blocks or warns on:
+  - Empty catch blocks / silent exception suppression (hard block)
+  - Domain vocabulary in function names (hard block)
+  - Hardcoded credentials in code (hard block)
+  - Resource opens without finally/context manager (warn)
+  - Unhandled promise rejections (warn)
+  - Dead code / unreachable branches (warn)
+  - Unverified imports not in manifests (warn)
+  - Unsourced precision values in docs (warn)
+  - INCOMPLETE/TODO/HACK markers (warn)
+  - package.json without lockfile (warn)
 
 **PreToolUse (Bash)** — `hooks/bash_safety_gate.py`
   Fires before every Bash command. Hard blocks npm install, --no-verify,
