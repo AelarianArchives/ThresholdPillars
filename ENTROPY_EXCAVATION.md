@@ -1,5 +1,5 @@
 ENTROPY EXCAVATION
-/DESIGN/ENTROPY_EXCAVATION.md
+/ENTROPY_EXCAVATION.md
 Written: 2026-04-07
 Status: ACTIVE
 
@@ -28,6 +28,15 @@ VERIFIED
 Files that have passed independent audit through the Recursion Repair
 gate system. These are trusted sources. If another file disagrees with
 a VERIFIED file, the VERIFIED file wins.
+
+A file is added to this list when ALL THREE conditions are met:
+  1. File passes adversarial audit (Recursion Repair AUDIT phase)
+  2. File is complete — not in progress, not a draft, not mid-build
+  3. Sage explicitly approves its addition
+
+Passing audit alone does not qualify. A file can pass audit mid-build
+and still take weeks to complete. Sage's approval is the final gate.
+No file is added to this list without Sage's explicit confirmation.
 
   TAG VOCABULARY.md
     Verified: 2026-04-06
@@ -311,11 +320,8 @@ STILL OPEN:
     DEPENDENCY_MAP.json contains only old-build refs.
     Scheduled for Fix 6 (clear and defer to core files phase).
 
-  ARCPHASE_ROT_CLEANUP.md
-    Threshold table uses old ID order (Sage handling)
-
-  SOT_BUILD_TODO.md
-    Threshold table uses old ID order (Sage handling)
+  ARCPHASE_ROT_CLEANUP.md — RETIRED (content transferred to ROT_REGISTRY.md)
+  SOT_BUILD_TODO.md — RETIRED (content transferred to ROT_REGISTRY.md)
 
 BLOCKING DECISIONS (not file fixes):
 

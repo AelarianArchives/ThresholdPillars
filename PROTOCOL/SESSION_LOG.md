@@ -11952,3 +11952,218 @@ FILES_THIS_SESSION:
 NEXT_ACTION: Pipeline Contract 2 (PCV → DTX ↔ SGR). Also: rot registry consolidation session
   and PAGE_LAYOUTS.md rebuild session (both separate from pipeline contract work).
 ---
+
+---
+TIMESTAMP: 2026-04-09
+TYPE: OPEN
+FILES_MODIFIED:
+  - none yet
+COMPLETED:
+  - Session open procedure: CLAUDE.md, ENFORCEMENT.md, GITHUB_PROTOCOL.md, SESSION_PROTOCOL.md read
+  - 6a spot-check: all [x] items in SOT_BUILD_TODO.md have valid SOURCE: lines — no downgrades
+  - Last entry was TYPE: CLOSE — clean session boundary
+CONFIRMED STATE:
+  - DESIGN/Systems/ — 65 files across named subfolders, includes Pipeline_Contracts/ from last session
+  - DESIGN/Domains/ — verified per prior sessions, not re-walked this open
+  - DESIGN/MISC/ — 5 files: 3 rot tracking (ARCPHASE_ROT_CLEANUP, ROT_CONTAMINATION_REPORT, ENTROPY_EXCAVATION), 2 build checklists (DOCS_STAGE_TODO, SOT_BUILD_TODO)
+  - Build phase: Step 2 (infrastructure) COMPLETE, Step 3 (SOT) NOT STARTED
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Rot registry consolidation: create ROT_REGISTRY.md, consolidate 3 rot files, retire source files, update CLAUDE.md session-open checklist
+  - File system decisions for DESIGN/MISC/ contents
+UNCOMMITTED: NO
+NEXT_ACTION: Closing the gap on drift detection and making decisions regarding the file system in DESIGN/MISC/
+---
+
+---
+TIMESTAMP: 2026-04-09 08:35
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\MISC\ROT_REGISTRY.md
+---
+
+---
+TIMESTAMP: 2026-04-09 08:46
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\MISC\ROT_REGISTRY.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\MISC\ROT_REGISTRY.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:11
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\MISC\ROT_REGISTRY.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:19
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\MISC\ROT_REGISTRY.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:36
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\RECURSION_REPAIR.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:36
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:36
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:37
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:37
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:37
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:37
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\ENTROPY_EXCAVATION.md
+---
+
+---
+TIMESTAMP: 2026-04-09 09:37
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\ROT_REGISTRY.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:09
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\.claude\plans\radiant-strolling-bentley.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:09
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\ROT_OPEN.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\ROT_REGISTRY.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\ENTROPY_EXCAVATION.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\RECURSION_REPAIR.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:10
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:11
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\CLAUDE.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:12
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_PROTOCOL.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:14
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION DB SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:14
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\ENTROPY_EXCAVATION.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:14
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:24
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\.claude\plans\radiant-strolling-bentley.md
+---
+
+---
+TIMESTAMP: 2026-04-09 10:32
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\session_open_gate.py
+---
+
+---
+TIMESTAMP: 2026-04-09 10:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\rot_open_gate.py
+---
+
+---
+TIMESTAMP: 2026-04-09 10:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\close_audit_gate.py
+---
+
+---
+TIMESTAMP: 2026-04-09 10:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\ghost_fix_gate.py
+---
+
+---
+TIMESTAMP: 2026-04-09 10:34
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\settings.json
+---

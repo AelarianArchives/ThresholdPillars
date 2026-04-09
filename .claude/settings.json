@@ -6,7 +6,23 @@
         "hooks": [
           {
             "type": "command",
+            "command": "python C:/Users/sasir/Desktop/Aelarian/Archives/hooks/session_open_gate.py"
+          },
+          {
+            "type": "command",
+            "command": "python C:/Users/sasir/Desktop/Aelarian/Archives/hooks/rot_open_gate.py"
+          },
+          {
+            "type": "command",
+            "command": "python C:/Users/sasir/Desktop/Aelarian/Archives/hooks/ghost_fix_gate.py"
+          },
+          {
+            "type": "command",
             "command": "python C:/Users/sasir/Desktop/Aelarian/Archives/hooks/recursion_repair_gate.py"
+          },
+          {
+            "type": "command",
+            "command": "python C:/Users/sasir/Desktop/Aelarian/Archives/hooks/close_audit_gate.py"
           }
         ]
       }

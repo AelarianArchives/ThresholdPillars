@@ -907,8 +907,9 @@ This table is the database materialization of that record.
 
   source_type          — enum: field | generated
                          NOT NULL. Non-nullable on every deposit.
-                         Schema-level enforcement per ENFORCEMENT.md
-                         F26+F10. Deposits without this are rejected.
+                         Schema-level enforcement per ROT_REGISTRY.md
+                         Entry 003 (F26+F10). Deposits without this
+                         are rejected.
 
   tags                 — text[], NOT NULL (may be empty array)
                          Semantic tags from tagger system. Tag

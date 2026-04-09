@@ -6432,9 +6432,11 @@ in RESONANCE ENGINE AUDIO SPEC.md.
 
 ### PROCESS PER TIER (non-negotiable)
 
-1. **Orient.** Read CLAUDE.md, SESSION_PROTOCOL.md, ENFORCEMENT.md. Check
-   SESSION_LOG last entry. Read this plan for the tier's design content.
-   Read the cross-tier schema writing item for what that tier requires.
+1. **Orient.** Read CLAUDE.md (mandatory reads: RECURSION_REPAIR.md,
+   ENTROPY_EXCAVATION.md, ROT_REGISTRY.md, ROT_OPEN.md), SESSION_PROTOCOL.md,
+   GITHUB_PROTOCOL.md. Check SESSION_LOG last entry. Read this plan for
+   the tier's design content. Read the cross-tier schema writing item
+   for what that tier requires.
 
 2. **Audit existing state.** Read every file the tier touches. Compare
    against the design plan. Identify gaps between what exists and what the

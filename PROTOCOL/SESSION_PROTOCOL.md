@@ -6,13 +6,17 @@
 
 ## PURPOSE
 
-Defines the required procedure for every session: open, close, interrupt
-resume, ghost fix verification, and long session restatement. SESSION_LOG.md
-is the persistent state record. It is written continuously during a session —
-not only at close. A session that ends without a clean close still leaves a
-recoverable state record.
+Defines the SESSION_LOG.md entry format, session lifecycle procedures
+(open, close, interrupted resume, ghost fix verification), work-unit
+definition, and long session restatement rule.
 
-All protocol files live in PROTOCOL/. CLAUDE.md lives at project root.
+This file owns the mechanical procedures. Behavioral rules, mandatory
+reads, code contract gates, test-alongside rules, and the confirmation
+gate live in CLAUDE.md. The gate system lives in RECURSION_REPAIR.md.
+
+All protocol files live in PROTOCOL/. Root documents (CLAUDE.md,
+RECURSION_REPAIR.md, ENTROPY_EXCAVATION.md, ROT_REGISTRY.md,
+ROT_OPEN.md) live at project root.
 
 ---
 
@@ -75,8 +79,9 @@ is task completion, not operation volume.
 
 ## 1. SESSION OPEN
 
-Run at the start of every session, in this order. Do not skip steps.
-Do not reorder.
+The mandatory reads and confirmation gate are defined in CLAUDE.md
+(BEFORE EVERY SESSION section). Complete those first. Then run
+these mechanical steps:
 
 0. Load 3 most recent WSC entries via GET /api/wsc/recent?limit=3.
    Read before any other context. This is the AI's self-orientation
@@ -85,23 +90,16 @@ Do not reorder.
    WSC system is live. Until then, proceed directly to step 1.
 1. Read SESSION_LOG.md
 2. Check the type of the last entry:
-   - `CLOSE` — proceed to step 6
+   - `CLOSE` — proceed to step 3
    - `WORK_UNIT`, `HOOK_WRITE`, or `OPEN` with no subsequent `CLOSE`
      — interrupted session. Go to section 3 (INTERRUPTED SESSION — RESUME)
      before proceeding
-3. Read CLAUDE.md completely
-4. Read ENFORCEMENT.md completely
-5. Re-derive current file state from disk — not from memory, not from the log.
+3. Re-derive current file state from disk — not from memory, not from the log.
    Read the actual files. Confirm what exists, what is PLANNED, what is clean
-6. Check DESIGN/Systems/ and DESIGN/Domains/ — confirm state matches last
+4. Check DESIGN/Systems/ and DESIGN/Domains/ — confirm state matches last
    known record. Name any discrepancy before proceeding
-6a. Spot-check SOT_BUILD_TODO.md — for every item marked [x], verify that
-    Sage's explicit approval exists in SESSION_LOG.md. A Claude session marking
-    its own decision [x] is not confirmation. If any [x] item cannot be traced
-    to Sage's words in the log, downgrade it to [p] immediately and name it
-    to Sage before any work begins. This check runs every session, no exceptions.
-7. Write a `TYPE: OPEN` entry to SESSION_LOG.md with current confirmed state
-8. State current confirmed state to Sage before any work begins
+5. Write a `TYPE: OPEN` entry to SESSION_LOG.md with current confirmed state
+6. State current confirmed state to Sage before any work begins
 
 ---
 
@@ -109,18 +107,24 @@ Do not reorder.
 
 Run when a session ends cleanly. All steps required.
 
-1. Confirm all changes from this session are committed — run git status,
+1. Run the session close audit defined in CLAUDE.md (ROT REGISTRY —
+   SESSION CLOSE AUDIT section). This includes: scanning for open rot,
+   running verification commands, checking against the 57-pattern
+   watchlist, reporting findings to Sage, and logging any new rot in
+   ROT_REGISTRY.md and ROT_OPEN.md. The audit must complete before
+   the CLOSE entry is written.
+2. Confirm all changes from this session are committed — run git status,
    name any uncommitted files
-2. Confirm no INCOMPLETE blocks exist in any file written this session
+3. Confirm no INCOMPLETE blocks exist in any file written this session
    without a named record in SESSION_LOG.md
-3. Push to GitHub — confirm push succeeded
-4. Write a `TYPE: CLOSE` entry to SESSION_LOG.md:
+4. Push to GitHub — confirm push succeeded
+5. Write a `TYPE: CLOSE` entry to SESSION_LOG.md:
    - All files modified this session
    - Everything completed
    - Anything left in progress with exactly where it stopped
    - Any blocking gaps discovered during the session
    - Next action for the following session
-5. Confirm SESSION_LOG.md itself is committed and pushed
+6. Confirm SESSION_LOG.md itself is committed and pushed
 
 ---
 
@@ -190,63 +194,12 @@ Read and restated.
 
 ---
 
-## 6. CODE CONTRACT GATE
+## CROSS-REFERENCES
 
-Run before implementing any function. This is a hard gate —
-implementation does not begin until every step is complete.
-
-1. State the function's full contract:
-   - Name
-   - Parameters — each with type and what it represents
-   - Return type — including what it returns on failure
-   - Side effects — every state change outside this function's scope
-   - Dependencies — what it calls, what events it fires
-
-2. State which file(s) this function lives in and which files call it.
-   Cross-check against PROTOCOL/DEPENDENCY_MAP.json.
-   NOTE: DEPENDENCY_MAP.json is currently empty (old-build entries
-   cleared 2026-04-08). Map will be rebuilt during Step 4 (core files
-   phase). Until then, use manual cascade analysis from schema
-   cross-references.
-
-3. Sage approves the contract before any code is written.
-
-4. Write the contract as a comment block at the top of the function
-   before writing the body.
-
-5. Implement against the approved contract only. Any deviation from
-   the contract during implementation is named and stopped —
-   not silently absorbed.
-
-6. If the implementation reveals the contract was wrong: stop.
-   Restate the corrected contract. Get approval. Then continue.
-
-**No function body is written before its contract is approved.
-No exceptions.**
-
----
-
-## 7. TEST-ALONGSIDE RULE
-
-Every function implementation requires a test spec written in the
-same work unit. Not in a later session. Not after the build stabilizes.
-The same work unit.
-
-**What a test spec contains:**
-- The function being tested (name, file)
-- Happy path: expected input → expected output
-- At minimum one failure case: bad input / missing data / error condition
-- At minimum one edge case if the function handles boundaries
-
-**The rule:**
-A work unit that writes a function is not closed until the test spec
-for that function is also written and recorded in SESSION_LOG.md.
-"I'll write tests later" is not an acceptable state.
-A function without a test spec is marked INCOMPLETE in SESSION_LOG.md
-regardless of whether the implementation itself is correct.
-
-**Why this exists:**
-F06 (self-validates) has no mechanical check until a test suite exists.
-Writing the test spec alongside the implementation creates the
-external verification layer that prevents Claude from being the only
-thing checking Claude's output.
+Code contract gates: defined in CLAUDE.md (CODE CONTRACT RULES section).
+Test-alongside rule: defined in CLAUDE.md (CODE CONTRACT RULES section).
+Recursion Repair gate system: defined in RECURSION_REPAIR.md.
+Mandatory reads and confirmation gate: defined in CLAUDE.md (BEFORE
+  EVERY SESSION section).
+Session close audit: defined in CLAUDE.md (ROT REGISTRY — SESSION
+  CLOSE AUDIT section).

@@ -139,10 +139,12 @@ When something is genuinely good, say so — once, without decoration.
 - No precision values — thresholds, timeouts, counts, version numbers —
   are stated unless sourced. Fabricated specifics are treated as hallucination
 
-See PROTOCOL/ENFORCEMENT.md for the complete failure mode map and all
-enforcement rules. See PROTOCOL/SESSION_PROTOCOL.md for session open,
-close, and interrupt procedures. See PROTOCOL/GITHUB_PROTOCOL.md for
-infrastructure and backup enforcement.
+See ROT_REGISTRY.md for the complete failure mode watchlist (57 confirmed
+patterns) and all logged rot/drift events. See RECURSION_REPAIR.md for
+the gate system (SPEC → BUILD → AUDIT → PASS). See ENTROPY_EXCAVATION.md
+for the audit process and verified file list. See PROTOCOL/SESSION_PROTOCOL.md
+for session open, close, and interrupt procedures. See PROTOCOL/GITHUB_PROTOCOL.md
+for infrastructure and backup enforcement.
 
 ---
 
@@ -219,76 +221,15 @@ Check before implementation begins, not after.
 
 ## RECURSION REPAIR — NON-NEGOTIABLE
 
-This gate system applies to every file type and every piece of code.
-All phases must pass before first output reaches disk. No exceptions.
-No phase may be skipped, reordered, or combined. Hooks enforce this
-mechanically — Claude cannot bypass the gates.
+The full gate system is defined in RECURSION_REPAIR.md (project root).
+Read it. Every session. No exceptions.
 
-**PHASE: SPEC**
+Four phases: SPEC → BUILD → AUDIT → PASS. All phases must pass before
+first output reaches disk. No phase may be skipped, reordered, or
+combined. Hooks enforce this mechanically. Claude cannot bypass the gates.
 
-Before anything is written, Claude produces:
-  - Goal — what this file or function will do
-  - Assumptions — what is being taken as true, named explicitly
-  - Risks — what could go wrong, including:
-    - Edge cases
-    - Invalid inputs
-    - Race conditions (if relevant)
-    - State corruption scenarios
-  - Invariants — what must remain true before and after
-  - Test strategy — how correctness will be verified
-  - Files — every file this change touches or could affect
-
-No code is allowed in this phase. The SPEC is plain language only.
-Sage reviews and approves the SPEC before BUILD begins.
-
-**PHASE: BUILD**
-
-Implement tests first. Then code.
-
-Tests are written and committed before the implementation they test.
-The implementation is written against the approved SPEC only. Any
-deviation from the SPEC during implementation is named and stopped —
-not silently absorbed.
-
-**PHASE: AUDIT**
-
-Assume the BUILD is flawed.
-
-Claude MUST:
-  1. Attempt to break the implementation
-  2. Identify mismatches between code and SPEC
-  3. Identify untested paths
-  4. Identify silent failure risks
-  5. Suggest minimal fixes
-
-Output is FAIL or PASS.
-If FAIL: exact issues listed with exact fixes.
-
-The AUDIT is adversarial. It does not confirm the BUILD — it tries
-to destroy it. If it cannot break it, it passes.
-
-**PHASE: REPAIR (if needed)**
-
-Apply ONLY the minimal fixes required to satisfy AUDIT.
-
-DO NOT rewrite everything.
-DO NOT introduce new behavior.
-DO NOT expand scope beyond what the AUDIT identified.
-
-After REPAIR, re-run AUDIT. The cycle continues until PASS.
-
-**ENFORCEMENT**
-
-These phases are enforced by hooks in settings.json. A PreToolUse
-hook blocks Write and Edit operations until phase requirements are
-met. Phase state is tracked mechanically. Claude cannot self-certify
-completion of a phase — the hooks verify it.
-
-This system exists because prior sessions reported files as clean
-when they were not. The gap was that the executor and the verifier
-were the same entity. Recursion Repair separates them: Claude
-executes, the hooks gate, Sage approves the SPEC, and the AUDIT
-is adversarial by design.
+This is not a guideline. Sage is not asking. The gate system exists
+because prior sessions reported files as clean when they were not.
 
 ---
 
@@ -363,6 +304,15 @@ SYSTEM_ Frontend.md. Written during infrastructure stage (step 2).
 
 ## FILE STATE AND BOUNDARIES
 
+**ROOT DOCUMENTS — non-negotiable, read every session:**
+```
+CLAUDE.md               — this file. Session contract and behavioral rules.
+RECURSION_REPAIR.md     — gate system (SPEC → BUILD → AUDIT → PASS)
+ENTROPY_EXCAVATION.md   — audit process, 15-category checklist, verified file list
+ROT_REGISTRY.md         — permanent rot/drift record and scan watchlist
+ROT_OPEN.md             — active rot items needing resolution (action queue)
+```
+
 **CLEAN — authoritative:**
 ```
 DESIGN/Systems/     — verified schemas and system documents (organized in named subfolders)
@@ -400,6 +350,16 @@ stores are built from SOT in the core files phase (step 4).
 All Claude-generated files go in .claude/ unless absolutely needed
 elsewhere. Do not create working files, memory files, or session
 artifacts outside this directory.
+
+**RETIRED — consolidated and archived:**
+```
+Retired/            — files that have been consolidated or superseded.
+                      Contents: ARCPHASE_ROT_CLEANUP.md, ENFORCEMENT.md,
+                      DOCS_STAGE_TODO.md, ROT_CONTAMINATION_REPORT.md,
+                      SOT_BUILD_TODO.md. All content transferred to
+                      ROT_REGISTRY.md before retirement. Do not build from
+                      retired files — the registry is the living source.
+```
 
 **REMOVED — session 14:**
 - `core/` — old build JS modules. Deleted. No longer needed.
@@ -514,16 +474,35 @@ The same weight as a code rule violation. Not a missed reminder.
 
 ## BEFORE EVERY SESSION
 
-1. Read this file completely
-2. Verify DESIGN/Systems/ and DESIGN/Domains/ state — do not assume it matches
-   any prior session's record
-3. Read PROTOCOL/ENFORCEMENT.md
-4. Read PROTOCOL/GITHUB_PROTOCOL.md
-5. Read PROTOCOL/SESSION_PROTOCOL.md completely — every session, no exceptions
-6. Check PROTOCOL/SESSION_LOG.md — last entry type determines next step:
+**MANDATORY READS — NON-NEGOTIABLE**
+
+These four documents are read every session. Sage is not asking.
+No work begins until all four are read and confirmed to Sage.
+
+1. Read this file (CLAUDE.md) completely
+2. Read RECURSION_REPAIR.md completely — the gate system
+3. Read ENTROPY_EXCAVATION.md completely — the audit process and
+   verified file list
+4. Read ROT_REGISTRY.md completely — the permanent rot/drift record
+5. Read ROT_OPEN.md — if it contains entries, these are addressed
+   with Sage before any new work begins. Open rot is the first priority.
+
+**CONFIRMATION GATE:** Before any work begins, state to Sage:
+"CLAUDE.md read. RECURSION_REPAIR.md read. ENTROPY_EXCAVATION.md read.
+ROT_REGISTRY.md read. ROT_OPEN.md read." This is not a formality. It
+is a gate. Work does not begin until this confirmation is given. If
+ROT_OPEN.md has entries, name them to Sage and resolve before proceeding.
+
+**SESSION OPEN PROCEDURE**
+
+5. Read PROTOCOL/GITHUB_PROTOCOL.md
+6. Read PROTOCOL/SESSION_PROTOCOL.md completely — every session, no exceptions
+7. Check PROTOCOL/SESSION_LOG.md — last entry type determines next step:
    CLOSE → write TYPE: OPEN entry to SESSION_LOG.md, then proceed
    anything else → interrupted session, follow SESSION_PROTOCOL.md section 3 before any work
-7. **Page code rot scan — NON-NEGOTIABLE.** Verify any page codes referenced
+8. Verify DESIGN/Systems/ and DESIGN/Domains/ state — do not assume it matches
+   any prior session's record
+9. **Page code rot scan — NON-NEGOTIABLE.** Verify any page codes referenced
    in session work against DESIGN/Systems/SECTION MAP.md. The canonical
    SECTION MAP is the sole authority for page codes, group names, and group
    numbers. Page codes drift silently across sessions when carried from
@@ -531,6 +510,62 @@ The same weight as a code rule violation. Not a missed reminder.
    the SECTION MAP is contamination — flag it before writing. This check
    was added after session 18 caught 9 drifted page codes that had entered
    the design build plan undetected.
-8. Do not assume anything about file state — verify before touching
-9. If uncertain about anything — ask before acting.
-   Silent failure is not acceptable
+10. Do not assume anything about file state — verify before touching
+11. If uncertain about anything — ask before acting.
+    Silent failure is not acceptable
+
+**RELATIONSHIP BETWEEN ROOT DOCUMENTS**
+
+Three root documents sit alongside CLAUDE.md. They are complementary,
+not overlapping:
+
+- **RECURSION_REPAIR.md** — the gate system. Defines the phases
+  (SPEC → BUILD → AUDIT → PASS) that every file and function must
+  pass through. The structure of how work is verified.
+
+- **ENTROPY_EXCAVATION.md** — the audit process. Defines the 15-category
+  checklist, project-specific rot patterns, and the verified file list.
+  The substance of what the AUDIT phase checks against.
+
+- **ROT_REGISTRY.md** — the living record. Every rot term, drift event,
+  and contamination ever found in this project, with timestamps, infected
+  files, cleanup actions, and verification commands. The permanent log.
+
+RECURSION_REPAIR says "run an audit." ENTROPY_EXCAVATION says "here is
+what to audit for." ROT_REGISTRY says "here is what has been found."
+
+**ROT REGISTRY — MID-SESSION RULE**
+
+Any time a new drift or rot is flagged or verified during a session:
+1. Confirm the finding with Sage
+2. Log it in ROT_REGISTRY.md (permanent record) AND ROT_OPEN.md
+   (action queue) immediately — before any other work continues
+3. Registry entry includes: rot term, timestamp, what it falsely
+   claimed or introduced, correct state, infected files, verification
+   commands
+4. ROT_OPEN.md entry includes: rot term, registry entry number, date
+   found, session, brief description, affected files
+This is not deferred to session close. Both files are updated in real time.
+
+**ROT REGISTRY — SESSION CLOSE AUDIT**
+
+Before writing the TYPE: CLOSE entry to SESSION_LOG.md, perform a
+system audit:
+1. Read ROT_OPEN.md for any active items that touch files modified
+   this session
+2. Run the verification commands from ROT_REGISTRY.md for those items
+3. Scan files written this session against the 57 failure mode watchlist
+   (Entry 001 in the registry)
+4. Report findings to Sage before closing
+5. Any new findings go into ROT_REGISTRY.md (permanent record) AND
+   ROT_OPEN.md (action queue for next session) before the session closes
+6. If any file written this session has been declared complete by Sage
+   and passed audit, add it to ENTROPY_EXCAVATION.md VERIFIED list.
+   Three gates required:
+     (a) File passes adversarial audit (Recursion Repair AUDIT phase)
+     (b) File is complete — not in progress, not draft, not mid-build
+     (c) Sage explicitly approves its addition to verified
+   All three required. Passing audit alone does not qualify.
+
+This audit is not optional. A session that closes without it has not
+closed cleanly.
