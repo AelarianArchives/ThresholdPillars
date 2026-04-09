@@ -25,17 +25,15 @@ Last updated: 2026-04-09. Read this before working in the document.
 Items are grouped by status. Line numbers are approximate — verify
 against the document if editing.
 
-**TIER 5 — Cosmology pages (unchecked in completed tier):**
-- [ ] HCO (34) — redefine with investigation + computation frame (~4814)
-- [ ] COS (35) — redefine with investigation + computation frame (~4832)
-- [ ] CLM (36) — redefine with investigation + computation frame (~4848)
-- [ ] NHM (37) — redefine with investigation + computation frame (~4862)
+**TIER 5 — Cosmology pages:**
+- [x] HCO (34) — CONFIRMED session 20 (investigation + computation frame)
+- [x] COS (35) — CONFIRMED session 20 (investigation + computation frame)
+- [x] CLM (36) — CONFIRMED session 20 (investigation + computation frame)
+- [x] NHM (37) — CONFIRMED session 20 (investigation + computation frame)
 
-**TIER 6 — Research assistant design questions (work done, tracker not updated):**
-- [ ] Lines ~5312-5327 — 9 design questions (ownership, archive access,
-      page context, observations, hypotheses, Cosmology, UI, embedding,
-      mode switching). All answered in companion specs and SYSTEM_ file.
-      Checkboxes need updating to [x].
+**TIER 6 — Research assistant design questions:**
+- [x] All 9 design questions verified and checked off (session 31).
+      Answered in 6 companion specs + SYSTEM_ Research Assistant.md.
 
 **TIER 7 — Observatory, navigation, live write, export, pipelines (NOT STARTED):**
 
@@ -99,10 +97,10 @@ against the document if editing.
 - [ ] #14 API folder rewrite (~5478)
 - [ ] CONNECTS TO + seed affinity pass (~5482)
 
-**AGENDA ITEM TRACKER (stale — items in completed tiers not checked off):**
-- [ ] #2, #4, #5, #6, #7, #9, #10, #11, #12, #15 (~5530-5542)
-      These reference work in Tiers 1-6 (all COMPLETE). The design work
-      exists in schemas. Tracker checkboxes were never updated.
+**AGENDA ITEM TRACKER:**
+- [x] #2, #4, #5, #6, #7, #8, #9, #10, #11, #12, #15 — all checked off (session 31)
+- [ ] #13 TRIA name change, #14 API folder rewrite — cross-tier, still open
+- [ ] #17, #18, #19 — Tier 8 (future)
 
 **INTENTIONALLY HOLDING:**
 - [ ] WSC DESIGN (~1869) — holding for Tier 4 second half, by design
@@ -4903,7 +4901,7 @@ suggestion → result → finding. Each step is one action.
 ### Page-by-page investigation surfaces
 
 **HCO (34) — Harmonic Cosmology:**
-- [ ] Redefine function with investigation + computation frame
+- [x] Redefine function with investigation + computation frame — CONFIRMED session 20
       Focus: wave structures, resonance, harmonic principles, geometric fields
       Sciences: harmonics, wave mechanics, acoustics, electromagnetism, signal
       processing, Fourier analysis, nonlinear wave dynamics, resonance theory,
@@ -4921,7 +4919,7 @@ Fourier decomposition of deposit patterns. Spectral comparison.
 "This deposit sequence has spectral index n=X. Compare: [known distribution]."
 
 **COS (35) — Coupling / Oscillation:**
-- [ ] Redefine function with investigation + computation frame
+- [x] Redefine function with investigation + computation frame — CONFIRMED session 20
       Focus: relational connectivity, phase-locking, cross-frequency coupling
       Sciences: coupled oscillator networks, cross-frequency field dynamics,
       hierarchical relational resonance, oscillatory multiplexing, control
@@ -4937,7 +4935,7 @@ Oscillator model comparison. "This co-regulation pattern matches coupled
 oscillator dynamics with coupling coefficient k=X."
 
 **CLM (36) — Celestial Mechanics:**
-- [ ] Redefine function with investigation + computation frame
+- [x] Redefine function with investigation + computation frame — CONFIRMED session 20
       Focus: stars, planets, orbital dynamics, spatial anchors, astro-patterns
       Sciences: astronomy, astrometry, celestial navigation, spherical
       astronomy, orbital resonances, astrophysical spiral dynamics, geometry,
@@ -4951,7 +4949,7 @@ mapping. "This threshold pattern follows geometric distribution consistent
 with [celestial model]."
 
 **NHM (37) — Neuro-Harmonics:**
-- [ ] Redefine function with investigation + computation frame
+- [x] Redefine function with investigation + computation frame — CONFIRMED session 20
       Focus: cognitive, neural, relational, quantum-analogous structures
       Sciences: connectomics, neural dynamics, neurophenomenology, theta-gamma
       nested oscillations, delta-beta cross-frequency modulation, quantum
@@ -5401,22 +5399,28 @@ research tool that layers on top of the visualization infrastructure.
 
 **Research assistant:**
 
-- [ ] What the assistant owns vs. what it doesn't (RAG pipeline, Claude API)
-- [ ] How it accesses the archive (embedding pipeline, vector search)
-- [ ] How it knows page context (lens frame, active engine state)
-- [ ] How it helps articulate observations ("I notice X" → structured deposit)
-- [ ] How it helps frame hypotheses ("this looks like Shannon entropy" → computation)
-- [ ] How it interacts with Cosmology computations
-- [ ] UI design — chat window, inline on pages, or both?
-- [ ] What gets embedded? All deposits? Findings? Schemas?
-- [ ] Mode switching:
-      · Research mode — default, full archive access, hypothesis framing
-      · Ven'ai mode — translate on the spot while researching.
-        Sage wants to learn the language. api/prompts/ reference material
-        (Venai_Domain.txt, Venai_Glossary.txt, Venai_Phonetics.txt,
-        Ven'ai_Manual.txt) feeds the assistant in this mode.
-      · Possible additional modes: analysis mode, cosmology mode, etc.?
-- [ ] Output: research assistant design spec + mode architecture
+- [x] What the assistant owns vs. what it doesn't (RAG pipeline, Claude API)
+      → SYSTEM_ Research Assistant.md (ownership boundaries)
+- [x] How it accesses the archive (embedding pipeline, vector search)
+      → RESEARCH ASSISTANT ARCHIVE ACCESS.md (hybrid search, re-ranking, retrieval confidence)
+- [x] How it knows page context (lens frame, active engine state)
+      → SYSTEM_ Research Assistant.md (page identity, engine state summaries, filter state)
+- [x] How it helps articulate observations ("I notice X" → structured deposit)
+      → RESEARCH ASSISTANT OBSERVATION ARTICULATION.md (articulation sequence, silence rule)
+- [x] How it helps frame hypotheses ("this looks like Shannon entropy" → computation)
+      → RESEARCH ASSISTANT HYPOTHESIS FRAMING.md (hypothesis detection, type sensing, archive retrieval)
+- [x] How it interacts with Cosmology computations
+      → RESEARCH ASSISTANT COSMOLOGY BRIDGE.md (plain language translation, field↔science bridge)
+- [x] UI design — chat window, inline on pages, or both?
+      → SYSTEM_ Research Assistant.md (persistent floating panel, navigates with Sage)
+- [x] What gets embedded? All deposits? Findings? Schemas?
+      → RESEARCH ASSISTANT EMBEDDING SCOPE.md (data types, timing, input per type)
+- [x] Mode switching:
+      → SYSTEM_ Research Assistant.md (Ven'ai always-on recognition, conversational depth
+      dial — not a mode toggle. Language held all the time. Sage directs deeper engagement
+      without formal mode switch.)
+- [x] Output: research assistant design spec + mode architecture
+      → 6 companion specs + SYSTEM_ file = complete design (verified session 31)
 
 **Why the assistant matters:**
 The assistant is the bridge between "I notice more than I can name" and
@@ -6109,19 +6113,19 @@ Updated to show build tier mapping instead of session mapping.
 - [x] #1 Axis engine audit — DONE (session 14)
 - [x] #3 Nexus engine audit — DONE (session 14)
 - [x] #16 File renaming + folder tree — DONE (session 14)
-- [ ] #2 Ven'ai name tracking → **Tier 3** (unified: names + phases + roles + grammar in STR engine)
-- [ ] #4 Duplicate finder → **Tier 1** (identical-entry hash in INT) + **Tier 3** (Ven'ai name dedup)
-- [ ] #5 Resonance engine + harmonics → **Tier 6** (audio sonification)
-- [ ] #6 Research assistant / chat → **Tier 6** (with Ven'ai mode switching)
-- [ ] #7 Batch processing → **Tier 1** (large file upload + chunking in INT engine)
-- [ ] #8 Export/backup wiring → **Tier 7** (JSON, MD, Google Drive exports)
-- [ ] #9 Media deposit wiring → **Tier 1** (images as tagged deposits through INT)
-- [ ] #10 doc_type tag design → **Tier 1** (INT tagging field on deposit record)
-- [ ] #11 Engine UI surfaces → **Tiers 3-5** (each engine gets its viz in its own tier)
-- [ ] #12 Smaller UI decisions → **Tier 2** (shared patterns) + **Tier 7** (export/Observatory patterns)
+- [x] #2 Ven'ai name tracking → **Tier 3** COMPLETE (session 27)
+- [x] #4 Duplicate finder → **Tier 1** COMPLETE (session 26) + **Tier 3** COMPLETE (session 27)
+- [x] #5 Resonance engine + harmonics → **Tier 6** COMPLETE (session 30)
+- [x] #6 Research assistant / chat → **Tier 6** COMPLETE (session 30, verified session 31)
+- [x] #7 Batch processing → **Tier 1** COMPLETE (session 26)
+- [x] #8 Export/backup wiring → **Tier 7** DESIGNED (session 31 — Export panel + Google Integration)
+- [x] #9 Media deposit wiring → **Tier 1** COMPLETE (session 26)
+- [x] #10 doc_type tag design → **Tier 1** COMPLETE (session 26)
+- [x] #11 Engine UI surfaces → **Tiers 3-5** COMPLETE (sessions 27-29)
+- [x] #12 Smaller UI decisions → **Tier 2** COMPLETE + **Tier 7** DESIGNED (session 31)
 - [ ] #13 TRIA name change → **Cross-tier** (quick fix, any session)
 - [ ] #14 API folder rewrite → **Cross-tier** (separate session)
-- [ ] #15 Ven'ai learning module → **Tier 6** (mode in research assistant)
+- [x] #15 Ven'ai learning module → **Tier 6** COMPLETE (session 30)
 - [ ] #17 Stub and placeholder sweep → **Tier 8** (before SOT)
 - [ ] #18 Finish line inventory → **Tier 8**
 - [ ] #19 Stress test → **Tier 8**
