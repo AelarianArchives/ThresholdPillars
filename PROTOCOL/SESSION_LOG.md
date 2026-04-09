@@ -11914,3 +11914,41 @@ TIMESTAMP: 2026-04-09 08:03
 TYPE: HOOK_WRITE
 FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\PAGE_LAYOUTS.md
 ---
+
+---
+TIMESTAMP: 2026-04-09
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DESIGN/Systems/Pipeline_Contracts/PIPELINE CONTRACT 1 — INT TO LNV.md — COMPLETE (new file)
+  - .claude/plans/design-session-plan.md — COMPLETE (Tier 6 strikethroughs, Contract 1 checked off, type system removed, scattered references replaced)
+  - DESIGN/Systems/Frontend/SYSTEM_ Frontend.md — COMPLETE (type system removed, references replaced with canonical names)
+  - DESIGN/Systems/Liber_Novus/LNV SCHEMA.md — COMPLETE (type label removed)
+  - DESIGN/Systems/Research_Assistant/SYSTEM_ Research Assistant.md — COMPLETE (type labels replaced with page codes)
+  - DESIGN/Systems/Pattern_Convergence/PATTERN CONVERGENCE SCHEMA.md — COMPLETE (type label replaced)
+  - DESIGN/Systems/PAGE_LAYOUTS.md — COMPLETE (legacy contamination note added, Sage will rebuild)
+  - .claude/plans/design-session-plan-ORIGINAL.md — COMPLETE (legacy contamination note added)
+  - PROTOCOL/SESSION_LOG.md — COMPLETE (OPEN + WORK_UNIT + CLOSE, legacy contamination note in header)
+COMPLETED:
+  - Pipeline Contract 1 written: INT → 5 Axis → MTM → LNV (6 stages, handoff contracts, failure propagation)
+  - Tier 6 research assistant open questions struck through (resolved session 31, formatting miss)
+  - Pipeline_Contracts folder created in DESIGN/Systems/
+  - Page type system fully excavated: secondary naming system (Gateway, Lens, Synthesis, Engine, Output, Scroll, Investigation, Domain) removed from all active specs
+  - Legacy contamination notes placed in 3 files that retain historical type system references
+  - Rot tracking system gap identified: 3 files in DESIGN/MISC/ (ARCPHASE_ROT_CLEANUP.md, ROT_CONTAMINATION_REPORT.md, ENTROPY_EXCAVATION.md) exist but are not combined into a registry, and CLAUDE.md session-open checklist does not reference them
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Pipeline Contract 2: PCV → DTX ↔ SGR
+  - Pipeline Contract 3: Axis → Cosmology investigation flow
+  - Pipeline Contract 4: Cosmology → Nexus feedback loop
+  - Pipeline Contract 5: Null observation through full pipeline
+  - Shared viz architecture, computation architecture, performance budget
+  - Rot registry consolidation (combine 3 MISC files into living registry, update CLAUDE.md session-open)
+  - PAGE_LAYOUTS.md rebuild (Sage-owned, dedicated session)
+  - Cross-tier: #13 TRIA name fix, #14 API folder rewrite, CONNECTS TO + seed affinity pass
+UNCOMMITTED: NO (after this commit)
+FILES_THIS_SESSION:
+  - 9 files across 2 commits (2b2fdac + b7a9c75)
+NEXT_ACTION: Pipeline Contract 2 (PCV → DTX ↔ SGR). Also: rot registry consolidation session
+  and PAGE_LAYOUTS.md rebuild session (both separate from pipeline contract work).
+---
