@@ -128,8 +128,40 @@ in INTEGRATION SCHEMA.md. Both valid — different scopes.
 
 ### Tier 2 — Black Pearl + Pages + Void (lines 1289-2166, COMPLETE)
 
-Specs: SYSTEM_ Frontend (VERIFIED), OPERATIONAL DB SCHEMA (VERIFIED),
-SECTION MAP, PAGE_LAYOUTS.md
+Specs: SYSTEM_ Frontend (VERIFIED — content approval pending, see
+ROT ENTRY 006), OPERATIONAL DB SCHEMA (VERIFIED), SECTION MAP,
+PAGE_LAYOUTS.md (null — Sage building separately)
+
+**Status: TRUTH CHECK COMPLETE (session 40).** 6 contamination items
+found in SYSTEM_ Frontend.md and design doc. Logged in ROT ENTRY 006.
+ROT_OPEN.md has 7 action items. Batch 1 (rot logging) done. Batch 2
+(section-by-section review with Sage) is next session. Batch 3
+(SYSTEM_ Frontend.md corrections) follows.
+
+**Modified methodology for Tier 2:** No auto-confirming against
+SYSTEM_ Frontend.md — the spec itself contains unauthorized content.
+Every section presented to Sage individually for yes/no/modified.
+
+**Already categorized:**
+  DEAD: sub-rhythms, curation panel, Reflective Pearl Constellation
+  DRIFT: error states standalone (belongs in Pulse)
+  WRONG: Black Pearl direction (left not right), Observatory order
+  DEAD (design doc): Page Identity type system (REMOVED session 33),
+    Page-Type Layout Anatomy (REMOVED session 33), Session Opening
+    Ritual (REMOVED session 32), Research Velocity Indicator
+    (REMOVED session 32)
+  CONFIRMED (Sage, this session): failure modes (keep)
+  STALE: components list (full-project inventory, not Tier 2)
+
+**Remaining sections needing Sage review (Batch 2):**
+  Black Pearl UI, Void page 51, UI Architecture Foundation,
+  Shared Shell + Navigation Contract, Deposit Card Component,
+  Page Load + Empty State, Black Pearl Panel Interaction Spec,
+  Session Schema, Instance Context, Deposit Weight AI Suggestion,
+  Observatory Spec (nodes confirmed, details need review),
+  Duplicate Prevention on Re-Route, Engine Baseline Recalibration,
+  AOS, Deposit Genealogy View, Annotation Layer, WSC HOLDING note,
+  Resolved Questions, Pipeline Segment
 
 
 ### Tier 3 — Axis Engines + Ven'ai (lines 2168-2938, DESIGNED)
