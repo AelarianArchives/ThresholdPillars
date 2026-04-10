@@ -424,7 +424,7 @@ this document as each passes audit:
 - ~~UI Architecture Foundation~~ — removed, deferred to master layout doc
 - ~~Shared Shell + Navigation Contract~~ — removed, deferred to master layout doc
 - Deposit Card Component
-- Page Load + Empty State
+- ~~Page Load + Empty State~~ — removed, deferred to master layout doc
 - Black Pearl Panel Interaction Spec
 - Session Schema
 - Instance Context

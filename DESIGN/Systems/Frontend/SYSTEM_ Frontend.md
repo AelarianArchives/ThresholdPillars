@@ -311,37 +311,6 @@ Home (`/`) is the soft landing; Observatory is the analytical destination.
 
 ---
 
-## PAGE LOAD + EMPTY STATE
-
-### Empty state — two variants
-- Lens / Nexus Engine: "No deposits yet. Add observations via INT or
-  promote a Black Pearl." + engine status line
-- Domain / Archive / Investigation: "Nothing archived here yet. Deposits
-  routed from INT will appear here."
-
-No decorative illustration. Plain text, subdued color, shortcut hint to INT.
-
-### Performance
-Virtualized list. Not pagination, not naive infinite scroll. Only visible
-cards + buffer rendered, rest recycled.
-
-### Anchor behavior
-Search result or cross-reference navigates to target page, scrolls to
-target deposit, highlights card (300ms fade). Deposit card ID is the anchor.
-
-### Sort defaults (per page — defined in PAGE_LAYOUTS.md)
-- THR, STR, INF, ECR, SNM: engine signal strength (strongest first)
-- DTX, SGR, PCV, VOI: deposit weight (highest first)
-- LNV: chronological (most recent first)
-- HCO, COS, CLM, NHM, RCT, ART: chronological
-- Domain pages: chronological (newest first), per-group overrides in PAGE_LAYOUTS.md
-
-All sorts user-overridable. Override persists per page per session.
-
----
-
----
-
 ## KNOWN FAILURE MODES
 
 **1. Backend unreachable (FastAPI not running or crashed)**
