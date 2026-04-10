@@ -181,9 +181,10 @@ SWARM FOUNDATION FIELDS:
                          Launch: single value.
                          Swarm phase: multiple nodes.
 
-  instance_context     — session identifier for creating instance.
-                         Launch cost: zero (always same values).
-                         Swarm phase value: critical.
+  instance_context     — pointer to the active instance in the instance
+                         registry. Phase period with date range. Sage
+                         creates manually. One active at a time.
+                         Validated non-null at deposit creation.
 
 DROPPED FIELDS (session 15 — recorded for audit trail):
   deposit_depth (deep|standard|fragment) — redundant with doc_type,
@@ -559,7 +560,7 @@ REQUEST:
       // Swarm foundation (always known at creation in V1)
       authored_by: string             — REQUIRED. V1: "sage" or "claude"
       node_id: string                 — REQUIRED. V1: single value
-      instance_context: string        — REQUIRED. V1: session identifier
+      instance_context: string        — REQUIRED. Active instance registry pointer.
 
       // Provenance
       provenance: {

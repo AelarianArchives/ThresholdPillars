@@ -36,6 +36,50 @@ of truth for what is confirmed complete.
       DESIGN/Domains/10_Nexus/Domain_Witness_Scroll.txt — complete
       DESIGN/Domains/10_Nexus/Manifest_46_Witness_Scroll.txt — complete
 
+  LNV design: LOCKED
+    Approved: 2026-04-10
+    Scope: 5-pass audit. LNV SCHEMA.md and SYSTEM_ LNV.md verified clean.
+    Findings resolved: 4 Dashboard→Observatory corrections; entry types 7–9
+      added (thread_trace/ttr, emergence_finding/emr, archive_record/arv)
+      with full content shapes, callers, source_system values
+    Cross-file: 13 files checked, 10 clean, 3 missing callers confirmed and added
+    Supporting files:
+      DESIGN/Systems/Liber_Novus/LNV SCHEMA.md — complete
+      DESIGN/Systems/Liber_Novus/SYSTEM_ LNV.md — complete
+      DESIGN/Domains/10_Nexus/Domain_Liber_Novus.txt — complete
+      DESIGN/Domains/10_Nexus/Manifest_47_Liber_Novus.txt — complete
+      DESIGN/Systems/Pipeline_Contracts/PIPELINE CONTRACT 1 — INT TO LNV.md — complete
+
+  Tier 2 sub-systems: COMPLETE
+    Approved: 2026-04-10
+    Scope: ROT 006 contamination cleared from design-session-plan.md Tier 2
+      section and SYSTEM_ Frontend.md. Sub-rhythms, curation panel, UI error
+      states, Reflective Pearl Constellation removed. Black Pearl panel
+      direction corrected (right→left). Observatory node order corrected.
+
+  Session Schema (Item 8): LOCKED
+    Approved: 2026-04-10
+    Scope: Research sessions are source files, not DB records. session_id is
+      a file reference. System sessions (synthesis_sessions, routine_sessions,
+      manifest_sessions) are DB records with auto-generated IDs.
+    Verified consistent across all files — no corrections required.
+
+  Instance Context (Item 9): LOCKED
+    Approved: 2026-04-10
+    Scope: instance_context = pointer to active instance in the instance
+      registry. Phase period with date range. Sage creates manually. One
+      active at a time. Tracks agent ID and system continuity. Validated
+      non-null at deposit creation.
+    Corrections applied:
+      DESIGN/Systems/Integration/INTEGRATION SCHEMA.md — Definition A replaced
+        with Definition B in two locations (field description + JSON block)
+      DESIGN/Systems/Witness_Scroll/WSC SCHEMA.md — "Which AI instance was
+        active" corrected to registry pointer with agent ID and system
+        continuity tracking
+    Verified clean: ARTIS SCHEMA.md, COSMOLOGY SCHEMA.md, INTEGRATION DB
+      SCHEMA.md, SYSTEM_ Integration DB.md, PIPELINE CONTRACT 1 — INT TO LNV.md,
+      SYSTEM_ Frontend.md, Manifest_35_Coupling_Oscillation.txt
+
 ---
 
 ## PURPOSE
@@ -1490,7 +1534,7 @@ This section defines the UI surface.
       Two modes: Capture and Reflect.
 
       **Trigger:** keyboard shortcut (`Ctrl+Shift+P`) or black star
-      button → slide-in panel from right, ~380px. Page visible behind
+      button → slide-in panel from left. Page visible behind
       (panel overlays, does not push content).
 
       **Context auto-capture:** page_id and instance_context

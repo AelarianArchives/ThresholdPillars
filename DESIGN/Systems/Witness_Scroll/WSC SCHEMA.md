@@ -144,7 +144,7 @@ the snapshot is stale due to failure, not due to absence of new data.
 | --- | --- | --- |
 | wsc_entry_id | auto | Primary key |
 | session_ref | string | Which session produced this entry. |
-| instance_context | string | Which AI instance was active. |
+| instance_context | string | Which instance from the instance registry was active. Tracks agent ID and system continuity. |
 | prompt_version | string | WSC prompt version. Versioned artifact. Same three changelog triggers as SNM and Void. |
 | created_at | timestamp | Written once. Never updated. |
 | entry_timestamp | string | Session date + instance context (display format, separate from created_at). |

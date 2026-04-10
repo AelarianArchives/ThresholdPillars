@@ -15575,3 +15575,150 @@ SESSION: 45
 FILES_MODIFIED:
   - DESIGN/Systems/Liber_Novus/LNV SCHEMA.md â€” Dashboardâ†’Observatory (4 corrections); thread_trace, emergence_finding, archive_record added ...
 ---
+
+---
+TIMESTAMP: 2026-04-10 07:24
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && git add "ROT_OPEN.md" "PROTOCOL/SESSION_LOG.md" && git commit -m "$(cat <<'EOF'
+Session 45 close: clean â€” LNV audit complete, ROT 008+009 resolved
+
+5-pass LNV audit: 4 Dashboardâ†’Observatory corrections, 3 missing callers
+added (thread_trace/ttr, e...
+---
+
+---
+TIMESTAMP: 2026-04-10 07:25
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Archive\SYSTEM_ Archive.md
+---
+
+---
+TIMESTAMP: 2026-04-10
+TYPE: OPEN
+SESSION: 46
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Mandatory reads: CLAUDE.md, RECURSION_REPAIR.md, ENTROPY_EXCAVATION.md,
+    ROT_REGISTRY.md (all 9 entries), ROT_OPEN.md
+  - Session 45 verified: TYPE: CLOSE exists, closed cleanly
+  - SESSION_LOG.md uncommitted: addendum HOOK entries from session 45 post-close work
+  - ROT_OPEN: 1 item — Registry 006 systemic (entropy scan ≠ content approval,
+    pre-SOT gate — not independently actionable this session)
+  - SYSTEM_ Frontend.md current state read: ROT 006 items appear removed
+    (no sub-rhythms, curation panel, UI error states, Pearl Constellation sections;
+    Black Pearl direction = left; Observatory order = correct)
+IN_PROGRESS:
+  - Tier 2 unmangle — design-session-plan.md Tier 2 section (lines ~1289-2166)
+    ROT 006 items status: unverified. Session 45 CLOSE confirms these were
+    not yet addressed in this file.
+NOT_STARTED:
+  - Registry 006 systemic SYSTEM_ file content review
+  - SOT (step 3), core files (step 4), app running (step 5)
+UNCOMMITTED: NO (prior session; SESSION_LOG addendum entries will commit this session)
+NEXT_ACTION: Verify ROT 006 infected locations in design-session-plan.md Tier 2 section.
+---
+
+---
+TIMESTAMP: 2026-04-10 08:01
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-10 08:01
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-10
+TYPE: WORK_UNIT
+SESSION: 46
+TASK: Tier 2 unmangle closed — direction fix + VERIFICATION LOG updated
+FILES_MODIFIED:
+  - .claude/plans/design-session-plan.md — Black Pearl panel direction corrected
+    (from right → from left); VERIFICATION LOG: LNV design LOCKED and Tier 2
+    sub-systems COMPLETE entries added
+  - PROTOCOL/SESSION_LOG.md — this entry
+COMPLETED:
+  - ROT 006 scan confirmed: 5 of 6 items clean. One remaining (Black Pearl
+    direction) fixed.
+  - VERIFICATION LOG updated: LNV design LOCKED, Tier 2 sub-systems COMPLETE
+  - Tier 2 unmangle fully closed
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Extract clean build plans from design-session-plan.md
+UNCOMMITTED: YES
+NEXT_ACTION: Begin extraction of clean build plans from design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-10 08:31
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-10 08:31
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-10 08:31
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Witness_Scroll\WSC SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-10 08:32
+TYPE: COMPACT_CHECKPOINT
+WORK_UNITS_TODAY: 5
+PHASE_STATE: DESIGN/Systems/Tagger/SYSTEM_ Tagger.md=audit_pass, DESIGN/Systems/TAG VOCABULARY.md=audit_pass, DESIGN/Systems/Composite_ID/COMPOSITE ID SCHEMA.md=audit_pass
+OPEN_ROT: YES
+NOTE: Context compaction occurred. Re-read CLAUDE.md mandatory rules.
+---
+
+---
+TIMESTAMP: 2026-04-10
+TYPE: WORK_UNIT
+SESSION: 46
+TASK: Items 8 & 9 — Session Schema and Instance Context field corrections
+FILES_MODIFIED:
+  - DESIGN/Systems/Integration/INTEGRATION SCHEMA.md — instance_context field
+    description corrected in two locations: line ~184 (Definition A replaced
+    with Definition B: pointer to active instance registry, phase period,
+    Sage creates manually, one active at a time, validated non-null at deposit
+    creation) and line ~562 (V1: session identifier → Active instance registry
+    pointer.)
+  - DESIGN/Systems/Witness_Scroll/WSC SCHEMA.md — instance_context description
+    corrected: "Which AI instance was active" → "Which instance from the
+    instance registry was active. Tracks agent ID and system continuity."
+  - PROTOCOL/SESSION_LOG.md — this entry
+COMPLETED:
+  - Full scan of all DESIGN/ files for instance_context field definitions
+  - Definition A (stale: session identifier, launch cost zero) found and
+    corrected in 2 locations in INTEGRATION SCHEMA.md
+  - Ambiguous "AI instance" language in WSC SCHEMA.md corrected to confirmed
+    wording (instance registry pointer, agent ID, system continuity)
+  - Verification scan confirmed: no remaining Definition A language in DESIGN/;
+    api/ = 0 hits; backend/services/claude.py INSTANCE_ID confirmed as separate
+    concept (app startup UUID for Claude API agent identity, not archive instance)
+  - Session Schema (Item 8) confirmed: research sessions are source files, not
+    DB records; system sessions (synthesis, routine, manifest) are DB records
+    with auto-generated IDs — no corrections needed (consistent across files)
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Next section items from Sage's extraction list
+UNCOMMITTED: YES
+NEXT_ACTION: Sage to provide next section item for design-session-plan.md extraction
+---
+
+---
+TIMESTAMP: 2026-04-10 08:36
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
