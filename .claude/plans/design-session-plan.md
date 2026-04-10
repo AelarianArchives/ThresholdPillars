@@ -1277,7 +1277,7 @@ deposit fields assigned → enters PostgreSQL as archive entry.
 instances/annotations/aos_records tables. Part 2: SYSTEM_ Frontend.md
 rewritten with full Tier 2 UI architecture (page types, shell, navigation,
 deposit card, layout anatomy, Black Pearl panel, dashboard,
-error states, library requirements).
+library requirements).
 
 **What gets built:** The 51 page surfaces that receive deposits from INT.
 Black Pearl UI (accessible from any page + Observatory). Page identity
@@ -1740,29 +1740,6 @@ IDENTITY removal note above).
 
 ---
 
-### UI ERROR STATES
-
-- [x] DESIGNED. What Sage sees when things fail. Technical failure
-      handling defined elsewhere — this is the user-facing surface.
-
-      **Persistent status indicator:** bottom of sidebar, above system
-      footer. Always visible.
-
-      Four states (priority order, highest wins):
-      1. "Needs attention" — failures requiring Sage's decision
-      2. "Running" — background operations in progress
-      3. "Recalibration due" — engine threshold review recommended
-      4. "All clear" — nothing to report
-
-      Tap indicator → system status panel (slide-in from sidebar).
-      Panel: all active issues grouped by type, each with status, age,
-      and direct link to affected surface.
-
-      **On individual pages:** affected deposit cards show a quiet
-      left-edge color change (not a badge, not a banner). Subtle signal
-      that something about this deposit needs attention — hover reveals
-      detail.
-
 ---
 
 ### WSC DESIGN — HOLDING
@@ -1972,8 +1949,6 @@ All open questions answered in session 15:
 - ~~No baseline recalibration trigger~~ → RESOLVED. Corpus 2× multiplier
   or variance threshold triggers AOS recommendation. See Engine Baseline
   Recalibration Trigger.
-- ~~No UI error states~~ → RESOLVED. Persistent sidebar indicator, four
-  states, system status panel, card-level indicators. See UI Error States.
 - ~~No external notification system~~ → RESOLVED. AOS (Automated
   Observation Signal). Engine + Sage triggers, integrity hash, immediate +
   digest delivery. See Automated Observation Signal.

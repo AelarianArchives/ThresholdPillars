@@ -28,7 +28,6 @@ When rot is fixed:
 
 ## OPEN ITEMS
 
-- **Error states standalone** (Registry 006) — 2026-04-09 session 40. Belongs in Pulse (Observatory node 8), not standalone sidebar system. Affects: SYSTEM_ Frontend.md, design-session-plan.md.
 - **Reflective Pearl Constellation** (Registry 006) — 2026-04-09 session 40. Drift. Not a confirmed design item. Affects: SYSTEM_ Frontend.md, design-session-plan.md.
 - **Black Pearl panel direction** (Registry 006) — 2026-04-09 session 40. Specs say right side, Sage says left side. Affects: SYSTEM_ Frontend.md, design-session-plan.md.
 - **Observatory node order** (Registry 006) — 2026-04-09 session 40. Order wrong in both specs. Sage provided correct order. Affects: SYSTEM_ Frontend.md, design-session-plan.md.

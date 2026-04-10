@@ -388,24 +388,6 @@ All sorts user-overridable. Override persists per page per session.
 
 ---
 
-## UI ERROR STATES
-
-### Persistent status indicator
-Bottom of sidebar. Always visible. Four states (priority order):
-1. "Needs attention" — failures requiring Sage's decision
-2. "Running" — background operations in progress
-3. "Recalibration due" — engine threshold review recommended
-4. "All clear" — nothing to report
-
-Tap → system status panel (slide-in from sidebar). All active issues
-grouped by type, each with status, age, and direct link.
-
-### Page-level indicators
-Affected deposit cards show quiet left-edge color change. Subtle signal —
-hover reveals detail.
-
----
-
 ## ~~SESSION OPENING RITUAL~~ — REMOVED (session 32)
 
 Drift. Redundant with Field Log (Observatory node 5). Deleted.
