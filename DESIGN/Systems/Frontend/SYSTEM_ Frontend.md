@@ -188,12 +188,6 @@ Per-page layout specs are defined in PAGE_LAYOUTS.md. That file is the
 authority for what each page looks like — layout, density, controls, accent,
 background, engine component, deposit area, page-specific UI.
 
-This section previously contained a "visual type system" (8 type labels:
-Gateway, Lens, Synthesis, Engine, Output, Scroll, Investigation, Domain)
-that was removed in session 33. The type system introduced secondary names
-competing with canonical page names and pre-decided layouts by category
-instead of per-page. See design-session-plan.md session 33 removal notes.
-
 **What is retained:**
 
 Color system — per-page or per-group accents. Valid design decision,
@@ -287,10 +281,8 @@ Three provenance icons: INT batch · Manual · Black Pearl promoted
 
 ## PAGE LAYOUT
 
-Per-page layout specs are defined in PAGE_LAYOUTS.md. This section
-previously contained a "page-type layout anatomy" organized by type
-labels (Gateway, Lens, Synthesis, etc.) — removed in session 33.
-PAGE_LAYOUTS.md is the authority for per-page layout decisions.
+Per-page layout specs are defined in PAGE_LAYOUTS.md. That file is the
+authority for per-page layout decisions.
 
 ---
 
@@ -351,8 +343,6 @@ Home (`/`) is the soft landing; Observatory is the analytical destination.
 ### Removed from Observatory
 - Black Pearl — lives in page nav
 - WSC handoff — redundant
-- Session Opening Ritual (P1) — drift, deleted
-- Research Velocity Indicator (P6) — drift, deleted
 
 ---
 
@@ -384,14 +374,6 @@ target deposit, highlights card (300ms fade). Deposit card ID is the anchor.
 All sorts user-overridable. Override persists per page per session.
 
 ---
-
-## ~~SESSION OPENING RITUAL~~ — REMOVED (session 32)
-
-Drift. Redundant with Field Log (Observatory node 2). Deleted.
-
-## ~~RESEARCH VELOCITY INDICATOR~~ — REMOVED (session 32)
-
-Drift. Colored activity bar in sidebar was never the plan. Deleted.
 
 ---
 

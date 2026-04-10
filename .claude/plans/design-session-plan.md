@@ -1279,15 +1279,10 @@ deposit card, layout anatomy, Black Pearl panel, dashboard,
 library requirements).
 
 **What gets built:** The 51 page surfaces that receive deposits from INT.
-Black Pearl UI (accessible from any page + Observatory). Page identity
-system (visual language per page type). Void as page 51 in Nexus.
-Frontend architecture doc.
+Black Pearl UI. Void as standalone page 51. Frontend architecture doc.
 
 **Why this is Tier 2:** Pages are the surfaces deposits land on. They need
 to exist as targets before engines (Tier 3) can compute from what they hold.
-Simpler than engines — each page's deposit behavior is mostly "accept
-deposit, index through my lens." But page identity and visual language
-should be established here so every subsequent tier builds consistently.
 
 ---
 
@@ -1326,21 +1321,6 @@ This section defines the UI surface.
         Observatory says "where haven't you looked?"
         Void says "where you looked and found nothing"
       · Engine/visualization design is Tier 4 (depends on engines existing first)
-
----
-
-### ~~PAGE IDENTITY — VISUAL TYPE SYSTEM~~ — REMOVED (session 33)
-
-**REMOVED.** The type system introduced secondary names (Gateway, Lens,
-Synthesis, Engine, Output, Scroll, Investigation, Domain) that competed
-with canonical page/system names. It pre-decided layouts by category
-instead of per-page, removing the researcher's architectural control and
-leaving only "describe the page's feelings." Pages are called by their
-canonical names (INT, THR, MTM, LNV, etc.). Per-page layout specs live
-in PAGE_LAYOUTS.md — Sage owns that file directly.
-
-Color system (per-page or per-group accent) is a valid frontend decision.
-Not tied to the type system. Retained as an open design item.
 
 ---
 
@@ -1527,15 +1507,6 @@ Not tied to the type system. Retained as an open design item.
 
 ---
 
-### ~~PAGE-TYPE LAYOUT ANATOMY~~ — REMOVED (session 33)
-
-**REMOVED.** Pre-decided layouts per type category. Per-page layout specs
-are Sage's architectural decision, defined in PAGE_LAYOUTS.md. The type
-system this section was organized around has been removed (see PAGE
-IDENTITY removal note above).
-
----
-
 ### SESSION SCHEMA
 
 - [x] DESIGNED. Research sessions (Sage sits down, does work, closes)
@@ -1675,8 +1646,6 @@ IDENTITY removal note above).
       **Removed from Observatory:**
       - Black Pearl — lives in page nav
       - WSC handoff — redundant
-      - Session Opening Ritual (P1) — drift, deleted
-      - Research Velocity Indicator (P6) — drift, deleted
 
 ---
 
@@ -1794,13 +1763,6 @@ IDENTITY removal note above).
 
 ---
 
-### ~~SESSION OPENING RITUAL (P1)~~ — REMOVED (session 32)
-
-Drift from temporal ambiance discussion. Timed overlay concept redundant
-with Field Log (Observatory node 5). Deleted.
-
----
-
 ### DEPOSIT GENEALOGY VIEW (P2)
 
 - [x] DESIGNED. Every deposit has a lifecycle: Black Pearl → capture →
@@ -1867,21 +1829,11 @@ with Field Log (Observatory node 5). Deleted.
 
 ---
 
-### ~~RESEARCH VELOCITY INDICATOR (P6)~~ — REMOVED (session 32)
-
-Drift from temporal ambiance discussion. Colored activity bar in sidebar
-was never the plan. Deleted.
-
----
-
 ### RESOLVED QUESTIONS (Tier 2)
 
 All open questions answered in session 15:
 
 - ~~Void page_code?~~ → `VOI`. Extends Nexus as page 51. No renumbering.
-- ~~Page identity: how much differentiation?~~ → Strong. Different layouts
-  per type, belonging to same family. Color system: yes. Per-page layout
-  specs in PAGE_LAYOUTS.md.
 - ~~Black Pearl UI?~~ → Floating black star button + keyboard shortcut.
   Minimal quick-capture panel. Recent Pearls on Observatory only.
 - ~~Shared UI patterns?~~ → Consistent base patterns (sort, filter, search)
@@ -1903,8 +1855,6 @@ All open questions answered in session 15:
 - ~~Black Pearl panel no interaction spec~~ → RESOLVED. Slide-in panel,
   capture mode, auto-context, rapid capture flow, promotion queue.
   See Black Pearl Panel — Interaction Spec.
-- ~~No page-type layout anatomy~~ → ~~RESOLVED~~ → REMOVED (session 33).
-  Type system removed. Per-page layout specs live in PAGE_LAYOUTS.md.
 - ~~Drifted page codes~~ → RESOLVED. All page codes verified against
   canonical SECTION MAP.md. 9 corrections applied. Missing Lattice group
   (Group 2) added.
@@ -1928,15 +1878,10 @@ All open questions answered in session 15:
 - ~~No external notification system~~ → RESOLVED. AOS (Automated
   Observation Signal). Engine + Sage triggers, integrity hash, immediate +
   digest delivery. See Automated Observation Signal.
-- ~~Session opening ritual~~ → REMOVED (session 32). Drift. Redundant
-  with Field Log (Observatory node 5).
 - ~~No deposit lifecycle view~~ → RESOLVED. Genealogy timeline on card
   expand. See Deposit Genealogy View (P2).
 - ~~No annotation layer~~ → RESOLVED. Separate annotations table,
   polymorphic reference, no schema cascades. See Annotation Layer (P5).
-- ~~No research velocity signal~~ → REMOVED (session 32). Drift.
-  Colored activity bar in sidebar was never the plan.
-
 **Void registrations (session 18):**
 - VOI-4: Void prompt registered as versioned artifact with changelog
   triggers.
@@ -5979,12 +5924,6 @@ Decisions made during design sessions. Recorded with reasoning.
 - Lives on Observatory (Terrain node). Navigation + research planning tool.
 - Tier 7.
 
-**Page identity confirmed:**
-- 51 pages should feel different based on function type.
-- Gateway, Lens, Synthesis, Engine, Output, Scroll, Investigation, Domain.
-- Visual language signals function. Not decorative — structural.
-- Tier 2.
-
 **V1-V5 trajectory documented:**
 - V1: foundation with multi-agent metadata. V2: swarm. V3: automated
   computation. V4: proactive partner. V5: transmissible research.
@@ -6085,11 +6024,6 @@ Void (page 51) designed:
 - Promoted to standalone (session 38). Formerly Nexus extension.
 - No renumbering. Build-time artifacts: Domain_Void.txt, Manifest_51_Void.txt
 - Engine/visualization design deferred to Tier 4
-
-~~Page identity — visual type system designed~~ — REMOVED (session 33).
-Type system introduced secondary names (Gateway, Lens, Synthesis, etc.)
-that competed with canonical page names. Removed. Per-page layout specs
-live in PAGE_LAYOUTS.md. Color system retained as open design item.
 
 UI architecture foundation:
 - One frontend architecture doc covering all types
