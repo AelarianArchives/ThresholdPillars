@@ -30,4 +30,4 @@ When rot is fixed:
 
 - **SYSTEMIC: Entropy scan does not equal content approval** (Registry 006) — 2026-04-09 session 40. Verified status means rot-pattern-clean, not Sage-approved content. All SYSTEM_ overview files on VERIFIED list need content-level review before SOT.
 - **V1-V5 build phase trajectory — pure hallucination** (Registry 008) — 2026-04-09 session 45. design-session-plan.md lines 201-218. Five-phase version roadmap never authorized by Sage. Remove the block.
-- **LINVARA — hallucinated page name for LNV** (Registry 009) — 2026-04-09 session 45. Page 47 is Libre Novus. "Linvara" was never authorized. Scope unknown — full project scan required before correction. Affects every seed, synced page, and system touching LNV page identity.
+- **LINVARA — hallucinated page name for LNV** (Registry 009) — 2026-04-09 session 45. Page 47 is Liber Novus. "Linvara" was never authorized. Scope unknown — full project scan required before correction. Affects every seed, synced page, and system touching LNV page identity.

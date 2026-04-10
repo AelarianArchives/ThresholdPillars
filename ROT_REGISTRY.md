@@ -1638,7 +1638,7 @@ What it falsely claimed:
     name had been injected into the build without Sage's knowledge
 
 Correct state:
-  - Page 47 is Libre Novus
+  - Page 47 is Liber Novus
   - Page code: LNV
   - Group: Nexus
   - The name Linvara was never authorized by Sage. It is a purely
