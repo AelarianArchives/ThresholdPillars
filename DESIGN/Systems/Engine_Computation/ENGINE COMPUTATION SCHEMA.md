@@ -481,7 +481,7 @@ computation snapshots (which are automatic and feed MTM).
                           Structure varies per engine visualization.
 
     note                — text, nullable
-                          Sage's optional annotation at capture time.
+                          Sage's optional note at capture time.
                           Why this moment was worth preserving.
 
     lnv_routed          — boolean, not null, default false

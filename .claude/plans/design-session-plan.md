@@ -86,6 +86,24 @@ of truth for what is confirmed complete.
       SCHEMA.md, SYSTEM_ Integration DB.md, PIPELINE CONTRACT 1 — INT TO LNV.md,
       SYSTEM_ Frontend.md, Manifest_35_Coupling_Oscillation.txt
 
+  Item 17 — Annotation Layer: LOCKED
+    Approved: 2026-04-10
+    Scope: Researcher marginalia on any analytical object. One table
+      (annotations), polymorphic reference (annotated_type + annotated_id),
+      zero changes to existing schemas. Visible only in expanded view of
+      annotated object. Exportable per page as research commentary layer.
+      annotated_type enum: deposit | finding | hypothesis | void_output
+      | engine_snapshot. WSC excluded by architecture (immutable entries).
+      AOS records excluded (system records only — Sage-confirmed).
+    Table location: DESIGN/Systems/Integration/INTEGRATION DB SCHEMA.md
+    Bug fixed: visualization_snapshot note field description used "annotation"
+      in two files — corrected to "note" in ENGINE COMPUTATION SCHEMA.md and
+      INTEGRATION DB SCHEMA.md to avoid confusion with the annotations system.
+    Verified clean: SYSTEM_ Integration DB.md, SYSTEM_ Frontend.md,
+      WSC SCHEMA.md, SYSTEM_ WSC.md, THREAD TRACE SCHEMA.md (thread_annotations
+      is a separate system), LNV SCHEMA.md, SYSTEM_ Thread Trace.md,
+      PATTERN CONVERGENCE SCHEMA.md, INTEGRATION SCHEMA.md
+
   Items 13 + 15 — AOS System (Engine Baseline Recalibration + Automated Observation Signal): LOCKED
     Approved: 2026-04-10
     Scope: Items 13 and 15 merged. AOS and Google Integration unified into
@@ -1835,37 +1853,12 @@ This section defines the UI surface.
 
 ### ANNOTATION LAYER (P5)
 
-- [x] DESIGNED. Researcher marginalia on any surface. Distinct from
-      deposits (don't enter the pipeline) and from Pearls (not captures
-      or reflections — notes on existing content).
-
-      **What they are:**
-      · Time-stamped researcher commentary on an existing object
-      · Stored separately, linked to the annotated object
-      · Visible only in expanded view of the annotated object
-      · Exportable per page as a research commentary layer
-
-      **Implementation: separate annotations table (Option A).**
-      One table, zero changes to existing schemas.
-
-        annotation:
-          annotation_id: string
-          annotated_type: deposit | finding | hypothesis | void_output
-                          | engine_snapshot
-          annotated_id: string         — ID of the annotated object
-          content: string              — free text
-          page_context: string | null  — where Sage was when annotating
-          created_at: timestamp
-
-      Polymorphic reference: `annotated_type` + `annotated_id` resolve
-      to the target object at query time. No schema changes on deposits,
-      findings, hypotheses, or any other existing table.
-
-      **Use case:** Sage reads a Void output and wants to note "this
-      conflicts with what I read in session 47" without creating a
-      deposit. That note lives on the Void output, timestamped,
-      permanently. The system's equivalent of pencil notes in a physical
-      archive.
+- [x] COMPLETE. Researcher marginalia on any analytical object. One table,
+      polymorphic reference, zero cascade to existing schemas. AOS records
+      explicitly excluded (system records only).
+      Table defined in INTEGRATION DB SCHEMA.md — annotations.
+      annotated_type enum: deposit | finding | hypothesis | void_output
+      | engine_snapshot. WSC excluded by architecture (immutable entries).
 
 ---
 

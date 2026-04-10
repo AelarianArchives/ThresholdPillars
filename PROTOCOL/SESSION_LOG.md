@@ -15820,7 +15820,63 @@ FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan
 ---
 
 ---
+TIMESTAMP: 2026-04-10
+TYPE: WORK_UNIT
+SESSION: 46
+TASK: Item 17 — Annotation Layer locked, full file scan, bugs corrected
+FILES_MODIFIED:
+  - DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md —
+    visualization_snapshot note field: "annotation at capture time" →
+    "note at capture time"
+  - DESIGN/Systems/Integration/INTEGRATION DB SCHEMA.md — same fix,
+    visualization_snapshots table
+  - .claude/plans/design-session-plan.md — Annotation Layer section
+    replaced with clean reference; Item 17 added to VERIFICATION LOG
+  - PROTOCOL/SESSION_LOG.md — this entry
+COMPLETED:
+  - Full scan of all DESIGN files for annotation references
+  - All references categorized: general annotations table (clean),
+    thread_annotations (separate system, clean), plain-language usage
+    (fine), inline note fields (one bug found in two files)
+  - Bug corrected: "annotation" → "note" in visualization_snapshot
+    note field description (ENGINE COMPUTATION SCHEMA.md and
+    INTEGRATION DB SCHEMA.md)
+  - AOS records confirmed not annotatable (Sage-confirmed)
+  - VERIFICATION LOG updated
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Next section items from Sage's extraction list
+UNCOMMITTED: YES
+NEXT_ACTION: Commit. Sage to provide next section item.
+---
+
+---
 TIMESTAMP: 2026-04-10 09:16
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-10 09:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Engine_Computation\ENGINE COMPUTATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-10 09:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION DB SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-10 09:33
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-10 09:34
 TYPE: HOOK_WRITE
 FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
 ---

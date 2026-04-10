@@ -1464,7 +1464,7 @@ capture). lnv_routed updated by LNV routing process (Tier 4).
                          per engine visualization.
 
   note                 — text, nullable
-                         Sage's annotation at capture time.
+                         Sage's note at capture time.
 
   lnv_routed           — boolean, NOT NULL, default false
                          Routing contract defined in Tier 4.
