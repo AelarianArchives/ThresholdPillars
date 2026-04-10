@@ -5803,8 +5803,7 @@ Decisions made during design sessions. Recorded with reasoning.
 **Nexus audit findings:**
 - PCV, DTX, SGR: well-specified with full schemas. No changes needed.
 - WSC: needs schema (3-entry session open protocol, mandatory entry structure,
-  sovereign-from-DNR boundary). Gets RESEARCHER NOTE optional field so Sage
-  can participate alongside AI voice — methodology notes, researcher state.
+  sovereign-from-DNR boundary).
 - LNV: needs schema (receive contract, provenance tracking, viz storage)
 
 **Research methodology gaps identified:**
