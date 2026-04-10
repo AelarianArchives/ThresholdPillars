@@ -38,7 +38,7 @@ against the document if editing.
 **TIER 7 — Observatory, navigation, live write, export, pipelines (NOT STARTED):**
 
   Observatory (session 32 — 8-node constellation):
-  - [ ] Constellation layout: Resonance Engine, Terrain, Timeline, Field Signals, Field Log, Field Review, Pulse, Void
+  - [ ] Constellation layout: Field Review, Field Log, Field Signals, Terrain, Timeline, Resonance Engine, Void, Pulse
 
   Google Integration:
   - [ ] DESIGNED: 2 accounts (Larimar=email, Threshold Studies=Drive), OAuth, two-way Drive pipeline
@@ -1655,22 +1655,22 @@ IDENTITY removal note above).
       Replaces the prior Zone A/B/C layout. Observatory is a constellation
       of 8 clickable nodes, not a dense 3-zone dashboard.
 
-      1. **Resonance Engine** — full visualization, centerpiece
-      2. **Terrain** — UMAP coverage map + custom visual overlay. Where
+      1. **Field Review** — recent deposits with recall to INT. No time
+         limit. Status change (deposited → recalled), not deletion.
+      2. **Field Log** — what happened since last session. Recent deposits,
+         findings, engine events.
+      3. **Field Signals** — AOS events, engine findings, hypothesis
+         crossings (PCV), active patterns. Merged signal surface.
+      4. **Terrain** — UMAP coverage map + custom visual overlay. Where
          deposits cluster and where the research hasn't looked yet. Built
          from embedding vectors. Observatory = "where haven't you looked?"
          Void = "where you looked and found nothing." (VOI-6)
-      3. **Timeline** — temporal deposit view across all 51 pages
-      4. **Field Signals** — AOS events, engine findings, hypothesis
-         crossings (PCV), active patterns. Merged signal surface.
-      5. **Field Log** — what happened since last session. Recent deposits,
-         findings, engine events.
-      6. **Field Review** — recent deposits with recall to INT. No time
-         limit. Status change (deposited → recalled), not deletion.
-      7. **Pulse** — calibration approvals, system alerts, pattern
+      5. **Timeline** — temporal deposit view across all 51 pages
+      6. **Resonance Engine** — full visualization, centerpiece
+      7. **Void** — absence flag summary
+      8. **Pulse** — calibration approvals, system alerts, pattern
          notifications. Stale engines and embedding failures routed to
          automated alerts (backend), not shown here.
-      8. **Void** — absence flag summary
 
       **Removed from Observatory:**
       - Black Pearl — lives in page nav

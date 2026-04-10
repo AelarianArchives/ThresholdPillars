@@ -14670,3 +14670,74 @@ TASK: ROT_OPEN item 4 â€” Reflective Pearl Constellation removed
 FILES_MODIFIED:
   - DESIGN/Systems/Frontend/SYSTEM_ Frontend.md â€” removed "Not constellation no...
 ---
+
+---
+TIMESTAMP: 2026-04-09 20:50
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\ROT_OPEN.md
+---
+
+---
+TIMESTAMP: 2026-04-09 20:52
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 20:52
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 20:52
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Frontend\SYSTEM_ Frontend.md
+---
+
+---
+TIMESTAMP: 2026-04-09 20:52
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 20:52
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.claude\plans\design-session-plan.md
+---
+
+---
+TIMESTAMP: 2026-04-09 20:53
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\ROT_OPEN.md
+---
+
+---
+TIMESTAMP: 2026-04-09
+TYPE: WORK_UNIT
+SESSION: 42
+TASK: ROT_OPEN items 5+6 — Black Pearl direction (already clean) + Observatory node order corrected
+FILES_MODIFIED:
+  - DESIGN/Systems/Frontend/SYSTEM_ Frontend.md — Observatory node order corrected in components table and constellation layout section (4 locations). Node 5 cross-reference updated to node 2.
+  - .claude/plans/design-session-plan.md — Observatory node order corrected in Tier 7 todo and Observatory spec section
+  - ROT_OPEN.md — Black Pearl direction entry deleted (was already clean from F8 fix), Observatory node order entry deleted
+COMPLETED:
+  - Observatory correct order: 1.Field Review 2.Field Log 3.Field Signals 4.Terrain 5.Timeline 6.Resonance Engine 7.Void 8.Pulse
+  - Black Pearl direction was already fixed in F8 earlier this session. ROT_OPEN entry removed.
+STATUS: Complete
+---
+
+---
+TIMESTAMP: 2026-04-09 20:53
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_LOG.md" << 'EOF'
+
+---
+TIMESTAMP: 2026-04-09
+TYPE: WORK_UNIT
+SESSION: 42
+TASK: ROT_OPEN items 5+6 â€” Black Pearl direction (already clean) + Observatory node order corrected
+FILES_MODIFIED:
+  - DESIGN/Systems/Frontend/SYSTEM_ Frontend...
+---
