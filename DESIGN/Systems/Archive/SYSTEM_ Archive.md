@@ -126,7 +126,7 @@ PCV treats sealed records as confirmed historical signal — not hypotheses awai
 
 **Liber Novus (LNV · 47)**
 
-LNV holds sealed records as permanent provenance anchors for findings that reference the same material. Sealed records arriving on LNV carry their provenance intact — arc_id, retired_at, source origin, confirmed routing. LNV holds them without editorializing.
+Receives sealed records via POST /api/lnv/receive (entry_type: archive_record). Triggered by INT post-retirement sequence after authentication threshold is met. Records arrive with provenance intact — arc_id, retired_at, source origin, confirmed routing. LNV holds them without editorializing.
 
 **RCT (38)**
 
