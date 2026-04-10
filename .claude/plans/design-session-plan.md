@@ -170,6 +170,32 @@ of truth for what is confirmed complete.
       DESIGN/Domains/11_Void/Manifest_51_Void.txt — AOS entry points
         reference correct as written
 
+  Item 5 — Deposit Card Component: LOCKED
+    Approved: 2026-04-10
+    Scope: Base card (DOC_TYPE / TAGS / STAMP top, content preview middle,
+      SESSION DATE / PROVENANCE ICON / WEIGHT BADGE bottom). Three provenance
+      icons: INT batch / Manual / Black Pearl promoted. Expand-on-click: full
+      content, metadata, provenance chain, engine signal (patterns this deposit
+      contributes to and their signal bands), edit access (tags and annotations
+      only), genealogy timeline, annotations. Deposit list sort behavior:
+      per-page (PAGE_LAYOUTS.md), null weight sorts to bottom. Per-page
+      variations: THR/STR/INF/ECR/SNM colored left edge; DTX/SGR/PCV/VOI
+      compact 1-line, sort default deposit_weight descending; MTM no cards;
+      WSC no cards; domain pages provenance icon prominent; HCO/COS/CLM/NHM/
+      RCT/ART base card no variation. LNV removed — LNV uses LnvGalleryCard
+      (separate component), deposit cards do not appear on the LNV page.
+      Media deposits: separate card type (MediaDepositCard) — large thumbnail,
+      summary alongside, lightbox on click.
+    Canonical file:
+      DESIGN/Systems/Frontend/SYSTEM_ Frontend.md — DEPOSIT CARD COMPONENT section
+    Changes applied to SYSTEM_ Frontend.md:
+      — Engine signal definition updated: "and their signal bands" added
+      — Edit access "notes" corrected to "annotations"
+      — DTX/SGR/PCV/VOI sort default added (deposit_weight descending)
+      — LNV entry removed (rot)
+      — Media deposit card section added
+      — MediaDepositCard added to component list and files section
+
 ---
 
 ## PURPOSE
@@ -1528,55 +1554,8 @@ This section defines the UI surface.
 
 ### DEPOSIT CARD COMPONENT
 
-- [x] DESIGNED. The most common UI element — appears on all 51 pages.
-      Base card with per-page variations where needed.
-
-      **Base card (all pages):**
-
-      ┌─────────────────────────────────────────────────┐
-      │ [DOC_TYPE BADGE] [TAGS]            [STAMP]      │
-      │                                                  │
-      │ Content preview (~3 lines)                       │
-      │                                                  │
-      │ [SESSION DATE] [PROVENANCE ICON] [WEIGHT BADGE]  │
-      └─────────────────────────────────────────────────┘
-
-      Stamp displayed monospace, small, far right, never truncated,
-      never a link. Format: canonical Composite ID
-      (`TS · [PAGE] · [PHASE] · [YYYY-MM] · [SEQ]`).
-
-      **Three provenance icons:**
-      · INT batch — parsed from source document
-      · Manual — native deposit on INT
-      · Black Pearl promoted — promoted from Pearl capture
-
-      **Expand on click:**
-      · Full content text
-      · All metadata: doc_type, source_format, observation_presence,
-        confidence, deposit_weight, notes, source_type
-      · Provenance chain: which session, which batch (if applicable),
-        INT origin stamp
-      · Engine signal: if deposit has been processed by an engine,
-        which patterns it contributes to (linked)
-      · Edit access for tags and notes only (not content, not routing)
-      · Deposit genealogy timeline (see P2 below)
-      · Annotations (see P5 below)
-
-      **Per-page card variations:**
-
-      · **THR, STR, INF, ECR, SNM:** engine signal indicator as colored
-        left edge (signal band color). Engine-relevant tags prominent.
-        Default sort: engine signal strength.
-      · **Domain pages:** chronological default sort. Provenance icon
-        prominent. Per-page layout in PAGE_LAYOUTS.md.
-      · **DTX, SGR, PCV, VOI:** compact card (1-line content preview). Weight
-        and doc_type prominent. Default sort: deposit weight.
-      · **MTM:** no deposit cards — findings display uses a different component.
-      · **HCO, COS, CLM, NHM, RCT, ART:** base card, no variation.
-      · **LNV:** snapshot card variant — displays visualization
-        thumbnail instead of text content. Expand shows full snapshot.
-      · **WSC:** no deposit cards — WSC has its own entry display
-        format (long-form reading surface, Tier 4 design).
+> **LOCKED — 2026-04-10.** See DESIGN/Systems/Frontend/SYSTEM_ Frontend.md —
+> DEPOSIT CARD COMPONENT section. All decisions finalized there.
 
 ---
 

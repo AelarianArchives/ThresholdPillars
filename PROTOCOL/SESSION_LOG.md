@@ -16038,3 +16038,37 @@ NOT_STARTED:
 UNCOMMITTED: YES
 NEXT_ACTION: Commit and push session 46 close. Next session: remaining Tier 2 items.
 ---
+
+---
+TIMESTAMP: 2026-04-10
+TYPE: WORK_UNIT
+SESSION: 46
+TASK: Item 5 — Deposit Card Component locked, SYSTEM_ Frontend.md updated
+FILES_MODIFIED:
+  - DESIGN/Systems/Frontend/SYSTEM_ Frontend.md — 6 changes:
+      (1) Engine signal: "and their signal bands" added
+      (2) Edit access: "notes" corrected to "annotations"
+      (3) DTX/SGR/PCV/VOI: sort default added (deposit_weight descending)
+      (4) LNV entry removed (rot — LNV uses LnvGalleryCard, not deposit cards)
+      (5) Media deposit card section added (large thumbnail, summary alongside,
+          lightbox on click, MediaDepositCard component)
+      (6) MediaDepositCard added to component table and files section
+  - .claude/plans/design-session-plan.md — DEPOSIT CARD COMPONENT section
+      replaced with clean reference; Item 5 added to VERIFICATION LOG
+  - PROTOCOL/SESSION_LOG.md — this entry
+COMPLETED:
+  - Structural review: 4 issues identified; 2 resolved (engine signal,
+    annotations), 1 confirmed rot (LNV), 1 gap filled (media card)
+  - LNV confirmed as lnv_entries gallery only (LnvGalleryCard) — deposit
+    cards confirmed absent from LNV page
+  - Engine signal confirmed: patterns this deposit contributes to and their
+    signal bands. Verified against ENGINE COMPUTATION SCHEMA.md.
+  - Edit access "notes" = annotations (separate table, polymorphic ref)
+  - Media card and sort default gaps filled per Sage confirmation
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Session close
+UNCOMMITTED: YES
+NEXT_ACTION: Commit and push. Assess session close.
+---

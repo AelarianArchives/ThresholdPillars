@@ -73,6 +73,7 @@ frontend/
 | Shell | Persistent sidebar navigation, section header, global layout elements |
 | NavigationSidebar | Fixed left sidebar — 9 collapsible groups, pinned utilities, state indicators |
 | DepositCard | Base deposit card with per-page variations — appears on all 51 pages |
+| MediaDepositCard | Media deposit card — large thumbnail, summary alongside, lightbox on click |
 | CompositeId | Renders composite ID stamp display |
 | TaggerPanel | Tag suggestion UI — sends context, displays candidates |
 | DepositPanel | Entry input form — collects observation, sends to backend |
@@ -222,8 +223,8 @@ Three provenance icons: INT batch · Manual · Black Pearl promoted
 - All metadata: doc_type, source_format, observation_presence,
   confidence, deposit_weight, notes, source_type
 - Provenance chain: session, batch (if applicable), INT origin stamp
-- Engine signal: patterns this deposit contributes to (linked)
-- Edit access: tags and notes only (not content, not routing)
+- Engine signal: patterns this deposit contributes to and their signal bands (linked)
+- Edit access: tags and annotations only (not content, not routing)
 - Deposit genealogy timeline (stages from Pearl capture through
   hypothesis contribution)
 - Annotations (researcher marginalia on this deposit)
@@ -235,12 +236,19 @@ Three provenance icons: INT batch · Manual · Black Pearl promoted
 
 ### Per-page card variations
 - **THR, STR, INF, ECR, SNM:** colored left edge (signal band). Engine-relevant tags prominent
-- **DTX, SGR, PCV, VOI:** compact card (1-line preview). Weight and doc_type prominent
+- **DTX, SGR, PCV, VOI:** compact card (1-line preview). Weight and doc_type prominent. Default sort: deposit_weight descending
 - **MTM:** no deposit cards — findings display component
-- **LNV:** snapshot card variant — viz thumbnail, not text
 - **WSC:** no deposit cards — own entry display (Tier 4)
 - **Domain pages:** provenance icon prominent. Per-page layout in PAGE_LAYOUTS.md
 - **HCO, COS, CLM, NHM, RCT, ART:** base card, no variation
+
+### Media deposit card
+
+Media deposits use a separate card type (MediaDepositCard component) — not a variation of the base card.
+
+- Large thumbnail
+- Summary text alongside thumbnail
+- Lightbox on click (full media view)
 
 ---
 
@@ -355,7 +363,7 @@ Guard: sort overrides stored in UI store per page per session. Reset on session 
 | frontend/src/routes/+layout.svelte | Root layout — shared shell (minimal scaffold) | LIVE |
 | frontend/src/routes/+page.svelte | Root page — Home, soft landing (minimal scaffold) | LIVE |
 | frontend/src/lib/index.ts | Lib barrel export | LIVE |
-| frontend/src/lib/components/ | Shared components (Shell, NavigationSidebar, DepositCard, CompositeId, TaggerPanel, DepositPanel, BlackPearlPanel, Observatory, ThreadTrace, ResonanceCanvas, DepositGenealogy, ARTISWorkbench, ARTISRegistryPanel, ARTISPagePanel, SciencePingIndicator, SciencePingFlow, ComputationSnapshotCard, MappingReviewCard, FindingCard, FindingsPanel, FindingInlineIndicator, ResidualPanel, ResidualCard, CouplingAnalysis, HarmonicSpectrum, CorrelationScatter, ClusterDendrogram, EntropyComparisonBar, NexusFeedbackIndicator, ReferenceCard, DistributionCard) | PLANNED |
+| frontend/src/lib/components/ | Shared components (Shell, NavigationSidebar, DepositCard, MediaDepositCard, CompositeId, TaggerPanel, DepositPanel, BlackPearlPanel, Observatory, ThreadTrace, ResonanceCanvas, DepositGenealogy, ARTISWorkbench, ARTISRegistryPanel, ARTISPagePanel, SciencePingIndicator, SciencePingFlow, ComputationSnapshotCard, MappingReviewCard, FindingCard, FindingsPanel, FindingInlineIndicator, ResidualPanel, ResidualCard, CouplingAnalysis, HarmonicSpectrum, CorrelationScatter, ClusterDendrogram, EntropyComparisonBar, NexusFeedbackIndicator, ReferenceCard, DistributionCard) | PLANNED |
 | frontend/src/lib/stores/ | Svelte stores (session, entries, tagger, ui, pearls) | PLANNED |
 | frontend/src/lib/api.ts | Fetch wrapper — single interface to FastAPI backend | PLANNED |
 | frontend/src/routes/[...] | 51 page routes — routing strategy TBD | PLANNED |
