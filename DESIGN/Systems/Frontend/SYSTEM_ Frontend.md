@@ -348,9 +348,6 @@ Home (`/`) is the soft landing; Observatory is the analytical destination.
    (backend), not shown here.
 8. **Void** — absence flag summary
 
-### Not constellation nodes (separate Observatory surfaces)
-- Reflective Pearl Constellation (P4) — Pearl visualization over time
-
 ### Removed from Observatory
 - Black Pearl — lives in page nav
 - WSC handoff — redundant

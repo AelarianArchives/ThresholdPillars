@@ -39,8 +39,7 @@ against the document if editing.
 
   Observatory (session 32 — 8-node constellation):
   - [ ] Constellation layout: Resonance Engine, Terrain, Timeline, Field Signals, Field Log, Field Review, Pulse, Void
-  - [ ] Reflective Pearl Constellation (P4) — separate Observatory surface, not a node
-  
+
   Google Integration:
   - [ ] DESIGNED: 2 accounts (Larimar=email, Threshold Studies=Drive), OAuth, two-way Drive pipeline
   - [ ] Daily 11:11 PM: snapshot + Session Seeds + exports → Drive, summary email with charts
@@ -1673,10 +1672,6 @@ IDENTITY removal note above).
          automated alerts (backend), not shown here.
       8. **Void** — absence flag summary
 
-      **Not constellation nodes (separate Observatory surfaces):**
-      - Reflective Pearl Constellation (P4) — Pearl visualization over
-        time. Observatory surface, not a node.
-
       **Removed from Observatory:**
       - Black Pearl — lives in page nav
       - WSC handoff — redundant
@@ -1836,25 +1831,6 @@ with Field Log (Observatory node 5). Deleted.
 
 ---
 
-### REFLECTIVE PEARL CONSTELLATION (P4)
-
-- [x] DESIGNED. Visualization of the reflective Pearl archive over time.
-
-      **Layout:** constellation view — reflective Pearls as nodes in a
-      spatial layout. Proximity determined by temporal closeness and
-      shared tags (if any).
-
-      **Interaction:** hover a node → Pearl text. Tap → opens Pearl.
-
-      **Access:** Observatory surface (separate from the 8 constellation
-      nodes) and from Black Pearl panel as a "View all" option.
-
-      This is not analytical. It's the one surface in the system that's
-      purely for Sage — the shape of her own thinking across time,
-      visible as a field. It feeds the swarm but it exists first for her.
-
----
-
 ### ANNOTATION LAYER (P5)
 
 - [x] DESIGNED. Researcher marginalia on any surface. Distinct from
@@ -1956,8 +1932,6 @@ All open questions answered in session 15:
   with Field Log (Observatory node 5).
 - ~~No deposit lifecycle view~~ → RESOLVED. Genealogy timeline on card
   expand. See Deposit Genealogy View (P2).
-- ~~No reflective Pearl visualization~~ → RESOLVED. Constellation view
-  from Observatory and panel. See Reflective Pearl Constellation (P4).
 - ~~No annotation layer~~ → RESOLVED. Separate annotations table,
   polymorphic reference, no schema cascades. See Annotation Layer (P5).
 - ~~No research velocity signal~~ → REMOVED (session 32). Drift.
