@@ -659,6 +659,19 @@ fields where needed but never remove or rename shared fields.
     by the engine. Used in visualization hover states and MTM
     payload.
 
+    snapshot_id: links this result to the engine_snapshots record
+    written during the Feed step (Step 4 of the four-step contract).
+    Not present during Step 3 (Visualize) — visualization renders
+    from the patterns array only and does not require this field.
+    Available when MTM reads the result after Feed completes.
+
+    mtm_read_at: null until MTM consumes this result during
+    synthesis. Written once by MTM at the point it reads the
+    snapshot. Used by MTM to determine delta — the most recent
+    snapshot where mtm_read_at IS NOT null is the last state MTM
+    saw. The gap between that snapshot and the current one is what
+    MTM synthesizes from.
+
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 WEIGHT BREAKDOWN AND NULL CONTRIBUTION
@@ -744,9 +757,9 @@ tool for different job.
   They do not share a rendering approach. A component is one or
   the other, never both.
 
-  RESONANCE ENGINE PLACEMENT: lives on dashboard as embedded
+  RESONANCE ENGINE PLACEMENT: lives on Observatory as embedded
   component (visual heartbeat, not full-size). Dedicated page
-  accessible from dashboard for the full experience. Not orphaned.
+  accessible from Observatory for the full experience. Not orphaned.
 
   2D ENGINE INSTRUMENTS (LayerCake + D3 utilities)
 
@@ -854,7 +867,7 @@ KNOWN FAILURE MODES
 
      Guard: engine_snapshot_id is a required field on
      visualization_snapshots. The snapshot record references
-     a computation snapshot that exists at capture time. With
+     a computation snapshot that exists at capture time.
      The retention policy is to keep all snapshots, so orphaning
      requires a manual deletion. If encountered: the
      visualization snapshot is still valid as a visual record.

@@ -762,6 +762,7 @@ this document as each passes audit:
 - ~~3.4 Baseline Computation~~ — locked 2026-04-14
 - ~~3.5 Null Observation Flow~~ — locked 2026-04-14
 - ~~3.6 Engine State Snapshots + MTM Drift Tracking~~ — locked 2026-04-14
+- ~~3.7 Engine Result Object~~ — locked 2026-04-14
 
 ---
 
@@ -1070,6 +1071,63 @@ capture fired.
 **Spec authority:** ENGINE COMPUTATION SCHEMA.md (ENGINE STATE
 SNAPSHOTS, MTM DRIFT TRACKING, VISUALIZATION SNAPSHOTS, full table
 definitions and field specs).
+
+---
+
+### 3.7 ENGINE RESULT OBJECT
+
+Shared output structure produced by every engine computation. The
+contract between engine output and downstream consumers (MTM,
+visualization, Nexus). All 5 engines produce this exact shape.
+Engine-specific schemas extend the patterns array but never remove
+or rename shared fields.
+
+**Top-level fields:**
+- engine — thr | str | inf | ecr | snm
+- computed_at — timestamp
+- baseline_scope — always 'page'. Explicit so downstream tiers know
+  what the baseline was computed against.
+- deposit_count — integer. Downstream tiers assess statistical
+  significance from this.
+- stale — always false in the result. Stale flag lives in SQLite,
+  checked before computation begins, not carried in output.
+- stale_warning — boolean. Normally false. Set true only when
+  recomputation failed and engine is returning its most recent
+  existing snapshot as fallback. MTM logs it and proceeds —
+  synthesis is not blocked by a stale warning, only by a read failure.
+
+**Each pattern in the patterns array:**
+- pattern_id — stable, deterministic identifier. Same pattern
+  produces the same id regardless of when computed. Format defined
+  in each engine schema.
+- description — human-readable label. Engine-generated. Used in
+  visualization hover states and MTM payload.
+- observed_rate, expected_rate, ratio — signal math per 3.4
+- signal_band — suppressed | mild | strong. Null when
+  insufficient_data is true.
+- insufficient_data — boolean. True when ratio cannot be computed
+  reliably: element has zero marginal frequency, or element's
+  weighted count is below MIN_ELEMENT_COUNT. Pattern still renders
+  distinctly. No signal band assigned. Not an error state.
+- low_sample — boolean. True when deposit_count is below
+  MIN_PATTERN_DEPOSIT_COUNT. Ratio and signal band still computed —
+  this is a caveat, not a disqualifier. Flag propagates into MTM
+  Findings output; Nexus reads it for grading confidence, Cosmology
+  for sample weighting.
+- deposit_count — integer
+- weighted_count — float
+- weight_breakdown sub-object: high / standard / low counts
+- null_contribution sub-object: null_count / null_weighted /
+  positive_count / positive_weighted
+
+**Identifiers (bottom of object):**
+- snapshot_id — links result to its engine_snapshots record.
+  Written after snapshot is persisted in the Feed step.
+- mtm_read_at — null until MTM consumes the snapshot. Written
+  once, by MTM, at synthesis time.
+
+**Spec authority:** ENGINE COMPUTATION SCHEMA.md (ENGINE RESULT
+OBJECT, WEIGHT BREAKDOWN AND NULL CONTRIBUTION sections, FIELD NOTES).
 
 ---
 

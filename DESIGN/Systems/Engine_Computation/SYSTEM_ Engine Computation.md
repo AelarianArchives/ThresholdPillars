@@ -34,7 +34,7 @@
   demand. trigger_source field distinguishes the two. Route to LNV
 * Shared engine result object structure — standardized shape for
   computation output including weight_breakdown, null_contribution,
-  low_sample, and stale_warning fields
+  insufficient_data, low_sample, and stale_warning fields
 * Pattern reliability constants — MIN_PATTERN_DEPOSIT_COUNT (flags
   low_sample patterns) and MIN_ELEMENT_COUNT (extends insufficient_data
   to near-zero frequency elements). Calibration items defined in

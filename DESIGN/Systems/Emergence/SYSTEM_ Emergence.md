@@ -42,7 +42,7 @@ Each detector runs across the tag set and entry corpus. Each produces zero or mo
 
 5. **Drift** — tags that were active in recent phases but have faded. Names what is losing signal. DTX receives these as named drift events.
 
-6. **Void Zone** — sections with low tag coverage. Gaps in the signal map where field activity exists but tagging has not reached. Void zone findings route to the dashboard coverage gap view — where the research hasn't looked. They do not route to the Void engine page (VOI), which aggregates confirmed observational absence where the researcher looked and found nothing. These are structurally distinct.
+6. **Void Zone** — sections with low tag coverage. Gaps in the signal map where field activity exists but tagging has not reached. Void zone findings route to the Observatory coverage gap view — where the research hasn't looked. They do not route to the Void engine page (VOI), which aggregates confirmed observational absence where the researcher looked and found nothing. These are structurally distinct.
 
 7. **NPA Spike** — sessions where non-primary arc tags dominate. Signal landing outside the expected routing path.
 

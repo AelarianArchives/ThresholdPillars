@@ -120,7 +120,7 @@ influence detectors.
 6. VOID ZONE
   Identifies sections with tagged entry ratio below
   VOID_COVERAGE_FLOOR. Gaps in the signal map. Void zone findings
-  route to the dashboard coverage gap view — NOT to the Void engine
+  route to the Observatory coverage gap view — NOT to the Void engine
   page (VOI). VOI aggregates confirmed observational absence. Void
   zones are coverage gaps. Structurally distinct.
 
