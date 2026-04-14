@@ -106,6 +106,6 @@ or Sage-triggered on demand.
 | File | Role | Status |
 | --- | --- | --- |
 | DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md | Full mechanical spec — four-step contract, baseline formula, weights, null flow, snapshot shapes, visualization architecture | COMPLETE |
-| backend/services/engine_base.py | Shared computation — baseline math, weight application, null handling, signal classification, snapshot write, stale flag check | PLANNED |
-| backend/routes/engines.py | Shared endpoints — compute trigger, result read, snapshot read, visualization snapshot capture | PLANNED |
-| backend/config.py | Deposit weight constants (HIGH, STANDARD, LOW) — added to existing config | PLANNED |
+| backend/services/engine_base.py | Shared computation — baseline math, weight application, null handling, signal classification, snapshot write, stale flag check | NOT STARTED |
+| backend/routes/engines.py | Shared endpoints — compute trigger, result read, snapshot read, visualization snapshot capture | NOT STARTED |
+| backend/config.py | Deposit weight constants (HIGH, STANDARD, LOW) — added to existing config | NOT STARTED |

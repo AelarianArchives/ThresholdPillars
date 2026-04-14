@@ -267,7 +267,7 @@ deposit record and indexes by its analytical lens.
 | STR | 03 | Ven'ai root clusters | tags (matched against venai_names.root_cluster), deposit_weight, observation_presence, created_at, id | Which root family/families the deposit touches |
 | INF | 04 | Scientific domain layers | tags (layer_id resolved through inf_layer_bridge to INF domains), deposit_weight, observation_presence, created_at, id | Which INF domain(s) via bridge table |
 | ECR | 05 | Signal seed presence | tags (routed to s01-s19), deposit_weight, observation_presence, created_at, id | Which signal seed(s) represented. Multiple tags → same seed = one presence |
-| SNM | 06 | Structural correspondence | tags (pillars, traditions, structural markers), content (fed to Claude), deposit_weight, observation_presence, created_at, id | Pillar association (TRIA/PRIA/PARA/unmapped) + tradition references |
+| SNM | 06 | Structural correspondence | tags (tradition references, pattern category signals, structural markers), content (fed to Claude), deposit_weight, observation_presence, created_at, id | Pattern category signals (ancient_philosophy/triadic_architecture/celestial/uncategorized) + tradition references |
 
 After indexing, stale flag is set to `true` in SQLite.
 
@@ -296,7 +296,7 @@ counts) and null_contribution (null/positive counts and weighted sums).
 | STR | Root cluster analysis (presence, co-occurrence, emergence timeline) + Correlation integration from Ven'ai service | Dynamic (N clusters) |
 | INF | Layer presence (5 domains), Intersection (10 pairs), Emergence timeline + Dormancy detection | 5 domains |
 | ECR | Co-occurrence (171 pairs), Presence (19 signals), Sequence detection (pairs + triples) | 19 signals — most data-dense |
-| SNM | Stream 1: Sage's observations (tradition presence, co-occurrence, pillar association). Stream 2: Claude API structural analysis (per-deposit + batch mode). Stream agreement classification | Open sets + Claude API |
+| SNM | Stream 1: Sage's observations (tradition presence, co-occurrence, pattern category rates). Stream 2: Claude API structural analysis (per-deposit + batch mode). Stream agreement classification | Open sets + Claude API |
 
 **Pattern ID formats** (deterministic, stable, per engine):
 
@@ -308,7 +308,7 @@ counts) and null_contribution (null/positive counts and weighted sums).
        inf_emrg_mirror_dynamics
   ECR: ecr_cooc_s01_s05, ecr_pres_s01, ecr_seq_s01_s13
   SNM: snm_s1_pres_vedic, snm_s1_cooc_vedic_hermetic,
-       snm_s1_pillar_tria, snm_corr_threshold_triadic_vedic_trinity
+       snm_s1_cat_ancient_philosophy, snm_corr_threshold_triadic_vedic_trinity
 ```
 
 ### Step 3 — VISUALIZE
@@ -324,7 +324,7 @@ visual weight does the filtering.
 | STR | Root cluster map (force-directed), Correlation matrix (filterable by type), Drift alert panel, Name index |
 | INF | Density field map (d3-contour), Emergence timeline, Intersection detail |
 | ECR | Correlation matrix (19x19, d3-zoom), Signal constellation (d3-force, stateful drift), Presence timeline, Sequence view |
-| SNM | Bipartite force-directed graph (field patterns ↔ traditions, TRIA/PRIA/PARA zones), Temporal correspondence view |
+| SNM | Bipartite force-directed graph (field patterns ↔ traditions, tradition nodes colored by pattern_category, uncategorized cluster explicit), Temporal correspondence view |
 
 Visualization snapshots are Sage-triggered (not automatic). Captured to LNV
 via `POST /api/lnv/receive` with `entry_type: engine_snapshot`.

@@ -768,7 +768,7 @@ tool for different job.
     layercake       — Svelte-native layout, scales, responsive containers
     d3-scale        — quantitative/ordinal scales
     d3-shape        — line/arc generators
-    d3-force        — force-directed layouts (STR network, SNM correspondence)
+    d3-force        — force-directed layouts (STR cluster map, SNM correspondence graph, ECR signal constellation)
     d3-hierarchy    — tree/cluster structures (STR root clusters)
     d3-interpolate  — color/value interpolation for signal gradient bands
     d3-zoom         — pan/zoom on dense matrices and cluster graphs
@@ -886,11 +886,11 @@ FILES
 
   | File | Role | Status |
   | --- | --- | --- |
-  | backend/config.py | DEPOSIT_WEIGHT_HIGH, DEPOSIT_WEIGHT_STANDARD, DEPOSIT_WEIGHT_LOW constants | PLANNED (add to existing LIVE file) |
-  | backend/services/engine_base.py | Shared engine computation: baseline math, weight application, null handling, signal classification, snapshot write, stale flag check | PLANNED |
-  | backend/services/engine_thr.py | THR engine — extends engine_base | PLANNED |
-  | backend/services/engine_ecr.py | ECR engine — extends engine_base | PLANNED |
-  | backend/services/engine_inf.py | INF engine — extends engine_base | PLANNED |
-  | backend/services/engine_str.py | STR engine — extends engine_base, reads Ven'ai service | PLANNED |
-  | backend/services/engine_snm.py | SNM engine — extends engine_base, calls Claude API | PLANNED |
-  | backend/routes/engines.py | FastAPI engine endpoints — compute trigger, result read, snapshot capture | PLANNED |
+  | backend/config.py | DEPOSIT_WEIGHT_HIGH, DEPOSIT_WEIGHT_STANDARD, DEPOSIT_WEIGHT_LOW constants | NOT STARTED (constants not yet added to existing LIVE file) |
+  | backend/services/engine_base.py | Shared engine computation: baseline math, weight application, null handling, signal classification, snapshot write, stale flag check | NOT STARTED |
+  | backend/services/engine_thr.py | THR engine — extends engine_base | NOT STARTED |
+  | backend/services/engine_ecr.py | ECR engine — extends engine_base | NOT STARTED |
+  | backend/services/engine_inf.py | INF engine — extends engine_base | NOT STARTED |
+  | backend/services/engine_str.py | STR engine — extends engine_base, reads Ven'ai service | NOT STARTED |
+  | backend/services/engine_snm.py | SNM engine — extends engine_base, calls Claude API | NOT STARTED |
+  | backend/routes/engines.py | FastAPI engine endpoints — compute trigger, result read, snapshot capture | NOT STARTED |

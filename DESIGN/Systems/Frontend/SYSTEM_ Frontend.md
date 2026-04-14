@@ -98,7 +98,7 @@ frontend/
 | StrCorrelationMatrix | Name correlation matrix — filterable by phase/role/root_pattern/grammar |
 | StrDriftAlertPanel | Ven'ai drift alert panel — acknowledge action, alert count badge |
 | StrNameIndex | Ven'ai name index — grouped by root family, searchable, sortable |
-| SnmBipartiteGraph | Bipartite force-directed graph — field patterns, traditions, TRIA/PRIA/PARA zones |
+| SnmBipartiteGraph | Bipartite force-directed graph — field patterns, traditions, tradition nodes colored by pattern_category, uncategorized cluster explicit |
 | SnmTemporalCorrespondence | Temporal correspondence view — strength over time, prompt version boundaries |
 | PcvCardBoard | PCV primary surface — filterable/sortable hypothesis cards with provenance badges, expand for full detail |
 | PcvNetworkGraph | PCV secondary view — domains as nodes, hypotheses as weighted edges, isolated nodes visible |
