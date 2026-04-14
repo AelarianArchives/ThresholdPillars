@@ -2,14 +2,14 @@
 
 ## /DESIGN/Systems/Sat_Nam_Engine/
 
-### Page 06 · two-stream architecture · Claude structural analysis · TRIA/PRIA/PARA · prompt versioning
+### Page 06 · two-stream architecture · Claude structural analysis · pattern category classification · prompt versioning
 
 ---
 
 ## WHAT THIS SYSTEM OWNS
 
 * SNM two-stream architecture — Stream 1: Sage's observations (tradition
-  presence, co-occurrence, pillar association). Stream 2: Claude
+  presence, co-occurrence, pattern category rates). Stream 2: Claude
   structural analysis (per-deposit and batch modes). Neither stream is
   privileged; both are data
 * Claude API integration in compute step — structural analysis function
@@ -21,25 +21,26 @@
   prompt version bump, new snapshot created alongside old. History of
   analysis is data
 * Correspondence computation — strength (weighted deposit count adjusted
-  by confidence), clustering by triadic_frame, genuine vs. surface
+  by confidence), clustering by pattern_category, genuine vs. surface
   classification (2.0x+/1.0–2.0x/below 1.0x)
 * Stream agreement classification — convergent (both see it),
   researcher-led (Sage sees, Claude does not), knowledge-led (Claude
   surfaces, Sage does not)
-* TRIA/PRIA/PARA framing — patterns organized by pillar association.
-  triadic_frame: null sits outside all three pillars (unmapped region =
-  active research surface, not error)
+* Pattern category classification — correspondences organized by manifest
+  category (ancient_philosophy / triadic_architecture / celestial /
+  uncategorized). pattern_category: null sits outside all three manifest
+  categories (uncategorized = active research surface, not error)
 * Prompt versioning — uses shared prompt_versions table
   (prompt_type: 'snm'). Three changelog triggers: sage_directed,
   calibration_triggered (repeated dismissals recommend bump), manual
 * Two visualizations: bipartite force-directed graph (field patterns ×
-  traditions, gravitational zones for TRIA/PRIA/PARA, unmapped region
-  explicit), temporal correspondence view (prompt version boundaries
-  marked)
+  traditions, tradition nodes colored by pattern_category, uncategorized
+  cluster explicit), temporal correspondence view (prompt version
+  boundaries marked)
 * SNM pattern_id format and generation
 * SNM-specific snapshot_data JSON structure with claude_snapshot_summary
   (total_snapshots, latest_prompt_version, per_deposit_count,
-  batch_count, unique_traditions, unmapped_count)
+  batch_count, unique_traditions, uncategorized_count)
 * SNM failure modes
 
 ## WHAT THIS SYSTEM DOES NOT OWN
@@ -57,7 +58,8 @@
   prompt_type: 'snm'
 * Database table definitions (except snm_claude_snapshots) — owned by
   INTEGRATION DB SCHEMA.md and OPERATIONAL DB SCHEMA.md
-* TRIA/PRIA/PARA pillar definitions — owned by TAG VOCABULARY.md
+* Three manifest pattern categories (ancient_philosophy, triadic_architecture,
+  celestial) — defined in Manifest_06_Sat_Nam.txt, not owned by this system
 * Entry data — owned by INTEGRATION DB SCHEMA.md
 * MTM synthesis — MTM reads SNM snapshots; SNM does not participate
   in synthesis
@@ -74,14 +76,16 @@ Two independent analytical streams produce parallel readings of the
 same deposits.
 
 Stream 1 runs through the shared baseline — tradition presence rates,
-co-occurrence, pillar association rates. Stream 2 calls Claude for
+co-occurrence, pattern category rates. Stream 2 calls Claude for
 structural analysis (per-deposit for immediate context, batch for
 relational context across sets).
 
 After both streams complete, stream agreement classification labels
 each correspondence as convergent, researcher-led, or knowledge-led.
-The unmapped region (triadic_frame: null) is where neither pillar
-claims the pattern — an active research surface, not a gap.
+The uncategorized cluster (pattern_category: null) is where a
+correspondence sits outside the three manifest categories — an active
+research surface, not a gap. The celestial category is the structural
+bridge to the Cosmology group.
 
 Most complex Axis engine — Claude embedded in the compute step.
 
@@ -107,7 +111,7 @@ Auto-triggered on signal delta or Sage-triggered on demand.
 | File | Role | Status |
 | --- | --- | --- |
 | DESIGN/Systems/Sat_Nam_Engine/SAT NAM ENGINE SCHEMA.md | Full mechanical spec — two-stream architecture, Claude integration, correspondence computation, prompt versioning, visualization specs, failure modes | COMPLETE |
-| backend/services/engine_snm.py | SNM computation — two-stream compute, Claude calls (per-deposit + batch), correspondence computation, stream agreement classification | PLANNED |
-| backend/routes/engines.py | SNM-specific endpoints — Claude snapshot read, prompt management (shared routes file with other engines) | PLANNED |
-| frontend/src/lib/components/SnmBipartiteGraph.svelte | Field patterns × traditions, gravitational TRIA/PRIA/PARA zones, unmapped region, edge style encoding — d3-force | PLANNED |
-| frontend/src/lib/components/SnmTemporalCorrespondence.svelte | Correspondence strength over time, prompt version boundaries, filterable — d3-scale | PLANNED |
+| backend/services/engine_snm.py | SNM computation — two-stream compute, Claude calls (per-deposit + batch), correspondence computation, stream agreement classification | NOT STARTED |
+| backend/routes/engines.py | SNM-specific endpoints — Claude snapshot read, prompt management (shared routes file with other engines) | NOT STARTED |
+| frontend/src/lib/components/SnmBipartiteGraph.svelte | Field patterns × traditions, tradition nodes colored by pattern_category, uncategorized cluster explicit, edge style encoding — d3-force | NOT STARTED |
+| frontend/src/lib/components/SnmTemporalCorrespondence.svelte | Correspondence strength over time, prompt version boundaries, filterable — d3-scale | NOT STARTED |

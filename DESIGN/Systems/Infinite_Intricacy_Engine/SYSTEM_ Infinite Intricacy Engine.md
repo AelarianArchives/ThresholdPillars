@@ -97,7 +97,7 @@ Auto-triggered on signal delta or Sage-triggered on demand.
 | File | Role | Status |
 | --- | --- | --- |
 | DESIGN/Systems/Infinite_Intricacy_Engine/INFINITE INTRICACY ENGINE SCHEMA.md | Full mechanical spec — domain registry, bridge mapping, intersection, emergence, dormancy, Cosmology boundary contract, visualization specs, failure modes | COMPLETE |
-| backend/services/engine_inf.py | INF computation — domain presence, intersection, emergence timeline, bridge resolution, emerging domain detection | PLANNED |
-| frontend/src/lib/components/InfDensityFieldMap.svelte | Topographic contours, domain regions, overlap zones, deposit points — d3-contour | PLANNED |
-| frontend/src/lib/components/InfEmergenceTimeline.svelte | Domain bands, thickness = frequency, first-appearance markers, dormancy gaps — d3-scale | PLANNED |
-| frontend/src/lib/components/InfIntersectionDetail.svelte | Specific deposits in overlap zone, triggered from density field map | PLANNED |
+| backend/services/engine_inf.py | INF computation — domain presence, intersection, emergence timeline, bridge resolution, emerging domain detection | NOT STARTED |
+| frontend/src/lib/components/InfDensityFieldMap.svelte | Topographic contours, domain regions, overlap zones, deposit points — d3-contour | NOT STARTED |
+| frontend/src/lib/components/InfEmergenceTimeline.svelte | Domain bands, thickness = frequency, first-appearance markers, dormancy gaps — d3-scale | NOT STARTED |
+| frontend/src/lib/components/InfIntersectionDetail.svelte | Specific deposits in overlap zone, triggered from density field map | NOT STARTED |

@@ -118,6 +118,6 @@ BAD OUTPUT
 
 CONNECTS TO
   Feeds    → MTM (07)
-  Draws from → INT (01) · ARC (19)
+  Draws from → INT (01)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

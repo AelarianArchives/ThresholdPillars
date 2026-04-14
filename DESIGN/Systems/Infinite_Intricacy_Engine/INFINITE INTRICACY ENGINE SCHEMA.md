@@ -658,7 +658,7 @@ FILES
 
   | File | Role | Status |
   | --- | --- | --- |
-  | backend/services/engine_inf.py | INF engine — extends engine_base. Domain presence, intersection, emergence timeline computations. Bridge resolution. Emerging domain detection. Snapshot assembly. | PLANNED |
-  | frontend/src/lib/components/InfDensityFieldMap.svelte | Density field map — LayerCake + d3-contour | PLANNED |
-  | frontend/src/lib/components/InfEmergenceTimeline.svelte | Emergence timeline — LayerCake + d3-scale | PLANNED |
-  | frontend/src/lib/components/InfIntersectionDetail.svelte | Intersection detail panel — triggered from density field map | PLANNED |
+  | backend/services/engine_inf.py | INF engine — extends engine_base. Domain presence, intersection, emergence timeline computations. Bridge resolution. Emerging domain detection. Snapshot assembly. | NOT STARTED |
+  | frontend/src/lib/components/InfDensityFieldMap.svelte | Density field map — LayerCake + d3-contour | NOT STARTED |
+  | frontend/src/lib/components/InfEmergenceTimeline.svelte | Emergence timeline — LayerCake + d3-scale | NOT STARTED |
+  | frontend/src/lib/components/InfIntersectionDetail.svelte | Intersection detail panel — triggered from density field map | NOT STARTED |

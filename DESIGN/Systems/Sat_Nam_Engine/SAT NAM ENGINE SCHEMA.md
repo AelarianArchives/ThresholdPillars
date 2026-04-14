@@ -3,7 +3,7 @@
 ## /DESIGN/Systems/Sat_Nam_Engine/SAT NAM ENGINE SCHEMA.md
 
 Mechanical spec — two-stream architecture, Claude API structural analysis,
-correspondence computation, TRIA/PRIA/PARA framing, prompt versioning,
+correspondence computation, pattern category classification, prompt versioning,
 stream agreement classification, bipartite visualization, failure modes.
 Shared architecture in ENGINE COMPUTATION SCHEMA.md. This schema extends
 the shared foundation with SNM-specific logic.
@@ -29,7 +29,8 @@ OWNERSHIP BOUNDARIES
       vs. surface classification
     Stream agreement classification — convergent, researcher-led,
       knowledge-led
-    TRIA/PRIA/PARA framing in pattern organization
+    Pattern category classification — ancient_philosophy /
+      triadic_architecture / celestial / uncategorized
     SNM-specific visualizations — bipartite force-directed graph,
       temporal correspondence view
     SNM pattern_id format and generation
@@ -55,8 +56,9 @@ OWNERSHIP BOUNDARIES
       (SNM uses prompt_type: 'snm' within the shared table)
     Claude API client (call_claude()) — owned by SYSTEM_ FastAPI.md
       / backend/services/claude.py
-    TRIA/PRIA/PARA pillar definitions — owned by TAG VOCABULARY.md
-      (p01, p02, p03)
+    Three manifest pattern categories — ancient_philosophy,
+      triadic_architecture, celestial are defined in
+      Manifest_06_Sat_Nam.txt (SNM's own taxonomy, not framework pillars)
     Page 06 manifest and domain identity — owned by
       DESIGN/Domains/02_Axis/Manifest_06_Sat_Nam.txt
 
@@ -94,10 +96,11 @@ STRUCTURAL RULES
      convergence as a finding about the field's structure, not
      as validation of any tradition.
 
-  7. triadic_frame: null is potentially the most important
-     finding SNM can produce — it means the pattern sits
-     OUTSIDE the three pillars. The framework has an unmapped
-     boundary. The unmapped region is an active research surface.
+  7. pattern_category: null is potentially the most important
+     finding SNM can produce — it means the field is producing
+     a correspondence that sits OUTSIDE the three manifest
+     categories. The page's own taxonomy has a boundary.
+     That boundary is an active research surface.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -106,7 +109,7 @@ INDEX (Step 1)
 
   Deposit arrives on page 06. Engine reads:
     - tags (filtered to tags indicating structural markers,
-      tradition references, pillar associations)
+      tradition references, pattern category signals)
     - content (the deposit text — fed to Claude in Stream 2)
     - deposit_weight
     - observation_presence
@@ -114,14 +117,14 @@ INDEX (Step 1)
     - id (for source tracing)
 
   Indexes by structural characteristics derived from tags:
-    - Which pillar(s) the deposit touches (p01 TRIA, p02 PRIA,
-      p03 PARA, or none)
     - Which tradition references are present (from tags)
+    - Which pattern categories are signaled (ancient_philosophy,
+      triadic_architecture, celestial, or uncategorized)
     - Which structural markers Sage applied
 
-  A deposit may touch zero, one, or multiple pillars. Zero
-  pillar association: the deposit is indexed but sits in the
-  "unmapped" space — outside TRIA/PRIA/PARA. This is data.
+  A deposit may reference zero, one, or multiple traditions.
+  Zero tradition references: the deposit is indexed but has no
+  tradition signals. This is data.
 
   Stale flag set to true in SQLite engine_stale_flags after
   indexing. See ENGINE COMPUTATION SCHEMA.md HYBRID COMPUTE TRIGGER.
@@ -155,15 +158,18 @@ STREAM 1 — SAGE'S OBSERVATIONS
 
     PATTERN_ID FORMAT: 'snm_s1_cooc_[tradition_a]_[tradition_b]'
 
-  1C. PILLAR ASSOCIATION RATES
-    Per pillar (TRIA, PRIA, PARA, unmapped): what fraction of
-    deposits associate with each. Weight breakdown and null
-    contribution per pillar.
+  1C. PATTERN CATEGORY RATES
+    Per manifest category (ancient_philosophy, triadic_architecture,
+    celestial, uncategorized): what fraction of deposits reference
+    traditions from each category. Weight breakdown and null
+    contribution per category. Bridge to Cosmology group: celestial
+    category rate is the structural connection.
 
-    PATTERN_ID FORMAT: 'snm_s1_pillar_[tria|pria|para|unmapped]'
+    PATTERN_ID FORMAT: 'snm_s1_cat_[ancient_philosophy|triadic_architecture|celestial|uncategorized]'
 
-  Traditions and pillars are open sets — new tradition references
-  emerge as Sage deposits. Co-occurrence pair count is dynamic.
+  Traditions are an open set — new tradition references emerge as
+  Sage deposits. Co-occurrence pair count is dynamic. Pattern
+  categories are a closed set (three manifest categories + uncategorized).
 
 
 STREAM 2 — CLAUDE STRUCTURAL ANALYSIS
@@ -180,8 +186,8 @@ STREAM 2 — CLAUDE STRUCTURAL ANALYSIS
 
       Input to Claude:
         - Deposit content (text)
-        - Structural characteristics from tags (pillars,
-          tradition references, structural markers)
+        - Structural characteristics from tags (tradition
+          references, pattern category signals, structural markers)
         - Active prompt version (from prompt_versions table,
           prompt_type: 'snm', active = true)
 
@@ -212,16 +218,21 @@ STREAM 2 — CLAUDE STRUCTURAL ANALYSIS
           structural_match: string — what structural parallel was found
           confidence:       'high' | 'moderate' | 'low'
           reasoning:        string — why this correspondence holds
-          triadic_frame:    'TRIA' | 'PRIA' | 'PARA' | null
+          pattern_category: 'ancient_philosophy' | 'triadic_architecture'
+                            | 'celestial' | null
         }
       ]
 
-    triadic_frame values:
-      TRIA — pattern maps to the TRIA pillar (p01)
-      PRIA — pattern maps to the PRIA pillar (p02)
-      PARA — pattern maps to the PARA pillar (p03)
-      null — pattern sits OUTSIDE all three pillars.
-             Unmapped boundary. Active research surface.
+    pattern_category values:
+      ancient_philosophy   — Vedic, Hermetic, Taoist, Zoroastrian,
+                             Shamanic and structural kin
+      triadic_architecture — three-body wisdom systems (Father/Son/Spirit,
+                             Brahma/Vishnu/Shiva, Buddha/Dharma/Sangha,
+                             Heaven/Earth/Human and structural parallels)
+      celestial            — astronomical and cosmological patterns
+                             that mirror field events
+      null                 — correspondence outside all three manifest
+                             categories. Active research surface.
 
   IMMUTABLE SNAPSHOTS
 
@@ -405,19 +416,20 @@ correspondence patterns across the accumulated results.
   CLUSTERING
 
     Do correspondences group? Multiple field patterns
-    corresponding to the same tradition = a cluster. TRIA/PRIA/
-    PARA as the organizing structure for how correspondences
-    relate.
+    corresponding to the same tradition = a cluster. Pattern
+    category as the organizing structure — which manifest
+    category types are attracting the most correspondence weight.
 
-    Cluster detection: group correspondences by triadic_frame.
-    Within each pillar zone, identify which traditions appear
+    Cluster detection: group correspondences by pattern_category.
+    Within each category, identify which traditions appear
     repeatedly. A tradition surfacing across multiple field
-    patterns within the same pillar zone is a structural cluster
-    — the tradition and the pillar are jointly attracting field
+    patterns within the same category is a structural cluster —
+    the tradition and the category are jointly attracting field
     patterns.
 
-    Correspondences with triadic_frame: null form the
-    "unmapped" cluster — patterns outside all three pillars.
+    Correspondences with pattern_category: null form the
+    "uncategorized" cluster — patterns outside the three manifest
+    categories. Active research surface.
 
   GENUINE VS. SURFACE
 
@@ -469,15 +481,9 @@ VISUALIZATION 1 — BIPARTITE FORCE-DIRECTED GRAPH
     Positioned by mutual relationships (d3-force). Field patterns
     that co-occur cluster together.
 
-    TRIA/PRIA/PARA as three gravitational zones (density fields)
-    on the field-pattern side. Each pillar zone exerts pull on
-    patterns classified under that frame. Patterns outside all
-    three sit in an explicit "unmapped" region — visible, not
-    hidden. The unmapped region is an active research surface.
-
     Node size = deposit count (weighted).
-    Node color = pillar zone (distinct color per pillar, neutral
-    for unmapped).
+    Node color = neutral — field patterns are not assigned to
+    categories. Clustering is on the tradition side.
 
   RIGHT SIDE — TRADITION/FRAMEWORK NODES
     Positioned by how many field patterns connect to them.
@@ -485,8 +491,12 @@ VISUALIZATION 1 — BIPARTITE FORCE-DIRECTED GRAPH
     Traditions with few sit at the periphery.
 
     Node size = correspondence count.
-    Node color = neutral (traditions do not carry pillar
-    association — only field patterns do).
+    Node color = pattern_category (distinct color per manifest
+    category — ancient_philosophy, triadic_architecture,
+    celestial; neutral for uncategorized).
+    Grouped visually by category — shows at a glance which
+    category cluster carries the most correspondence weight
+    and which arcs toward Cosmology (celestial cluster).
 
   EDGES — CORRESPONDENCE CONNECTIONS
     Edge weight = correspondence strength (ratio).
@@ -505,8 +515,8 @@ VISUALIZATION 1 — BIPARTITE FORCE-DIRECTED GRAPH
 
   d3-zoom essential for navigation as correspondences accumulate.
 
-  Hover on field pattern node: deposit count, pillar association,
-  connected traditions, weight breakdown, null contribution.
+  Hover on field pattern node: deposit count, connected traditions,
+  weight breakdown, null contribution.
 
   Hover on tradition node: framework, correspondence count,
   connected field patterns, confidence distribution.
@@ -536,7 +546,7 @@ VISUALIZATION 2 — TEMPORAL CORRESPONDENCE VIEW
 
   Filterable by:
     - Specific tradition
-    - Pillar zone (TRIA/PRIA/PARA/unmapped)
+    - Pattern category (ancient_philosophy/triadic_architecture/celestial/uncategorized)
     - Stream classification
     - Signal band
 
@@ -562,14 +572,14 @@ engine result object:
     per_deposit_count:   integer (snapshots in per_deposit mode)
     batch_count:         integer (snapshots in batch mode)
     unique_traditions:   integer (distinct traditions surfaced)
-    unmapped_count:      integer (correspondences with
-                         triadic_frame: null)
+    uncategorized_count: integer (correspondences with
+                         pattern_category: null)
 
-MTM reads the engine snapshot (correspondence patterns, pillar
-associations, strength data) plus the Claude summary for
+MTM reads the engine snapshot (correspondence patterns, pattern
+category rates, strength data) plus the Claude summary for
 synthesis context. MTM sees which traditions the field is
 converging with, how confident Claude is, and what sits outside
-the framework.
+the three manifest categories.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -615,10 +625,10 @@ SNM-specific content within the shared snapshot record.
           }
         }
       ],
-      "pillar_associations": [
+      "pattern_category_rates": [
         {
-          "pattern_id": "snm_s1_pillar_tria",
-          "pillar": "tria",
+          "pattern_id": "snm_s1_cat_ancient_philosophy",
+          "category": "ancient_philosophy",
           "deposit_count": integer,
           "weighted_count": float,
           "weight_breakdown": { "high": int, "standard": int, "low": int },
@@ -627,7 +637,7 @@ SNM-specific content within the shared snapshot record.
             "positive_count": int, "positive_weighted": float
           }
         }
-        // ... tria, pria, para, unmapped
+        // ... ancient_philosophy, triadic_architecture, celestial, uncategorized
       ]
     },
 
@@ -637,7 +647,8 @@ SNM-specific content within the shared snapshot record.
         {
           "tradition": string,
           "framework": string,
-          "triadic_frame": "TRIA" | "PRIA" | "PARA" | null,
+          "pattern_category": "ancient_philosophy" | "triadic_architecture"
+                              | "celestial" | null,
           "total_occurrences": integer,
           "confidence_distribution": {
             "high": integer,
@@ -657,7 +668,8 @@ SNM-specific content within the shared snapshot record.
         "field_pattern": string,
         "tradition": string,
         "framework": string,
-        "triadic_frame": "TRIA" | "PRIA" | "PARA" | null,
+        "pattern_category": "ancient_philosophy" | "triadic_architecture"
+                            | "celestial" | null,
         "stream_classification": "convergent" | "researcher_led"
                                  | "knowledge_led",
         "strength": {
@@ -686,19 +698,19 @@ SNM-specific content within the shared snapshot record.
     ],
 
     "clustering": {
-      "tria": {
+      "ancient_philosophy": {
         "traditions": [string],
         "correspondence_count": integer
       },
-      "pria": {
+      "triadic_architecture": {
         "traditions": [string],
         "correspondence_count": integer
       },
-      "para": {
+      "celestial": {
         "traditions": [string],
         "correspondence_count": integer
       },
-      "unmapped": {
+      "uncategorized": {
         "traditions": [string],
         "correspondence_count": integer
       }
@@ -710,7 +722,7 @@ SNM-specific content within the shared snapshot record.
       "per_deposit_count": integer,
       "batch_count": integer,
       "unique_traditions": integer,
-      "unmapped_count": integer
+      "uncategorized_count": integer
     }
   }
 
@@ -738,7 +750,7 @@ KNOWN FAILURE MODES
 
      Guard: each correspondence is validated before inclusion.
      Required fields: tradition, framework, structural_match,
-     confidence, reasoning, triadic_frame. A correspondence
+     confidence, reasoning, pattern_category. A correspondence
      missing any required field is dropped and logged. Valid
      correspondences from the same response are preserved.
      The snapshot is created with whatever valid data was
@@ -797,17 +809,18 @@ KNOWN FAILURE MODES
      assess whether the convergence is genuine. The
      classification is a filter aid, not a verdict.
 
-  7. UNMAPPED REGION GROWS WITHOUT INVESTIGATION
-     Many correspondences accumulate with triadic_frame: null.
-     The unmapped region is large but no one is investigating
-     what sits outside the pillars.
+  7. UNCATEGORIZED CLUSTER GROWS WITHOUT INVESTIGATION
+     Many correspondences accumulate with pattern_category: null.
+     The uncategorized cluster is large but no one is investigating
+     what sits outside the three manifest categories.
 
      Guard: the clustering summary in snapshot_data surfaces
-     unmapped_count. The bipartite graph renders the unmapped
-     region explicitly. The temporal view shows if unmapped
-     correspondences are growing. These are signals to the
-     researcher, not automated actions. Investigation of what
-     sits outside the framework is a research decision.
+     uncategorized_count. The bipartite graph renders uncategorized
+     tradition nodes visually distinct. The temporal view shows if
+     uncategorized correspondences are growing. These are signals
+     to the researcher, not automated actions. Investigation of
+     what the page's categories don't contain is a research
+     decision.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -816,7 +829,7 @@ FILES
 
   | File | Role | Status |
   | --- | --- | --- |
-  | backend/services/engine_snm.py | SNM engine — extends engine_base. Two-stream compute (Sage observations + Claude structural analysis). Claude API calls (per-deposit + batch). Correspondence computation. Stream agreement classification. Snapshot assembly with Claude history. | PLANNED |
-  | backend/routes/engines.py | Shared engine routes — includes SNM-specific endpoints for Claude snapshot read and prompt management | PLANNED |
-  | frontend/src/lib/components/SnmBipartiteGraph.svelte | Bipartite force-directed graph — LayerCake + d3-force. Field patterns left, traditions right, TRIA/PRIA/PARA gravitational zones, unmapped region, edge style encoding | PLANNED |
-  | frontend/src/lib/components/SnmTemporalCorrespondence.svelte | Temporal correspondence view — LayerCake + d3-scale. Strength over time, prompt version boundaries, filterable | PLANNED |
+  | backend/services/engine_snm.py | SNM engine — extends engine_base. Two-stream compute (Sage observations + Claude structural analysis). Claude API calls (per-deposit + batch). Correspondence computation. Stream agreement classification. Snapshot assembly with Claude history. | NOT STARTED |
+  | backend/routes/engines.py | Shared engine routes — includes SNM-specific endpoints for Claude snapshot read and prompt management | NOT STARTED |
+  | frontend/src/lib/components/SnmBipartiteGraph.svelte | Bipartite force-directed graph — LayerCake + d3-force. Field patterns left, traditions right colored by pattern_category, uncategorized cluster explicit, edge style encoding | NOT STARTED |
+  | frontend/src/lib/components/SnmTemporalCorrespondence.svelte | Temporal correspondence view — LayerCake + d3-scale. Strength over time, prompt version boundaries, filterable | NOT STARTED |

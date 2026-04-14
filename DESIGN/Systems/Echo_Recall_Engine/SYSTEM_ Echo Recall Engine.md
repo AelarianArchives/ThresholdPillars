@@ -86,8 +86,8 @@ Constellation snapshots carry drift vectors and cluster groupings.
 | File | Role | Status |
 | --- | --- | --- |
 | DESIGN/Systems/Echo_Recall_Engine/ECHO RECALL ENGINE SCHEMA.md | Full mechanical spec — 171 pairs, 19 signals, sequence detection, constellation state, visualization specs, performance notes, failure modes | COMPLETE |
-| backend/services/engine_ecr.py | ECR computation — 171 pairs, 19 presence rates, sequence detection, constellation state management | PLANNED |
-| frontend/src/lib/components/EcrCorrelationMatrix.svelte | 19x19 with signal family block structure — d3-zoom essential | PLANNED |
-| frontend/src/lib/components/EcrSignalConstellation.svelte | Force-directed, stateful drift tracking — d3-force | PLANNED |
-| frontend/src/lib/components/EcrPresenceTimeline.svelte | 19 signal rows, deposit dots — d3-scale + d3-zoom | PLANNED |
-| frontend/src/lib/components/EcrSequenceView.svelte | Significance filter, recurrence counts, sortable | PLANNED |
+| backend/services/engine_ecr.py | ECR computation — 171 pairs, 19 presence rates, sequence detection, constellation state management | NOT STARTED |
+| frontend/src/lib/components/EcrCorrelationMatrix.svelte | 19x19 with signal family block structure — d3-zoom essential | NOT STARTED |
+| frontend/src/lib/components/EcrSignalConstellation.svelte | Force-directed, stateful drift tracking — d3-force | NOT STARTED |
+| frontend/src/lib/components/EcrPresenceTimeline.svelte | 19 signal rows, deposit dots — d3-scale + d3-zoom | NOT STARTED |
+| frontend/src/lib/components/EcrSequenceView.svelte | Significance filter, recurrence counts, sortable | NOT STARTED |

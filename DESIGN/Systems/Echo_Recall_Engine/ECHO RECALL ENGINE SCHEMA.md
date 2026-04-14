@@ -579,8 +579,8 @@ FILES
 
   | File | Role | Status |
   | --- | --- | --- |
-  | backend/services/engine_ecr.py | ECR engine — extends engine_base. Co-occurrence (171 pairs), presence (19 signals), sequence computations. Constellation state management. Snapshot assembly. | PLANNED |
-  | frontend/src/lib/components/EcrCorrelationMatrix.svelte | 19x19 correlation matrix — LayerCake + d3-interpolate + d3-zoom | PLANNED |
-  | frontend/src/lib/components/EcrSignalConstellation.svelte | Force-directed signal constellation — LayerCake + d3-force, stateful drift tracking | PLANNED |
-  | frontend/src/lib/components/EcrPresenceTimeline.svelte | Signal presence timeline — LayerCake + d3-scale + d3-zoom | PLANNED |
-  | frontend/src/lib/components/EcrSequenceView.svelte | Sequence detection display with significance filter — table/card layout | PLANNED |
+  | backend/services/engine_ecr.py | ECR engine — extends engine_base. Co-occurrence (171 pairs), presence (19 signals), sequence computations. Constellation state management. Snapshot assembly. | NOT STARTED |
+  | frontend/src/lib/components/EcrCorrelationMatrix.svelte | 19x19 correlation matrix — LayerCake + d3-interpolate + d3-zoom | NOT STARTED |
+  | frontend/src/lib/components/EcrSignalConstellation.svelte | Force-directed signal constellation — LayerCake + d3-force, stateful drift tracking | NOT STARTED |
+  | frontend/src/lib/components/EcrPresenceTimeline.svelte | Signal presence timeline — LayerCake + d3-scale + d3-zoom | NOT STARTED |
+  | frontend/src/lib/components/EcrSequenceView.svelte | Sequence detection display with significance filter — table/card layout | NOT STARTED |
