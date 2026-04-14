@@ -16339,6 +16339,37 @@ NEXT_ACTION: Commit and push, then close session.
 TIMESTAMP: 2026-04-14
 TYPE: WORK_UNIT
 SESSION: 47
+TASK: Tier 2 audit + build spec completion (6 missing sections)
+FILES_MODIFIED:
+  - .claude/audits/tier2-completion-audit-2026-04-14.md — NEW, COMPLETE
+  - .claude/plans/design-build-spec.md — COMPLETE
+COMPLETED:
+  - Audit artifact written. Root cause: session 46 locked all items at
+    file level but never extracted to build spec before session ended.
+  - Sections written and locked:
+      2.3 Deposit Card Component
+      2.4 Instance Context
+      2.5 Deposit Weight — AI Suggestion Logic
+      2.6 Engine Baseline Recalibration + AOS (merged)
+      2.9 Deposit Genealogy View
+      2.10 Annotation Layer
+  - All pending list items struck. Every item in 2.3-2.18 is now
+    struck or categorized (DEAD/DRIFT/HOLD).
+  - Ghost fixes confirmed: sections at lines 533-698, pending list
+    fully struck at lines 706-719.
+  - TIER 2 FULLY COMPLETE — pending list exhausted.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Session close
+UNCOMMITTED: YES
+NEXT_ACTION: Commit, push, close session.
+---
+
+---
+TIMESTAMP: 2026-04-14
+TYPE: WORK_UNIT
+SESSION: 47
 TASK: Black Pearl lock — File 3 of 3 (design-build-spec.md)
 FILES_MODIFIED:
   - .claude/plans/design-build-spec.md — COMPLETE

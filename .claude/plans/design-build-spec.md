@@ -530,6 +530,172 @@ Engine trigger fires (or Sage triggers from analytical surface) →
 
 ---
 
+### 2.3 DEPOSIT CARD COMPONENT
+
+**Status:** LOCKED
+**Audited:** Session 46 (2026-04-10). Canonical spec: SYSTEM_ Frontend.md.
+
+Base card layout — three zones:
+- Top: DOC_TYPE · TAGS · STAMP
+- Middle: content preview
+- Bottom: SESSION DATE · PROVENANCE ICON · WEIGHT BADGE
+
+Three provenance icons: INT batch · Manual · Black Pearl promoted
+
+Expand-on-click reveals: full content, metadata, provenance chain,
+engine signal (patterns this deposit contributes to + signal bands),
+edit access (tags and annotations only), genealogy timeline, annotations.
+
+**Per-page card variations:**
+- THR / STR / INF / ECR / SNM — colored left edge
+- DTX / SGR / PCV / VOI — compact 1-line, sort default: deposit_weight desc
+- MTM — no deposit cards
+- WSC — no deposit cards
+- Domain pages — provenance icon prominent
+- HCO / COS / CLM / NHM / RCT / ART — base card, no variation
+- LNV — uses LnvGalleryCard (separate component, no deposit cards)
+- Media deposits — MediaDepositCard: large thumbnail, summary alongside,
+  lightbox on click
+
+Sort behavior: per-page defaults in PAGE_LAYOUTS.md. Null weight sorts
+to bottom across all pages.
+
+**Spec authority:** SYSTEM_ Frontend.md — DEPOSIT CARD COMPONENT section
+
+---
+
+### 2.4 INSTANCE CONTEXT
+
+**Status:** LOCKED
+**Audited:** Session 46 (2026-04-10). Corrections applied to two files.
+
+instance_context on the deposit record is a pointer to an active entry
+in the instance registry. Not a literal value — a registry reference.
+
+Instance = phase period with a date range. Sage creates instances
+manually. One active at a time. Registry entry tracks: agent ID, phase
+state, date range, system continuity flag.
+
+Validated non-null at deposit creation — every deposit must have an
+active instance context.
+
+**Spec authority:** INTEGRATION SCHEMA.md (Definition B — field
+description + JSON block), WSC SCHEMA.md (registry pointer correction)
+
+---
+
+### 2.5 DEPOSIT WEIGHT — AI SUGGESTION LOGIC
+
+**Status:** LOCKED
+**Audited:** Session 46 (2026-04-10). Canonical prompt in TAGGER SCHEMA.
+
+AI suggests deposit_weight (high | standard | low) using three factors
+in priority order:
+
+1. doc_type — observations, analyses, hypotheses trend higher than
+   entries, transcripts, or discussion
+2. Content specificity — named patterns, concrete detail, specific
+   cross-references signal higher weight
+3. Confidence — clear > raw when content quality is otherwise equal
+
+Default to standard when ambiguous. Sage overrides freely — AI
+suggestion is a starting point, not a gate.
+
+Null weight sorts to bottom on all deposit lists (edge case —
+weight is always populated at deposit creation).
+
+Multiplier constants (2.0 / 1.0 / 0.5) live in engine schemas and
+are not reassigned here.
+
+**Spec authority:** TAGGER SCHEMA.md (DEPOSIT_WEIGHT ASSESSMENT PROMPT),
+INTEGRATION DB SCHEMA.md (deposit_weight field definition)
+
+---
+
+### 2.6 ENGINE BASELINE RECALIBRATION + AOS
+
+**Status:** LOCKED
+**Audited:** Session 46 (2026-04-10). Items 13 + 15 merged. Two new
+system files created: SYSTEM_ AOS.md, AOS SCHEMA.md.
+
+Engine Baseline Recalibration is fully absorbed into the AOS trigger
+registry — it is not a separate system. AOS is the unified system.
+
+**Two-layer architecture:**
+
+Signal layer — detection, record creation, integrity hash, delivery
+routing. Triggers: engine corpus doubles (2× multiplier threshold),
+engine variance exceeds threshold, Sage manual trigger from analytical
+surface. Each trigger creates an aos_record with an integrity hash.
+Delivery routed by signal_type (immediate for high-signal, daily
+digest for lower-signal).
+
+Delivery layer — Gmail OAuth (Larimar → Threshold Studies), Drive
+pipeline, APScheduler 11:11 PM daily cron. delivery_error field on
+aos_records captures failed delivery attempts. Pulse node is the
+fallback when email delivery itself fails (system alert surface, not
+email).
+
+AOS records persist permanently. They are not cleared after delivery.
+
+**Spec authority:** SYSTEM_ AOS.md (system overview, ownership
+boundaries), AOS SCHEMA.md (full schema, triggers, delivery contract)
+
+---
+
+### 2.9 DEPOSIT GENEALOGY VIEW
+
+**Status:** LOCKED
+**Audited:** Session 46 (2026-04-10). Canonical spec: SYSTEM_ Frontend.md.
+
+Read-only lifecycle timeline rendered on deposit card expand. Never
+visible on the card face — expand only.
+
+No dedicated table. Assembled at read time from existing tables:
+deposits, batch records, engine state, PCV, MTM.
+
+Component: DepositGenealogy
+
+Stage sequence (in order):
+  Pearl capture (if applicable) → INT review → deposit creation →
+  page routing → engine indexing → pattern contribution →
+  finding contribution → hypothesis contribution
+
+Future stages (not yet reached) render grayed out. Click on any
+completed stage navigates to its context (e.g., clicking INT review
+opens the batch record, clicking a pattern opens the pattern entry).
+
+**Spec authority:** SYSTEM_ Frontend.md — expanded card spec,
+DepositGenealogy component, component list
+
+---
+
+### 2.10 ANNOTATION LAYER
+
+**Status:** LOCKED
+**Audited:** Session 46 (2026-04-10). Table defined in INTEGRATION DB
+SCHEMA.md. Bug fix applied (annotation → note in two files).
+
+Researcher marginalia on any analytical object in the archive.
+
+One table: annotations. Polymorphic reference via annotated_type +
+annotated_id. Zero changes to existing schemas — no cascades.
+
+annotated_type enum:
+  deposit | finding | hypothesis | void_output | engine_snapshot
+
+Explicitly excluded:
+  WSC entries — immutable by architecture. AI-sovereign record.
+  AOS records — system records only. Sage-confirmed exclusion.
+
+Visible only in the expanded view of the annotated object. Never
+on the card face or list surface. Exportable per page as a research
+commentary layer.
+
+**Spec authority:** INTEGRATION DB SCHEMA.md — annotations table
+
+---
+
 ### 2.3–2.18 REMAINING SECTIONS (review in progress)
 
 The following sections are pending Sage review. They will be added to
@@ -537,18 +703,18 @@ this document as each passes audit:
 
 - ~~UI Architecture Foundation~~ — removed, deferred to master layout doc
 - ~~Shared Shell + Navigation Contract~~ — removed, deferred to master layout doc
-- Deposit Card Component
+- ~~Deposit Card Component~~ — locked session 46 (section 2.3)
 - ~~Page Load + Empty State~~ — removed, deferred to master layout doc
-- ~~Black Pearl Panel Interaction Spec~~ — locked 2026-04-14
-- ~~Session Schema~~ — locked session 46
-- ~~Instance Context~~ — locked session 46
-- Deposit Weight AI Suggestion
+- ~~Black Pearl Panel Interaction Spec~~ — locked 2026-04-14 (section 2.7)
+- ~~Session Schema~~ — locked session 46 (section 2.4 note)
+- ~~Instance Context~~ — locked session 46 (section 2.4)
+- ~~Deposit Weight AI Suggestion~~ — locked session 46 (section 2.5)
 - ~~Observatory Spec~~ — audited clean 2026-04-10, no file changes needed
 - ~~Duplicate Prevention on Re-Route~~ — corrected 2026-04-10 (INTEGRATION SCHEMA + DB SCHEMA updated, duplicate_flagged field added)
-- Engine Baseline Recalibration
-- AOS (Automated Observation Signal)
-- Deposit Genealogy View
-- Annotation Layer
+- ~~Engine Baseline Recalibration~~ — locked session 46, merged into AOS (section 2.6)
+- ~~AOS (Automated Observation Signal)~~ — locked session 46 (section 2.6)
+- ~~Deposit Genealogy View~~ — locked session 46 (section 2.9)
+- ~~Annotation Layer~~ — locked session 46 (section 2.10)
 - ~~WSC HOLDING note~~ — recorded below, held for Tier 4
 - ~~Pipeline Segment (Tier 2)~~ — locked 2026-04-14 (section 2.8)
 
