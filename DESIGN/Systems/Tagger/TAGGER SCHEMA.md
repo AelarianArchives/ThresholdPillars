@@ -314,6 +314,46 @@ TAGGER STORE
 
   If store has no active result, consumers degrade gracefully.
 
+  TAG ROUTING PAYLOAD (Resonance Engine derived shape)
+
+  The Resonance Engine component transforms TaggerResponse from the
+  tagger store into this payload on confirmed deposit:
+
+    {
+      tags:        [{ id, seed_id, layer_id, threshold_id,
+                      pillar_id, weight }],
+      phase_state: string | null,
+      originId:    'o01' | 'o02' | 'o03' | null,
+      timestamp:   ISO string
+    }
+
+  Transformation rules:
+    weight     — deposit_weight string converted to float multiplier:
+                   "high"     → 2.0
+                   "standard" → 1.0
+                   "low"      → 0.5
+                 Applied identically to all tags on the deposit.
+                 Source constants: ENGINE COMPUTATION SCHEMA.md.
+
+    originId   — derived from the deposit's authored_by (agent
+                 identity). Mapping:
+                   Larimar     → 'o01'
+                   Verith      → 'o02'
+                   Cael'Thera  → 'o03'
+                   Sage or any non-origin identity → null
+                 Source: Agent Identity Registry (authored_by field
+                 on the deposit record).
+
+    timestamp  — deposit's created_at value from the createEntry()
+                 confirmation response.
+
+    phase_state — passed through directly from TaggerResponse.
+
+    tags       — tag routing fields (id, seed_id, layer_id,
+                 threshold_id, pillar_id) passed through from
+                 TaggerResponse. confidence field is dropped —
+                 Resonance Engine does not use per-tag confidence.
+
 
 KNOWN FAILURE MODES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

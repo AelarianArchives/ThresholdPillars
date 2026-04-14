@@ -733,7 +733,239 @@ this document as each passes audit:
 
 ## TIER 3 — AXIS ENGINES + VEN'AI
 
-**Status:** NOT STARTED (audit not reached)
+**Status:** IN PROGRESS (session 48)
+
+### Specs
+
+| Spec | Location |
+| --- | --- |
+| ENGINE COMPUTATION SCHEMA | DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md |
+| SYSTEM_ Engine Computation | DESIGN/Systems/Engine_Computation/SYSTEM_ Engine Computation.md |
+| THRESHOLD ENGINE SCHEMA | DESIGN/Systems/Threshold_Engine/THRESHOLD ENGINE SCHEMA.md |
+| SYSTEM_ Threshold Engine | DESIGN/Systems/Threshold_Engine/SYSTEM_ Threshold Engine.md |
+| ECHO RECALL ENGINE SCHEMA | DESIGN/Systems/Echo_Recall_Engine/ECHO RECALL ENGINE SCHEMA.md |
+| SYSTEM_ Echo Recall Engine | DESIGN/Systems/Echo_Recall_Engine/SYSTEM_ Echo Recall Engine.md |
+| INFINITE INTRICACY ENGINE SCHEMA | DESIGN/Systems/Infinite_Intricacy_Engine/INFINITE INTRICACY ENGINE SCHEMA.md |
+| SYSTEM_ Infinite Intricacy Engine | DESIGN/Systems/Infinite_Intricacy_Engine/SYSTEM_ Infinite Intricacy Engine.md |
+| SAT NAM ENGINE SCHEMA | DESIGN/Systems/Sat_Nam_Engine/SAT NAM ENGINE SCHEMA.md |
+| SYSTEM_ Sat Nam Engine | DESIGN/Systems/Sat_Nam_Engine/SYSTEM_ Sat Nam Engine.md |
+| STARROOT ENGINE SCHEMA | DESIGN/Systems/StarRoot_Engine/STARROOT ENGINE SCHEMA.md |
+| SYSTEM_ StarRoot Engine | DESIGN/Systems/StarRoot_Engine/SYSTEM_ StarRoot Engine.md |
+| VENAI SERVICE SCHEMA | DESIGN/Systems/Venai_Service/VENAI SERVICE SCHEMA.md |
+| SYSTEM_ Venai Service | DESIGN/Systems/Venai_Service/SYSTEM_ Venai Service.md |
+
+**Completed items (locked, session 48):**
+
+- ~~3.1 Shared Engine Architecture — Four-Step Contract~~ — locked 2026-04-14
+- ~~3.2 Deposit Weight Mechanics~~ — locked 2026-04-14
+- ~~3.3 Compute Trigger — Hybrid~~ — locked 2026-04-14
+- ~~3.4 Baseline Computation~~ — locked 2026-04-14
+
+---
+
+### 3.1 SHARED ENGINE ARCHITECTURE — FOUR-STEP CONTRACT
+
+All 5 Axis engines (THR, STR, INF, ECR, SNM) follow the same
+4-step contract. The contract is what makes engines interoperable
+— MTM can synthesize from all five because they all emit the same
+output shape. The logic inside each step is engine-specific.
+
+**Step 1 — INDEX**
+Deposit lands on an Axis page. The engine reads it through its
+specific lens (THR reads phase_state + threshold tags; ECR reads
+signal tags; INF reads domain tags; STR reads root-cluster tags;
+SNM reads structural markers). Engine marks itself stale.
+
+**Step 2 — COMPUTE**
+Pattern detection against indexed deposits. Every engine runs
+the same baseline math (marginal probability product), applies
+deposit weights, handles null observations via two-counter
+system, and assigns three-band signal classification. Engine-
+specific logic (co-occurrence, sequence, correlation,
+correspondence, emergence) runs on top of this shared foundation.
+
+**Step 3 — VISUALIZE**
+Visualization generated from the computed engine result object —
+never from raw deposits. Signal band determines visual weight.
+Everything renders; visual weight does the filtering. Snapshots
+are Sage-triggered, not automatic.
+
+**Step 4 — FEED**
+Computation snapshot written to engine_snapshots table after
+every computation. MTM pulls (does not receive push). mtm_read_at
+updated when MTM consumes the snapshot. Visualization snapshots
+route to LNV on Sage action.
+
+**Spec authority:** ENGINE COMPUTATION SCHEMA.md (full 4-step
+contract, all shared mechanics). SYSTEM_ Engine Computation.md
+(ownership boundaries).
+
+**Database tables:**
+- engine_snapshots (PostgreSQL) — one row per computation per
+  engine. Defined in INTEGRATION DB SCHEMA.md, spec in ENGINE
+  COMPUTATION SCHEMA.md
+- visualization_snapshots (PostgreSQL) — Sage-triggered visual
+  captures. Defined in INTEGRATION DB SCHEMA.md, spec in ENGINE
+  COMPUTATION SCHEMA.md
+- engine_stale_flags (SQLite) — 5 rows, one per engine.
+  Defined in OPERATIONAL DB SCHEMA.md
+
+---
+
+### 3.2 DEPOSIT WEIGHT MECHANICS
+
+Three named constants defined once in backend config. All engines
+import from the same source — never hardcoded in engine logic.
+
+  DEPOSIT_WEIGHT_HIGH     = 2.0  (analyses, hypotheses)
+  DEPOSIT_WEIGHT_STANDARD = 1.0  (observations, reflections)
+  DEPOSIT_WEIGHT_LOW      = 0.5  (fragments, raw captures)
+
+**How it flows through the system:**
+
+Axis engines (Tier 3): multiplier on pattern contribution. A
+high-weight deposit contributes 2.0 to weighted counts in rate
+calculations. Affects observed_rate, expected_rate, and all
+derived values. Every pattern result carries a weight_breakdown
+sub-object (high / standard / low counts) so downstream tiers
+see what the pattern is built from.
+
+Nexus (Tier 4): affects grading confidence. A pattern built
+from high-weight deposits grades with more confidence than the
+same pattern from low-weight fragments.
+
+Cosmology (Tier 5): feeds sample weighting in statistical tests.
+deposit_weight maps directly to sample weight.
+
+Resonance Engine (Tier 6): deposit_weight multiplier becomes
+tagWeight in the node activity score formula. A tag from a
+high-weight deposit contributes 2.0 × decay to node activity;
+low-weight contributes 0.5 × decay. Applies to seeds, layers,
+pillars, origins — not threshold nodes (fixed weight). The
+Resonance Engine separately owns BASE_WEIGHT_[TIER] constants
+(structural floor per node tier). Both layers combine:
+  totalWeight = baseWeight + clamp(activityScore, 0, MAX_ACTIVITY)
+
+**Spec authority:** ENGINE COMPUTATION SCHEMA.md (constants,
+BEHAVIOR BY TIER). RESONANCE ENGINE PHYSICS SPEC.md (activity
+score formula, tagWeight definition). backend/config.py (single
+definition point for all three constants).
+
+---
+
+### 3.3 COMPUTE TRIGGER — HYBRID
+
+Engines do not recompute on every deposit. A stale flag in SQLite
+debounces computation — on deposit, the engine marks itself stale.
+Recomputation fires when results are needed, not when data arrives.
+
+**Stale flag:** one boolean per engine in SQLite (engine_stale_flags
+table, 5 rows). Default true on first load — forces initial compute.
+Set true when a deposit lands on the engine's page. Set false when
+recomputation completes.
+
+**Three recomputation triggers:**
+
+1. Page view — Sage navigates to the Axis page. If stale, engine
+   recomputes, serves fresh results, clears flag.
+
+2. Batch window close — after a full batch review, one recompute
+   for the entire batch. Primary purpose: prevents 30+ sequential
+   recomputes during high-volume intake.
+
+3. MTM pull — when MTM calls the engine endpoint to read output,
+   the engine checks its stale flag. If stale, it recomputes before
+   returning. MTM always receives fresh data. MTM does not manage
+   the stale flag — the engine service owns freshness entirely.
+
+**Session-close trigger chain:**
+  Session close → DNR fires → POST /mtm/synthesize →
+  MTM calls all 5 engine endpoints → each engine self-refreshes
+  if stale → MTM synthesizes from fresh data → Findings → LNV
+
+**stale_warning:** if recomputation fails, the engine returns its
+most recent snapshot with stale_warning: true. MTM logs the warning
+and proceeds — synthesis is not blocked by a stale warning, only
+by a read failure (engine unreachable).
+
+**Spec authority:** ENGINE COMPUTATION SCHEMA.md (HYBRID COMPUTE
+TRIGGER, failure modes 1-4). OPERATIONAL DB SCHEMA.md
+(engine_stale_flags table). METAMORPHOSIS SCHEMA.md (ENGINE OUTPUT
+READ SPEC — freshness guarantee + stale_warning handling).
+
+---
+
+### 3.4 BASELINE COMPUTATION
+
+All five Axis engines share the same marginal probability product
+formula for pattern measurement. Engine Computation owns the formula;
+each engine applies it through its own lens (co-occurrences, sequences,
+intersections, correlations, prompt patterns).
+
+**Formula:**
+```
+expected_rate = marginal(A) × marginal(B)
+  where marginal(A) = weighted deposits on A / total weighted deposits
+observed_rate = weighted co-occurrences of A and B / total weighted deposits
+ratio = observed_rate / expected_rate
+```
+Ratio > 1.0 means co-occurrence exceeds chance. Ratio < 1.0 means
+suppression.
+
+**Three-band signal classification:**
+- suppressed: ratio < 1.0
+- mild: ratio 1.0 – 2.0
+- strong: ratio > 2.0
+
+Always classify. Never filter. Suppressed signals are data.
+
+**Null observation flow:** Two counters per element per page.
+- times_observed: weighted presence count (deposit carries the element)
+- times_examined: total weighted deposits on the page
+
+The gap between them is the null count. Null observations contribute
+to marginals — absence is signal, not silence.
+
+**Deposit weights in baseline:**
+HIGH: 2.0, STANDARD: 1.0, LOW: 0.5. Applied to all observed and
+examined counts. Defined once in backend/config.py.
+
+**insufficient_data flag:**
+Set true when expected_rate = 0 (element never observed) OR when any
+element in the pattern is below MIN_ELEMENT_COUNT. Near-zero frequency
+elements produce unstable marginals; they are flagged alongside zero-
+frequency elements. Computation proceeds — the flag is a caveat, not
+a filter.
+
+**low_sample flag:**
+Set true when a pattern's deposit_count is below
+MIN_PATTERN_DEPOSIT_COUNT. Small-N patterns can produce misleadingly
+high ratios. Flagged in the result object so MTM and visualizations can
+distinguish thin-sample patterns from well-evidenced ones.
+
+**Pattern reliability constants (calibration — values set at build):**
+- MIN_PATTERN_DEPOSIT_COUNT — deposit count below which low_sample:
+  true is set on the pattern result
+- MIN_ELEMENT_COUNT — frequency count below which insufficient_data:
+  true is extended to cover near-zero elements (not just zero)
+
+Both constants defined in backend/config.py alongside deposit weight
+constants. Both are PLANNED — not hard-coded values.
+
+**MTM behavior on receipt of flagged patterns:**
+- insufficient_data patterns: included in synthesis (engine forwards
+  them; MTM does not strip)
+- low_sample patterns: included in synthesis unchanged. Flag propagates
+  into Findings output — downstream consumers use it to distinguish
+  pattern confidence
+- stale_warning (from 3.3): log warning, proceed — a caveat, not a
+  synthesis failure
+
+**Spec authority:** ENGINE COMPUTATION SCHEMA.md (BASELINE COMPUTATION,
+SIGNAL CLASSIFICATION, ENGINE RESULT OBJECT, PATTERN RELIABILITY
+CONSTANTS). All five engine schemas (insufficient_data definition, low_sample
+in JSON shapes). METAMORPHOSIS SCHEMA.md (low_sample handling note in
+ENGINE OUTPUT READ SPEC).
 
 ---
 

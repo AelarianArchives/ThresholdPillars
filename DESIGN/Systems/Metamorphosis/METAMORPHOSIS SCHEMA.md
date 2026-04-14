@@ -119,6 +119,31 @@ architecture (ENGINE COMPUTATION SCHEMA.md). MTM reads these outputs via the
 Feed step — pull, not push. MTM pulls engine outputs at synthesis time. Engines
 do not push to MTM.
 
+**Freshness guarantee:** Engine endpoints self-refresh before returning. When
+MTM calls an engine endpoint, the engine checks its own stale flag. If stale,
+the engine recomputes and clears the flag before returning its result. MTM
+always receives current data. MTM does not manage or check the stale flag — the
+engine service owns that entirely.
+
+**stale_warning handling:** If an engine's recomputation fails, the engine
+returns its most recent existing snapshot with stale_warning: true in the
+engine_result object. MTM behavior on receipt of stale_warning: true:
+- Log the warning against the affected engine
+- Proceed with synthesis using the delivered snapshot
+- Synthesis is not blocked — a stale warning is a caveat, not a failure
+- The stale_warning is not surfaced as a synthesis failure_type
+A read failure (engine unreachable or error response) is different from a
+stale warning and does cause synthesis to fail with failure_type → pre_synthesis.
+
+**low_sample handling:** Engine pattern results may carry low_sample: true when
+a pattern's deposit_count is below MIN_PATTERN_DEPOSIT_COUNT. MTM behavior on
+receipt of low_sample: true patterns:
+- Include the pattern in synthesis as-is — low_sample is a caveat, not a filter
+- MTM does not strip or de-weight low_sample patterns; synthesis treats them as
+  any other pattern result
+- The low_sample flag propagates into the Findings output so downstream consumers
+  can distinguish well-evidenced patterns from thin-sample patterns
+
 ### Synthesis threshold filter
 
 Before the Pass 1 payload is assembled, all engine pattern results are filtered:

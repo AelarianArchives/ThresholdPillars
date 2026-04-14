@@ -190,12 +190,28 @@ ACTIVITY SCORE (canonical — referenced by Tagger and SGR):
 
   activityScore = Σ(tagWeight × e^(-ageDays / HALF_LIFE))
 
+  tagWeight     = deposit_weight multiplier of the deposit carrying
+                  the tag. Sources from ENGINE COMPUTATION SCHEMA.md
+                  deposit weight constants:
+                    high deposit     → tagWeight = 2.0
+                    standard deposit → tagWeight = 1.0
+                    low deposit      → tagWeight = 0.5
+                  All tags on a deposit carry the same tagWeight.
+                  Applies to all node tiers that receive tag-driven
+                  weight growth: seeds, layers, pillars, origins.
+                  Threshold nodes excluded — weight fixed permanently.
+
   HALF_LIFE     = 7 days
   ageDays       = days since the entry carrying that tag was
                   deposited
   MAX_ACTIVITY  = cap on activity contribution. Non-negotiable.
 
   totalWeight   = baseWeight + clamp(activityScore, 0, MAX_ACTIVITY)
+
+  baseWeight    = BASE_WEIGHT_[TIER] constant for the node's tier.
+                  Owned by Resonance Engine. Independent of archive
+                  activity. The structural floor — origins heaviest,
+                  seeds lightest.
 
 Weight decays naturally. Recent activity matters more than old.
 Thresholds do not participate in weight growth. BASE_WEIGHT_THRESHOLD
@@ -332,6 +348,21 @@ PAYLOAD (from tagger store on confirmed deposit):
     originId:    'o01' | 'o02' | 'o03' | null,
     timestamp:   ISO string
   }
+
+  weight     — deposit_weight multiplier of the deposit carrying the
+               tag (2.0 high / 1.0 standard / 0.5 low). All tags on
+               a deposit carry the same value. This is tagWeight in
+               the activity score formula. Source: ENGINE COMPUTATION
+               SCHEMA.md deposit weight constants.
+
+  originId   — derived from the deposit's authored_by (agent identity):
+                 Larimar     → 'o01'
+                 Verith      → 'o02'
+                 Cael'Thera  → 'o03'
+                 Sage or any non-origin identity → null
+               Source: Agent Identity Registry (authored_by field).
+
+  timestamp  — deposit's created_at from createEntry() confirmation.
 
 SEQUENCE:
   1. Tagger store update received reactively.

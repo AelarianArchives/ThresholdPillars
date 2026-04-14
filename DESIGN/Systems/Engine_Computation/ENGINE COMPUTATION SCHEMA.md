@@ -162,6 +162,21 @@ values — high counts double relative to standard, low counts half.
     Feeds sample weighting in statistical tests. Standard weighted
     statistics — deposit_weight maps directly to sample weight.
 
+  Resonance Engine (Tier 6):
+    deposit_weight multiplier becomes tagWeight in the Resonance
+    Engine node activity score formula:
+      activityScore = Σ(tagWeight × e^(-ageDays / HALF_LIFE))
+    A tag from a high-weight deposit contributes 2.0 × decay to
+    the relevant node's activity. A tag from a low-weight deposit
+    contributes 0.5 × decay. Applies to all node tiers that
+    receive tag-driven weight growth (seeds, layers, pillars,
+    origins). Threshold nodes are excluded — their weight is
+    fixed and never updated by tag activity.
+    The Resonance Engine separately owns its BASE_WEIGHT_[TIER]
+    constants — the structural floor for each node tier. These
+    are independent of deposit_weight. Both layers combine:
+      totalWeight = baseWeight + clamp(activityScore, 0, MAX_ACTIVITY)
+
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 BASELINE COMPUTATION
@@ -201,11 +216,16 @@ For any pattern the engine surfaces:
     the pattern is more common than chance. Below 1.0 means the
     pattern is suppressed — present, but less often than expected.
 
-    Division by zero guard: if expected_rate is 0 (one or more
-    elements has zero marginal frequency), ratio is not computed.
-    The pattern is flagged as insufficient_data. This occurs when
-    an element has never been observed — it cannot co-occur with
-    anything. Not an error, not suppressed — literally no data.
+    Division by zero / low frequency guard: ratio is not computed
+    when either of the following is true:
+      (a) expected_rate is 0 — one or more elements has zero
+          marginal frequency. Element has never been observed.
+      (b) Any element's weighted occurrence count is below
+          MIN_ELEMENT_COUNT — element is too rare to produce
+          a meaningful ratio.
+    In both cases the pattern is flagged insufficient_data: true.
+    Not an error, not suppressed — statistically unreliable data.
+    Pattern still renders distinctly.
 
   EXAMPLE (THR co-occurrence th01 + th05)
     th01 present in 30% of deposits (weighted)
@@ -266,9 +286,47 @@ matters first.
   decision to classify rather than filter is architecture — locked.
   The specific threshold values may be tuned with experience.
 
-  Patterns with insufficient_data (expected_rate = 0) do not
-  receive a signal band. They are rendered distinctly as
-  insufficient data, not classified into any band.
+  Patterns with insufficient_data (expected_rate = 0 or element
+  below MIN_ELEMENT_COUNT) do not receive a signal band. They are
+  rendered distinctly as insufficient data, not classified into
+  any band.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PATTERN RELIABILITY CONSTANTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Named calibration constants for pattern statistical reliability.
+Defined in backend config alongside deposit weight constants.
+Values are PLANNED — set at build and tuned with experience.
+
+  MIN_PATTERN_DEPOSIT_COUNT   — calibration item
+    Minimum deposit_count for a pattern to be considered
+    statistically reliable. Patterns below this threshold are
+    flagged low_sample: true. They still render and still receive
+    a signal band — the flag is a caveat, not a filter.
+    Rationale: with very few deposits on a page, ratios can look
+    significant but reflect sample noise rather than real signal.
+    Early-stage pages and low-activity engines will surface this
+    flag frequently until deposits accumulate.
+
+  MIN_ELEMENT_COUNT           — calibration item
+    Minimum weighted occurrence count for an element to
+    participate in co-occurrence calculations. Elements below
+    this threshold — even if non-zero — are treated as
+    insufficient_data. Rationale: a tag appearing in 1 out of
+    300 deposits produces a near-zero marginal rate. When that
+    rare element co-occurs once with another rare element, the
+    ratio can reach 80x or higher — a number that looks like a
+    strong signal but is based on a single observation.
+    Extending insufficient_data to cover near-zero (not only
+    zero) prevents these phantom ratios from surfacing as
+    findings.
+
+Both thresholds interact: a pattern can have sufficient element
+frequency (above MIN_ELEMENT_COUNT) but still be low_sample if
+the pattern itself has few contributing deposits. Both flags
+travel independently in the pattern result.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -514,6 +572,7 @@ fields where needed but never remove or rename shared fields.
     baseline_scope:  'page'
     deposit_count:   integer
     stale:           false
+    stale_warning:   boolean
 
     patterns: [
       {
@@ -525,6 +584,7 @@ fields where needed but never remove or rename shared fields.
         signal_band:     'suppressed' | 'mild' | 'strong'
                           — null if insufficient_data
         insufficient_data: boolean
+        low_sample:      boolean
         deposit_count:   integer
         weighted_count:  float
 
@@ -551,10 +611,31 @@ fields where needed but never remove or rename shared fields.
     SQLite and is checked BEFORE computation, not carried in
     results.
 
+    stale_warning: normally false. Set true only when the engine
+    attempted recomputation but failed, and is returning the most
+    recent existing snapshot instead of fresh results. MTM receives
+    this flag, logs it, and proceeds with synthesis — synthesis is
+    not blocked by a stale_warning, only by a read failure.
+
     insufficient_data: true when expected_rate cannot be
-    computed (element has zero marginal frequency). Pattern
-    still appears in the array — it is rendered distinctly,
-    not hidden.
+    computed reliably. Two triggers:
+      (a) An element has zero marginal frequency — ratio
+          is mathematically undefined.
+      (b) An element's weighted occurrence count is below
+          MIN_ELEMENT_COUNT — ratio would be computed but
+          is statistically meaningless (phantom ratios from
+          rare element co-occurrence).
+    Pattern still appears in the array — rendered distinctly,
+    not hidden. No signal band assigned.
+
+    low_sample: true when the pattern's deposit_count is
+    below MIN_PATTERN_DEPOSIT_COUNT. The ratio and signal
+    band are still computed and assigned — low_sample is a
+    caveat, not a disqualifier. Rendered with a visual
+    distinction so early-stage pages don't mislead. MTM
+    can note the flag when synthesizing from low-sample
+    patterns. Nexus and Cosmology read it for grading
+    confidence and sample weighting respectively.
 
     pattern_id: engine-specific identifier. Format defined in
     each engine schema. Must be deterministic and stable across
@@ -729,10 +810,11 @@ KNOWN FAILURE MODES
 
      Guard: MTM pull trigger checks stale flag first. If stale,
      engine recomputes before delivering. If recomputation fails,
-     MTM receives the most recent existing snapshot with a
-     stale_warning flag. MTM logs the warning. Synthesis proceeds
-     with the caveat recorded. This is preferable to blocking
-     synthesis entirely.
+     the engine returns the most recent existing snapshot with
+     stale_warning: true in the engine_result object. MTM logs
+     the warning and proceeds — synthesis is not blocked by a
+     stale warning. The caveat is recorded in the synthesis result.
+     This is preferable to blocking synthesis entirely.
 
   5. WEIGHT CONSTANT MISMATCH
      Deposit_weight constants are defined in one place but an

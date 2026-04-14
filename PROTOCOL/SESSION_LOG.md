@@ -16394,3 +16394,186 @@ UNCOMMITTED: YES
 NEXT_ACTION: Commit all changes from this session, then proceed to
   WSC HOLDING note or close session per Sage's direction.
 ---
+TIMESTAMP: 2026-04-14
+TYPE: CLOSE
+SESSION: 47
+NOTE: Retrospective close. Session 47 context was compacted mid-session
+  before CLOSE entry was written. All session 47 work was committed and
+  pushed prior to compaction. Close entry written at session 48 open.
+FILES_MODIFIED:
+  - DESIGN/Systems/Black_Pearl/SYSTEM_ Black Pearl.md — NEW, COMPLETE
+  - DESIGN/Systems/Black_Pearl/BLACK PEARL SCHEMA.md — NEW, COMPLETE
+  - DESIGN/Systems/Operational_DB/OPERATIONAL DB SCHEMA.md — label field added
+  - DESIGN/Systems/Integration/INTEGRATION SCHEMA.md — label field, GET /pearls/, PATCH /archive
+  - DESIGN/Systems/Frontend/SYSTEM_ Frontend.md — panel rewrite, stores updated
+  - .claude/plans/design-build-spec.md — sections 2.3-2.10, pending list fully struck
+  - .claude/audits/black-pearl-gap-audit-2026-04-14.md — NEW, COMPLETE
+  - .claude/audits/tier2-completion-audit-2026-04-14.md — NEW, COMPLETE
+  - memory/project_tier2_resume.md — updated to reflect Tier 2 complete
+  - PROTOCOL/SESSION_LOG.md — OPEN, multiple WORK_UNIT entries
+COMPLETED:
+  - Black Pearl fully locked (7 files)
+  - WSC HOLDING: struck, recorded as HOLD in build spec
+  - Pipeline Segment (Tier 2): section 2.8 written, locked
+  - Tier 2 completion audit: 6 missing sections identified and written
+  - Tier 2 pending list fully struck. Tier 2 LOCKED.
+  - Tier 3 scan begun: all design-session-plan.md Tier 3 content read,
+    cross-tier scan performed, working list compiled. Session compacted
+    before first Tier 3 build spec write.
+COMMITTED: YES (committed and pushed before compaction)
+---
+TIMESTAMP: 2026-04-14
+TYPE: OPEN
+SESSION: 48
+RESUMING_FROM: Session 47 (context compacted mid-Tier-3 read)
+PRIOR_STATE:
+  - Tier 2 fully LOCKED.
+  - Tier 3 working list compiled (16 items). Session plan read complete.
+    No Tier 3 components scattered in Tiers 4-6.
+  - design-build-spec.md: Tier 3 section is empty stub, ready to build.
+FOCUS: Tier 3 — Axis Engines + Ven'ai. One item at a time per process.
+---
+TIMESTAMP: 2026-04-14
+TYPE: WORK_UNIT
+SESSION: 48
+TASK: Tier 3 — 3.1 Shared Engine Architecture — build spec write + file audit
+FILES_MODIFIED:
+  - .claude/plans/design-build-spec.md — section 3.1 written
+  - .claude/plans/design-session-plan.md — null_target drift corrected (lines 2090-2094)
+COMPLETED:
+  - Confirmed 3.1 against ENGINE COMPUTATION SCHEMA.md and SYSTEM_ Engine
+    Computation.md. Both files complete and clean.
+  - Cross-reference audit: engine_snapshots and visualization_snapshots
+    tables confirmed in INTEGRATION DB SCHEMA.md. engine_stale_flags
+    confirmed in OPERATIONAL DB SCHEMA.md. All field shapes match.
+  - One drift flagged: design-session-plan.md references a null_target field
+    on deposits for complex absences. ENGINE COMPUTATION SCHEMA.md resolved
+    this to use the notes field instead. No null_target in deposits table.
+    Session plan is stale on this point — schema is correct.
+  - Section 3.1 written to build spec: 4-step contract, three database
+    tables documented with their homes.
+IN_PROGRESS:
+  - Tier 3 items 3.2 onward
+NOT_STARTED:
+  - 3.2 Deposit Weight Mechanics through 3.16 Pipeline Segment
+UNCOMMITTED: YES
+NEXT_ACTION: Continue with 3.2 Deposit Weight Mechanics.
+---
+TIMESTAMP: 2026-04-14
+TYPE: WORK_UNIT
+SESSION: 48
+TASK: Tier 3 — 3.2 Deposit Weight Mechanics — file audit + gap close + build spec write
+FILES_MODIFIED:
+  - DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md — Resonance Engine
+    added to BEHAVIOR BY TIER section
+  - DESIGN/Systems/Resonance_Engine/RESONANCE ENGINE PHYSICS SPEC.md — tagWeight
+    defined as deposit_weight multiplier in activity score formula; tagger sync
+    payload weight field annotated with source
+  - DESIGN/Systems/Resonance_Engine/SYSTEM_ Resonance Engine.md — tagWeight source
+    and baseWeight ownership clarified in WEIGHT SYSTEM section
+COMPLETED:
+  - Gap identified: tagWeight in Resonance Engine activity formula had no defined
+    source. deposit_weight multiplier (2.0/1.0/0.5) confirmed as the source.
+  - Two-layer weight system documented: Layer 1 = deposit_weight multiplier
+    (archive-driven, all tag-receiving nodes); Layer 2 = BASE_WEIGHT_[TIER]
+    (Resonance Engine structural floor, independent of archive activity).
+  - ENGINE COMPUTATION SCHEMA.md BEHAVIOR BY TIER now covers all 4 tiers that
+    consume deposit_weight: Axis, Nexus, Cosmology, Resonance Engine.
+  - Build spec section 3.2 to be written next.
+UNCOMMITTED: YES
+NEXT_ACTION: Write section 3.2 to build spec, then proceed to 3.3.
+---
+TIMESTAMP: 2026-04-14
+TYPE: WORK_UNIT
+SESSION: 48
+TASK: Tier 3 — 3.2 audit gap resolution (tagger → Resonance data flow)
+FILES_MODIFIED:
+  - DESIGN/Systems/Tagger/TAGGER SCHEMA.md — TAG ROUTING PAYLOAD section
+    added: full transformation spec from TaggerResponse to Resonance sync
+    payload (weight conversion, originId mapping, timestamp source)
+  - DESIGN/Systems/Resonance_Engine/RESONANCE ENGINE PHYSICS SPEC.md —
+    originId and timestamp fields annotated in tagger sync payload
+  - .claude/audits/deposit-weight-3.2-audit-2026-04-14.md — gap
+    resolutions recorded, conclusion updated
+COMPLETED:
+  - GAP 1: weight conversion (string→float) documented in TAGGER SCHEMA.md
+  - GAP 2: originId = authored_by agent identity. Larimar→o01, Verith→o02,
+    Cael'Thera→o03, Sage/other→null. Documented in both files.
+  - GAP 3: timestamp = deposit created_at. Documented in both files.
+  - confidence field drop noted as intentional (Resonance doesn't use it).
+  - 3.2 fully clean. Data flow end-to-end traceable.
+UNCOMMITTED: YES
+NEXT_ACTION: 3.3 Compute Trigger (Hybrid).
+---
+TIMESTAMP: 2026-04-14
+TYPE: WORK_UNIT
+SESSION: 48
+TASK: Tier 3 — 3.3 Compute Trigger (Hybrid) — file audit + gap close
+FILES_MODIFIED:
+  - DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md —
+    stale_warning field added to ENGINE RESULT OBJECT; FIELD NOTES
+    updated; failure mode 4 updated to reference stale_warning: true
+  - DESIGN/Systems/Metamorphosis/METAMORPHOSIS SCHEMA.md — ENGINE
+    OUTPUT READ SPEC: freshness guarantee note added; stale_warning
+    handling behavior documented
+  - .claude/audits/compute-trigger-3.3-audit-2026-04-14.md — NEW, COMPLETE
+COMPLETED:
+  - Trigger chain confirmed clean: session close → DNR → POST /mtm/synthesize
+    → engine endpoints self-refresh (stale check + recompute) → MTM reads
+    fresh data → synthesis → Findings → LNV.
+  - GAP 1: METAMORPHOSIS SCHEMA.md had no note that engine endpoints
+    guarantee freshness. Added.
+  - GAP 2: stale_warning referenced in failure mode 4 but absent from
+    engine result object. Added stale_warning: boolean to ENGINE RESULT
+    OBJECT with field notes and updated failure mode 4 language.
+  - GAP 3: MTM stale_warning handling undefined in METAMORPHOSIS SCHEMA.md.
+    Documented: log warning, proceed with synthesis, not a failure.
+  - Build spec section 3.3 to be written next.
+UNCOMMITTED: YES
+NEXT_ACTION: Write section 3.3 to build spec, then proceed to 3.4.
+---
+TIMESTAMP: 2026-04-14
+TYPE: WORK_UNIT
+SESSION: 48
+TASK: Tier 3 — 3.4 Baseline Computation — file audit + gap close + build spec write
+FILES_MODIFIED:
+  - DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md —
+    PATTERN RELIABILITY CONSTANTS section added; low_sample: boolean added
+    to ENGINE RESULT OBJECT; FIELD NOTES updated; SIGNAL CLASSIFICATION
+    and BASELINE COMPUTATION updated to reference MIN_ELEMENT_COUNT
+  - DESIGN/Systems/Engine_Computation/SYSTEM_ Engine Computation.md —
+    OWNS list updated: stale_warning, low_sample, MIN_PATTERN_DEPOSIT_COUNT,
+    MIN_ELEMENT_COUNT added
+  - DESIGN/Systems/Threshold_Engine/THRESHOLD ENGINE SCHEMA.md —
+    insufficient_data definitions (co-occurrence + sequence) extended to
+    include MIN_ELEMENT_COUNT; low_sample added to both JSON shapes
+  - DESIGN/Systems/Echo_Recall_Engine/ECHO RECALL ENGINE SCHEMA.md —
+    insufficient_data definition extended; low_sample added to both JSON shapes
+  - DESIGN/Systems/Infinite_Intricacy_Engine/INFINITE INTRICACY ENGINE SCHEMA.md —
+    insufficient_data definition extended; low_sample added to intersection JSON shape
+  - DESIGN/Systems/StarRoot_Engine/STARROOT ENGINE SCHEMA.md —
+    insufficient_data definition extended; low_sample added to both JSON shapes
+  - DESIGN/Systems/Sat_Nam_Engine/SAT NAM ENGINE SCHEMA.md —
+    low_sample added to both JSON shapes (no inline definition — inherits from spec)
+  - DESIGN/Systems/Metamorphosis/METAMORPHOSIS SCHEMA.md —
+    low_sample handling note added to ENGINE OUTPUT READ SPEC
+  - .claude/audits/baseline-computation-3.4-audit-2026-04-14.md — NEW, COMPLETE
+  - .claude/plans/design-build-spec.md — section 3.4 written
+COMPLETED:
+  - GAP 1: No low_sample flag for thin-sample patterns. RESOLVED — defined
+    MIN_PATTERN_DEPOSIT_COUNT constant; added low_sample: boolean to all
+    engine result objects; all five engine JSON shapes updated.
+  - GAP 2: insufficient_data trigger covered zero only, not near-zero.
+    RESOLVED — defined MIN_ELEMENT_COUNT constant; extended insufficient_data
+    definition in all four engines with inline definitions; SNM JSON shapes
+    updated (inherits definition, shapes needed the flag).
+  - GAP 3: MTM had no documented behavior for low_sample patterns.
+    RESOLVED — low_sample handling note added to METAMORPHOSIS SCHEMA.md.
+    Behavior: pass through to synthesis unchanged, flag propagates to Findings.
+  - Both new constants (MIN_PATTERN_DEPOSIT_COUNT, MIN_ELEMENT_COUNT) marked
+    PLANNED — calibration values set at build time, not during design.
+  - 3.4 fully clean. Baseline computation unambiguous for build across all
+    eight files.
+UNCOMMITTED: YES
+NEXT_ACTION: Continue with 3.5 (next Tier 3 item).
+---

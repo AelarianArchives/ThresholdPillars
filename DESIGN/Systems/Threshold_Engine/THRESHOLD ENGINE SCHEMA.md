@@ -143,7 +143,12 @@ COMPUTATION 1 — CO-OCCURRENCE RATES
 
     ratio: observed_rate / expected_rate
     signal_band: classified per ENGINE COMPUTATION SCHEMA.md
-    insufficient_data: true if expected_rate = 0
+    insufficient_data: true if expected_rate = 0 or any threshold
+      element is below MIN_ELEMENT_COUNT (see ENGINE COMPUTATION
+      SCHEMA.md PATTERN RELIABILITY CONSTANTS)
+    low_sample: true if pattern deposit_count is below
+      MIN_PATTERN_DEPOSIT_COUNT — caveat flag, signal band still
+      assigned (see ENGINE COMPUTATION SCHEMA.md)
 
   Each pair result carries the full shared breakdown:
     weight_breakdown (high, standard, low counts for deposits
@@ -240,7 +245,10 @@ COMPUTATION 3 — SEQUENCE DETECTION
 
       ratio: observed_count / expected_count
       signal_band: classified per ENGINE COMPUTATION SCHEMA.md
-      insufficient_data: true if expected_count = 0
+      insufficient_data: true if expected_count = 0 or any element
+        is below MIN_ELEMENT_COUNT
+      low_sample: true if pattern deposit_count is below
+        MIN_PATTERN_DEPOSIT_COUNT
 
   RECURRENCE THRESHOLD
 
@@ -393,6 +401,7 @@ THR-specific content within the shared snapshot record.
         "ratio": float,
         "signal_band": "suppressed" | "mild" | "strong" | null,
         "insufficient_data": boolean,
+        "low_sample": boolean,
         "deposit_count": integer,
         "weighted_count": float,
         "weight_breakdown": { "high": int, "standard": int, "low": int },
@@ -432,6 +441,7 @@ THR-specific content within the shared snapshot record.
         "ratio": float,
         "signal_band": "suppressed" | "mild" | "strong" | null,
         "insufficient_data": boolean,
+        "low_sample": boolean,
         "weight_breakdown": { "high": int, "standard": int, "low": int },
         "null_contribution": {
           "null_count": int, "null_weighted": float,

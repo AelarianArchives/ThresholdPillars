@@ -33,8 +33,12 @@
   (PostgreSQL). Sage-triggered captures linked to engine_snapshots.
   Route to LNV
 * Shared engine result object structure — standardized shape for
-  computation output including weight_breakdown and null_contribution
-  sub-objects
+  computation output including weight_breakdown, null_contribution,
+  low_sample, and stale_warning fields
+* Pattern reliability constants — MIN_PATTERN_DEPOSIT_COUNT (flags
+  low_sample patterns) and MIN_ELEMENT_COUNT (extends insufficient_data
+  to near-zero frequency elements). Calibration items defined in
+  backend config alongside deposit weight constants
 * Duplicate detection contract — extends INT hash check with
   lens-contextual awareness per engine
 

@@ -281,7 +281,8 @@ COMPUTATION 2 — INTERSECTION RATES
 
     ratio: observed_rate / expected_rate
     signal_band: classified per ENGINE COMPUTATION SCHEMA.md
-    insufficient_data: true if expected_rate = 0
+    insufficient_data: true if expected_rate = 0 or any element is below MIN_ELEMENT_COUNT (see ENGINE COMPUTATION SCHEMA.md PATTERN RELIABILITY CONSTANTS)
+    low_sample: true if pattern deposit_count is below MIN_PATTERN_DEPOSIT_COUNT
 
   Each intersection result carries:
     weight_breakdown, null_contribution
@@ -524,6 +525,7 @@ INF-specific content within the shared snapshot record.
         "ratio": float,
         "signal_band": "suppressed" | "mild" | "strong" | null,
         "insufficient_data": boolean,
+        "low_sample": boolean,
         "deposit_count": integer,
         "weighted_count": float,
         "weight_breakdown": { "high": int, "standard": int, "low": int },

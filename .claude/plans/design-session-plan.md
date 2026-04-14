@@ -2090,8 +2090,10 @@ deposit record (Tier 1) and page surfaces (Tier 2) existing first.
       **Null targeting:** tags carry the null target (what was examined).
       A null observation tagged th01 means "th01 was examined, result:
       absent." For complex absences ("expected th01 AND th05 together,
-      only saw th01"), a null_target field (optional, null observations
-      only) captures the specific absence.
+      only saw th01"), the deposit's notes field captures the specific
+      absence context. The engine indexes what the tags declare. No
+      dedicated null_target field — resolved to notes in ENGINE
+      COMPUTATION SCHEMA.md.
 
       **Nulls sharpen baselines:** a null for th01 increases total
       examined count without increasing th01 presence count → pushes

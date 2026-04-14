@@ -71,6 +71,17 @@ The activity score formula is canonical to this system. The Tagger system and SG
     activityScore = Σ(tagWeight × e^(-ageDays / HALF_LIFE))
     totalWeight   = baseWeight + clamp(activityScore, 0, MAX_ACTIVITY)
 
+tagWeight sources from the deposit_weight multiplier of the deposit
+carrying the tag (2.0 high / 1.0 standard / 0.5 low — constants owned
+by ENGINE COMPUTATION SCHEMA.md). A tag from a high-weight deposit
+contributes more to node activity than a tag from a low-weight deposit.
+Applies to seeds, layers, pillars, and origins. Threshold nodes excluded.
+
+baseWeight is the structural floor — BASE_WEIGHT_[TIER] constants owned
+exclusively by this system. Origins heaviest, seeds lightest. These are
+independent of archive activity and are not sourced from ENGINE
+COMPUTATION SCHEMA.md.
+
 HALF_LIFE and MAX_ACTIVITY are named constants defined in the physics spec. When calibration changes them, it changes in one place and all referencing systems inherit it.
 
 Weight decays naturally — recent activity matters more than old. Thresholds do not participate in weight growth.
