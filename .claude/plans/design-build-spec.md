@@ -754,7 +754,7 @@ this document as each passes audit:
 | VENAI SERVICE SCHEMA | DESIGN/Systems/Venai_Service/VENAI SERVICE SCHEMA.md |
 | SYSTEM_ Venai Service | DESIGN/Systems/Venai_Service/SYSTEM_ Venai Service.md |
 
-**Completed items (locked, session 48):**
+**Completed items (locked, session 48–51):**
 
 - ~~3.1 Shared Engine Architecture — Four-Step Contract~~ — locked 2026-04-14
 - ~~3.2 Deposit Weight Mechanics~~ — locked 2026-04-14
@@ -764,6 +764,8 @@ this document as each passes audit:
 - ~~3.6 Engine State Snapshots + MTM Drift Tracking~~ — locked 2026-04-14
 - ~~3.7 Engine Result Object~~ — locked 2026-04-14
 - ~~3.8 Visualization Architecture~~ — locked 2026-04-14
+- ~~3.9 Duplicate Detection in Engines~~ — locked 2026-04-14
+- ~~3.10 THR Engine — Threshold Lens~~ — locked 2026-04-14
 
 ---
 
@@ -1184,6 +1186,118 @@ accessible from Observatory.
 **Spec authority:** ENGINE COMPUTATION SCHEMA.md (VISUALIZATION
 ARCHITECTURE section). SYSTEM_ Frontend.md (Library Requirements,
 component list with per-component rendering category).
+
+---
+
+### 3.9 DUPLICATE DETECTION IN ENGINES
+
+This is a boundary clarification, not a separate mechanism. No new
+tables, endpoints, or constants. Defines what the engine layer does
+and does not do with duplicate deposits.
+
+**INT level (Tier 1 — already locked):**
+`content_hash` (SHA-256) on the deposits table flags exact content
+duplicates at intake. Warns, does not block. Sage decides. Fires at
+deposit creation (INT gateway step 2).
+
+**Engine level:**
+Engines index deposits through their lens and compute from what
+exists. They do not deduplicate.
+
+Two cases that surface naturally during indexing:
+- Same content, different tags → routes to different patterns (the
+  tags determine the lens, not the content)
+- Different content, same tag profile → both deposits contribute to
+  the same pattern
+
+If duplicate deposits are inflating a pattern rate, the `content_hash`
+warning from INT is the researcher's signal to investigate. The engine
+surfaces the effect; INT named the cause.
+
+**Ven'ai name deduplication:**
+Handled entirely by the Ven'ai service (see VEN'AI SERVICE SCHEMA.md).
+STR engine reads the service's output (`venai_correlations`) — it does
+not re-implement name normalization.
+
+**Spec authority:** ENGINE COMPUTATION SCHEMA.md (DUPLICATE DETECTION
+IN ENGINES section). INTEGRATION DB SCHEMA.md (`content_hash` field on
+deposits table). VEN'AI SERVICE SCHEMA.md (`venai_correlations` table).
+
+---
+
+### 3.10 THR ENGINE — THRESHOLD LENS
+
+Page 02 (`thresholds` / `THR`). Core question: when threshold state X
+was active, what else was present?
+
+**Index:**
+Reads `phase_state` and threshold tags (`th01`–`th12`). Both indexed
+independently — a deposit where `phase_state` names th01 but tags
+reference th05 is analytically meaningful (field condition and observed
+content diverged). Divergence is data, not error.
+
+A deposit with zero threshold tags is still indexed. It contributes to
+no threshold-specific pattern but counts in the total examined
+denominator for all baseline calculations.
+
+**Compute — three computations:**
+
+*1. Co-occurrence rates* — 12 thresholds = 66 pairs (12 choose 2).
+For each pair: observed rate vs. expected rate (marginal product
+baseline), ratio, signal band, weight breakdown, null contribution.
+`pattern_id` format: `thr_cooc_[thX]_[thY]` (lower-numbered threshold
+first, deterministic).
+
+*2. Presence rates* — per threshold: weighted frequency relative to
+total examined deposits. The marginal rate surfaced independently
+because per-threshold activity is data in its own right. 12 entries,
+one per threshold. `pattern_id` format: `thr_pres_[thX]`.
+
+*3. Sequence detection* — temporal ordering across all deposits on page
+02, no windowing. Recurring pairs and triples only (minimum 2
+occurrences — calibration item).
+
+Asymmetric position weighting: significance = product of deposit_weight
+at each position. high→high pair = 2.0 × 2.0 = 4.0. low→low = 0.25.
+Same thresholds, same order, different weights = different significance.
+Order preserved in `pattern_id`: `thr_seq_[thX]_[thY]`.
+
+Sequences have their own baseline: `expected_count` = marginal product
+of individual threshold frequencies at each position, applied to total
+sequential opportunities. `ratio = observed_count / expected_count`.
+Signal band applied to the ratio. The `significance` score (position
+weight product) travels alongside as a separate field — not a substitute
+for the ratio.
+
+**Visualize — three components (layout deferred to PAGE_LAYOUTS.md):**
+
+*ThrCooccurrenceMatrix* — 12×12 grid. Symmetric — 66 unique pair cells
++ 12 diagonal cells showing per-threshold presence rates from
+Computation 2. Cell color mapped from ratio via signal band using
+d3-interpolate gradient (not flat colors). Hover: full breakdown.
+Insufficient data rendered as distinct gray.
+
+*ThrPresenceTimeline* — horizontal timeline, 12 threshold rows. Each
+deposit appears as a dot in every row its tags place it. Dot color =
+deposit_weight. Dot opacity/outline encodes observation_presence
+(positive = solid, null = hollow). Clusters reveal activity; gaps
+reveal dormancy.
+
+*ThrSequenceView* — table listing of detected sequences with columns:
+sequence (arrow notation), length, recurrence count, significance,
+ratio, signal band. Sorted by significance descending (default).
+Expand row: contributing deposit IDs and timeline positions. Visual
+sequence path representation is a calibration item.
+
+**Feed:** Standard computation snapshot + MTM drift tracking. Snapshot
+stores THR-specific `snapshot_data` with three arrays: `co_occurrences`
+(66 entries), `presences` (12 entries), `sequences` (recurrence ≥ 2).
+Visualization snapshots Sage-triggered, route to LNV.
+
+**Spec authority:** THRESHOLD ENGINE SCHEMA.md (full mechanical spec —
+algorithms, pattern_id formats, snapshot_data JSON, failure modes).
+SYSTEM_ Threshold Engine.md (ownership boundaries, component list,
+nexus feed). TAG VOCABULARY.md (th01–th12 canonical names).
 
 ---
 

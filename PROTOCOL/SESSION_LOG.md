@@ -16886,3 +16886,101 @@ UNCOMMITTED: YES (this entry + audit artifact)
 NEXT_ACTION: Session 51 — open session, resume Tier 3 at item 3.9
   (Duplicate Detection in Engines). 8 sections remaining: 3.9–3.16.
 ---
+---
+TIMESTAMP: 2026-04-14 13:31
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Mandatory reads: CLAUDE.md, RECURSION_REPAIR.md, ENTROPY_EXCAVATION.md, ROT_REGISTRY.md, ROT_OPEN.md, SESSION_PROTOCOL.md
+  - SECTION MAP verified for Tier 3 page codes (THR=02, STR=03, INF=04, ECR=05, SNM=06 — all confirmed)
+  - Last entry confirmed TYPE: CLOSE — session 50 clean close
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Tier 3 items 3.9–3.16 (Duplicate Detection, THR, ECR, INF, SNM, STR, Ven'ai Service, Pipeline Segment)
+UNCOMMITTED: NO
+NEXT_ACTION: Begin audit of section 3.9 (Duplicate Detection in Engines)
+---
+---
+TIMESTAMP: 2026-04-14 13:39
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md — COMPLETE (precision fix: STR/Ven'ai handoff description)
+  - ROT_OPEN.md — COMPLETE (ROT 008 entry deleted — decision reached)
+  - ROT_REGISTRY.md — COMPLETE (ROT 008 resolution logged)
+COMPLETED:
+  - Fixed ENGINE COMPUTATION SCHEMA.md: 'consumes the service's deduplicated output'
+    corrected to 'reads the service's output (venai_correlations) — does not re-implement
+    name normalization'
+  - ROT 008 closed: design-session-plan.md will be retired at tier extraction
+    completion, no purge needed, contamination contained
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - 3.9 extraction to design-build-spec.md
+  - 3.10–3.16
+UNCOMMITTED: YES
+NEXT_ACTION: Extract section 3.9 into design-build-spec.md, then audit
+  relevant files (ENGINE COMPUTATION SCHEMA.md cross-refs)
+---
+---
+TIMESTAMP: 2026-04-14 13:43
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-build-spec.md — COMPLETE (section 3.9 written and added to completed list)
+COMPLETED:
+  - Section 3.9 (Duplicate Detection in Engines) written into design-build-spec.md
+  - System audit PASS: ENGINE COMPUTATION SCHEMA, INTEGRATION DB SCHEMA, VEN'AI SERVICE SCHEMA all clean
+  - 3.9 LOCKED
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - 3.10–3.16
+UNCOMMITTED: YES
+NEXT_ACTION: Begin 3.10 — THR Engine summary and audit
+---
+---
+TIMESTAMP: 2026-04-14 13:50
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-build-spec.md — COMPLETE (section 3.10 written, completed list updated)
+COMPLETED:
+  - Section 3.10 (THR Engine) written into design-build-spec.md
+  - Functional issue self-corrected: sequences resolve cleanly via own observed/expected/ratio
+  - Layout check: no overwriting of master page layout — component-level only
+  - Cross-refs confirmed: TAG VOCABULARY (th01-th12), THRESHOLD ENGINE SCHEMA, SYSTEM_ Threshold Engine
+  - 3.10 LOCKED
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - 3.11–3.16
+UNCOMMITTED: YES
+NEXT_ACTION: Begin 3.11 — ECR Engine summary and audit
+---
+---
+TIMESTAMP: 2026-04-14 13:59
+TYPE: CLOSE
+FILES_MODIFIED:
+  - DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md — COMPLETE (precision fix: STR reads venai_correlations, not 'deduplicated output')
+  - ROT_OPEN.md — COMPLETE (ROT 008 entry deleted — decision reached)
+  - ROT_REGISTRY.md — COMPLETE (ROT 008 resolution logged)
+  - .claude/plans/design-build-spec.md — COMPLETE (sections 3.9 and 3.10 written and locked)
+  - PROTOCOL/SESSION_LOG.md — this entry
+COMPLETED:
+  - Mandatory session open (CLAUDE.md, RECURSION_REPAIR, ENTROPY_EXCAVATION, ROT_REGISTRY, ROT_OPEN, SESSION_PROTOCOL all read)
+  - ROT 008 closed: design-session-plan.md will be retired at tier extraction completion
+  - 3.9 Duplicate Detection in Engines — LOCKED
+  - 3.10 THR Engine — Threshold Lens — LOCKED
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - 3.11–3.16 (ECR, INF, SNM, STR, Ven'ai Service, Pipeline Segment)
+  - Session close — next session must re-establish summary+confirmation protocol before writing any section
+CLOSE AUDIT: 292 HIGH findings — all pre-existing. +1 from ROT_REGISTRY.md resolution
+  text containing V1-V5 (false positive — registry is the permanent rot record).
+  No new contamination from session 51 changes. Marker created with --force.
+UNCOMMITTED: YES (all 5 files above)
+NEXT_ACTION: Session 52 — open, then 3.11 ECR: give plain-language summary FIRST,
+  wait for Sage confirmation, audit spec files, THEN write section. Do not skip summary step.
+---

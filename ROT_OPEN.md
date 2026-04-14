@@ -30,4 +30,3 @@ When rot is fixed:
 
 - **SYSTEMIC: Entropy scan does not equal content approval** (Registry 006) — 2026-04-09 session 40. Verified status means rot-pattern-clean, not Sage-approved content. All SYSTEM_ overview files on VERIFIED list need content-level review before SOT.
 
-- **ROT ENTRY 008 — V1-V5 in design-session-plan.md** — 2026-04-14. DESIGN/ specs fully purged. Remaining 30+ V1-V5 instances in .claude/plans/design-session-plan.md (the origin document). This is a historical session working doc. Decision pending: (a) purge it fully, (b) leave it as historical record (contained — specs are clean), or (c) retire it. Sage to decide before it can feed a future session.

@@ -1643,6 +1643,14 @@ Infected files (spread — full-system purge completed 2026-04-14):
 Verification:
   grep -rn "V[1-5]" DESIGN/Systems/ DESIGN/Domains/
   Should return: No matches found
+
+Resolution (2026-04-14, session 51):
+  design-session-plan.md will be retired once all tiers are fully
+  extracted to design-build-spec.md as clean specs. No purge of the
+  remaining 30+ instances needed — the file is a historical working
+  document. The contamination is contained: DESIGN/ specs are the
+  authority and are fully clean. V1-V5 language will leave the project
+  with the file at retirement. ROT_OPEN.md entry deleted.
   grep -n "V[1-5]" .claude/plans/design-session-plan.md
   Will show remaining contamination in origin doc (pending Sage decision).
 

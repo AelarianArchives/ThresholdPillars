@@ -735,8 +735,9 @@ lens-contextual awareness.
   investigate.
 
   Ven'ai name deduplication is handled separately by the Ven'ai
-  service (see VEN'AI SERVICE SCHEMA.md). STR engine consumes the
-  service's deduplicated output.
+  service (see VEN'AI SERVICE SCHEMA.md). STR engine reads the
+  service's output (venai_correlations) — it does not re-implement
+  name normalization.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
