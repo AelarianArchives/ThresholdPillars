@@ -196,6 +196,18 @@ of truth for what is confirmed complete.
       — Media deposit card section added
       — MediaDepositCard added to component list and files section
 
+  ROT ENTRY 008 — V1-V5 terminology: PURGED
+    Confirmed: 2026-04-14
+    Scope: All V1-V5 versioning language purged from DESIGN/Systems/ (54 files).
+      The V1-V5 trajectory (V1: single researcher → V5: transmissible research)
+      was unauthorized hallucination — never authorized by Sage. This document
+      retains the source contamination as a historical session record and will be
+      retired once all tier specs are fully extracted to design-build-spec.md.
+    DO NOT use V1/V2/V3/V4/V5 terminology in any spec, schema, or plan.
+    DO NOT treat any V1-V5 language found in the body of this document as current.
+    No versioning trajectory applies. Everything is the current build until app
+    launch. See ROT_REGISTRY.md ENTRY 008 for full scope.
+
 ---
 
 ## PURPOSE
