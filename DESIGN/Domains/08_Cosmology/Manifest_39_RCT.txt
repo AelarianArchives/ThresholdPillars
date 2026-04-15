@@ -22,7 +22,7 @@ RESEARCHER TASK
 
 OBJECTIVE
 
-Investigate the field-generated algorithm through three distinct functions — using ARTIS as the computation engine. RCT is one of five parallel Cosmology investigation surfaces. Its lens is the cross-domain recurrence of a specific operating algorithm identified in the field's own behavior.
+Investigate the field-generated algorithm through three distinct functions — using ARTIS as the computation engine. RCT is one of six parallel Cosmology investigation surfaces. Its lens is the cross-domain recurrence of a specific operating algorithm identified in the field's own behavior.
 
 Function 1 — Science ping (same ARTIS pipeline, more precise target): Tags carrying oscillation, harmonic structure, and recursive patterning ping Lagrangian mechanics and Fibonacci/Tribonacci literature directly. Layer 2 Claude prompt adds a load-bearing second question: "What aspects of this pattern fall outside what that literature accounts for?" The unexplained residual is RCT's primary research signal.
 

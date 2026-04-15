@@ -3,7 +3,7 @@
 ## /DESIGN/Systems/Cosmology/SYSTEM_ Cosmology.md
 
 Ownership boundaries, API surface, and rules for the Cosmology investigation
-group — five parallel pages (HCO, COS, CLM, NHM, RCT) sharing a common
+group — six parallel pages (HCO, COS, CLM, NHM, MIR, RCT) sharing a common
 findings schema. Full mechanical spec in COSMOLOGY SCHEMA.md. Computation
 infrastructure in ARTIS SCHEMA.md.
 
@@ -11,7 +11,7 @@ infrastructure in ARTIS SCHEMA.md.
 
 ## OWNS
 
-- **cosmology_findings table** — shared across all five investigation pages,
+- **cosmology_findings table** — shared across all six investigation pages,
   discriminated by page_code. Each page service writes findings with its own
   page_code. Finding lifecycle (draft → confirmed → superseded/abandoned)
   managed here.

@@ -21,7 +21,7 @@ RESEARCHER TASK
 
 OBJECTIVE
 
-Investigate field patterns through the lens of geometry, topology, orbital dynamics, and spatial structure — using ARTIS as the computation engine. CLM is one of five parallel Cosmology investigation surfaces. Its lens is geometric and spatial structure: distance relationships, clustering, distribution shapes, and structural correspondences to celestial mechanics.
+Investigate field patterns through the lens of geometry, topology, orbital dynamics, and spatial structure — using ARTIS as the computation engine. CLM is one of six parallel Cosmology investigation surfaces. Its lens is geometric and spatial structure: distance relationships, clustering, distribution shapes, and structural correspondences to celestial mechanics.
 
 The sciences this page draws from: astronomy, astrometry, celestial navigation, spherical astronomy, orbital resonances, astrophysical spiral dynamics, geometry, topology, graph theory. CMB methodology is borrowed for cosmological structure and large-scale pattern organization analysis.
 

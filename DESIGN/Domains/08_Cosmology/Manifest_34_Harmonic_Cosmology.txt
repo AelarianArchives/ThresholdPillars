@@ -22,7 +22,7 @@ RESEARCHER TASK
 
 OBJECTIVE
 
-Investigate field patterns through the lens of wave mechanics, harmonics, and signal processing — using ARTIS as the computation engine. HCO is one of five parallel Cosmology investigation surfaces. It does not sit above or below the others. Each reads the field through its own specific scientific lens. HCO's lens is harmonic structure: interference patterns, resonance cascades, spectral energy distribution, and information-theoretic signal content.
+Investigate field patterns through the lens of wave mechanics, harmonics, and signal processing — using ARTIS as the computation engine. HCO is one of six parallel Cosmology investigation surfaces. It does not sit above or below the others. Each reads the field through its own specific scientific lens. HCO's lens is harmonic structure: interference patterns, resonance cascades, spectral energy distribution, and information-theoretic signal content.
 
 The sciences this page draws from: harmonics, wave mechanics, acoustics, electromagnetism, signal processing, Fourier analysis, nonlinear wave dynamics, resonance theory, fractal geometry, phyllotaxis, morphogenetic pattern science, dynamical spiral systems, spiral wave physics, logarithmic/geometric spiral modeling, metric fields, mirror fields, oscillation fields. Shannon entropy measures information content of signal distributions. CMB methodology is borrowed for spectral analysis of field patterns.
 

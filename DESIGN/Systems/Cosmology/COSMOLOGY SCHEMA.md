@@ -20,7 +20,7 @@ in SYSTEM_ Cosmology.md.
    frameworks. The lens is external science. The investigation is the
    correspondence. The math is the evidence.
 
-2. All five investigation pages are parallel. No page sits above another.
+2. All six investigation pages are parallel. No page sits above another.
    Each reads the field through its own specific lens. ARTIS powers all of
    them through a shared computation API.
 
@@ -56,7 +56,7 @@ in SYSTEM_ Cosmology.md.
 
 ## STORE: cosmology_findings
 
-Shared across all five investigation pages. Discriminated by page_code.
+Shared across all six investigation pages. Discriminated by page_code.
 
 | Field | Type | Description |
 | --- | --- | --- |
@@ -367,7 +367,7 @@ All three panels use LayerCake + D3 per Tier 3 visualization architecture.
 
 ## FINDING CARD LAYOUT
 
-Applies to all five investigation pages. Same card structure, same action
+Applies to all six investigation pages. Same card structure, same action
 buttons.
 
 ### Four zones (top to bottom)

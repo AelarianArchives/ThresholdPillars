@@ -21,7 +21,7 @@ RESEARCHER TASK
 
 OBJECTIVE
 
-Investigate field patterns through the lens of neural dynamics, cognitive models, and information theory — using ARTIS as the computation engine. NHM is one of five parallel Cosmology investigation surfaces. Its lens is neural and information-theoretic structure: how field patterns correspond to connectome dynamics, and what Shannon's information theory reveals about their content.
+Investigate field patterns through the lens of neural dynamics, cognitive models, and information theory — using ARTIS as the computation engine. NHM is one of six parallel Cosmology investigation surfaces. Its lens is neural and information-theoretic structure: how field patterns correspond to connectome dynamics, and what Shannon's information theory reveals about their content.
 
 The sciences this page draws from: connectomics, neural dynamics, neurophenomenology, theta-gamma nested oscillations, delta-beta cross-frequency modulation, quantum cognition, IIT (integrated information theory), cognitive field theory, attention theory, affective neuroscience, predictive processing, information geometry, information theory, semiotics, morphogenesis.
 

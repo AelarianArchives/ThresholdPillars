@@ -97,8 +97,8 @@ and writes a finding. Asynchronous.
 
 ### Cosmology Findings — at production
 
-Investigation outputs from the five Cosmology pages (HCO, COS, CLM,
-NHM, RCT) via ARTIS computation.
+Investigation outputs from the six Cosmology pages (HCO, COS, CLM,
+NHM, MIR, RCT) via ARTIS computation.
 
 **Input:** Finding content + scientific framework + computation type +
 confidence + deposit_ids (source data) + cosmology_page.

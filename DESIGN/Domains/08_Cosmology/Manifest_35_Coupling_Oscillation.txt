@@ -21,7 +21,7 @@ RESEARCHER TASK
 
 OBJECTIVE
 
-Investigate field patterns through the lens of coupled oscillator dynamics, phase-locking, and cross-frequency coupling — using ARTIS as the computation engine. COS is one of five parallel Cosmology investigation surfaces. Its lens is coupling mechanics: how systems bind, synchronize, and separate.
+Investigate field patterns through the lens of coupled oscillator dynamics, phase-locking, and cross-frequency coupling — using ARTIS as the computation engine. COS is one of six parallel Cosmology investigation surfaces. Its lens is coupling mechanics: how systems bind, synchronize, and separate.
 
 The sciences this page draws from: coupled oscillator networks, cross-frequency field dynamics, hierarchical relational resonance, oscillatory multiplexing, control theory, nonlinear dynamics, dynamical systems theory, self-organization, emergence, complex adaptive systems, predictive processing.
 
