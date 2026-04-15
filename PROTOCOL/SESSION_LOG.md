@@ -18256,3 +18256,39 @@ NEXT_SESSION:
   - Tier 6 build spec write (Research Assistant + Audio)
   - ROT 006 (SYSTEM_ content review) — ongoing pre-SOT item, address before build phase
 ---
+---
+TIMESTAMP: 2026-04-15
+SESSION: 61
+TYPE: OPEN
+FILES_MODIFIED: none yet
+COMPLETED: none yet
+IN_PROGRESS: none
+NOT_STARTED:
+  - Tier 6 build spec write (Research Assistant + Audio)
+  - ROT 006 (SYSTEM_ content review) — pre-SOT
+RESUMING_FROM: Session 60 TYPE: CLOSE (fb1c8f0). Clean close.
+CONFIRMED_STATE:
+  - Mandatory reads: CLAUDE.md, RECURSION_REPAIR.md, ENTROPY_EXCAVATION.md,
+    ROT_REGISTRY.md (entries 001-014), ROT_OPEN.md — all read
+  - ROT_OPEN.md: one open item (ROT 006 — SYSTEM_ content review pre-SOT)
+  - Page code scan: SECTION MAP verified — 52 pages, 9 groups, 2 standalone.
+    No page codes referenced in session work yet. No drift.
+  - DESIGN/Systems/ and DESIGN/Domains/: no changes since session 60 close.
+    Session 60 only modified backup.py, .gitignore, create_backup_tasks.bat.
+  - Last commit: fb1c8f0. Git state: clean.
+NEXT_ACTION: Sage-directed verification work
+---
+---
+TIMESTAMP: 2026-04-15
+SESSION: 61
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - CLAUDE.md — COMPLETE (strikethrough permanence rule added to KEY INVARIANTS)
+  - PROTOCOL/SESSION_LOG.md — IN_PROGRESS
+COMPLETED:
+  - Hard rule added: strikethrough in design-build-spec.md is never removed,
+    never replaced, never reformatted. Immediate session violation to touch it.
+    Placed at top of KEY INVARIANTS section.
+UNCOMMITTED: YES
+NEXT_ACTION: Commit and push
+---

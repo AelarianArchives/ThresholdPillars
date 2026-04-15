@@ -430,6 +430,12 @@ Full planned structure in .claude/plans/infrastructure-build-plan.md.
 
 ## KEY INVARIANTS
 
+- Strikethrough in design-build-spec.md is never removed, never replaced, never
+  reformatted. It is a permanent record of superseded design. Touching it in any
+  way — deletion, reformatting, replacement — is an immediate session violation.
+  No exceptions. No "cleanup" justification. The strikethrough stays exactly as
+  written, forever.
+
 - INT gateway: nothing enters the archive without INT provenance. No exceptions
 - MTM never receives deposits. Synthesis only, at session close via DNR
 - Graph export is stubbed in both emergence service (was emergence.js) and
