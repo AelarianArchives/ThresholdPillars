@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import shutil
 import subprocess
 from datetime import datetime
@@ -13,6 +14,7 @@ USB_DRIVE = "D:\\"
 USB_BACKUP_FOLDER = "threshold-backups"
 B2_BUCKET = "threshold-backups"
 DB_DUMPS_FOLDER = os.path.join(PROJECT_FOLDER, "db-dumps")
+BACKBLAZE_STATE_FILE = os.path.join(PROJECT_FOLDER, "backblaze_state.json")
 
 # === LOAD CREDENTIALS FROM .env ===
 # Credentials are never hardcoded. See GITHUB_PROTOCOL.md section 5.
@@ -38,6 +40,20 @@ logging.basicConfig(filename=log_path, level=logging.INFO,
 def log(msg):
     print(msg)
     logging.info(msg)
+
+# === BACKBLAZE STATE ===
+def load_backblaze_state():
+    if os.path.exists(BACKBLAZE_STATE_FILE):
+        try:
+            with open(BACKBLAZE_STATE_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, IOError):
+            return {"uploaded": []}
+    return {"uploaded": []}
+
+def save_backblaze_state(state):
+    with open(BACKBLAZE_STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
 
 # === LAYER 0: POSTGRES DUMP ===
 def backup_postgres():
@@ -100,24 +116,30 @@ def backup_to_backblaze():
         api = B2Api(info)
         api.authorize_account("production", B2_KEY_ID, B2_APP_KEY)
         bucket = api.get_bucket_by_name(B2_BUCKET)
+        state = load_backblaze_state()
+        already_uploaded = set(state.get("uploaded", []))
         uploaded = 0
         exports_folder = os.path.join(PROJECT_FOLDER, "exports")
         if os.path.exists(exports_folder):
             for filename in os.listdir(exports_folder):
-                if filename.endswith(".json"):
+                if filename.endswith(".json") and filename not in already_uploaded:
                     filepath = os.path.join(exports_folder, filename)
                     bucket.upload_local_file(local_file=filepath, file_name=filename)
+                    already_uploaded.add(filename)
                     log(f"Backblaze: Uploaded {filename}")
                     uploaded += 1
         if os.path.exists(DB_DUMPS_FOLDER):
             for filename in os.listdir(DB_DUMPS_FOLDER):
-                if filename.endswith(".sql"):
+                if filename.endswith(".sql") and filename not in already_uploaded:
                     filepath = os.path.join(DB_DUMPS_FOLDER, filename)
                     bucket.upload_local_file(local_file=filepath, file_name=filename)
+                    already_uploaded.add(filename)
                     log(f"Backblaze: Uploaded {filename}")
                     uploaded += 1
+        state["uploaded"] = sorted(already_uploaded)
+        save_backblaze_state(state)
         if uploaded == 0:
-            log("Backblaze: No files to upload (exports/ and db-dumps/ both empty or missing).")
+            log("Backblaze: No new files to upload.")
     except Exception as e:
         log(f"Backblaze: Failed — {e}")
 
