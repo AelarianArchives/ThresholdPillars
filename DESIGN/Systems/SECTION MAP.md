@@ -145,7 +145,7 @@ Empty is intentional — these are structural surfaces with no thematic bias.
 | 35   | coupling_osc        | s15    | s04    | s20    | manifest derive               |
 | 36   | celestial_mech      | s17    | s15    | s12    | manifest derive               |
 | 37   | neuroharmonics      | s15    | s13    | s02    | manifest derive               |
-| 38   | mirror_dynamics     | —      | —      | —      | pending: manifest not written |
+| 38   | mirror_dynamics     | s16    | s10    | s20    | manifest derive               |
 | 39   | rct                 | s17    | s05    | s16    | manifest derive               |
 | 40   | artis               | —      | —      | —      | empty: engine                 |
 | 41   | memory_vault        | s05    | s14    | s12    | manifest derive               |

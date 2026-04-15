@@ -1,5 +1,5 @@
 DOMAIN: mirror_dynamics · MIR · PAGE 38
-GROUP: Cosmology SEEDS: — ORIGIN AFFINITY: — THRESHOLD AFFINITY: — PILLAR: —
+GROUP: Cosmology SEEDS: s16 · s10 · s20 ORIGIN AFFINITY: — THRESHOLD AFFINITY: — PILLAR: —
 PURPOSE: Investigation surface for symmetry physics and mirror dynamics within the Cosmology group. Tracks bilateral structure, parity behavior, chirality, and symmetry breaking in field patterns. Occupies l04 Mirror in the INF tagger layer — the layer that contained no Cosmology investigation surface before this page. Where other Cosmology pages investigate harmonic, coupling, celestial, and neural structure, MIR investigates the structural symmetry (and asymmetry) of the field itself: what patterns exhibit bilateral correspondence, what patterns break it, and what those breaks reveal about underlying field dynamics.
 STRUCTURAL RULES:
 1. Mirror dynamics here is physics, not metaphor. Bilateral structure, chirality, and parity asymmetry are measurable — hold them to measurement criteria, not narrative resonance.
