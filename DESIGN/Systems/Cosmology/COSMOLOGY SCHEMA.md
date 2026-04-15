@@ -702,7 +702,7 @@ Files outside this schema that must be updated for Cosmology deployment:
 | File | Role | Status |
 | --- | --- | --- |
 | DESIGN/Systems/Cosmology/COSMOLOGY SCHEMA.md | This file — shared schema for Cosmology investigation group | COMPLETE |
-| DESIGN/Systems/Cosmology/SYSTEM_ Cosmology.md | Ownership boundaries for the investigation group | PLANNED (next) |
+| DESIGN/Systems/Cosmology/SYSTEM_ Cosmology.md | Ownership boundaries for the investigation group | COMPLETE |
 | DESIGN/Systems/ARTIS/ARTIS SCHEMA.md | Computation infrastructure | COMPLETE |
 | DESIGN/Systems/ARTIS/SYSTEM_ ARTIS.md | ARTIS ownership boundaries | COMPLETE |
 | backend/routes/cosmology.py | Shared Cosmology endpoints | PLANNED |

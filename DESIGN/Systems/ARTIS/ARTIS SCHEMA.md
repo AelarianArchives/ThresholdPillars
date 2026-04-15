@@ -1142,7 +1142,7 @@ itself — each cascade file is updated as its own work unit.
 | --- | --- | --- |
 | backend/routes/artis.py | FastAPI ARTIS endpoints — 12 routes under /artis/ namespace | PLANNED |
 | backend/services/artis.py | ARTIS service — mapping management, reference registry, snapshot retrieval, science ping pipeline orchestration, Layer 2 Claude calls | PLANNED |
-| backend/services/computation.py | Computation library — 13 implementations, input validation, snapshot creation, computation execution | PLANNED |
+| backend/services/computation.py | Computation library — 15 implementations, input validation, snapshot creation, computation execution | PLANNED |
 | frontend/src/lib/components/ARTISWorkbench.svelte | Zone A computation workbench | PLANNED |
 | frontend/src/lib/components/ARTISRegistryPanel.svelte | Zone B registry and health surface | PLANNED |
 | frontend/src/lib/components/ARTISPagePanel.svelte | Right-side panel for Cosmology pages | PLANNED |

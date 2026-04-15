@@ -234,6 +234,8 @@ against the document if editing.
 - [x] COS (35) — CONFIRMED session 20 (investigation + computation frame)
 - [x] CLM (36) — CONFIRMED session 20 (investigation + computation frame)
 - [x] NHM (37) — CONFIRMED session 20 (investigation + computation frame)
+- [x] RCT (38) — CONFIRMED session 20 (parallel investigation surface, 3 functions, rct_residuals schema)
+- [x] ARTIS (39) — CONFIRMED session 20 (computation engine, 5 tables, 12 endpoints, science ping pipeline)
 
 **TIER 6 — Research assistant design questions:**
 - [x] All 9 design questions verified and checked off (session 31).
@@ -2087,7 +2089,7 @@ deposit record (Tier 1) and page surfaces (Tier 2) existing first.
       are active data about absence, NOT "no data."
 
       **Flow:**
-      1. Sage deposits with observation_type: null, routed to target page
+      1. Observation enters through INT with observation_type: null, routed to target page
       2. Engine indexes identically to positive observations
       3. At compute: null increments times_examined WITHOUT incrementing
          times_observed. Positives increment both.

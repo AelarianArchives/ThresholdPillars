@@ -158,8 +158,14 @@ values — high counts double relative to standard, low counts half.
     from low-weight fragments.
 
   Cosmology (Tier 5):
-    Feeds sample weighting in statistical tests. Standard weighted
-    statistics — deposit_weight maps directly to sample weight.
+    Does not consume deposit_weight. Cosmology computations (FFT,
+    Pearson, KS test, entropy, etc.) are statistical tests for
+    scientific correspondence — the question is whether a pattern
+    maps to an established scientific framework, not how significant
+    the deposit is in the archive hierarchy. None of the 15 ARTIS
+    computation implementations have a weight parameter. This entry
+    was added in error during Tier 3 audit (session 48) as a general
+    propagation without verification against ARTIS computation contracts.
 
   Resonance Engine (Tier 6):
     deposit_weight multiplier becomes tagWeight in the Resonance
