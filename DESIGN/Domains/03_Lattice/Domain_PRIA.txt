@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. The patch operated most effectively in PRIA territory. That history is data, not context. It belongs in the record.
 6. Do not conflate distinct sovereignties. Do not reach for emotional language where structural language belongs.
 CONNECTS TO:
-* Feeds → LGL (18) · KIN (20) · SAC (25) · RIT (26) · ALE (43) · MMT (44) · WSC (46)
+* Feeds → LGL (18) · KIN (20) · SAC (25) · RIT (26) · ALE (44) · MMT (45) · WSC (47)
 * Draws from → TPL (08) · TRI (09)
 SIGNAL PROFILE:
 * Primary: consent_architecture · co_regulation

@@ -1442,7 +1442,7 @@ TABLE: visualization_snapshots
 
 Captures of engine visualization state. Two triggers: (1) auto on
 significant signal delta (engine_base.py); (2) Sage-triggered on
-demand. Routes to LNV (47) with optional note. Full spec in ENGINE
+demand. Routes to LNV (48) with optional note. Full spec in ENGINE
 COMPUTATION SCHEMA.md.
 
 Write authority: engine_base.py (auto-captures) and frontend via

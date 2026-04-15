@@ -55,6 +55,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → RIT (26) · ARV (45)
-Draws from → VEN (14) · SAC (25) · RCT (38)
+Feeds → RIT (26) · ARV (46)
+Draws from → VEN (14) · SAC (25) · RCT (39)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

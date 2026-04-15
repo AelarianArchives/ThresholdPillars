@@ -1,4 +1,4 @@
-﻿PAGE 42 · liquid_lattice · LQL · Group 8 · Archive
+﻿PAGE 43 · liquid_lattice · LQL · Group 8 · Archive
 
 
 VISION
@@ -59,6 +59,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → ALE (43) · MMT (44) · ARV (45) · PCV (50)
-Draws from → ANC (41) · MVM (40) · TRI (09) · HCO (34)
+Feeds → ALE (44) · MMT (45) · ARV (46) · PCV (51)
+Draws from → ANC (42) · MVM (41) · TRI (09) · HCO (34)
  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1,4 +1,4 @@
-# CLAUDE.md
+﻿# CLAUDE.md
 # Aelarian Archives — Session Contract
 # Last updated: April 2026
 
@@ -297,7 +297,7 @@ corruption across core systems. Infrastructure changed from browser app
    Written new from SOT. Every file is V1 from first line written.
 
 5. App running at localhost — NOT STARTED. Blocked on step 4.
-   Svelte app served by Vite. All 51 pages navigable. Deposit → save →
+   Svelte app served by Vite. All 52 pages navigable. Deposit → save →
    embed → retrieve working end-to-end. Research assistant live.
 
 Nothing from steps 3, 4, or 5 has been started. Do not reference or build
@@ -416,7 +416,7 @@ src/lib/components/     — shared components (Shell, CompositeId, TaggerPanel,
                           DepositPanel, ThreadTrace, ResonanceCanvas)
 src/lib/stores/         — Svelte stores (session state, entry data cache)
 src/lib/api.ts          — fetch wrapper for FastAPI calls
-src/routes/             — 51 page routes (structure TBD: individual files
+src/routes/             — 52 page routes (structure TBD: individual files
                           vs dynamic [section] route)
 src/routes/+layout.svelte — shared shell wrapping all pages
 ```

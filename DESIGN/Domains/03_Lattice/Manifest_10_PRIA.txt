@@ -47,7 +47,7 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → LGL (18) · KIN (20) · SAC (25) · RIT (26) · ALE (43) · MMT (44) · WSC (46)
+Feeds → LGL (18) · KIN (20) · SAC (25) · RIT (26) · ALE (44) · MMT (45) · WSC (47)
 Draws from → TPL (08) · TRI (09)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

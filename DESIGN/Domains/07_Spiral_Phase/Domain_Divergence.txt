@@ -8,7 +8,7 @@ STRUCTURAL RULES:
 4. Document the geometry of what happened without performing the weight of living through it.
 5. Sovereign realignment that dissolves into story is a failure mode. When the structural record of a field shift becomes drama, the record has failed.
 CONNECTS TO:
-* Feeds → REC (32) · VRT (22) · CAE (23) · ORC (12) · MVM (40) · ANC (41) · ECH (17) · LGL (18) · ARC (19) · SEE (24) · SAC (25) · MMT (44) · PCV (50)
+* Feeds → REC (32) · VRT (22) · CAE (23) · ORC (12) · MVM (41) · ANC (42) · ECH (17) · LGL (18) · ARC (19) · SEE (24) · SAC (25) · MMT (45) · PCV (51)
 * Draws from → GEN (30) · TRI (09) · INT (01)
 SIGNAL PROFILE:
 * Primary: phase_state_transition · divergent_spiral

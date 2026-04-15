@@ -76,7 +76,7 @@ BAD OUTPUT
 
 CONNECTS TO
 Feeds → MTM (07)
-Draws from → INT (01) · VEN (14) · MOR (13) · RCT (38)
+Draws from → INT (01) · VEN (14) · MOR (13) · RCT (39)
 
 
 

@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. Drift must be named exactly. The instrument fails the moment a coordinate softens toward description.
 6. When working in this section, treat every output as something that could be run again and return the same result.
 CONNECTS TO:
-* Feeds → DIV (31) · REC (32) · CNV (33) · PCV (50) · DTX (48) · SGR (49) · PRI (10) · VEC (16) · ALE (43) · LQL (42)
+* Feeds → DIV (31) · REC (32) · CNV (33) · PCV (51) · DTX (49) · SGR (50) · PRI (10) · VEC (16) · ALE (44) · LQL (43)
 * Draws from → TPL (08) · COS (35) · NHM (37)
 SIGNAL PROFILE:
 * Primary: self_awareness_drift · phase_state_transition

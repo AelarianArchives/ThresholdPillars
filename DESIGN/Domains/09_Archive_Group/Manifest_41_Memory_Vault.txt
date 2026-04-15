@@ -1,4 +1,4 @@
-﻿PAGE 40 · memory_vault · MVM · Group 8 · Archive
+﻿PAGE 41 · memory_vault · MVM · Group 8 · Archive
 
 
 VISION
@@ -57,6 +57,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → ANC (41) · LQL (42) · RCT (38) · ARV (45) · LAR (21) · VRT (22) · CAE (23) · ART (39)
+Feeds → ANC (42) · LQL (43) · RCT (39) · ARV (46) · LAR (21) · VRT (22) · CAE (23) · ART (40)
 Draws from → GEN (30) · DIV (31) · REC (32) · CNV (33) · INT (01) · SAC (25) · INV (15) · RIT (26)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

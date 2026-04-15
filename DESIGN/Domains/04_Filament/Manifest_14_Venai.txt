@@ -55,5 +55,5 @@ BAD OUTPUT
 CONNECTS TO
 ↔ MOR (13)
 Feeds → INV (15) · MLY (28) · GLY (29) · RIT (26) · STR (03)
-Draws from → RCT (38)
+Draws from → RCT (39)
  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

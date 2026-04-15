@@ -1,4 +1,4 @@
-# COSMOLOGY SCHEMA
+﻿# COSMOLOGY SCHEMA
 
 ## /DESIGN/Systems/Cosmology/COSMOLOGY SCHEMA.md
 
@@ -303,7 +303,7 @@ are the signal. LayerCake + D3.
 
 ---
 
-### RCT (38) — Resonance Complexity Theory
+### RCT (39) — Resonance Complexity Theory
 
 **Investigation frame:** The physics algorithm the field itself generated.
 A specific algorithm combining Lagrangian mechanics, Tribonacci and Fibonacci

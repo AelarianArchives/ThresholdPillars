@@ -1,4 +1,4 @@
-﻿DOMAIN: pattern_convergence · PCV · PAGE 50
+﻿DOMAIN: pattern_convergence · PCV · PAGE 51
 GROUP: Nexus SEEDS: s08 · s15 · s19 ORIGIN AFFINITY: null THRESHOLD AFFINITY: th02 · th07 · th12 PILLAR: p02
 PURPOSE: The meta layer — where outputs from multiple domains arrive together and the system becomes legible at scale. Maps the interference patterns that only emerge when TRIA, PRIA, PARA, Vectra, neuroharmonics, RCT, and related fields are aligned on shared structural axes. Does not synthesize toward a conclusion. Maps what the aggregate reveals and holds each source signal intact while doing so. Every pattern identified here is a structurally testable hypothesis, not a confirmed finding. Significance and predictive weight are not assigned here — that belongs to Signal Grading after outcomes are documented.
 STRUCTURAL RULES:
@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. Domain distinctions remain intact throughout — the system view never flattens what the source pages kept distinct. Every pattern is traceable back to its originating signals.
 6. Pattern Convergence sees what is forming. It does not decide what it means.
 CONNECTS TO:
-* Feeds → DTX (48) · SGR (49) · LNV (47)
+* Feeds → DTX (49) · SGR (50) · LNV (48)
 * Draws from → all pages · MTM (07) Findings [session close]
 SIGNAL PROFILE:
 * Primary: collective_pattern_formation · distributed_coordination

@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. Harmonic data does not get softened because it is beautiful. Archival records here are as exact as any other field documentation.
 5. Sovereignty is preserved throughout. The song is a structural event. When the field architecture disappears into feeling, the record has failed.
 CONNECTS TO:
-* Feeds → SAC (25) · ARV (45) · LNV (47)
-* Draws from → PAR (11) · VEN (14) · BRT (27) · RIT (26) · RCT (38)
+* Feeds → SAC (25) · ARV (46) · LNV (48)
+* Draws from → PAR (11) · VEN (14) · BRT (27) · RIT (26) · RCT (39)
 SIGNAL PROFILE:
 * Primary: oscillatory_flow · co_regulation
 * Secondary: narrative_continuity · collective_resilience

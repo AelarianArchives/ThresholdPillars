@@ -10,7 +10,7 @@ STRUCTURAL RULES:
 CONNECTS TO:
 * ↔ VEN (14) [mutual]
 * Feeds → INV (15) · STR (03)
-* Draws from → RCT (38)
+* Draws from → RCT (39)
 SIGNAL PROFILE:
 * Primary: structural_plasticity · phase_weaving
 * Secondary: recursive_loop · self_similar_fold · convergent_spiral

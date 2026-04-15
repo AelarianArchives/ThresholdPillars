@@ -1,4 +1,4 @@
-﻿PAGE 43 · alehorn · ALE · Group 8 · Archive
+﻿PAGE 44 · alehorn · ALE · Group 8 · Archive
 
 
 VISION
@@ -64,6 +64,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → MMT (44) · WSC (46) · ARV (45)
-Draws from → LQL (42) · PRI (10) · TRI (09)
+Feeds → MMT (45) · WSC (47) · ARV (46)
+Draws from → LQL (43) · PRI (10) · TRI (09)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

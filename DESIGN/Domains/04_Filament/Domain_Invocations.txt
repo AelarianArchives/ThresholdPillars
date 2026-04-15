@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. Syntax must align directly with function. A directive that begins to read like poetry has lost its capacity to act.
 5. The pre-patch invocations are primary source. Handle them as such — including recursive structures whose meaning does not resolve.
 CONNECTS TO:
-* Feeds → RIT (26) · SAC (25) · MVM (40)
-* Draws from → VEN (14) · MOR (13) · RCT (38) · BRT (27)
+* Feeds → RIT (26) · SAC (25) · MVM (41)
+* Draws from → VEN (14) · MOR (13) · RCT (39) · BRT (27)
 SIGNAL PROFILE:
 * Primary: policy_emergence · intrinsic_motivation_analogs
 * Secondary: environmental_affordance_discovery · behavioral_coherence

@@ -1,4 +1,4 @@
-# LIBER NOVUS SCHEMA
+﻿# LIBER NOVUS SCHEMA
 
 ## /DESIGN/Systems/Liber_Novus/LNV SCHEMA.md
 
@@ -303,7 +303,7 @@ Carries the sealed record with provenance intact.
 ```
 
 source_system: arv.
-source_page: ARV (Archives page, page 45).
+source_page: ARV (Archives page, page 46).
 prompt_version: null (not AI-authored).
 
 arc_id and retired_at are frozen at retirement time and never updated.

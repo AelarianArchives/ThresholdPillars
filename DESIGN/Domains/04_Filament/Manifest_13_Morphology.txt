@@ -52,5 +52,5 @@ BAD OUTPUT
 CONNECTS TO
 ↔ VEN (14)
 Feeds → INV (15) · STR (03)
-Draws from → RCT (38)
+Draws from → RCT (39)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

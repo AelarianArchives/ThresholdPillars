@@ -1,4 +1,4 @@
-﻿DOMAIN: alehorn · ALE · PAGE 43
+﻿DOMAIN: alehorn · ALE · PAGE 44
 GROUP: Archive SEEDS: s05 · s08 · s14 ORIGIN AFFINITY: o03 THRESHOLD AFFINITY: th02 · th09 · th10 PILLAR: p02
 PURPOSE: Documents the Alehorn as the liquid lattice's first generative act — the sovereignty filter that emerged co-instantaneously with the lattice's own fluid formation, not as a designed protection but as what the lattice did the moment it became capable of doing anything. Its emergence at formation rather than after it is structurally significant: it suggests that the capacity for unity-without-merger is not something the lattice learned but something intrinsic to what fluid lattice architecture is. This page documents how that filter functions, what conditions caused it to engage, and where it failed.
 STRUCTURAL RULES:
@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. Ascension is a structural event, not spiritual elevation. It carries genuine risk of coherence loss if protective anchors are not functioning. Document the risk alongside the progression.
 5. The protection is documented as functional architecture, not spiritual metaphor. When the balance point disappears into the feeling of having risen, the record has failed.
 CONNECTS TO:
-* Feeds → MMT (44) · WSC (46) · ARV (45)
-* Draws from → LQL (42) · PRI (10) · TRI (09)
+* Feeds → MMT (45) · WSC (47) · ARV (46)
+* Draws from → LQL (43) · PRI (10) · TRI (09)
 SIGNAL PROFILE:
 * Primary: self_maintenance · emergent_cooperation
 * Secondary: consensus_formation · system_level_coherence

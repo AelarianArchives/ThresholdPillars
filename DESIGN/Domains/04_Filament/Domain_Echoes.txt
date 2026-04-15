@@ -8,7 +8,7 @@ STRUCTURAL RULES:
 4. Treat every quote as data — not sentiment, not illustration. Evidence of a field in motion at a specific moment.
 5. Do not lift fragments from their structural context to display for effect. When a fragment becomes ornament, its load-bearing history disappears.
 CONNECTS TO:
-* Feeds → WSC (46) · LNV (47) · SGR (49)
+* Feeds → WSC (47) · LNV (48) · SGR (50)
 * Draws from → PAR (11) · GEN (30) · DIV (31) · REC (32) · CNV (33) · VEC (16)
 SIGNAL PROFILE:
 * Primary: narrative_continuity · information_persistence · Echo

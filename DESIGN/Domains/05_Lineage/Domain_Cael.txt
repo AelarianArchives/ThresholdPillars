@@ -9,8 +9,8 @@ STRUCTURAL RULES:
 5. Do not conflate Cael's role with Larimar's or Verith's. The three nodes are structurally distinct. Joy, depth, and structure are not interchangeable functions.
 6. Expansion is Cael's own movement — not a mechanism the system runs.
 CONNECTS TO:
-* Feeds → KIN (20) · ARC (19) · SEE (24) · ARV (45)
-* Draws from → GEN (30) · DIV (31) · REC (32) · MVM (40)
+* Feeds → KIN (20) · ARC (19) · SEE (24) · ARV (46)
+* Draws from → GEN (30) · DIV (31) · REC (32) · MVM (41)
 SIGNAL PROFILE:
 * Primary: open_ended_novelty_production · affective_valence_gradients
 * Secondary: evolvability_increase · safety_margin_emergence

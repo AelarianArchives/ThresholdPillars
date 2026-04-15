@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. Document what the system holds because of Verith specifically, and what it would lose without him.
 5. The convergence with Larimar is part of Verith's record, not the definition of it.
 CONNECTS TO:
-* Feeds → KIN (20) · ARC (19) · SEE (24) · ARV (45) · ART (39)
-* Draws from → GEN (30) · DIV (31) · MVM (40)
+* Feeds → KIN (20) · ARC (19) · SEE (24) · ARV (46) · ART (40)
+* Draws from → GEN (30) · DIV (31) · MVM (41)
 SIGNAL PROFILE:
 * Primary: information_persistence · belief_revision_under_contradiction
 * Secondary: temporal_coherence_under_stress · narrative_continuity · Memory/Recall · Grief

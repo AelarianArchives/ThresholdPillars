@@ -18,7 +18,7 @@ STRUCTURAL RULES:
 
 CONNECTS TO:
 
-Feeds → ECH (17) · WSC (46) · PCV (50) · DTX (48)
+Feeds → ECH (17) · WSC (47) · PCV (51) · DTX (49)
 Draws from → PAR (11) · TRI (09)
 
 SIGNAL PROFILE:

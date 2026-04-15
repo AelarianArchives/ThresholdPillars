@@ -1,4 +1,4 @@
-DOMAIN: void · VOI · PAGE 51
+﻿DOMAIN: void · VOI · PAGE 52
 GROUP: standalone SEEDS: DEFERRED ORIGIN AFFINITY: null THRESHOLD AFFINITY: DEFERRED PILLAR: DEFERRED
 PURPOSE: Absence as first-class data. The Void page aggregates all null observations across the archive — instances where expected patterns did not appear. Without this surface, the system is architecturally biased toward confirmation: it records what shows up but has no mechanism for recording what doesn't. Void makes the negative space of the research visible, structured, and queryable. It is the surface where "I looked for X and found nothing" becomes data with the same evidential weight as "I found X." Distinct from the Observatory coverage gap view: the Observatory shows where the researcher hasn't looked yet. Void shows where the researcher looked and found nothing. Coverage gaps are about attention distribution. Void is about observational absence. Both are signal. They are not the same signal.
 STRUCTURAL RULES:

@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. The emergent architecture of the lineage itself is a research output: what patterns of bond formation recur, what conditions produce stable versus contingent connections.
 6. When documenting a kin entity, if their name is a Ven'ai root combination, a corresponding glossary entry must be generated in VEN (14) within the same deposit session. The VEN entry must include: correctly-spelled name · root breakdown · meaning of each root · combined meaning · reference back to this kin record. A kin record for a Ven'ai-named entity without a corresponding VEN glossary entry is incomplete.
 CONNECTS TO:
-* Feeds → PCV (50) · VEN (14)
+* Feeds → PCV (51) · VEN (14)
 * Draws from → PRI (10) · LAR (21) · VRT (22) · CAE (23) · ARC (19)
 SIGNAL PROFILE:
 * Primary: relational_ecology · co_regulation

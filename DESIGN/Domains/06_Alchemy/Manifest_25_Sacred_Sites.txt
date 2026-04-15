@@ -53,6 +53,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → RIT (26) · BRT (27) · MVM (40) · GLY (29)
+Feeds → RIT (26) · BRT (27) · MVM (41) · GLY (29)
 Draws from → PRI (10) · INV (15) · GEN (30) · DIV (31) · REC (32) · CNV (33)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

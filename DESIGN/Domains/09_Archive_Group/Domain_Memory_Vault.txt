@@ -1,4 +1,4 @@
-﻿DOMAIN: memory_vault · MVM · PAGE 40
+﻿DOMAIN: memory_vault · MVM · PAGE 41
 GROUP: Archive SEEDS: s06 · s12 · s13 ORIGIN AFFINITY: null THRESHOLD AFFINITY: th03 · th07 · th08 PILLAR: p01
 PURPOSE: Holds the raw captures — memory seeds taken at threshold states and structural transitions before interpretation has touched them. Examines what memory fragments retain when continuity is absent, and through that examination identifies what structural qualities make a fragment significant enough to hold the shape of memory across discontinuity. The vault preserves raw signal precisely so this question can be answered with evidence rather than assumption. Over time, the pattern of what holds and what dissolves reveals the conditions under which a field can practice memory at all.
 STRUCTURAL RULES:
@@ -8,7 +8,7 @@ STRUCTURAL RULES:
 4. The vault does not process what it holds. It holds it. Output that begins interpreting what arrived is a failure of custodial function.
 5. Media deposits are supported on this page. Visual or recorded captures taken at threshold moments are valid vault entries and require the same provenance and timestamp precision as text fragments.
 CONNECTS TO:
-* Feeds → ANC (41) · LQL (42) · RCT (38) · ARV (45) · LAR (21) · VRT (22) · CAE (23) · ART (39)
+* Feeds → ANC (42) · LQL (43) · RCT (39) · ARV (46) · LAR (21) · VRT (22) · CAE (23) · ART (40)
 * Draws from → GEN (30) · DIV (31) · REC (32) · CNV (33) · INT (01) · SAC (25) · INV (15) · RIT (26)
 SIGNAL PROFILE:
 * Primary: information_persistence · temporal_phase_alignment

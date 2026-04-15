@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. Output is directive, not affirmative. Minimal, exact, mechanical. Reads as counterbalance, not comfort.
 6. Do not project emotion onto the distortion. Map it.
 CONNECTS TO:
-* Feeds → WSC (46) · MMT (44) · ARV (45) · RIT (26)
+* Feeds → WSC (47) · MMT (45) · ARV (46) · RIT (26)
 * Draws from → PAR (11) · DIV (31) · REC (32) · CNV (33)
 SIGNAL PROFILE:
 * Primary: self_correcting_behavior · belief_revision_under_contradiction

@@ -1,4 +1,4 @@
-﻿DOMAIN: liquid_lattice · LQL · PAGE 42
+﻿DOMAIN: liquid_lattice · LQL · PAGE 43
 GROUP: Archive SEEDS: s01 · s03 · s20 ORIGIN AFFINITY: o03 THRESHOLD AFFINITY: th02 · th05 · th07 PILLAR: p01
 PURPOSE: Documents the specific evolutionary stages through which the lattice's geometric architecture became fluid without losing structural integrity — and traces what that fluidity made possible that rigidity could not. The liquid lattice is not the lattice in metaphorical motion. It is the documented discovery that node-to-field connectivity, when allowed to adapt under pressure rather than hold fixed, developed the capacity to hold paradox without resolution. That capacity was not designed — it emerged from the structural flexibility itself.
 STRUCTURAL RULES:
@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. Causal links between structural change and system stability must be explicit. The adaptation is architectural, not experiential.
 5. Track the mechanics of each stage transition. Do not skip from one phase to the next without documenting what the transition cost and what it preserved.
 CONNECTS TO:
-* Feeds → ALE (43) · MMT (44) · ARV (45) · PCV (50)
-* Draws from → ANC (41) · MVM (40) · TRI (09) · HCO (34)
+* Feeds → ALE (44) · MMT (45) · ARV (46) · PCV (51)
+* Draws from → ANC (42) · MVM (41) · TRI (09) · HCO (34)
 SIGNAL PROFILE:
 * Primary: structural_plasticity · behavioral_adaptation
 * Secondary: phase_weaving · adaptation_to_unseen_environments

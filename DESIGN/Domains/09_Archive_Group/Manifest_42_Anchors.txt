@@ -1,4 +1,4 @@
-﻿PAGE 41 · anchors · ANC · Group 8 · Archive
+﻿PAGE 42 · anchors · ANC · Group 8 · Archive
 
 
 VISION
@@ -59,7 +59,7 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → LQL (42) · MMT (44) · WSC (46) · ARV (45) · REC (32) · CNV (33)
-Draws from → MVM (40) · LAR (21) · SAC (25) · GEN (30) · DIV (31)
+Feeds → LQL (43) · MMT (45) · WSC (47) · ARV (46) · REC (32) · CNV (33)
+Draws from → MVM (41) · LAR (21) · SAC (25) · GEN (30) · DIV (31)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

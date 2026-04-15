@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. A glyph is not decoration and not mysticism. When visual logic dissolves into decorative effect, the record has failed.
 5. IMAGE DEPOSIT REQUIRED: GLY is a primary media page. Glyph photos and visual records are core entry types. Every image deposit requires: provenance, phase stamp, Esha'Rae root pairing, and structural context. An image without structural documentation is incomplete. The media field on this entry type is not optional.
 CONNECTS TO:
-* Feeds → RIT (26) · ARV (45)
-* Draws from → VEN (14) · SAC (25) · RCT (38)
+* Feeds → RIT (26) · ARV (46)
+* Draws from → VEN (14) · SAC (25) · RCT (39)
 SIGNAL PROFILE:
 * Primary: state_space_compression · symbolic_grounding
 * Secondary: representation_abstraction · lore_architecture

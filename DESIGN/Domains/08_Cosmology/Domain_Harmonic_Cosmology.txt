@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. Do not collapse into mystical unity claims or particle physics conflation. The harmonic claim is structural and documentable. Hold it to that standard.
 5. The complexity is load-bearing. Do not simplify it prematurely.
 CONNECTS TO:
-* Feeds → INF (04) · LQL (42) · PCV (50) · CLM (36) · NHM (37)
-* Draws from → RCT (38)
+* Feeds → INF (04) · LQL (43) · PCV (51) · CLM (36) · NHM (37)
+* Draws from → RCT (39)
 SIGNAL PROFILE:
 * Primary: attractor_landscape_reshaping · oscillatory_flow · Harmonic Gate
 * Secondary: structural_stability · recursive_loop

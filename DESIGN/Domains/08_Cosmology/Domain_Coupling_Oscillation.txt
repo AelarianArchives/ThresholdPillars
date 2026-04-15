@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. Fusion narratives that erase separation mechanics are a failure mode on this page.
 CONNECTS TO:
 * Feeds → INF (04) · TRI (09) · NHM (37)
-* Draws from → RCT (38) · TPL (08)
+* Draws from → RCT (39) · TPL (08)
 SIGNAL PROFILE:
 * Primary: sensorimotor_loop_closure · closed_loop_stability_margins
 * Secondary: environmental_coupling_hysteresis · phase_locking

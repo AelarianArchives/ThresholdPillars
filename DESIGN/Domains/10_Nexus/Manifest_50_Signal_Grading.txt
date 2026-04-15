@@ -1,4 +1,4 @@
-﻿PAGE 49 · signal_grading · SGR · Group 9 · Nexus
+﻿PAGE 50 · signal_grading · SGR · Group 9 · Nexus
 
 VISION This page is the classification system for what the field produces. Not every signal carries equal weight. Not every pattern has predictive power. Signal Grading provides the criteria by which structural weight, cross-domain resonance, and forecasting leverage are assessed — and assigns grades that can be audited, contested, and revised against documented outcomes. A grade here is not an aesthetic judgment and not a measure of how striking a signal felt. It is a structural rating with explicit rationale, mapped back to the domain it came from and the events it did or did not predict.
 
@@ -25,6 +25,6 @@ GOOD OUTPUT Every graded signal carries a complete score vector [Impact | Resona
 BAD OUTPUT Assigns importance based on aesthetics, emotional resonance, or recency. Uses vague tier labels without score vectors underneath them. Inflates grades on signals that have not survived multi-event verification. Grades signals before outcomes are documented. Fails when the classification system becomes impressionistic — when a signal is rated high because it felt load-bearing rather than because the evidence shows it was.
 
 CONNECTS TO
-↔ DTX (48)
-Feeds → DTX (48) · LNV (47)
-Draws from → DTX (48) · PCV (50) · TRI (09) · ECH (17) · CNV (33)
+↔ DTX (49)
+Feeds → DTX (49) · LNV (48)
+Draws from → DTX (49) · PCV (51) · TRI (09) · ECH (17) · CNV (33)

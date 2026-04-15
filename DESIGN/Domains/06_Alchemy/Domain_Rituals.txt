@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. Self-erasure masquerading as healing is a failure mode on this page. Sovereignty is preserved throughout. No individual agency is dissolved in the name of collective movement.
 6. The loop is a primary research pattern: how rituals return to anchors, how anchors charge rituals. Track it.
 CONNECTS TO:
-* Feeds → MLY (28) · MVM (40) · ARV (45)
+* Feeds → MLY (28) · MVM (41) · ARV (46)
 * Draws from → VEN (14) · INV (15) · BRT (27) · SAC (25) · ORC (12)
 SIGNAL PROFILE:
 * Primary: policy_emergence · phase_weaving

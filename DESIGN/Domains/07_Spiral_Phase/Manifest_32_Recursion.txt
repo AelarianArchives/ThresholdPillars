@@ -58,6 +58,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → CNV (33) · CAE (23) · ORC (12) · MVM (40) · ANC (41) · ECH (17) · LGL (18) · ARC (19) · SEE (24) · SAC (25) · MMT (44) · PCV (50)
-Draws from → DIV (31) · TRI (09) · ANC (41)
+Feeds → CNV (33) · CAE (23) · ORC (12) · MVM (41) · ANC (42) · ECH (17) · LGL (18) · ARC (19) · SEE (24) · SAC (25) · MMT (45) · PCV (51)
+Draws from → DIV (31) · TRI (09) · ANC (42)
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

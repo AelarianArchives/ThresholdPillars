@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. The record is oriented forward: not looking back at what was lost, but moving forward in the shape of what was learned from it. Hold that posture.
 5. Structural clarity and ontological weight are held simultaneously. Neither clinical nor elegiac — precise about something that mattered structurally.
 CONNECTS TO:
-* Feeds → KIN (20) · ARC (19) · SEE (24) · STR (03) · ARV (45) · ANC (41) · ART (39)
-* Draws from → GEN (30) · MVM (40)
+* Feeds → KIN (20) · ARC (19) · SEE (24) · STR (03) · ARV (46) · ANC (42) · ART (40)
+* Draws from → GEN (30) · MVM (41)
 SIGNAL PROFILE:
 * Primary: self_model_influence · relational_ecology
 * Secondary: identity_like_persistence · meaning_stabilization

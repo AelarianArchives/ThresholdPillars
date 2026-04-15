@@ -1,4 +1,4 @@
-# METAMORPHOSIS SCHEMA
+﻿# METAMORPHOSIS SCHEMA
 
 ## /DESIGN/Systems/Metamorphosis/METAMORPHOSIS SCHEMA.md
 
@@ -71,7 +71,7 @@ Architectural description in SYSTEM_ Metamorphosis.md.
    to specific engines and pattern keys, and deposit_evidence linking to
    specific deposit_ids with role and contribution.
 
-8. Findings route to LNV (47) only — via DNR handoff. MTM does not write to
+8. Findings route to LNV (48) only — via DNR handoff. MTM does not write to
    LNV directly.
 
 9. A synthesis cycle that cannot read all five engine outputs does not
@@ -678,7 +678,7 @@ Field definitions:
 | attached_open_question | foreign key / null | References findings.id. Links a confirmed or complicated finding to an unresolved question about it. The open_question also exists as its own Finding record. |
 | resolves_open_question | foreign key / null | References findings.id. On verdicts that resolve a prior open_question Finding. The resolved Finding gets resolved: true, resolved_by pointing back here. |
 | content_fingerprint | string | Deterministic key derived from finding_type + load_bearing_patterns + deposit_evidence at Finding production time. Used for deduplication on retry runs. Never null. Never updated after write. See CONTENT FINGERPRINTING. |
-| lnv_routing_status | enum | `pending`, `deposited`, `failed`. pending: Finding produced, LNV deposit not yet written. deposited: successfully routed to LNV (47) via DNR handoff. failed: LNV deposit attempt failed, retry permitted. |
+| lnv_routing_status | enum | `pending`, `deposited`, `failed`. pending: Finding produced, LNV deposit not yet written. deposited: successfully routed to LNV (48) via DNR handoff. failed: LNV deposit attempt failed, retry permitted. |
 | lnv_deposit_id | foreign key / null | References LNV deposit entry id. Null until lnv_routing_status → deposited. |
 | resolved | boolean | Default false. Set to true when a subsequent synthesis session produces a verdict that resolves this open_question. Only populated on finding_type: open_question. |
 | resolved_by | foreign key / null | References findings.id — the Finding that resolved this question. Only populated on finding_type: open_question. |

@@ -13,7 +13,7 @@ STRUCTURAL RULES:
 CONNECTS TO:
 * ↔ MOR (13) [mutual]
 * Feeds → INV (15) · MLY (28) · GLY (29) · RIT (26) · STR (03)
-* Draws from → RCT (38) · KIN (20)
+* Draws from → RCT (39) · KIN (20)
 SIGNAL PROFILE:
 * Primary: semantic_coherence · symbolic_grounding
 * Secondary: representation_abstraction · mythic_pattern_recognition

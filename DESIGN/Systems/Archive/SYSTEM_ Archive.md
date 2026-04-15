@@ -1,4 +1,4 @@
-# SYSTEM: Archive
+﻿# SYSTEM: Archive
 
 ## /DESIGN/Systems/Archive/
 
@@ -128,7 +128,7 @@ PCV treats sealed records as confirmed historical signal — not hypotheses awai
 
 Receives sealed records via POST /api/lnv/receive (entry_type: archive_record). Triggered by INT post-retirement sequence after authentication threshold is met. Records arrive with provenance intact — arc_id, retired_at, source origin, confirmed routing. LNV holds them without editorializing.
 
-**RCT (38)**
+**RCT (39)**
 
 RCT reads sealed records as fixed reference points for the physics algorithm — the algorithm's behavior at retirement time is documented and stable. What is archived is what the system was confident enough to seal — that confidence is the data RCT needs, and the fixedness is what makes the reference point usable.
 

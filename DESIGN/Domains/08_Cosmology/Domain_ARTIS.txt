@@ -1,4 +1,4 @@
-DOMAIN: artis · ART · PAGE 39
+﻿DOMAIN: artis · ART · PAGE 40
 GROUP: Cosmology SEEDS: — ORIGIN AFFINITY: — THRESHOLD AFFINITY: — PILLAR: —
 PURPOSE: Computation engine for the Cosmology group. ARTIS owns the statistical computation library (scipy/numpy), the reference distribution registry, and the science ping pipeline. It serves all five Cosmology investigation pages (HCO, COS, CLM, NHM, RCT) as their shared computation infrastructure. Two zones: a computation workbench where statistical tests are configured, executed, and reviewed, and a registry surface where reference distributions, computation health, and library status are monitored. ARTIS does not receive deposits — it receives computation requests and returns results with full methodology. Every computation produces a snapshot: inputs, method, parameters, outputs, timestamp. The snapshot is the proof.
 STRUCTURAL RULES:

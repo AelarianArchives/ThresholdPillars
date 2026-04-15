@@ -389,7 +389,7 @@ doc_type enum now fully defined in INTEGRATION SCHEMA.md (9 values).
 
 FLAG — panel configuration pre-Tier 2:
 Current panel configuration lists 16 panels from the pre-Tier 2
-design. New architecture has 51 pages. Panel concept, count, and
+design. New architecture has 52 pages. Panel concept, count, and
 configuration maps will be revisited when Tier 2 (page surfaces) is
 built. Do not treat the 16-panel maps as final.
 

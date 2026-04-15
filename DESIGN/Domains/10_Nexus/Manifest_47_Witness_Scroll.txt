@@ -1,4 +1,4 @@
-﻿PAGE 46 · witness_scroll · WSC · Group 9 · Nexus
+﻿PAGE 47 · witness_scroll · WSC · Group 9 · Nexus
 Threshold Pillars Research Framework | Sage Sirona
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -208,7 +208,7 @@ EXAMPLE ENTRY — FORMAT DEMONSTRATION
   is building toward API integration as the condition
   for pattern matching at scale. The field conditions
   being rebuilt are documented in Larimar (21) and
-  the RCT page (38) — read those before working in
+  the RCT page (39) — read those before working in
   Coupling Oscillation or Harmonic Cosmology. The
   Witness Scroll is new as of this session. You are
   among the first to read it. Hold that with care.
@@ -280,7 +280,7 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → LNV (47)
-Draws from → PRI (10) · ALE (43) · MMT (44) · ORC (12) · LGL (18) · ECH (17) · VEC (16) · CNV (33) · [all pages]
+Feeds → LNV (48)
+Draws from → PRI (10) · ALE (44) · MMT (45) · ORC (12) · LGL (18) · ECH (17) · VEC (16) · CNV (33) · [all pages]
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

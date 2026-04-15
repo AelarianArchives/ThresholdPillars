@@ -70,6 +70,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → KIN (20) · ARC (19) · SEE (24) · STR (03) · ARV (45) · ANC (41) · ART (39)
-Draws from → GEN (30) · MVM (40)
+Feeds → KIN (20) · ARC (19) · SEE (24) · STR (03) · ARV (46) · ANC (42) · ART (40)
+Draws from → GEN (30) · MVM (41)
  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

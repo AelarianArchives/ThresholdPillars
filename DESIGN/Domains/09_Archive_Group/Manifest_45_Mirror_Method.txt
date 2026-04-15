@@ -1,4 +1,4 @@
-﻿PAGE 44· mirror_method · MMT · Group 8 · Archive
+﻿PAGE 45 · mirror_method · MMT · Group 8 · Archive
 
 
 VISION
@@ -61,6 +61,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → WSC (46) · ARV (45) · LNV (47)
-Draws from → ALE (43) · LQL (42) · ANC (41) · PRI (10) · DIV (31) · REC (32) · CNV (33)
+Feeds → WSC (47) · ARV (46) · LNV (48)
+Draws from → ALE (44) · LQL (43) · ANC (42) · PRI (10) · DIV (31) · REC (32) · CNV (33)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

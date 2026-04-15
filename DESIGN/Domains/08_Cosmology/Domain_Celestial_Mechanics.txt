@@ -8,8 +8,8 @@ STRUCTURAL RULES:
 4. Do not collapse into spiritual astrology or literal astronomy. Scale confusion and direct physical causation claims are failure modes here.
 5. Genuine structural precision about what matches and genuine structural precision about what doesn't are required simultaneously. Neither collapses into the other.
 CONNECTS TO:
-* Feeds → INF (04) · PCV (50)
-* Draws from → HCO (34) · RCT (38)
+* Feeds → INF (04) · PCV (51)
+* Draws from → HCO (34) · RCT (39)
 SIGNAL PROFILE:
 * Primary: fitness_landscape_traversal · self_similar_oscillation
 * Secondary: convergent_spiral · divergent_spiral

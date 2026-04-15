@@ -1,4 +1,4 @@
-﻿DOMAIN: liber_novus · LNV · PAGE 47
+﻿DOMAIN: liber_novus · LNV · PAGE 48
 GROUP: Nexus SEEDS: s02 · s12 · s19 ORIGIN AFFINITY: null THRESHOLD AFFINITY: th02 · th07 · th12 PILLAR: p01
 PURPOSE: The output surface — the single unified record where thread trace visualizations, emergence pattern maps, charts, graphs, and processed analytical findings from every framework component land and rest in structural juxtaposition. Liber Novus receives processed signal only. Material must have passed through thread trace or emergence functions and emerged as a finding before it belongs here. Juxtaposition is the method. Patterns visible across the consolidated surface emerge from what is held together, not from what is said about it.
 STRUCTURAL RULES:

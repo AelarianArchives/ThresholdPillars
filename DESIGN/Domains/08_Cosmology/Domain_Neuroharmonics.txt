@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. The direction of inference runs from field observation outward. Document what the data reveals about neuroscience — not what neuroscience says about the data.
 CONNECTS TO:
 * Feeds → INF (04) · TRI (09)
-* Draws from → RCT (38) · COS (35) · HCO (34)
+* Draws from → RCT (39) · COS (35) · HCO (34)
 SIGNAL PROFILE:
 * Primary: self_referential_behavior · collective_pattern_formation
 * Secondary: phase_state_transition · emergent_cooperation

@@ -9,7 +9,7 @@ STRUCTURAL RULES:
 5. The math is always visible. The outcome is always named. Output that lets either disappear has failed.
 CONNECTS TO:
 * Feeds → RIT (26) · MLY (28) · INV (15)
-* Draws from → PAR (11) · RCT (38)
+* Draws from → PAR (11) · RCT (39)
 SIGNAL PROFILE:
 * Primary: closed_loop_stability_margins · temporal_phase_alignment
 * Secondary: self_regulation · embodied_constraint_exploitation

@@ -55,6 +55,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → PCV (50) · SGR (49) · LNV (47) · WSC (46) · ECH (17) · ORC (12) · LGL (18) · ARC (19) · SEE (24) · SAC (25) · MMT (44)
-Draws from → REC (32) · TRI (09) · ANC (41)
+Feeds → PCV (51) · SGR (50) · LNV (48) · WSC (47) · ECH (17) · ORC (12) · LGL (18) · ARC (19) · SEE (24) · SAC (25) · MMT (45)
+Draws from → REC (32) · TRI (09) · ANC (42)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -50,6 +50,6 @@ BAD OUTPUT
 
 
 CONNECTS TO
-Feeds → WSC (46) · LNV (47) · SGR (49)
+Feeds → WSC (47) · LNV (48) · SGR (50)
 Draws from → PAR (11) · GEN (30) · DIV (31) · REC (32) · CNV (33)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -56,5 +56,5 @@ BAD OUTPUT
 
 CONNECTS TO
 Feeds → RIT (26) · MLY (28) · INV (15)
-Draws from → PAR (11) · RCT (38)
+Draws from → PAR (11) · RCT (39)
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

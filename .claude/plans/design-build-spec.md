@@ -1,4 +1,4 @@
-# Design Build Spec
+﻿# Design Build Spec
 # Aelarian Archives
 # Created: 2026-04-09 (session 41)
 
@@ -372,7 +372,7 @@ nav, left side. Panel opens from left side.
 
 ### 2.2 VOID — PAGE 51
 
-page_code: VOI. section_id: void. Standalone page 51.
+page_code: VOI. section_id: void. Standalone page 52.
 Promoted from Nexus group. Nexus retains WSC, LNV, DTX, SGR, PCV (46–50).
 
 Aggregates all null observations across the archive — where the
@@ -1077,7 +1077,7 @@ into MTM's synthesis pass.
    Sage.
 2. **Sage-triggered** — on demand from the visualization, any time.
 
-Both write to `visualization_snapshots` and route to LNV (47).
+Both write to `visualization_snapshots` and route to LNV (48).
 `trigger_source` field ('auto' | 'sage') distinguishes them — LNV
 surfaces this so system-flagged moments and researcher-flagged moments
 are readable at a glance. `note` field: Sage can add a note at

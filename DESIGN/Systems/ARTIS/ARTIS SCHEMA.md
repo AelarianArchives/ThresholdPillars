@@ -1,4 +1,4 @@
-# ARTIS SCHEMA
+﻿# ARTIS SCHEMA
 
 ## /DESIGN/Systems/ARTIS/ARTIS SCHEMA.md
 
@@ -951,7 +951,7 @@ Add a reference distribution to the registry.
 
 ## ARTIS ZONE B — REGISTRY AND HEALTH SURFACE
 
-The right ~40% of the ARTIS page (page 39). Management and monitoring
+The right ~40% of the ARTIS page (page 40). Management and monitoring
 surface. Not a computation surface — Zone A (left ~60%) is the computation
 workbench.
 

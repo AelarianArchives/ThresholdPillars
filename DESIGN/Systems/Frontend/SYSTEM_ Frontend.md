@@ -1,4 +1,4 @@
-# SYSTEM: Frontend
+﻿# SYSTEM: Frontend
 
 ## frontend_system.md
 
@@ -11,12 +11,12 @@
 ## WHAT THIS SYSTEM OWNS
 
 * All user-facing rendering — Svelte components, page routes, scoped CSS. Every visual element the researcher interacts with is owned by the frontend
-* Navigation — 51 page routes corresponding to the 51 archive sections (50 original + VOI page 51). Routing strategy (individual route files vs dynamic `[section]` parameter route) is a decision required before core files phase. Both options are viable; the choice affects file count and route-level code sharing
+* Navigation — 52 page routes corresponding to the 52 archive sections (51 original + VOI page 52). Routing strategy (individual route files vs dynamic `[section]` parameter route) is a decision required before core files phase. Both options are viable; the choice affects file count and route-level code sharing
 * Component state — Svelte stores for session state, active entry data cache, and UI state (active filters, current section, panel visibility). Stores are the single source of runtime state for the frontend. Components read from stores; they do not hold independent state that other components need
 * Shared layout — `+layout.svelte` shell wrapping all pages. Persistent sidebar navigation, section header, and global UI elements live here
 * API client layer — `src/lib/api.ts` fetch wrapper for all FastAPI calls. Every backend route has one corresponding function in this module. All data access goes through this layer. No direct database access. No direct Ollama calls. No direct Claude API calls. The API client is the only point of contact between frontend and backend
 * Per-page layout specs — defined in PAGE_LAYOUTS.md. Each page has its own layout, density, controls, and accent. Pages look different but belong to the same family. Same shell, different internal structure per page
-* Deposit card component — the most common UI element, appears on all 51 pages. Base card with per-page variations where needed
+* Deposit card component — the most common UI element, appears on all 52 pages. Base card with per-page variations where needed
 * Black Pearl panel — slide-in quick-capture panel accessible from any page
 * Observatory — analytical overview surface (`/observatory`), 8-node constellation
 * Composite ID display — reads the assembled stamp from backend, renders it. Does not construct composite IDs (construction owned by composite ID service, see COMPOSITE ID SCHEMA.md)
@@ -51,7 +51,7 @@ frontend/
       stores/         — Svelte stores
       api.ts          — fetch wrapper for FastAPI calls
       index.ts        — lib barrel export
-    routes/           — 51 page routes + layout
+    routes/           — 52 page routes + layout
       +layout.svelte  — shared shell wrapping all pages
       +page.svelte    — root page (Home — soft landing)
     app.d.ts          — TypeScript declarations
@@ -72,7 +72,7 @@ frontend/
 | --- | --- |
 | Shell | Persistent sidebar navigation, section header, global layout elements |
 | NavigationSidebar | Fixed left sidebar — 9 collapsible groups, pinned utilities, state indicators |
-| DepositCard | Base deposit card with per-page variations — appears on all 51 pages |
+| DepositCard | Base deposit card with per-page variations — appears on all 52 pages |
 | MediaDepositCard | Media deposit card — large thumbnail, summary alongside, lightbox on click |
 | CompositeId | Renders composite ID stamp display |
 | TaggerPanel | Tag suggestion UI — sends context, displays candidates |
@@ -206,7 +206,7 @@ palette chosen at frontend build time.
 
 ## DEPOSIT CARD COMPONENT
 
-The most common UI element — appears on all 51 pages. Base card with
+The most common UI element — appears on all 52 pages. Base card with
 per-page variations.
 
 ### Base card (all pages)
@@ -317,7 +317,7 @@ Home (`/`) is the soft landing; Observatory is the analytical destination.
    cluster and where the research hasn't looked yet. Built from embedding
    vectors. Observatory = "where haven't you looked?" Void = "where you
    looked and found nothing." (VOI-6)
-5. **Timeline** — temporal deposit view across all 51 pages
+5. **Timeline** — temporal deposit view across all 52 pages
 6. **Resonance Engine** — full visualization, centerpiece
 7. **Void** — absence flag summary
 8. **Pulse** — calibration approvals, system alerts, pattern notifications.
@@ -377,4 +377,4 @@ Guard: sort overrides stored in UI store per page per session. Reset on session 
 | frontend/src/lib/components/ | Shared components (Shell, NavigationSidebar, DepositCard, MediaDepositCard, CompositeId, TaggerPanel, DepositPanel, BlackPearlPanel, Observatory, ThreadTrace, ResonanceCanvas, DepositGenealogy, ARTISWorkbench, ARTISRegistryPanel, ARTISPagePanel, SciencePingIndicator, SciencePingFlow, ComputationSnapshotCard, MappingReviewCard, FindingCard, FindingsPanel, FindingInlineIndicator, ResidualPanel, ResidualCard, CouplingAnalysis, HarmonicSpectrum, CorrelationScatter, ClusterDendrogram, EntropyComparisonBar, NexusFeedbackIndicator, ReferenceCard, DistributionCard) | PLANNED |
 | frontend/src/lib/stores/ | Svelte stores (session, entries, tagger, ui, pearls) | PLANNED |
 | frontend/src/lib/api.ts | Fetch wrapper — single interface to FastAPI backend | PLANNED |
-| frontend/src/routes/[...] | 51 page routes — routing strategy TBD | PLANNED |
+| frontend/src/routes/[...] | 52 page routes — routing strategy TBD | PLANNED |

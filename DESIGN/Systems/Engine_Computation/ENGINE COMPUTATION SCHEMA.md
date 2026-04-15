@@ -1,4 +1,4 @@
-# ENGINE COMPUTATION SCHEMA
+﻿# ENGINE COMPUTATION SCHEMA
 
 ## /DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md
 
@@ -524,7 +524,7 @@ Captures of engine visualization state. Two triggers: (1) automatic
 on significant signal delta — new strong pattern, band change, or new
 pattern type detected by engine_base.py comparing computation result
 to most recent engine_snapshot; (2) Sage-triggered on demand. Routes
-to LNV (47) with optional note. Distinct from computation snapshots
+to LNV (48) with optional note. Distinct from computation snapshots
 (which are automatic and feed MTM).
 
   TABLE: visualization_snapshots (PostgreSQL)
