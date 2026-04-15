@@ -36,8 +36,10 @@ build/
 *.pkg
 *.msi
 
-# Database dumps
+# Database dumps and backup operational state
 db-dumps/
+backup_manifest.json
+backblaze_state.json
 
 # Audio and media assets (large binaries)
 Audio/

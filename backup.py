@@ -10,11 +10,12 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 # === YOUR SETTINGS ===
 PROJECT_FOLDER = r"C:\Users\sasir\Desktop\Aelarian\Archives"
+SIGNAL_FOLDER = r"C:\Users\sasir\Desktop\To_Parse"
 USB_DRIVE = "D:\\"
 USB_BACKUP_FOLDER = "threshold-backups"
 B2_BUCKET = "threshold-backups"
 DB_DUMPS_FOLDER = os.path.join(PROJECT_FOLDER, "db-dumps")
-BACKBLAZE_STATE_FILE = os.path.join(PROJECT_FOLDER, "backblaze_state.json")
+MANIFEST_PATH = os.path.join(PROJECT_FOLDER, "backup_manifest.json")
 
 # === LOAD CREDENTIALS FROM .env ===
 # Credentials are never hardcoded. See GITHUB_PROTOCOL.md section 5.
@@ -41,19 +42,19 @@ def log(msg):
     print(msg)
     logging.info(msg)
 
-# === BACKBLAZE STATE ===
-def load_backblaze_state():
-    if os.path.exists(BACKBLAZE_STATE_FILE):
+# === MANIFEST — tracks filepath → last modified time ===
+def load_manifest():
+    if os.path.exists(MANIFEST_PATH):
         try:
-            with open(BACKBLAZE_STATE_FILE, "r", encoding="utf-8") as f:
+            with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, IOError):
-            return {"uploaded": []}
-    return {"uploaded": []}
+            return {}
+    return {}
 
-def save_backblaze_state(state):
-    with open(BACKBLAZE_STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(state, f, indent=2)
+def save_manifest(manifest):
+    with open(MANIFEST_PATH, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2)
 
 # === LAYER 0: POSTGRES DUMP ===
 def backup_postgres():
@@ -75,6 +76,45 @@ def backup_postgres():
         log(f"Postgres: Dump complete → {filepath}")
     except Exception as e:
         log(f"Postgres: Failed — {e}")
+
+# === LAYER 0b: SIGNAL FILE BACKUP ===
+def backup_signal_files():
+    if not os.path.exists(SIGNAL_FOLDER):
+        log("Signal files: To_Parse not found, skipping.")
+        return
+    if not B2_KEY_ID or not B2_APP_KEY:
+        log("Signal files: Backblaze credentials not set, skipping.")
+        return
+    try:
+        from b2sdk.v2 import InMemoryAccountInfo, B2Api
+        info = InMemoryAccountInfo()
+        api = B2Api(info)
+        api.authorize_account("production", B2_KEY_ID, B2_APP_KEY)
+        bucket = api.get_bucket_by_name(B2_BUCKET)
+        manifest = load_manifest()
+        uploaded = 0
+        for root, dirs, files in os.walk(SIGNAL_FOLDER):
+            for filename in files:
+                filepath = os.path.join(root, filename)
+                try:
+                    mtime = os.path.getmtime(filepath)
+                except OSError:
+                    continue
+                if manifest.get(filepath) == mtime:
+                    continue
+                rel = os.path.relpath(filepath, SIGNAL_FOLDER).replace("\\", "/")
+                b2_name = f"signal-files/{rel}"
+                bucket.upload_local_file(local_file=filepath, file_name=b2_name)
+                manifest[filepath] = mtime
+                save_manifest(manifest)
+                log(f"Signal files: Uploaded {rel}")
+                uploaded += 1
+        if uploaded == 0:
+            log("Signal files: No new or changed files.")
+        else:
+            log(f"Signal files: {uploaded} file(s) uploaded.")
+    except Exception as e:
+        log(f"Signal files: Failed — {e}")
 
 # === LAYER 1: USB BACKUP ===
 def backup_to_usb():
@@ -116,28 +156,39 @@ def backup_to_backblaze():
         api = B2Api(info)
         api.authorize_account("production", B2_KEY_ID, B2_APP_KEY)
         bucket = api.get_bucket_by_name(B2_BUCKET)
-        state = load_backblaze_state()
-        already_uploaded = set(state.get("uploaded", []))
+        manifest = load_manifest()
         uploaded = 0
         exports_folder = os.path.join(PROJECT_FOLDER, "exports")
         if os.path.exists(exports_folder):
             for filename in os.listdir(exports_folder):
-                if filename.endswith(".json") and filename not in already_uploaded:
+                if filename.endswith(".json"):
                     filepath = os.path.join(exports_folder, filename)
+                    try:
+                        mtime = os.path.getmtime(filepath)
+                    except OSError:
+                        continue
+                    if manifest.get(filepath) == mtime:
+                        continue
                     bucket.upload_local_file(local_file=filepath, file_name=filename)
-                    already_uploaded.add(filename)
+                    manifest[filepath] = mtime
+                    save_manifest(manifest)
                     log(f"Backblaze: Uploaded {filename}")
                     uploaded += 1
         if os.path.exists(DB_DUMPS_FOLDER):
             for filename in os.listdir(DB_DUMPS_FOLDER):
-                if filename.endswith(".sql") and filename not in already_uploaded:
+                if filename.endswith(".sql"):
                     filepath = os.path.join(DB_DUMPS_FOLDER, filename)
+                    try:
+                        mtime = os.path.getmtime(filepath)
+                    except OSError:
+                        continue
+                    if manifest.get(filepath) == mtime:
+                        continue
                     bucket.upload_local_file(local_file=filepath, file_name=filename)
-                    already_uploaded.add(filename)
+                    manifest[filepath] = mtime
+                    save_manifest(manifest)
                     log(f"Backblaze: Uploaded {filename}")
                     uploaded += 1
-        state["uploaded"] = sorted(already_uploaded)
-        save_backblaze_state(state)
         if uploaded == 0:
             log("Backblaze: No new files to upload.")
     except Exception as e:
@@ -147,6 +198,7 @@ def backup_to_backblaze():
 if __name__ == "__main__":
     log("=== BACKUP STARTED ===")
     backup_postgres()
+    backup_signal_files()
     backup_to_usb()
     backup_to_github()
     backup_to_backblaze()
