@@ -18189,3 +18189,25 @@ NOT_STARTED:
 RESUMING_FROM: Session 59 TYPE: CLOSE (90ed20b). Session 60 infrastructure work.
 NEXT_ACTION: Write backup.py changes
 ---
+TIMESTAMP: 2026-04-15
+SESSION: 60
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - backup.py — COMPLETE (pg_dump layer, Backblaze .sql scan, state tracking, encoding fix)
+  - backblaze_state.json — COMPLETE (created; tracks uploaded filenames to prevent re-uploads)
+  - .gitignore — COMPLETE (db-dumps/ added)
+  - create_backup_tasks.bat — COMPLETE (Windows Task Scheduler setup script)
+  - PROTOCOL/SESSION_LOG.md — IN_PROGRESS
+COMPLETED:
+  - backup_postgres(): runs pg_dump against aelarian-postgres before USB/GitHub/Backblaze layers
+  - DB_DUMPS_FOLDER setting; db-dumps/ created on disk; gitignored
+  - Backblaze expanded to upload .sql from db-dumps/ alongside .json from exports/
+  - backblaze_state.json: skip-if-uploaded logic — each file uploaded exactly once
+  - sys.stdout.reconfigure(encoding="utf-8"): closes print() encoding failure class
+  - backup.log.archive-20260415: old mixed-encoding log archived, fresh log started
+  - create_backup_tasks.bat: creates Aelarian-Backup-Scheduled (every 4h from 08:00)
+    and Aelarian-Backup-Startup (on startup, 1min delay); both confirmed firing
+  - backup.py test runs confirmed: pg_dump, GitHub push, Backblaze all working
+UNCOMMITTED: backblaze_state.json + this entry
+NEXT_ACTION: Commit and push; session remains open
+---
