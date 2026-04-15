@@ -652,6 +652,13 @@ AOS records persist permanently. They are not cleared after delivery.
 **Spec authority:** SYSTEM_ AOS.md (system overview, ownership
 boundaries), AOS SCHEMA.md (full schema, triggers, delivery contract)
 
+> **ROT 014 — BUILD DEPENDENCY WATCHLIST:** AOS delivery layer (Gmail
+> OAuth, Drive pipeline, health check) requires external Google API
+> provisioning before it can be built or tested. Signal layer builds
+> independently. Confirm Google API project + credentials are in place
+> before starting the delivery layer. See ROT_REGISTRY.md Entry 014
+> for the full checklist.
+
 ---
 
 ### 2.9 DEPOSIT GENEALOGY VIEW

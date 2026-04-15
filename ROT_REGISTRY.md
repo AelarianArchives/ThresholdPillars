@@ -1875,3 +1875,46 @@ On trigger — run these scans across all companion specs and system docs:
 Note: files that carry ·NN refs were correct at the time of writing.
   The refs become stale only when the group expands or renumbers after
   the fact. The cascade correction is the fix, not a rewrite.
+
+══════════════════════════════════════════════════════════════════
+ROT ENTRY 014 — BUILD DEPENDENCY WATCHLIST: AOS EXTERNAL INTEGRATIONS
+══════════════════════════════════════════════════════════════════
+
+Documented: 2026-04-15 (session 59)
+Type: BUILD DEPENDENCY WATCHLIST — not a rot event. Documents external
+  provisioning requirements that must be complete before the AOS delivery
+  layer can function. Signal layer and delivery layer are independently
+  buildable — only delivery is blocked on external setup.
+
+AOS two-layer architecture:
+
+  Signal layer (detection, record creation, integrity hash, routing) —
+  pure code, no external dependencies. Buildable and testable in isolation.
+
+  Delivery layer (Gmail OAuth, Drive pipeline, APScheduler cron) —
+  requires external provisioning before the delivery layer can be built
+  or tested. Three required items:
+
+  1. Gmail OAuth — Google API project, OAuth consent screen, Gmail API
+     scope (send), OAuth client credentials (client_id, client_secret).
+     Delivery route: Larimar → Threshold Studies email address.
+     This is a Google Cloud Console task, not a code task.
+
+  2. Google Drive pipeline — Drive API enabled in the same Google API
+     project. Service account or OAuth credentials with Drive scope.
+
+  3. Health check registration — FastAPI health endpoint must report
+     AOS status (aos: true/false) alongside the Redis and PostgreSQL
+     health checks. Code task, but must be registered at build time.
+
+Signal: Sage raised this 2026-04-15 to prevent the delivery layer from
+  being discovered as blocked mid-build.
+
+Checklist — confirm before starting AOS delivery layer build:
+  [ ] Google API project created
+  [ ] Gmail API enabled, OAuth credentials provisioned
+  [ ] Drive API enabled
+  [ ] Delivery credentials added to env vars (not hardcoded)
+  [ ] FastAPI health endpoint updated to include aos: bool
+
+Spec authority: SYSTEM_ AOS.md, AOS SCHEMA.md (delivery contract section)
