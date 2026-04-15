@@ -1,0 +1,26 @@
+2026-03-26 02:36:56,057 � === BACKUP STARTED ===
+2026-04-03 01:10:56,708 � === BACKUP STARTED ===
+2026-04-03 01:12:53,836 � USB: Failed � 'charmap' codec can't encode character '\u2192' in position 21: character maps to <undefined>
+2026-04-03 01:15:39,905 � GitHub: Pushed successfully.
+2026-04-03 01:15:42,989 � Backblaze: No exports folder found, skipping.
+2026-04-03 01:15:42,989 � === BACKUP COMPLETE ===
+2026-04-03 01:17:12,035 — === BACKUP STARTED ===
+2026-04-03 01:17:12,035 — USB: Backup for today already exists, skipping.
+2026-04-03 01:17:14,687 — GitHub: Pushed successfully.
+2026-04-03 01:17:16,719 — Backblaze: No exports folder found, skipping.
+2026-04-03 01:17:16,719 — === BACKUP COMPLETE ===
+2026-04-15 02:36:03,249 — === BACKUP STARTED ===
+2026-04-15 02:36:03,574 — Postgres: Dump complete → C:\Users\sasir\Desktop\Aelarian\Archives\db-dumps\aelarian_20260415_023603.sql
+2026-04-15 02:36:03,576 — USB: Failed — [WinError 3] The system cannot find the path specified: 'D:\\'
+2026-04-15 02:36:22,730 — GitHub: Pushed successfully.
+2026-04-15 02:36:28,195 — Backblaze: Uploaded aelarian_20260415_022335.sql
+2026-04-15 02:36:28,920 — Backblaze: Uploaded aelarian_20260415_023603.sql
+2026-04-15 02:36:28,921 — === BACKUP COMPLETE ===
+2026-04-15 02:47:08,820 — === BACKUP STARTED ===
+2026-04-15 02:47:09,385 — Postgres: Dump complete → C:\Users\sasir\Desktop\Aelarian\Archives\db-dumps\aelarian_20260415_024708.sql
+2026-04-15 02:47:09,414 — USB: Failed — [WinError 3] The system cannot find the path specified: 'D:\\'
+2026-04-15 02:47:23,654 — GitHub: Pushed successfully.
+2026-04-15 02:47:26,142 — Backblaze: Uploaded aelarian_20260415_022335.sql
+2026-04-15 02:47:26,458 — Backblaze: Uploaded aelarian_20260415_023603.sql
+2026-04-15 02:47:26,788 — Backblaze: Uploaded aelarian_20260415_024708.sql
+2026-04-15 02:47:26,789 — === BACKUP COMPLETE ===
