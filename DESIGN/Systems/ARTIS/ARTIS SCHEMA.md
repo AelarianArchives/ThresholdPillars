@@ -3,10 +3,11 @@
 ## /DESIGN/Systems/ARTIS/ARTIS SCHEMA.md
 
 Mechanical spec — computation engine for the Cosmology group. Five PostgreSQL
-tables, twelve endpoint contracts, seventeen computation implementations,
-three PLANNED interfaces, three-layer science ping pipeline, computation
-snapshot architecture, external reference registry, reference distribution
-registry, mapping management, validation rules, failure modes.
+tables, fourteen endpoint contracts (twelve core + two bridge namespace),
+seventeen computation implementations, three PLANNED interfaces, three-layer
+science ping pipeline, computation snapshot architecture, external reference
+registry, reference distribution registry, mapping management, validation
+rules, failure modes.
 
 Ownership boundaries in SYSTEM_ ARTIS.md.
 
@@ -994,6 +995,106 @@ Add a reference distribution to the registry.
 
 ---
 
+## ARTIS BRIDGE NAMESPACE
+
+Two dedicated endpoints for the research assistant's Cosmology bridge
+functions. These are the named mechanical substrate for bridge calls
+that were previously described behaviorally without a defined contract.
+
+The bridge namespace exists within ARTIS because ARTIS owns the data
+these endpoints query (artis_computation_snapshots). The bridge calls
+these endpoints; it does not query snapshot tables directly.
+
+---
+
+### GET /artis/bridge/prior-check
+
+Prior computation check. Called before every new computation suggestion
+from the research assistant. Checks whether this computation or a
+closely matching one has already been run on these deposits.
+
+**Query parameters:**
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| deposit_ids | string (comma-separated) | required | One or more deposit IDs to check |
+| computation_type | string | optional | Specific computation to check for. If omitted, returns all computation types run on these deposits |
+| page_code | string | optional | Filter to a specific Cosmology page. If omitted, checks across all pages |
+
+**Response:**
+```json
+{
+  "found": true,
+  "snapshots": [
+    {
+      "snapshot_id": "string",
+      "computation_type": "string",
+      "caller_page_code": "string",
+      "result_summary": "string",
+      "created_at": "timestamp"
+    }
+  ]
+}
+```
+
+`found: false` returns an empty snapshots array. The bridge uses
+`found` as the gate: if true, surface the prior result before
+suggesting a new computation.
+
+**Validation:**
+1. deposit_ids must contain at least one valid deposit ID.
+2. computation_type, if provided, must be a registered computation type.
+3. page_code, if provided, must be a valid Cosmology page code.
+
+---
+
+### GET /artis/bridge/cross-page
+
+Cross-page computation snapshot query. Returns computation snapshots
+for a given deposit set across all Cosmology pages, grouped by
+caller_page_code. Called by the research assistant to surface
+cross-page investigation context, and to trigger the proactive group
+findings synthesis offer when 2+ pages return results.
+
+**Query parameters:**
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| deposit_ids | string (comma-separated) | required | One or more deposit IDs to query across pages |
+
+**Response:**
+```json
+{
+  "cross_page_count": 2,
+  "pages": [
+    {
+      "page_code": "string",
+      "snapshot_count": 3,
+      "snapshots": [
+        {
+          "snapshot_id": "string",
+          "computation_type": "string",
+          "result_summary": "string",
+          "created_at": "timestamp"
+        }
+      ]
+    }
+  ]
+}
+```
+
+`cross_page_count` is the number of distinct page_codes that have
+computation snapshots for these deposit_ids. The bridge uses this
+value as the proactive synthesis trigger: when `cross_page_count >= 2`,
+offer group findings synthesis once.
+
+**Validation:**
+1. deposit_ids must contain at least one valid deposit ID.
+2. Returns empty pages array (not an error) when no snapshots exist
+   for the given deposit_ids.
+
+---
+
 ## ARTIS ZONE B — REGISTRY AND HEALTH SURFACE
 
 The right ~40% of the ARTIS page (page 40). Management and monitoring
@@ -1146,7 +1247,7 @@ ARTIS endpoints.
 Route file: backend/routes/artis.py
 Service files: backend/services/artis.py, backend/services/computation.py
 
-12 endpoints registered under /artis/ namespace.
+14 endpoints registered under /artis/ namespace (12 core + 2 bridge namespace).
 
 ### Frontend (SYSTEM_ Frontend.md)
 

@@ -689,9 +689,61 @@ Write authority:
 
 Route files:
 - backend/routes/cosmology.py — shared Cosmology endpoints (findings CRUD,
-  LNV routing)
+  LNV routing, group synthesis retrieval). 9 endpoints
 - backend/routes/rct.py — RCT-specific endpoints (residual creation,
   accumulation queries)
+
+**GET /cosmology/findings/group**
+
+Group findings retrieval. Called by the research assistant's
+`assemble_group_synthesis()` to retrieve cosmology_findings for a
+deposit set or tag set, grouped by page_code.
+
+Query parameters:
+- deposit_ids (string, comma-separated) — filter by deposit IDs.
+  Returns findings where any of the deposit_ids is in the finding's
+  deposit_ids array. Required unless tag_ids provided
+- tag_ids (string, comma-separated) — filter by tag IDs. Returns
+  findings where any tag in the finding's associated deposits matches.
+  Required unless deposit_ids provided
+- status (string, optional) — filter by finding status. Default:
+  confirmed only. Valid: draft | confirmed | superseded | abandoned | all
+
+Response:
+```json
+{
+  "page_count": 3,
+  "pages": [
+    {
+      "page_code": "string",
+      "finding_count": 2,
+      "findings": [
+        {
+          "finding_id": "string",
+          "title": "string",
+          "hypothesis": "string",
+          "confidence": "string",
+          "nexus_eligible": false,
+          "status": "confirmed",
+          "snapshot_id": "string",
+          "created_at": "timestamp"
+        }
+      ]
+    }
+  ]
+}
+```
+
+`page_count` is the number of distinct page_codes with findings for
+this query. Pages with zero findings are not included in the array —
+absence is surfaced by the bridge conversationally, not by empty
+response objects.
+
+Validation:
+1. At least one of deposit_ids or tag_ids must be present.
+2. status values must be from the valid enum.
+3. Returns page_count: 0 and empty pages array (not an error) when
+   no findings match.
 
 Service files:
 - backend/services/cosmology.py — shared findings service (create, confirm,

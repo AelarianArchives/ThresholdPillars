@@ -39,7 +39,7 @@ confirmation bias with a good UI.
 * Computation execution — ARTIS owns all computation. The assistant
   produces a computation_suggestion; ARTIS runs it
 * ARTIS computation library — which computations exist, their
-  parameters, their output shapes. Owned by ARTIS (ART·39)
+  parameters, their output shapes. Owned by ARTIS (ART·40)
 * Science ping pipeline — Layers 1-2-3 are ARTIS infrastructure.
   This spec produces suggestions that feed into the same computation
   engine but through a different entry path (researcher-initiated

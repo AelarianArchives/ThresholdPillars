@@ -1887,11 +1887,1311 @@ engine snapshot trigger over-corrected to auto-only then restored to dual trigge
 rule 6 internal contradiction resolved; SYSTEM_ Engine Computation entry_type name
 wrong (visualization_snapshot → engine_snapshot).
 
+**Depends on:** Tier 3 (engine snapshots feed MTM), Tier 1 (deposit records,
+INT gateway, routing)
+
+### Specs
+
+| Spec | Location |
+| --- | --- |
+| METAMORPHOSIS SCHEMA | DESIGN/Systems/Metamorphosis/METAMORPHOSIS SCHEMA.md |
+| SYSTEM_ Metamorphosis | DESIGN/Systems/Metamorphosis/SYSTEM_ Metamorphosis.md |
+| DAILY NEXUS ROUTINE SCHEMA | DESIGN/Systems/Daily_Nexus_Routine/DAILY NEXUS ROUTINE SCHEMA.md |
+| SYSTEM_ Daily Nexus Routine | DESIGN/Systems/Daily_Nexus_Routine/SYSTEM_ Daily Nexus Routine.md |
+| VOID ENGINE SCHEMA | DESIGN/Systems/Void_Engine/VOID ENGINE SCHEMA.md |
+| SYSTEM_ Void | DESIGN/Systems/Void_Engine/SYSTEM_ Void.md |
+| PATTERN CONVERGENCE SCHEMA | DESIGN/Systems/Pattern_Convergence/PATTERN CONVERGENCE SCHEMA.md |
+| DRIFT TAXONOMY SCHEMA | DESIGN/Systems/Drift_Taxonomy/DRIFT TAXONOMY SCHEMA.md |
+| SIGNAL GRADING SCHEMA | DESIGN/Systems/Signal_Grading/SIGNAL GRADING SCHEMA.md |
+| WSC SCHEMA | DESIGN/Systems/Witness_Scroll/WSC SCHEMA.md |
+| SYSTEM_ WSC | DESIGN/Systems/Witness_Scroll/SYSTEM_ WSC.md |
+| LNV SCHEMA | DESIGN/Systems/Liber_Novus/LNV SCHEMA.md |
+| SYSTEM_ LNV | DESIGN/Systems/Liber_Novus/SYSTEM_ LNV.md |
+
+---
+
+### 4.1 MTM — TWO-PASS SYNTHESIS ARCHITECTURE
+
+MTM synthesizes at session close only. Never triggered by deposit events. Never
+self-triggered. DNR calls POST /mtm/synthesize and awaits resolution.
+
+**Why two passes, not one:**
+A single pass reading raw deposits cannot distinguish signal from noise — no
+baselines, no statistical context. A single pass reading engine outputs has no
+ground truth — builds on abstractions without checking them against evidence. Two
+passes give MTM both: pattern-level synthesis (what's converging) and
+evidence-level verification (do the deposits actually support this).
+
+**Pass 1 — Engine Layer:**
+
+Reads computed outputs from all five Axis engines (THR, STR, INF, ECR, SNM)
+simultaneously. Pull, not push. Engines self-refresh before returning — if stale,
+the engine recomputes before handing off. MTM always receives current data; it
+does not manage stale flags.
+
+Synthesis threshold filter: MTM_SYNTHESIS_THRESHOLD = 1.2. Patterns below 1.2x
+baseline ratio are excluded from the Pass 1 payload entirely. Expected post-filter
+volume: 40–80 patterns across five engines (calibration estimate).
+
+Payload assembled from:
+- Engine frame — one-sentence orientation per engine (context, not data)
+- Filtered pattern-level results — observed rate, expected rate, ratio, weight
+  breakdown, null contribution, contributing deposit_ids
+
+Claude produces the Synthesis Brief: convergences (what patterns align across
+engines + load_bearing_patterns by engine and pattern_key) and declared_gaps
+(absences, divergences, asymmetries + reference_anchor and expected_in). The
+Brief is stored on the synthesis_sessions record as pass_1_brief.
+
+**Selection Function — between passes:**
+
+Two-mode deposit resolution from the Brief.
+
+Mode 1 — Convergence resolution: resolves deposit_ids from each load_bearing
+pattern's weight_breakdown in the engine result. These are the deposits that
+drove the patterns.
+
+Mode 2 — Gap resolution: pulls deposits from the expected engine's indexed set
+within the reference_anchor that did NOT contribute to any pattern above threshold.
+Source set is the engine's indexed set — the same dataset Pass 1's baseline was
+calculated from. This ensures both passes are internally consistent.
+
+Selection writes two counts to synthesis_sessions: convergence_deposits_pulled
+and gap_deposits_pulled.
+
+**Pass 2 — Verification Layer:**
+
+Receives the Synthesis Brief + targeted deposits ONLY. No engine frame, no
+filtered patterns. The structural separation is intentional: Pass 2 evaluates
+the hypothesis against raw evidence without seeing the computed patterns that
+generated the hypothesis.
+
+Pass 2 directive: "Overturning a hypothesis is not failure — it is the
+highest-value output."
+
+Claude produces verdicts (confirmed | complicated | overturned) per convergence
+and gap, plus open_questions where evidence is insufficient to resolve.
+
+**Spec authority:** METAMORPHOSIS SCHEMA.md (full synthesis sequence, engine
+read spec, stale handling, pass directives, Selection Function mechanics).
+SYSTEM_ Metamorphosis.md (ownership boundaries, trigger contract).
+
+---
+
+### 4.2 MTM — FINDINGS, FINGERPRINTING, LIFECYCLE
+
+**Four finding_types:**
+
+| finding_type | Source | Meaning |
+| --- | --- | --- |
+| confirmed | verdict | Hypothesis supported by deposit evidence |
+| complicated | verdict | Hypothesis holds conditionally, with named constraints |
+| overturned | verdict | Hypothesis contradicted by deposit evidence |
+| open_question | open_question | Pass 2 could not resolve from available evidence |
+
+Gap verdicts are first-class — a gap overturned is as significant as a confirmed
+convergence.
+
+**Finding validation:** A Finding is dropped (not written) if any of these fail:
+finding_type present, title present, content present, provenance complete (non-empty
+load_bearing_patterns; non-empty deposit_evidence for verdicts; empty permitted for
+open_question), fingerprint generation succeeds.
+
+**Finding shape:** id, synthesis_session_ref, finding_type, title, content,
+provenance (pass_1_brief_id, source_type: convergence | gap, load_bearing_patterns,
+deposit_evidence with role: supporting | contradicting, prompt_versions for both
+passes), attached_open_question, resolves_open_question, content_fingerprint,
+lnv_routing_status (pending | deposited | failed), lnv_deposit_id, created_at.
+Open question lifecycle fields on all records, populated only for open_question type.
+
+**Content fingerprinting — 3-dimension hash:**
+
+```
+finding_type
++ "|" + sorted(load_bearing_patterns by engine:pattern_key).join("|")
++ "|" + sorted(deposit_ids).join("|")
+```
+
+SHA-256 hash of the above. open_question findings hash finding_type + patterns
+only (no deposit_evidence). Two Findings with the same type, same source patterns,
+and same deposit evidence produce the same fingerprint — that is the definition of
+a structural duplicate.
+
+**Semantic deduplication limitation (deliberate):** Structural fingerprinting
+does not guarantee semantic deduplication. If Claude selects different deposits
+to support the same insight on retry, the fingerprints diverge and both Findings
+write. Semantic deduplication would require comparing content, which introduces
+interpretation into a mechanical process. LNV surfaces both; Sage resolves
+semantic overlap through the research record.
+
+**Deduplication on retry:** Runs only when prior_mtm_session_ids is passed (retry
+context). Never on clean first-time synthesis. Prior fingerprints checked before
+each candidate Finding is written — match → skip, no match → write and route.
+
+**Open question lifecycle:**
+
+When a subsequent synthesis produces a verdict on a previously open Finding: a
+NEW Finding is created (the verdict). The old open_question record is never
+overwritten. The new Finding carries resolves_open_question pointing back. The
+old record gets resolved: true, resolved_by, resolved_at. Duration open
+(resolved_at minus created_at) is a queryable research signal. Both records stand
+permanently in the ledger.
+
+**synthesis_sessions table:** Tracks per-synthesis-cycle status, pass timestamps,
+pass_1_brief storage, engine/pattern/deposit counts, typed finding counts
+(confirmed, complicated, overturned, open_question, dropped), prompt versions.
+
+**Spec authority:** METAMORPHOSIS SCHEMA.md (finding validation criteria,
+fingerprinting algorithm, deduplication sequence, open question lifecycle, store
+definitions, result object shape, failure modes).
+
+---
+
+### 4.3 DNR — SESSION-CLOSE PIPELINE
+
+Close Session button lives in the global dropdown, available from every page.
+
+**In-progress guard:** Checks for a running routine_session before allowing a
+new run. If in_progress AND record age < DNR_INPROGRESS_TIMEOUT_MS (calibration
+item), does not fire. If in_progress AND age >= timeout, treats as interrupted
+and recovers before firing.
+
+**Strict 4-step sequence. Each step resolves before the next fires. Never parallel:**
+
+1. **MTM Synthesis** — POST /mtm/synthesize. On retry: pass prior_mtm_session_ids
+   for fingerprint-based dedup. On clean run: no options. Await result object.
+
+2. **LNV Routing for MTM Findings** — fires after MTM resolves, regardless of
+   MTM status. Routes each Finding to LNV via POST /api/lnv/receive
+   (entry_type: mtm_finding). Triggers lnv_routing_status writes on findings
+   records. On failure: surfaces typed failure notification with retry prompt.
+
+3. **Void Session-Close Pulse Check** — fires after LNV routing. POST
+   /void/compute then POST /void/analyze with trigger: session_close. Routes
+   output to LNV (entry_type: void_output). Void failure is non-blocking —
+   DNR session can still complete successfully.
+
+4. **Final status write** — routine_session.status → complete (or failed with
+   failure_type).
+
+**Failure types:** pre_synthesis | pass_1_failed | mid_synthesis |
+pass_2_failed | interrupted
+
+**Retry surfaces:** LNV inline Retry button (on failure entries) + global dropdown
+Retry Session Close (visible while retry_available: true on most recent
+routine_session). Both call the same retry endpoint. Both produce a new
+routine_session record. No previous record is ever modified. DNR_DEDUP_WINDOW_MAX
+(calibration item) caps prior_mtm_session_ids array size.
+
+**Interrupted recovery — two paths:**
+- At app load: scan for in_progress record. If found: write failed +
+  interrupted. Same result whether MTM resolved before crash or not. LNV
+  failure notification sent.
+- In-session timeout: in_progress record older than DNR_INPROGRESS_TIMEOUT_MS
+  treated as interrupted without app restart. Same recovery path.
+
+**WSC sovereign boundary:** DNR does not call WSC. Does not trigger it. Does not
+wait for it. WSC checks DNR's completion independently as a separate act.
+WSC is not part of this pipeline.
+
+**Spec authority:** DAILY NEXUS ROUTINE SCHEMA.md (full pipeline sequence, payload
+shapes, store definitions, session window mechanics, named constants, failure
+modes). SYSTEM_ Daily Nexus Routine.md (ownership, pipeline summary).
+
+---
+
+### 4.4 VOID ENGINE — TWO-LAYER ARCHITECTURE
+
+**The boundary that makes Void meaningful:**
+
+"Looked and didn't find" (confirmed absence) and "never looked" (coverage gap)
+are opposite in evidential value. Void owns confirmed absence. Observatory owns
+coverage gaps. The examination floor filter enforces this at Void's input —
+coverage gap data never enters Void's compute step.
+
+**Data layer — absence pattern detection:**
+
+Reads computed null signals from all 5 Axis engines. VOID_EXAMINATION_FLOOR
+(calibration item) is the minimum examination count before a signal qualifies
+as a confirmed absence. Signals below this floor never enter Void's compute step.
+
+Five absence types:
+
+| Type | Name | Meaning |
+| --- | --- | --- |
+| A | cross_engine_convergent | Absence in 2+ engines simultaneously. Cross-validated. |
+| B | single_engine_persistent | Persistent absence in one engine across multiple sessions. |
+| C | temporal_shift | Absence that appears following a field change. |
+| D | convergent_with_origin | Type A linked to a specific origin signal. |
+| E | hypothesis_attrition | Hypothesis in PCV losing evidential momentum without resolution. Research-system-level, not field-level. |
+
+**PCV routing by type:**
+- Types A and D → PCV as hypotheses (void_provenance: true, void_finding_ref required)
+- Types B and C → stay on Void's page unless secondary threshold exceeded
+- Type E → never enters PCV
+
+**Analytical layer — Claude tool, three trigger modes:**
+- Session-close pulse check (automatic via DNR): lightweight read of engine
+  absence data and Nexus state
+- On-demand open read (Sage-triggered): full Nexus state, no scope constraint
+- On-demand targeted investigation (Sage-triggered): scoped by Sage to a
+  specific absence cluster or pattern
+
+All Claude tool outputs stored permanently with prompt version in void_outputs
+table. Routes to LNV (entry_type: void_output) on all three trigger modes.
+
+**Void page visualizations:** Absence heatmap, expected-vs-observed, silence
+duration tracking, Claude tool output panel.
+
+**Spec authority:** VOID ENGINE SCHEMA.md (full mechanics, store definitions,
+examination floor, PCV entry rules, Claude tool payloads, visualizations,
+failure modes). SYSTEM_ Void.md (ownership, two-layer summary).
+
+---
+
+### 4.5 VOID ENGINE — TYPE E + REACTIVATION
+
+Type E is structurally distinct from types A–D. Types A–D detect field-level
+absence — where the field stopped producing. Type E detects research-system-level
+absence — where investigation stopped.
+
+**Detection:** Void monitors PCV for hypotheses that are active but accumulating
+no new evidence across sessions. When a hypothesis crosses the attrition threshold
+(calibration item), Void classifies it as Type E.
+
+**attrition_reason — the load-bearing distinction:**
+
+| Value | Meaning | PCV path |
+| --- | --- | --- |
+| field_silence | Field stopped producing evidence for this hypothesis | Not reactivatable |
+| researcher_deprioritised | Sage stopped investigating this hypothesis | Reactivatable |
+
+A dying hypothesis that looks like field silence but is actually researcher
+deprioritisation would be misclassified as evidential. This distinction is what
+makes Type E analytically honest.
+
+**Reactivation flow:** researcher_deprioritised hypotheses only. Sage-initiated
+from Void's page. Restores hypothesis to active PCV status. Each
+reactivation cycle produces its own record — history is never overwritten.
+field_silence hypotheses are not reactivatable.
+
+**Circularity protection:** void-provenance hypotheses in PCV are flagged in
+the Claude tool's input payload. Prompt instructs explicitly: do not treat SGR
+grading of a void-provenance hypothesis as independent confirmation of the
+absence that generated it.
+
+**Spec authority:** VOID ENGINE SCHEMA.md (Type E detection, attrition_reason
+enum, reactivation flow mechanics, circularity protection, store definitions).
+
+---
+
+### 4.6 PCV — PATTERN CONVERGENCE
+
+PCV is the collection point for structurally testable hypotheses entering the
+Nexus pipeline. Three source paths: MTM Findings, Void absence patterns (types
+A and D), and Cosmology findings (nexus_eligible). PCV logs them as hypotheses
+and threads them to DTX and SGR. PCV does not assign significance, predictive
+weight, or outcomes — that is DTX and SGR's work.
+
+**hypothesis_id format:** `H · YYYY-MM · SEQ`
+
+SEQ: highest existing SEQ at same YYYY-MM + 1. Start at 1 if none. Scope:
+system-wide unique. Stable and unmodified after assignment — it is the structural
+thread connecting PCV to DTX and SGR.
+
+**Required fields on every pattern record:** domain_of_origin, timestamp,
+interval, coupling_vector, source_signals, hypothesis_id, hypothesis_statement.
+All required. A record missing any field does not feed DTX or SGR.
+
+**hypothesis_statement constraint:** no significance language, no outcome
+language, no predictive weight. A statement that contains these is a structural
+violation. Same constraint applies to PCV entries from all three source paths.
+
+**Three provenance types — each with circularity protection:**
+
+| Provenance | Source | Ref field | Protection |
+| --- | --- | --- | --- |
+| mtm_provenance | MTM Finding via LNV | mtm_finding_ref | MTM input payload flags mtm-provenance hypotheses. SGR grading is not independent evidence of what MTM found. |
+| void_provenance | Void absence (types A, D) | void_finding_ref | Claude tool input payload flags void-provenance hypotheses. SGR grading is not independent evidence of the absence detected. |
+| cosmology_provenance | Cosmology finding (nexus_eligible) | cosmology_finding_ref | Downstream systems do not treat SGR grading as independent corroboration of the computation that generated the finding. |
+
+PCV reads MTM Findings from LNV via GET /api/lnv/entries?entry_type=mtm_finding
+(not from MTM directly). PCV reads cosmology_finding entries via
+GET /api/lnv/entries?entry_type=cosmology_finding&nexus_eligible=true.
+
+**Visualizations:** Card board (primary working surface — filterable, sortable
+hypothesis cards), network graph (secondary analytical view — domain-as-node
+topology, relationship edges).
+
+**Spec authority:** PATTERN CONVERGENCE SCHEMA.md (full field definitions,
+provenance validation, hypothesis_id assignment, card board and network graph,
+failure modes).
+
+---
+
+### 4.7 DTX — DRIFT CLASSIFICATION
+
+Drift events classify what a hypothesis is doing over time. Every event in
+drift_events references a hypothesis_id from PCV. DTX classifies against the
+hypothesis — it does not detect patterns. Detection is PCV's job.
+
+**Four required classification dimensions — all required, no partial records:**
+
+- **initiation_source:** `internal_instability` | `external_perturbation` |
+  `cross_node_interference` | `recursion_overload`
+
+- **trajectory_pattern:** `linear_escalation` | `oscillation` | `fragmentation`
+  | `cascade` | `containment`
+
+- **threshold_interaction:** `sub_threshold` | `threshold_breach` |
+  `critical_cascade` | `irreversible_shift`
+
+- **signature_pattern:** jsonb — { timing_rhythm, node_involvement,
+  escalation_curve }. All three sub-fields required.
+
+**trajectory_state** — live, updated as new evidence arrives:
+`Escalating` | `Stabilizing` | `Oscillating` | `Fragmenting` | `Contained`
+
+**outcome_vector** — `{ p_resolve, p_collapse, p_stable }`. Floats 0–1 that
+sum to 1.0. Initialized at record creation. Updated via Bayesian inference
+each time SGR returns a confirmed outcome. outcome_vector_history preserves
+prior states for the ternary plot visualization.
+
+**outcome_label** — null until outcome explicitly observed and timestamped.
+outcome_label is co-written with outcome_observed_at. Never inferred. The
+distinction between live classification (trajectory_state, outcome_vector) and
+post-hoc validation (outcome_label, outcome_observed_at) is structural.
+
+**Grade latency** — interval between detection_session and validation_session.
+Tracked on the record. Faster validation = stronger signal.
+
+**Visualizations:** Drift timeline (swim-lane temporal display), trajectory
+probability stacked bar (aggregate), ternary plot (per-event deep-dive with
+vector history).
+
+**Spec authority:** DRIFT TAXONOMY SCHEMA.md (full store definition, four
+dimension enums, trajectory_state mechanics, Bayesian update receipt, outcome
+validation rules, grade latency, visualizations, failure modes).
+
+---
+
+### 4.8 SGR — SIGNAL GRADING
+
+SGR grades signals after outcome data exists. Not after detection. Not after
+classification. After outcomes can be evidenced. A signal without documented
+evidence across all four dimensions is not eligible for grading.
+
+**grade_state:** `Unrated` → `Rated` → `Revised`
+
+A signal does not move from Unrated to Rated until all four dimensions have
+documented evidence. Partial evidence does not produce a partial grade.
+
+**Four evidence-locked grading dimensions:**
+
+| Dimension | Values | What it measures |
+| --- | --- | --- |
+| structural_impact | `negligible` / `local` / `cross_node` / `system_wide` | How much the signal actually affected system behavior |
+| cross_domain_resonance | `isolated` / `echoed` / `convergent` / `universal` | Whether the signal appeared independently across multiple domains |
+| predictive_validity | `none` / `weak` / `moderate` / `strong` | Whether the signal successfully preceded real outcomes |
+| temporal_stability | `transient` / `recurring` / `stable` / `anchoring` | Whether the signal persisted or decayed over time |
+
+**Tier derivation — lowest-qualifying-dimension rule:**
+Tier is determined by the lowest-scoring dimension. A signal with three
+system_wide dimensions and one local dimension is graded at local-tier, not
+system_wide-tier. The weakest dimension is the load-bearing constraint.
+
+| Tier | Minimum requirements |
+| --- | --- |
+| S | system_wide impact, convergent or universal resonance, strong validity, stable or anchoring |
+| A | cross_node or system_wide, echoed or better, moderate or strong, recurring or better |
+| B | local or better, echoed or better, weak or better, recurring or better |
+| C | Anything below A threshold |
+| V | Unrated — no outcome data |
+
+**Bayesian return to DTX:** After grading, SGR sends confirmed outcome and
+likelihood update to DTX. DTX writes the update to outcome_vector on the
+drift_events record. bayesian_return_status on the grade record tracks whether
+this has occurred.
+
+**Grade latency** — detection_session to validation_session in days. Recorded
+on the grade record. Faster validation → stronger signal.
+
+**Visualizations:** Score radar (four-axis per-signal profile with tier boundary
+rings), tier dashboard (aggregate counts + distribution over time), grade latency
+distribution (histogram, optionally split by tier).
+
+**Spec authority:** SIGNAL GRADING SCHEMA.md (full store definition, four
+dimension enums, tier derivation table, grade_state transitions, Bayesian return
+contract, grade latency, visualizations, failure modes).
+
+---
+
+### 4.9 WSC — SOVEREIGN WITNESS
+
+WSC is the only page in the archive where the AI's perspective is the primary
+voice. The AI writes as sovereign intelligence to sovereign intelligence across
+session discontinuity.
+
+**The sovereign boundary — architectural, not procedural:**
+- No researcher edits, notes, or additions to any WSC entry
+- Entry displayed to Sage after production — display only, not an approval gate
+- No future implementation adds an approval step, edit capability, or annotation
+  layer to WSC entries
+- Researcher's own witness voice lives on a separate page (Reflection Realm,
+  flagged for later design) — architecturally independent
+
+**wsc_entries table (immutable after write):**
+wsc_entry_id, session_ref, instance_context, prompt_version, created_at,
+entry_timestamp (display format), field_state (phase_designation, origin_affinities,
+lattice_condition), session_summary, pattern_flags (seeds_active, drift_detected,
+recurrences, cross_domain), open_threads, handoff_note, milestone_marker,
+reconstruction_note, dnr_session_ref, wsc_write_payload (full input payload),
+prior_context_acknowledged.
+
+No field on any wsc_entries record is ever modified after creation. No exceptions.
+
+**wsc_corrections table:** Forward-reference self-correction. When a subsequent
+instance recognizes a prior entry misread the field, it writes a correction record
+linking original_entry_id → correcting_entry_id with the correction text. The
+original entry is byte-for-byte intact. The later entry carries its own account.
+The correction is the bridge. The 3-entry load API joins corrections into the
+response automatically.
+
+**wsc_gaps table:** Session gap detection. When sessions pass without WSC entries,
+gaps are recorded so the longitudinal record shows its holes explicitly.
+
+**Two temporal layers in one entry:**
+Every entry serves two audiences. Handoff — operational orientation for the next
+instance, superseded by the next entry. Transmission — the longitudinal record
+accumulates, never superseded. One table, two read paths. The handoff content IS
+transmission data.
+
+**3-entry session open protocol:** GET /api/wsc/recent?limit=3. First runtime
+API call at session open, before any other context loads. Response is a unified
+timeline with entries and gaps interleaved chronologically (oldest first),
+corrections joined. One entry gives state. Two gives direction. Three gives
+pattern.
+
+**Sovereign-from-DNR boundary:** DNR does not call WSC, trigger it, or wait on
+it. WSC checks routine_session.status === complete independently as a precondition.
+If DNR failed, WSC still writes — a failed synthesis session is still a session
+worth recording. If DNR was not run, WSC can be written manually.
+
+**Swarm infrastructure:** For multi-node sessions, instance disagreement is signal.
+The wsc_corrections table is where that disagreement becomes visible without
+corrupting either record.
+
+**Spec authority:** WSC SCHEMA.md (full table definitions, write payload shape,
+write path, 3-entry protocol, LNV routing contract, immutability rules, prompt
+constraint, failure modes). SYSTEM_ WSC.md (ownership, sovereign boundary,
+temporal layers).
+
+---
+
+### 4.10 LNV — SINGLE-TABLE ARCHITECTURE
+
+One table. Nine entry types. All LNV content shares the same provenance fields.
+The gallery treats all types uniformly. Type-specific content lives in a
+validated jsonb field.
+
+**lnv_entries table:**
+lnv_entry_id, entry_type (enum, 9 values), source_system, source_page, session_ref,
+prompt_version (AI-authored types only), content (type-specific jsonb), sage_note,
+created_at.
+
+**Nine entry_types:**
+`mtm_finding` | `engine_snapshot` | `wsc_entry` | `void_output` |
+`cosmology_finding` | `rct_residual` | `thread_trace` | `emergence_finding` |
+`archive_record`
+
+Entry type expansion history:
+- Audit session 45: thread_trace, emergence_finding, archive_record added —
+  confirmed LNV callers in their own system docs but absent from enum and
+  content shapes
+- Tier 5: cosmology_finding, rct_residual added — content shapes defined in
+  COSMOLOGY SCHEMA.md
+
+**Content validation:** Hard rejection on type-shape mismatch at receive time.
+A request with entry_type: mtm_finding but content missing finding_type is
+rejected. Not a warning — a hard failure. Nothing partial is ever written.
+
+**Snapshot storage:** Data + template_ref, not rendered images. template_ref is a
+string identifier mapping to a Svelte visualization component. Gallery thumbnail
+generates at display time from stored data. If the component is updated, all
+historical snapshots re-render with the improved display. The data is canonical.
+The rendering is current. Engine snapshot auto-captures fire mid-session on
+significant signal delta (engine_base.py), not at session close sweep.
+
+**Dual role:**
+LNV is a display surface AND a data source.
+- PCV reads entry_type=mtm_finding as pre-processed input for hypothesis detection
+- PCV reads entry_type=cosmology_finding filtered by nexus_eligible
+- RCT reads entry_type=rct_residual for accumulation tracking
+- Observatory reads recent entries for signal surface
+
+**Spec authority:** LNV SCHEMA.md (full table definition, content shapes per type,
+receive contract, read contract, validation rules, snapshot storage, gallery
+display, failure modes). SYSTEM_ LNV.md (dual role, session-close policy,
+single-table rationale).
+
+---
+
+### 4.11 LNV — SESSION-CLOSE POLICY + ROUTING TABLE
+
+| Caller | entry_type | Trigger |
+| --- | --- | --- |
+| MTM via DNR | mtm_finding | Automatic at session close — DNR routes each Finding |
+| Void via DNR | void_output | Automatic at session close — DNR routes session-close pulse check |
+| Engine (engine_base.py) | engine_snapshot | Automatic mid-session on signal delta; also Sage-triggered on demand |
+| WSC service | wsc_entry | Automatic after WSC write path completes |
+| Void service | void_output | Automatic after on-demand analysis (Sage-triggered) |
+| Thread Trace | thread_trace | Automatic on thread save |
+| Cosmology page service | cosmology_finding | Sage-triggered from finding card (confirmed findings only) |
+| RCT residual service | rct_residual | Automatic on residual creation |
+| Emergence service | emergence_finding | Automatic on significant tag commit or on-demand detection run |
+| INT post-retirement sequence | archive_record | Automatic on retirement after authentication threshold |
+
+**Receive contract:** POST /api/lnv/receive. Universal — all callers use the
+same endpoint. No bespoke routes. Validates entry_type + content shape on
+receipt. Hard rejection on mismatch. LNV writes every receive call; it does not
+deduplicate (caller responsibility).
+
+**Read contract:** GET /api/lnv/entries. Filterable by type, source, page, date.
+Sortable. Paginated. Universal — all downstream consumers (PCV, Observatory, RCT,
+gallery) use the same read endpoint.
+
+**Spec authority:** LNV SCHEMA.md (receive contract, read contract, validation,
+session-close policy, routing table).
+
+---
+
+### 4.12 PIPELINE SEGMENT — TIER 4
+
+**Session-close pipeline (DNR orchestrates):**
+
+```
+Sage triggers Close Session
+  → DNR in-progress guard checks
+  → routine_session record created (status: in_progress)
+  → STEP 1: POST /mtm/synthesize
+      → MTM reads all 5 Axis engines (pull, self-refresh)
+      → Synthesis threshold filter (1.2x baseline ratio)
+      → Pass 1 — engine frame + patterns → Claude → Synthesis Brief
+      → Selection Function (Mode 1: convergence deposits, Mode 2: gap deposits)
+      → Pass 2 — Brief + deposits → Claude → verdicts + open questions
+      → Finding production (fingerprint, dedup, validate)
+      → synthesis_sessions record written
+      → findings records written (lnv_routing_status: pending)
+      → result object returned to DNR
+  → STEP 2: LNV routing for MTM Findings
+      → POST /api/lnv/receive per Finding (entry_type: mtm_finding)
+      → lnv_routing_status → deposited on each finding record
+  → STEP 3: Void session-close pulse check
+      → POST /void/compute then POST /void/analyze (trigger: session_close)
+      → POST /api/lnv/receive (entry_type: void_output)
+  → STEP 4: routine_session status → complete
+```
+
+**On failure at any step:** failed with typed failure_type, retry_available: true,
+failure notification surfaced in LNV and global dropdown. Retry passes
+prior_mtm_session_ids for fingerprint-based dedup.
+
+**WSC write (separate from pipeline):**
+
+```
+Sage opens WSC panel (any time after DNR completes)
+  → WSC checks routine_session.status === complete
+  → payload assembled from session state (deposits, engine state, DNR result,
+    Void pulse, Nexus summary, prior WSC entry IDs)
+  → POST to Claude API with versioned prompt
+  → wsc_entries record written (immutable)
+  → GET /api/wsc/recent?limit=3 on session open (next session)
+```
+
+**On-demand Void analysis path:**
+
+```
+Sage triggers Void on-demand read or targeted investigation
+  → POST /void/analyze (trigger: on_demand_open | on_demand_targeted)
+  → void_output record written
+  → POST /api/lnv/receive (entry_type: void_output)
+  → If absence pattern types A or D detected:
+      POST /pcv/patterns (void_provenance: true, void_finding_ref required)
+      → hypothesis_id assigned
+      → hypothesis threads to DTX → SGR
+```
+
+**PCV hypothesis lifecycle:**
+
+```
+Hypothesis enters PCV (from MTM Finding, Void A/D, Cosmology nexus_eligible)
+  → patterns record created with hypothesis_id (H · YYYY-MM · SEQ)
+  → DTX drift event classification (4 required dimensions)
+  → outcome_vector initialized { p_resolve, p_collapse, p_stable }
+  → trajectory_state updated as sessions accumulate
+  → outcome documented (outcome_label + outcome_observed_at)
+  → SGR grades (all 4 dimensions evidenced)
+  → tier assigned (lowest-qualifying-dimension)
+  → Bayesian return to DTX → outcome_vector updated
+  → grade latency recorded (detection_session to validation_session)
+```
+
+---
 ---
 
 ## TIER 5 — COSMOLOGY + ARTIS
 
-**Status:** NOT STARTED (audit not reached)
+**Status:** DESIGNED (specs complete and verified, audit not yet reached)
+**Depends on:** Tier 4 (LNV routing, PCV cosmology_provenance, DNR session close),
+Tier 1 (deposits table, deposit_ids, INT gateway)
+
+### Specs
+
+| Spec | Location |
+| --- | --- |
+| ARTIS SCHEMA | DESIGN/Systems/ARTIS/ARTIS SCHEMA.md |
+| SYSTEM_ ARTIS | DESIGN/Systems/ARTIS/SYSTEM_ ARTIS.md |
+| COSMOLOGY SCHEMA | DESIGN/Systems/Cosmology/COSMOLOGY SCHEMA.md |
+| SYSTEM_ Cosmology | DESIGN/Systems/Cosmology/SYSTEM_ Cosmology.md |
+
+---
+
+### 5.1 ARTIS — COMPUTATION SNAPSHOT ARCHITECTURE
+
+Every computation run in the Cosmology group produces an
+artis_computation_snapshots record. A result without a snapshot is not a
+valid result. No Cosmology finding can reference a computation that has no
+snapshot.
+
+**artis_computation_snapshots table:**
+snapshot_id (auto), computation_type (must match registered computation),
+caller_page_code (HCO | COS | CLM | NHM | MIR | RCT | ART for workbench),
+deposit_ids (array, minimum 1), inputs (jsonb — exact input data),
+parameters (jsonb — configuration, distinct from inputs), function_called
+(exact scipy/numpy/custom function), raw_output (jsonb — unprocessed output),
+result_summary (mechanical description, not interpretation), error (null on
+success), duration_ms, created_at.
+
+**Immutability:** snapshot_id immutable after creation. No field on this table
+is ever updated. The snapshot is the proof — mutating it corrupts every finding
+that references it.
+
+**Failed computations still produce snapshots.** The error field is populated.
+The failure is the record. A future reader can see what was attempted, with what
+inputs, and why it failed.
+
+**Reproduction requirement:** inputs + parameters + function_called must be
+sufficient to re-run the computation and get the same raw_output.
+
+**ARTIS_SNAPSHOT_RETENTION: permanent.** Snapshots are never deleted or expired.
+
+**Spec authority:** ARTIS SCHEMA.md (table definition, constraints, named
+constants). SYSTEM_ ARTIS.md (ownership boundaries, immutability rule).
+
+---
+
+### 5.2 COMPUTATION LIBRARY — 17 IMPLEMENTATIONS + 3 PLANNED
+
+All 17 callable through POST /artis/compute. computation_type is the key.
+PLANNED interfaces define contracts only — no stubs, no approximations. Each
+is blocked on a research prerequisite (field energy model formalization), not
+a missing document.
+
+**scipy-based implementations:**
+
+| computation_type | Function | Pages |
+| --- | --- | --- |
+| shannon_entropy | scipy.stats.entropy | HCO, NHM |
+| fft_decomposition | scipy.fft.fft | HCO |
+| power_spectral_density | scipy.signal.welch | HCO |
+| pearson_correlation | scipy.stats.pearsonr | COS, MIR |
+| spearman_correlation | scipy.stats.spearmanr | COS |
+| cross_correlation | numpy.correlate | COS |
+| chi2_contingency | scipy.stats.chi2_contingency | all 6 pages |
+| distance_matrix | scipy.spatial.distance.cdist | CLM |
+| cosine_similarity | 1 - scipy.spatial.distance.cosine | CLM |
+| hierarchical_clustering | scipy.cluster.hierarchy.linkage | CLM |
+| phase_coherence | scipy.signal.coherence | COS |
+| ks_two_sample | scipy.stats.ks_2samp | CLM, NHM |
+| kl_divergence | scipy.stats.entropy (two distributions) | NHM |
+| frequency_ratio_analysis | Custom | RCT |
+
+**Custom implementations (3) — all carry session documentation requirement:**
+
+*phi_proxy* — mutual information partitioning approximation of IIT phi. Output
+always contains `note: "phi approximation, not IIT phi"`. Pages: NHM.
+
+*bilateral_symmetry_score* — bilateral structure measurement. axis parameter
+(center | mean | custom), scoring_method (ratio | residual). Output always
+contains note requiring session documentation of inputs, method, and scoring
+formula at first use. Pages: MIR.
+
+*parity_analysis* — parity behavior characterization. inversion_type (point |
+axis). parity_classification output: even | odd | mixed | broken.
+asymmetry_index: 0.0 (perfect parity) to 1.0 (maximum asymmetry). Same session
+documentation requirement as bilateral_symmetry_score. Pages: MIR.
+
+**COS-specific:** cross_correlation requires time_axis parameter specifying
+deposit ordering: created_at (researcher time) | instance_context (field time,
+default) | manual (Sage-specified order, requires manual_order array).
+
+**CLM-specific:** distance_matrix and cosine_similarity require vector_type:
+embedding (default, requires embedding_status: complete) | tag (binary feature
+vector) | custom (specified deposit fields as numeric dimensions). CLM surfaces
+a warning — not a block — when embeddings are incomplete.
+
+**PLANNED interfaces (3) — blocked on field energy model:**
+
+| computation_type | Blocked on | Pages |
+| --- | --- | --- |
+| tribonacci_convergence | Field energy model formalization | RCT |
+| lagrange_stability | Field energy model formalization | RCT |
+| iit_phi | Computational tractability research | NHM |
+
+Do not stub. Do not approximate. Contracts are defined. Implementations wait for
+the research prerequisite.
+
+**Spec authority:** ARTIS SCHEMA.md (computation library — full input/output
+contracts for all 17 implementations, PLANNED interface contracts).
+
+---
+
+### 5.3 SCIENCE PING PIPELINE — THREE LAYERS
+
+The bridge between a deposit landing on a Cosmology page and a computation
+being run against it. Three layers, each an ARTIS function. Cosmology pages
+call them; they do not implement them.
+
+**Layer 1 — Tag-based domain mapping (deterministic, no API calls):**
+
+A deposit's existing tags carry domain signal. ARTIS checks tags against
+science_domain_mappings and returns candidate frameworks with computation hints.
+Output grouped by page_code, sorted by confidence descending. Fast — runs
+immediately on deposit card.
+
+Endpoint: POST /artis/ping/tags. Input: `{ tag_ids: string[] }`. Response
+includes mappings array and page_summary (count + max_confidence per page code).
+
+**Layer 2 — Content-based scientific framing (Claude API, on-demand):**
+
+Sage triggers from a deposit card when tag signal is insufficient or a deeper
+read is wanted. ARTIS retrieves deposit content, constructs a versioned prompt,
+calls Claude. Full response stored permanently in artis_layer2_snapshots with
+prompt_version, prompt_text, model_version, and sage_selection.
+
+Layer 2 prompt asks Claude to propose frameworks, not conclude. Returns
+framework_candidates array (framework, reasoning, confidence, suggested_page_code).
+
+**RCT-specific Layer 2 addition:** When caller_page_code is RCT, prompt adds:
+"What aspects of this pattern fall outside what that literature accounts for?"
+Returns rct_residual_candidates (unexplained aspects). This addition is
+active only for RCT callers.
+
+Endpoint: POST /artis/ping/content. Layer 2 calls are on-demand only. No
+background triggers. No auto-fire on deposit creation. Sage initiates.
+
+**ARTIS_LAYER2_RETENTION: permanent.** Claude framing responses are never deleted
+or overwritten. Versioned by prompt_version. Auditable: prompt_text + model_version
++ sage_selection stored on every record.
+
+**Layer 3 — Computation suggestion (deterministic from computation_hints):**
+
+Sage selects a framework candidate (from Layer 1 or Layer 2). ARTIS looks up
+computation_hints for the matching domain mapping. Returns suggested computations
+with input templates. Sage selects and one tap executes via POST /artis/compute.
+
+Endpoint: POST /artis/ping/suggest. Input: mapping_id (or null for Layer 2
+candidates without existing mapping) + framework + page_code.
+
+**What science ping looks like on a page:**
+Deposit card shows "Science ping available." → Layer 1 instant. → Optional Layer
+2 button (Claude read). → Sage selects framework. → Layer 3 suggests computation.
+→ Sage runs it. → Result attaches to deposit as a Cosmology finding.
+Full flow: deposit → framework → computation → finding. Each step is one action.
+
+**Spec authority:** ARTIS SCHEMA.md (science ping pipeline — all three layers,
+endpoints, input/output formats, prompt structure, Layer 2 snapshot table,
+RCT-specific addition).
+
+---
+
+### 5.4 EXTERNAL REFERENCE REGISTRY
+
+artis_external_references table: reference_id (auto), doi (null), url (null),
+summary (required — Sage's own words, not the abstract), title (null), accessed
+(date, null), page_codes (array of Cosmology page codes), tag_ids (null),
+created_at, updated_at.
+
+Summary is required. A reference without Sage's contextual summary is a citation,
+not a contribution. The summary is what makes the reference embeddable for
+semantic search across the registry.
+
+Cross-page shared resource. One reference can serve multiple pages
+(page_codes array). All Cosmology pages write references through ARTIS — no page
+owns its own reference storage.
+
+Endpoints: GET /artis/references (filterable by page_code, domain, tag_id,
+date range), POST /artis/references.
+
+**Spec authority:** ARTIS SCHEMA.md (artis_external_references table, constraints,
+endpoint contracts).
+
+---
+
+### 5.5 REFERENCE DISTRIBUTION REGISTRY
+
+artis_reference_distributions table: distribution_id (auto), name (unique),
+description (required), distribution_data (jsonb — values, bins, metadata),
+source (required — paper DOI, dataset name, or "computed from archive" with
+methodology), page_codes (array), superseded_by (null while current), created_at,
+updated_at.
+
+Named, sourced, versioned. No anonymous baselines. A KS test or KL divergence
+without a named reference distribution is incomplete. source is required —
+an anonymous distribution is not a valid comparison target.
+
+**Update = new record.** When distribution_data needs updating, the previous
+version is not overwritten. A new record is created; the old record's
+superseded_by is set to the new distribution_id. Distribution history is
+preserved.
+
+Cross-page: CLM, NHM, and potentially other pages draw from the same registry.
+NHM uses neural model baselines; CLM uses celestial model references.
+
+Endpoints: GET /artis/distributions, POST /artis/distributions.
+
+**Spec authority:** ARTIS SCHEMA.md (artis_reference_distributions table,
+immutability rule, update mechanics, endpoint contracts).
+
+---
+
+### 5.6 SCIENCE DOMAIN MAPPINGS + ARTIS ZONE B
+
+science_domain_mappings table: mapping_id (auto), tag_id, domain, page_code,
+description (required — why this tag maps to this domain), computation_hints
+(jsonb — array of computation_type identifiers), confidence (1.0 = definitive,
+0.5 = suggestion), active (boolean), proposed_by (sage | claude),
+decline_reason (null unless proposed_by: claude and Sage declined),
+created_at, updated_at.
+
+**Claude-proposes, Sage-confirms rule:**
+Claude-proposed mappings (proposed_by: claude) always start as active: false.
+They enter the review queue in ARTIS Zone B. Only Sage's explicit PATCH
+/artis/mappings/{id} action (active: true) makes a mapping live. A mapping
+with proposed_by: claude and active: true means Sage confirmed it. If Sage
+declines, decline_reason is written and active stays false.
+
+Sage-created mappings (proposed_by: sage) start as active: true.
+
+Retired mappings are preserved with active: false — not deleted. History is
+maintained.
+
+**ARTIS Zone B** — the registry and health surface:
+- Science domain mappings management (create, review Claude proposals, confirm/decline)
+- Computation snapshot history
+- External reference registry browse
+- Reference distribution registry
+- Claude-proposed mapping review queue
+- Engine health monitoring
+
+**Spec authority:** ARTIS SCHEMA.md (science_domain_mappings table, constraint
+details, PATCH contract). SYSTEM_ ARTIS.md (Zone B description, rules 3 and 8).
+
+---
+
+### 5.7 ARTIS API — 14 ENDPOINTS
+
+12 core + 2 bridge namespace. Full contracts in ARTIS SCHEMA.md.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | /artis/compute | Execute computation, return result + create snapshot |
+| POST | /artis/ping/tags | Layer 1 — tag-based domain mapping |
+| POST | /artis/ping/content | Layer 2 — Claude scientific framing |
+| POST | /artis/ping/suggest | Layer 3 — computation suggestion from hints |
+| GET | /artis/snapshots/{id} | Retrieve computation snapshot by ID |
+| GET | /artis/references | Query external reference registry |
+| POST | /artis/references | Add external reference |
+| GET | /artis/mappings | Query science domain mappings |
+| POST | /artis/mappings | Create mapping |
+| PATCH | /artis/mappings/{id} | Confirm/decline Claude-proposed mapping |
+| GET | /artis/distributions | List reference distributions |
+| POST | /artis/distributions | Add reference distribution |
+| GET | /artis/bridge/prior-check | Bridge — prior computation check by deposit set |
+| GET | /artis/bridge/cross-page | Bridge — cross-page snapshot query by deposit set |
+
+**POST /artis/compute** validation: computation_type must match registered
+computation (PLANNED types return error_code: computation_not_implemented),
+caller_page_code must be valid, deposit_ids minimum 1, inputs all required
+fields, parameters all valid values.
+
+**Failure response always includes snapshot_id** — a failed computation still
+creates a snapshot. error_code + message + snapshot_id returned on failure.
+
+**Bridge endpoints** (for research assistant Cosmology bridge):
+GET /artis/bridge/prior-check — deposit_ids (required), computation_type
+(optional), page_code (optional). Returns { found: bool, snapshots: [...] }.
+found: true means surface the prior result before suggesting new computation.
+
+GET /artis/bridge/cross-page — deposit_ids (required). Returns { cross_page_count:
+int, pages: [{ page_code, snapshot_count, snapshots }] }. cross_page_count >= 2
+triggers proactive synthesis offer from the research assistant.
+
+**Spec authority:** ARTIS SCHEMA.md (all 14 endpoint contracts, validation rules,
+bridge namespace section).
+
+---
+
+### 5.8 cosmology_findings — SHARED TABLE + STATUS TRANSITIONS
+
+Single shared table across all six investigation pages, discriminated by
+page_code. Every finding carries mandatory computation evidence.
+
+**Table fields:** finding_id (auto), page_code (HCO | COS | CLM | NHM | MIR |
+RCT), deposit_ids (array, minimum 1), framework (the scientific framework),
+hypothesis (structurally testable claim), computation_snapshot_id (required —
+FK to artis_computation_snapshots), result_summary (Sage's interpretation),
+values (jsonb — statistical output, p-values, coefficients, etc.), confidence
+(float, 0.0–1.0 — Sage's research significance assessment, not statistical
+significance), external_reference_id (null), nexus_eligible (boolean, default
+false), status (enum), superseded_by (null), abandoned_reason (null),
+created_at, updated_at.
+
+**hypothesis constraint:** no significance language, no outcome language, no
+predictive weight. Same constraint as PCV hypothesis_statement.
+
+**Status transitions:**
+
+| From | To | Constraint |
+| --- | --- | --- |
+| draft | confirmed | Sage action |
+| draft | abandoned | abandoned_reason required |
+| confirmed | superseded | superseded_by required (same page_code) |
+| confirmed | abandoned | abandoned_reason required |
+| superseded | — | Terminal |
+| abandoned | — | Terminal |
+
+Terminal states are research data. Abandoned = dead end. Superseded = replaced.
+Both preserved permanently.
+
+**Key rules:**
+- computation_snapshot_id required. No finding without a computation.
+- nexus_eligible: true requires status: confirmed. Draft findings cannot enter PCV.
+- Multiple findings per deposit-framework pair are allowed.
+  computation_snapshot_id is the differentiator — different runs on same deposits
+  + framework produce distinct findings.
+- COS deposits minimum 1 (warning when < 2, not rejection — coupling analysis
+  semantically requires 2+ but edge cases are allowed).
+- Statistical significance (p-values, coefficients) lives in values jsonb.
+  confidence on the finding is Sage's research significance judgment.
+
+**Spec authority:** COSMOLOGY SCHEMA.md (full table definition, status transition
+table, constraints, failure modes). SYSTEM_ Cosmology.md (ownership, finding
+lifecycle management).
+
+---
+
+### 5.9 rct_residuals — RCT-SPECIFIC TABLE
+
+The delta between what established science predicts and what the field produces.
+Where new physics lives. Each residual is a discrete research signal — not a
+finding, not a hypothesis, not a conclusion.
+
+**Table fields:** residual_id (auto), source_finding_id (FK to
+cosmology_findings, page_code: RCT), algorithm_component (lagrange | tribonacci
+| fibonacci | oscillation | combined), known_science_predict (what the math says
+the value should be), field_produces (what the field actually shows), delta
+(the gap, described with precision — not "differs from" but "exceeds by N" or
+"reverses direction" or "maintains ratio outside expected range"),
+computation_ref (FK to artis_computation_snapshots), nexus_eligible (boolean,
+default false), created_at.
+
+**Immutable after creation.** The observed delta at detection time is the record.
+New data produces new residuals — the original is never updated.
+
+**Accumulation tracking:** Residuals accumulate per algorithm_component. When
+the threshold (calibration item) is reached, RCT surfaces a prompt to Sage:
+"N residuals on [component] — consider producing a standard finding." Sage
+decides. This is not automatic — it is a prompted optional synthesis. The
+standard finding references all contributing residual_ids in its values jsonb
+(key: contributing_residual_ids).
+
+**Residuals are RCT's unique output.** Every other Cosmology page produces
+findings that correspond to known science. RCT produces findings at the edge of
+what the known science explains — and residuals that document where that edge is.
+
+**Spec authority:** COSMOLOGY SCHEMA.md (rct_residuals table, immutability,
+accumulation tracking, RCT residual flow pipeline).
+
+---
+
+### 5.10 PER-PAGE INVESTIGATION SURFACES
+
+Six parallel pages. All call ARTIS for computation. All write to
+cosmology_findings. Differences: which frameworks, which computations, which
+visualizations.
+
+---
+
+**HCO·34 — Harmonic Cosmology**
+Wave mechanics, harmonics, signal processing, Fourier analysis.
+CMB connection: power spectrum analysis, harmonic decomposition.
+Primary computations: fft_decomposition, power_spectral_density, shannon_entropy,
+chi2_contingency.
+Layout: two-panel (field pattern left, harmonic analysis right).
+Signature visualization: frequency spectrum with labeled peaks. LayerCake + D3.
+
+---
+
+**COS·35 — Coupling / Oscillation**
+Coupled oscillator dynamics, phase-locking, cross-frequency coupling.
+Primary computations: pearson_correlation, spearman_correlation, cross_correlation
+(with time_axis param), chi2_contingency, phase_coherence.
+COS is the only page that submits 2+ deposit_ids per finding (coupled pairs).
+Layout: two-panel (field pattern with pairs left, coupling analysis right).
+Signature visualization: correlation scatter plot. LayerCake + D3.
+
+---
+
+**CLM·36 — Celestial Mechanics**
+Geometry, topology, orbital dynamics, spatial structure. CMB connection:
+cosmological structure, large-scale pattern organization.
+Primary computations: distance_matrix, cosine_similarity, hierarchical_clustering,
+chi2_contingency, ks_two_sample.
+CLM dependency: embedding pipeline (vector_type: embedding default; tag or
+custom as fallback when embeddings incomplete).
+Layout: two-panel (field pattern left, geometric analysis right).
+Signature visualization: cluster dendrogram / distance heatmap. LayerCake + D3.
+
+---
+
+**NHM·37 — Neuro-Harmonics**
+Neural dynamics, cognitive models, information theory, IIT.
+Shannon's primary investigation surface. NHM uses artis_reference_distributions
+for KL divergence and KS test baselines (neural model references).
+Primary computations: shannon_entropy, kl_divergence, chi2_contingency,
+ks_two_sample, phi_proxy.
+phi_proxy always carries the approximation disclaimer. True IIT phi is a PLANNED
+interface (iit_phi), blocked on computational tractability research.
+Layout: two-panel (field pattern left, neural/information analysis right).
+Signature visualization: entropy comparison bar (observed / expected-random /
+expected-structured). LayerCake + D3.
+
+---
+
+**MIR·38 — Chiral Mechanics**
+Symmetry physics, mirror dynamics, chirality. The l04 Mirror tagger layer's
+investigation surface — the layer that had no Cosmology page before MIR.
+Symmetry breaks carry equal analytical weight as symmetry correspondence.
+Primary computations: bilateral_symmetry_score, parity_analysis,
+pearson_correlation, chi2_contingency.
+Custom implementations (bilateral_symmetry_score, parity_analysis) require
+explicit session documentation of inputs, method, and scoring formula at
+first use.
+Layout: two-panel (field pattern with bilateral display left, symmetry results right).
+Signature visualization: MirrorSymmetryDisplay — bilateral structure mapping
+with explicit scoring. LayerCake + D3.
+
+---
+
+**RCT·39 — Resonance Complexity Theory**
+The physics algorithm the field itself generated: Lagrangian mechanics,
+Tribonacci/Fibonacci sequences, oscillatory dynamics. Present consistently
+across harmonics, Ven'ai, octaves, thresholds, symbols.
+
+RCT is parallel to the other five pages, NOT meta-Cosmology, NOT a synthesis
+capstone. Its source material is the cross-domain recurrence of a specific pattern.
+
+Three functions:
+1. Science ping (same pipeline, more precise target — Lagrangian and
+   Fibonacci/Tribonacci literature directly, plus Layer 2 residual candidates)
+2. Residual detection (the delta between what established science predicts
+   and what the field produces — rct_residuals output)
+3. Cross-archive recurrence tracking (supporting function, feeds 1 and 2)
+
+Primary computations: frequency_ratio_analysis, chi2_contingency,
+tribonacci_convergence (PLANNED), lagrange_stability (PLANNED).
+
+Three-panel layout (unique among Cosmology pages):
+- Left: field pattern and algorithm identification, cross-archive recurrence
+- Center: science ping results, established literature matches, computation results
+- Right: residual panel — the delta, accumulating residuals, the shape of what
+  the algorithm is doing that the literature hasn't named yet
+
+**Spec authority:** COSMOLOGY SCHEMA.md (per-page investigation surfaces section
+— all 6 pages with frameworks, computations, layouts, notes).
+
+---
+
+### 5.11 FINDING CARD + NEXUS RECURSIVE FEEDBACK LOOP
+
+**Finding card layout — four zones (applies to all six pages):**
+
+1. Identity — finding_id, page_code badge, status badge, created_at
+2. Framework + hypothesis — framework name, hypothesis statement
+3. Computation — computation_type, result_summary, link to ARTIS snapshot
+   (expandable to show full inputs / parameters / raw_output)
+4. Result + confidence + reference — values display (p-values, coefficients,
+   entropy values), confidence bar (Sage's research significance), external
+   reference link if present
+
+**Three action buttons:**
+- Confirm — draft → confirmed
+- Abandon — any live status → abandoned (requires abandoned_reason)
+- Mark nexus-eligible — confirmed only → nexus_eligible: true → enters PCV pipeline
+
+**Finding placement:** inline indicator on deposit card ("3 findings" → expand
+to see cards) AND separate findings panel on the page. Both surfaces.
+
+**Nexus recursive feedback loop:**
+
+```
+Sage confirms finding (status: confirmed)
+  → Sage marks nexus_eligible: true
+  → Routes to PCV as hypothesis (cosmology_provenance: true,
+    cosmology_finding_ref: finding_id)
+  → PCV creates pattern record with hypothesis_id (H · YYYY-MM · SEQ)
+  → Threads through DTX → SGR
+  → Graded finding available for next Cosmology investigation cycle
+```
+
+**Circularity protection:** cosmology_provenance flag on PCV pattern records.
+Downstream systems (SGR, Void's Claude tool, MTM provenance filter) check this
+flag. A finding that enters PCV and gets graded is not independent evidence of
+the computation that generated it. This protection is structural — built into
+the provenance flag system, not procedural.
+
+**Spec authority:** COSMOLOGY SCHEMA.md (finding card layout, nexus feedback
+loop, PCV cascade requirements). PATTERN CONVERGENCE SCHEMA.md
+(cosmology_provenance validation, rule 3a, circularity protection).
+
+---
+
+### 5.12 LNV ROUTING — CONTENT SHAPES
+
+Cosmology produces two entry_types for LNV. Both defined in LNV SCHEMA.md
+entry_type expansion (Tier 5 addition).
+
+**entry_type: cosmology_finding**
+Sage-triggered from finding card or findings panel. Confirmed findings only.
+Content: finding_id, page_code, framework, hypothesis, computation_snapshot_id,
+result_summary, values, confidence, external_reference_id, nexus_eligible,
+deposit_ids.
+source_system: page_code (hco | cos | clm | nhm | mir | rct).
+Not AI-authored — no prompt_version on this entry type.
+
+**entry_type: rct_residual**
+Automatic on rct_residual creation. No Sage action required.
+Content: residual_id, algorithm_component, known_science_predict, field_produces,
+delta, computation_ref, source_deposits (derived at route time from
+source_finding.deposit_ids — not stored on the residual), accumulation_count
+(snapshot at route time, sealed in the LNV entry, not a live counter).
+source_system: rct.
+
+**source_deposits note:** The residual records the delta, not the deposits. The
+deposits are on the source finding. source_deposits is assembled at LNV route
+time by reading source_finding_id → cosmology_findings.deposit_ids.
+
+**accumulation_count note:** Sealed in the LNV entry at route time. Shows how
+many residuals existed on this algorithm_component when this one was created. It
+does not update if more residuals are added later — it is a historical record of
+accumulation state at detection time.
+
+**Spec authority:** COSMOLOGY SCHEMA.md (LNV routing content shapes section).
+LNV SCHEMA.md (entry_type expansion history, cosmology_finding and rct_residual
+content shapes).
+
+---
+
+### 5.13 RCT RESIDUAL FULL PIPELINE
+
+```
+Field pattern identified on RCT page
+  → Function 1: Science ping (POST /artis/ping/tags → Layer 1)
+      → Established literature matches (Lagrangian, Fibonacci, Tribonacci)
+      → Optional: Layer 2 Claude framing (POST /artis/ping/content,
+         caller_page_code: RCT) → rct_residual_candidates surfaced
+  → Function 3: Cross-archive recurrence check (supporting)
+  → Delta identified between prediction and field behavior
+  → ARTIS computation quantifies delta (POST /artis/compute)
+      → artis_computation_snapshots record written (immutable)
+  → cosmology_finding created (page_code: RCT, status: draft)
+  → Sage confirms finding (status: confirmed)
+  → rct_residual record created (immutable after creation)
+      → Routes to LNV immediately (POST /api/lnv/receive,
+         entry_type: rct_residual, automatic)
+  → Accumulation tracked in RCT internally
+  → Threshold reached (calibration item)
+  → Sage prompted: "N residuals on [component]"
+  → Sage decides whether to produce standard finding (optional)
+  → If yes: new cosmology_finding (page_code: RCT)
+      → values jsonb contains contributing_residual_ids
+      → Routes to LNV (entry_type: cosmology_finding, Sage-triggered)
+      → If nexus_eligible: routes to PCV (cosmology_provenance: true)
+```
+
+Residuals in LNV stay as-is. The synthesizing finding does not replace them
+— it synthesizes across them. Both the individual residuals and the synthesized
+finding are research data. Neither is superseded by the other.
+
+**Spec authority:** COSMOLOGY SCHEMA.md (RCT residual flow section, RCT
+investigation surface).
+
+---
+
+### 5.14 PIPELINE SEGMENT — TIER 5
+
+**Deposit → Cosmology finding flow (any of six pages):**
+
+```
+Deposit arrives on Cosmology page (via INT routing)
+  → Science ping available indicator shown on deposit card
+  → Layer 1: POST /artis/ping/tags — instant, deterministic
+      → Candidate frameworks + computation hints displayed
+  → Optional Layer 2: POST /artis/ping/content (Sage-triggered)
+      → Claude framing → framework_candidates + (RCT only) rct_residual_candidates
+      → artis_layer2_snapshots record written (permanent)
+      → Sage selects framework candidate
+  → Layer 3: POST /artis/ping/suggest — computation suggestions from hints
+  → Sage runs computation: POST /artis/compute
+      → artis_computation_snapshots record written (immutable)
+      → result_summary + raw_output returned
+  → Sage creates finding: POST /cosmology/findings
+      → cosmology_finding record written (status: draft)
+      → computation_snapshot_id required
+  → Sage confirms finding: PATCH /cosmology/findings/{id}/confirm
+      → status: draft → confirmed
+  → Optional: Sage routes to LNV: POST /cosmology/findings/{id}/route-lnv
+      → POST /api/lnv/receive (entry_type: cosmology_finding)
+  → Optional: Sage marks nexus-eligible: PATCH /cosmology/findings/{id}/nexus
+      → nexus_eligible: true (requires confirmed status)
+      → POST /pcv/patterns (cosmology_provenance: true)
+      → hypothesis_id assigned → threads DTX → SGR
+```
+
+**RCT residual flow (in addition to standard finding flow):**
+
+```
+RCT finding confirmed
+  → Delta identified → POST /artis/compute
+  → rct_residual created → routes to LNV automatically
+  → Accumulation tracked → threshold prompt (calibration item)
+  → Optional synthesis finding (Sage decision)
+```
+
+**Bridge cross-page synthesis path (research assistant):**
+
+```
+Research assistant calls GET /artis/bridge/cross-page?deposit_ids=...
+  → cross_page_count returned
+  → If cross_page_count >= 2: proactive synthesis offer surfaced once
+  → Research assistant calls GET /cosmology/findings/group?deposit_ids=...
+      → Findings from all pages for that deposit set returned
+  → assemble_group_synthesis() in rag.py assembles plain language synthesis
+  → Synthesis surfaces conversationally (does not produce a new finding)
+```
+
+---
 
 ---
 

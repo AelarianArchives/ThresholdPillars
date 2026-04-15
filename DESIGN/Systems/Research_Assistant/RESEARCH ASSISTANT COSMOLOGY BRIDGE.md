@@ -64,7 +64,7 @@ where Sage works.
   transitions, and storage are owned by the Cosmology findings design
   (Tier 5)
 * **ARTIS computation library** — which computations exist, their
-  parameters, output shapes. Owned by ARTIS (ART·39)
+  parameters, output shapes. Owned by ARTIS (ART·40)
 * **Nexus classification** — whether a finding actually qualifies as
   nexus_eligible is a classification decision owned by the Nexus
   systems. The assistant surfaces the suggestion; Sage and the system
@@ -99,7 +99,12 @@ Neural dynamics, information theory, Shannon.
 Shannon entropy, mutual information, KL divergence, phi proxy.
 Pattern has information structure → NHM.
 
-**RCT·38 — Resonance Complexity Theory**
+**MIR·38 — Chiral Mechanics**
+Mirror symmetry, bilateral structure, chirality, parity violations.
+bilateral_symmetry_score, parity_analysis, Pearson correlation (bilateral).
+Pattern has bilateral/mirror structure or chiral asymmetry → MIR.
+
+**RCT·39 — Resonance Complexity Theory**
 Unexplained residuals, cross-archive recurrence.
 Pattern doesn't fit known frameworks → RCT.
 Or: pattern appears across multiple domains simultaneously → RCT.
@@ -284,6 +289,122 @@ Sage needs it.
 
 ---
 
+## CROSS-PAGE PATTERN INTERPRETATION
+
+The bridge interprets findings from any of the six Cosmology
+investigation pages using that page's scientific domain context.
+When Sage is investigating on one page and findings from another
+page become relevant — either because she asks or because the
+bridge surfaces a cross-page match — the bridge reads and
+interprets them through the originating page's domain lens.
+
+**Domain context per page:**
+
+* **HCO** findings are read through signal and frequency analysis.
+  A result means something about harmonic structure
+* **COS** findings are read through coupling and synchronization.
+  A result means something about relational dynamics between signals
+* **CLM** findings are read through geometry and topology.
+  A result means something about spatial or structural arrangement
+* **NHM** findings are read through information theory.
+  A result means something about entropy, complexity, or information
+  organization
+* **MIR** findings are read through chirality and bilateral structure.
+  A result means something about symmetry, parity, or mirror behavior
+* **RCT** findings are read through residual accumulation.
+  A result means something about what established frameworks cannot
+  explain
+
+When a CLM finding is relevant while Sage is working on NHM, the
+bridge interprets the CLM finding in CLM's terms — not flattened into
+generic language, not reframed in NHM's terms. The finding belongs to
+its page. The bridge holds that context and carries it across.
+
+**Named calls:**
+
+* `GET /artis/bridge/prior-check` — checks whether this computation
+  or a closely matching one has already been run on these deposits
+  before any new computation is suggested. Query: deposit_ids +
+  optional computation_type + optional page_code. Returns matching
+  computation snapshots with result_summary
+* `GET /artis/bridge/cross-page` — retrieves computation snapshots
+  for a given deposit set across all Cosmology pages, grouped by
+  caller_page_code. Called when Sage asks about cross-page context
+  or when the bridge surfaces cross-page relevance
+
+**Rules:**
+
+1. Every finding from a Cosmology page is interpreted through that
+   page's domain lens. Domain context is not stripped in translation
+2. The bridge does not synthesize across pages unless explicitly
+   asked or the proactive trigger fires. Interpretation and synthesis
+   are different functions
+3. Cross-page relevance is surfaced once, conversationally. Not
+   repeated on every exchange
+4. The bridge never speculates about findings on pages that have not
+   yet investigated the pattern. Cross-page interpretation is grounded
+   in what has actually been found
+
+---
+
+## GROUP FINDINGS SYNTHESIS
+
+When a pattern has been investigated across multiple Cosmology pages,
+the bridge can synthesize what the group has found — assembling a
+plain language view across all pages that have results on a deposit set.
+
+**Two triggers:**
+
+**Reactive** — Sage asks. "What has the archive found about this
+pattern?" or equivalent. The bridge queries all six pages for
+findings on the relevant deposit set and assembles the synthesis.
+
+**Proactive** — the bridge surfaces it once when
+`GET /artis/bridge/cross-page` returns computation snapshots across
+two or more pages for the same deposit set. One offer,
+conversationally:
+
+> "This deposit has been investigated on both HCO and CLM — want
+> me to pull together what both pages found?"
+
+Sage confirms or declines. The bridge does not synthesize unsolicited.
+
+**Named assembly function: `assemble_group_synthesis()` in `backend/services/rag.py`**
+
+Called when synthesis is triggered. Sequence:
+
+1. `GET /artis/bridge/cross-page` — computation snapshots grouped by
+   page_code for the deposit set
+2. `GET /cosmology/findings/group` — confirmed findings grouped by
+   page_code for the deposit set
+3. Assembles per-page summaries in each page's domain terms, then
+   a cross-page view of convergence, divergence, and absence
+
+**What synthesis includes:**
+
+* What each page found, in that page's domain terms
+* Where pages converge on the same pattern
+* Where pages see different things in the same data — divergence is
+  signal, named honestly rather than resolved
+* Which pages have no findings yet on this deposit set — absence is
+  named, not silently omitted
+* Whether any finding is marked nexus_eligible — surfaced once as
+  ambient context
+
+**What synthesis does not include:**
+
+* Conclusions the computations do not support
+* Speculation about pages that have not yet investigated the pattern
+* Forced coherence across divergent findings
+* Interpretation beyond what each page's computation produced
+
+**Synthesis principle:** The assembly produces a view of what the
+Cosmology group has collectively found. It does not produce a new
+finding. Synthesis is the assistant's output. A new finding belongs
+to a page and Sage.
+
+---
+
 ## RELATIONSHIP TO OTHER SPECS
 
 **Hypothesis Framing → Cosmology Bridge:**
@@ -299,7 +420,7 @@ The prior computation check uses the RAG pipeline (RESEARCH ASSISTANT
 ARCHIVE ACCESS.md) to retrieve existing findings before suggesting
 new computations.
 
-**ARTIS (ART·39) → Cosmology Bridge:**
+**ARTIS (ART·40) → Cosmology Bridge:**
 ARTIS executes computations and produces results. The bridge
 translates those results. The boundary is clean — ARTIS is
 computational, the bridge is conversational.
@@ -331,13 +452,22 @@ These are not guidelines. Each is a scientific integrity boundary.
    Different scope, different trigger, different output. The boundary
    is architectural.
 
+7. **Cross-page interpretation preserves each page's domain context.**
+   A CLM finding is read through CLM's lens. A MIR finding is read
+   through MIR's lens. Domain context is not flattened in translation.
+
+8. **Group synthesis surfaces what was found. It does not produce a
+   new finding.** Synthesis is the assistant's output. A new finding
+   belongs to a page and Sage.
+
 ---
 
 ## FILES
 
 | File | Role | Status |
 | --- | --- | --- |
-| backend/services/rag.py | RAG pipeline — prior computation retrieval | PLANNED |
+| backend/services/rag.py | RAG pipeline — prior computation retrieval + assemble_group_synthesis() for group findings synthesis | PLANNED |
 | backend/services/claude.py | Claude API client — bridge calls via research_assistant agent | LIVE |
-| backend/routes/artis.py | ARTIS endpoints — computation results source | PLANNED |
-| frontend Cosmology bridge components | Svelte UI — result translation display, nexus_eligible surfacing | PLANNED |
+| backend/routes/artis.py | ARTIS endpoints — compute, science ping, snapshots, references, mappings, distributions (12 routes) + bridge namespace: GET /artis/bridge/prior-check, GET /artis/bridge/cross-page | PLANNED |
+| backend/routes/cosmology.py | Shared Cosmology endpoints — findings CRUD + GET /cosmology/findings/group for group synthesis | PLANNED |
+| frontend Cosmology bridge components | Svelte UI — result translation display, nexus_eligible surfacing, group synthesis panel | PLANNED |

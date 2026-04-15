@@ -1796,3 +1796,82 @@ Verification commands:
   grep -rn "StrDriftAlertPanel" DESIGN/
   grep -rn "unresolved_drift_count" DESIGN/
   All should return: No files found
+
+══════════════════════════════════════════════════════════════════
+ROT ENTRY 012 — COSMOLOGY BRIDGE STALE PAGE NUMBERS POST-RENUMBERING
+══════════════════════════════════════════════════════════════════
+
+Documented: 2026-04-15 (session 58)
+Discovery: Session open page code scan against SECTION MAP.
+
+RESEARCH ASSISTANT COSMOLOGY BRIDGE.md was verified 2026-04-07 and
+passed entropy scan clean. Session 56 (2026-04-14) ran the renumbering
+cascade: MIR added as page 38, RCT moved to page 39, ARTIS moved to
+page 40. The COSMOLOGY BRIDGE was not in the cascade sweep — the cascade
+targeted page code lists (HCO/COS/CLM/NHM/RCT), not page number suffixes
+in display references.
+
+What it falsely claimed: RCT is page ·38, ARTIS is page ·39
+What the correct state is: RCT is page ·39, ARTIS (ART) is page ·40
+
+Infected files:
+  - DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT COSMOLOGY BRIDGE.md
+    (2 stale refs: RCT·38 and ART·39 — both page number suffixes only,
+    page codes RCT and ART were never wrong)
+
+Failure mode: PAGE CODE DRIFT (post-verification renumbering cascade miss)
+
+Cleanup: COMPLETE — 2026-04-15 session 58.
+  RCT·38 → RCT·39: orientation map
+  ART·39 → ART·40: ownership boundaries + relationship to other specs
+  Cascade miss noted: page number display refs were not in the grep
+  pattern used for the session 56 cascade scan (pattern matched code
+  lists, not inline ·NN suffixes).
+
+Verification commands:
+  grep -n "RCT·38\|ART·39" DESIGN/Systems/Research_Assistant/RESEARCH\ ASSISTANT\ COSMOLOGY\ BRIDGE.md
+  Should return: No matches found
+
+══════════════════════════════════════════════════════════════════
+ROT ENTRY 013 — WATCHLIST: PAGE NUMBER CASCADE ON GROUP EXPANSION
+══════════════════════════════════════════════════════════════════
+
+Documented: 2026-04-15 (session 58)
+Type: PREVENTION WATCHLIST — not a new infection record. Documents the
+  scan requirement triggered any time a Cosmology page is added or
+  any group's pages are renumbered.
+
+Background: The existing cascade scan patterns (grep for page code
+  lists: HCO/COS/CLM/NHM/RCT) catch code list entries but not inline
+  page number display references — the ·NN suffix format used in
+  companion specs, system docs, and bridge specs (e.g., "ART·40",
+  "RCT·39"). These inline refs are not in any grep target currently
+  used for cascade scans.
+
+First instance (session 56 → session 58):
+  MIR added as page 38 → RCT moved to 39, ART to 40.
+  Files that carried stale ·NN refs after the cascade:
+    RESEARCH ASSISTANT COSMOLOGY BRIDGE.md — ART·39, RCT·38 (FIXED session 58)
+    RESEARCH ASSISTANT HYPOTHESIS FRAMING.md — ART·39 (FIXED session 58)
+  These were not caught by the session 56/57 cascade scans because
+  the grep patterns targeted code lists, not inline ·NN suffixes.
+
+Trigger for future scans: any session that:
+  1. Adds a new page to an existing group (page numbers shift for
+     pages that follow the insertion point)
+  2. Renumbers pages within a group for any reason
+
+On trigger — run these scans across all companion specs and system docs:
+
+  grep -rn "·[0-9][0-9]" DESIGN/Systems/Research_Assistant/
+  grep -rn "·[0-9][0-9]" DESIGN/Systems/ARTIS/
+  grep -rn "·[0-9][0-9]" DESIGN/Systems/Cosmology/
+
+  For each match: verify the ·NN number against SECTION MAP.md.
+  Any mismatch is a cascade correction — not rot in the original
+  sense, but still requires a fix before the file can be trusted as
+  current.
+
+Note: files that carry ·NN refs were correct at the time of writing.
+  The refs become stale only when the group expands or renumbers after
+  the fact. The cascade correction is the fix, not a rewrite.

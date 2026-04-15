@@ -873,7 +873,7 @@ All design items fully specified in standalone specs:
 | DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT COSMOLOGY BRIDGE.md | Companion spec — page orientation, prior computation check, plain language translation | COMPLETE |
 | DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT RESEARCH POSTURE.md | Companion spec — 23 behavioral sections defining the assistant's epistemic and relational posture | COMPLETE |
 | backend/routes/assistant.py | FastAPI endpoints — query, memory CRUD, summary, context assembly, drift log (7 routes) | PLANNED |
-| backend/services/rag.py | RAG pipeline — query assembly, hybrid search, cross-encoder re-rank, context packaging | PLANNED |
+| backend/services/rag.py | RAG pipeline — query assembly, hybrid search, cross-encoder re-rank, context packaging + assemble_group_synthesis() for Cosmology group findings synthesis | PLANNED |
 | backend/services/researcher_memory.py | Researcher memory read/update, history snapshot, conversation summary production, Ven'ai drift log persistence | PLANNED |
 | backend/services/claude.py | Shared Claude API client — used by research assistant, tagger, and page engines | LIVE |
 | frontend/src/lib/components/ResearchAssistantPanel.svelte | Persistent floating panel — chat interface, header indicators, research state action | PLANNED |

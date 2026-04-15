@@ -71,7 +71,8 @@ group's computation engine. Full mechanical spec in ARTIS SCHEMA.md.
 
 ## API SURFACE
 
-Twelve endpoints under /artis/ namespace. Full contracts in ARTIS SCHEMA.md.
+Fourteen endpoints under /artis/ namespace: twelve core + two bridge
+namespace. Full contracts in ARTIS SCHEMA.md.
 
 | Method | Path | Purpose |
 | --- | --- | --- |
@@ -87,6 +88,8 @@ Twelve endpoints under /artis/ namespace. Full contracts in ARTIS SCHEMA.md.
 | PATCH | /artis/mappings/{id} | Confirm/decline mapping |
 | GET | /artis/distributions | List reference distributions |
 | POST | /artis/distributions | Add reference distribution |
+| GET | /artis/bridge/prior-check | Bridge — prior computation check by deposit set |
+| GET | /artis/bridge/cross-page | Bridge — cross-page snapshot query by deposit set |
 
 ---
 
@@ -137,4 +140,4 @@ Twelve endpoints under /artis/ namespace. Full contracts in ARTIS SCHEMA.md.
 | DESIGN/Systems/ARTIS/SYSTEM_ ARTIS.md | This file — ownership boundaries, API surface, rules | COMPLETE |
 | backend/routes/artis.py | FastAPI ARTIS endpoints | PLANNED |
 | backend/services/artis.py | ARTIS service — mappings, references, snapshots, ping pipeline | PLANNED |
-| backend/services/computation.py | Computation library — 15 implementations | PLANNED |
+| backend/services/computation.py | Computation library — 17 implementations | PLANNED |

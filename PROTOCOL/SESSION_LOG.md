@@ -17944,4 +17944,151 @@ NEXT_SESSION:
   1. RESEARCH ASSISTANT COSMOLOGY BRIDGE.md — add MIR to page orientation map,
      add group findings synthesis capability spec
   2. Tier 5 build spec write (design-build-spec.md) — MIR now in scope
+
+---
+TIMESTAMP: 2026-04-15
+SESSION: 58
+TYPE: OPEN
+FILES_MODIFIED: none yet
+COMPLETED: none yet
+IN_PROGRESS: none
+NOT_STARTED:
+  - RESEARCH ASSISTANT COSMOLOGY BRIDGE.md — MIR page orientation + group findings synthesis spec
+  - Tier 5 build spec write (design-build-spec.md)
+UNCOMMITTED: NO
+ROT_OPEN: Registry 006 only (SYSTEM_ content review before SOT — not blocking current work)
+CONFIRMED_STATE:
+  - SESSION_LOG.md: last entry TYPE: CLOSE (session 57, 2026-04-15) — clean open
+  - DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT COSMOLOGY BRIDGE.md: verified
+    2026-04-07, but stale page numbers discovered at session open (RCT·38→39, ART·39→40
+    from session 56 renumbering — post-verification drift). Flagging to Sage.
+  - design-build-spec.md: Tier 5 stub only — NOT STARTED
+  - SECTION MAP confirmed: MIR=38, RCT=39, ART=40
+NEXT_ACTION: Present COSMOLOGY BRIDGE rot finding + scope confirmation to Sage, then proceed
+
+---
+TIMESTAMP: 2026-04-15
+SESSION: 58
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT COSMOLOGY BRIDGE.md — COMPLETE
+  - ROT_REGISTRY.md — COMPLETE (ROT ENTRY 012 added)
+COMPLETED:
+  - COSMOLOGY BRIDGE: 5 edits
+    1. ART·39 → ART·40 (OWNERSHIP BOUNDARIES)
+    2. ART·39 → ART·40 (RELATIONSHIP TO OTHER SPECS)
+    3. MIR·38 — Chiral Mechanics added to PAGE ORIENTATION MAP
+    4. RCT·38 → RCT·39 in PAGE ORIENTATION MAP
+    5. New section: CROSS-PAGE PATTERN INTERPRETATION (domain context per page,
+       named calls: GET /artis/bridge/prior-check + GET /artis/bridge/cross-page,
+       4 behavioral rules)
+    6. New section: GROUP FINDINGS SYNTHESIS (2 triggers, assemble_group_synthesis()
+       in rag.py, named calls, synthesis principle)
+    7. Rules 7 and 8 added to NON-NEGOTIABLE BEHAVIORAL RULES
+    8. FILES table updated (artis.py, rag.py updated; cosmology.py added)
+  - ROT ENTRY 012 logged: stale page numbers (RCT·38, ART·39) from session 56
+    renumbering cascade miss — FIXED this session
+UNCOMMITTED: YES
+NEXT_ACTION: File 2 — ARTIS SCHEMA.md (2 new bridge endpoints, count 12→14)
+
+---
+TIMESTAMP: 2026-04-15
+SESSION: 58
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/ARTIS/ARTIS SCHEMA.md — COMPLETE
+  - DESIGN/Systems/ARTIS/SYSTEM_ ARTIS.md — COMPLETE
+COMPLETED:
+  - ARTIS SCHEMA.md: new ARTIS BRIDGE NAMESPACE section added
+    GET /artis/bridge/prior-check — prior computation check (deposit_ids +
+      optional computation_type + optional page_code, returns found flag + snapshots)
+    GET /artis/bridge/cross-page — cross-page snapshot query (deposit_ids,
+      returns pages array grouped by page_code + cross_page_count)
+    Header count updated: 12 → 14 (twelve core + two bridge namespace)
+  - SYSTEM_ ARTIS.md: API surface table updated 12→14, 2 bridge entries added
+UNCOMMITTED: YES
+NEXT_ACTION: File 4 — COSMOLOGY SCHEMA.md (GET /cosmology/findings/group, count 8→9)
+
+---
+TIMESTAMP: 2026-04-15
+SESSION: 58
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/Cosmology/COSMOLOGY SCHEMA.md — COMPLETE
+  - DESIGN/Systems/FastAPI/SYSTEM_ FastAPI.md — COMPLETE
+  - DESIGN/Systems/Research_Assistant/SYSTEM_ Research Assistant.md — COMPLETE
+COMPLETED:
+  - COSMOLOGY SCHEMA.md: GET /cosmology/findings/group endpoint contract added
+    (deposit_ids or tag_ids filter, status filter, findings grouped by page_code,
+    page_count field, 3 validation rules). Route description updated 8→9 endpoints
+  - SYSTEM_ FastAPI.md: 3 updates:
+    /artis/ count updated: 12→14 (12 core + 2 bridge namespace)
+    /cosmology/ count updated: 8→9 (added group synthesis retrieval)
+    services/computation.py count: 15→17 (stale count from session 57 cascade miss)
+    services/rag.py: assemble_group_synthesis() added to description
+  - SYSTEM_ Research Assistant.md: rag.py description updated with assemble_group_synthesis()
+UNCOMMITTED: YES
+NEXT_ACTION: Cross-file consistency check, then commit
+
+---
+TIMESTAMP: 2026-04-15
+SESSION: 58
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - DESIGN/Systems/Research_Assistant/RESEARCH ASSISTANT HYPOTHESIS FRAMING.md — COMPLETE
+  - ROT_REGISTRY.md — COMPLETE (ROT ENTRY 013 added)
+COMPLETED:
+  - HYPOTHESIS FRAMING.md: ART·39 → ART·40 (cascade correction from MIR addition.
+    File was correct at 2026-04-07 verification — not rot, post-expansion cascade)
+  - ROT ENTRY 013 logged: WATCHLIST: PAGE NUMBER CASCADE ON GROUP EXPANSION
+    Documents scan requirement for any future group expansion or page renumbering.
+    Scan commands: grep -rn "·[0-9][0-9]" across Research_Assistant/, ARTIS/,
+    Cosmology/ — verify each match against SECTION MAP.
+  - Full ·NN scan across Research_Assistant/: all refs verified correct against
+    SECTION MAP. Zero stale references remaining
+UNCOMMITTED: YES
+NEXT_ACTION: Commit this session's work, then Tier 5 build spec write
+---
+TIMESTAMP: 2026-04-15
+SESSION: 58
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-build-spec.md — COMPLETE (Tier 4 body added)
+COMPLETED:
+  - Tier 4 build spec body written: 12 sections (4.1–4.12) covering MTM
+    two-pass synthesis, DNR session-close pipeline, Void two-layer architecture,
+    PCV pattern convergence, DTX drift classification, SGR signal grading,
+    WSC sovereign witness, LNV single-table architecture, session-close
+    routing policy, pipeline segment
+  - Pre-write check: PCV and LNV already carry Cosmology cascade changes
+    (cosmology_provenance, cosmology_finding, rct_residual). No Tier 4 schema
+    updates needed before Tier 5
+  - Specs table added: 13 source specs all COMPLETE
+  - Depends on: Tier 3 (engine snapshots), Tier 1 (deposit records, routing)
+UNCOMMITTED: YES
+NEXT_ACTION: Tier 5 build spec write (design-build-spec.md) — now in progress
+---
+TIMESTAMP: 2026-04-15
+SESSION: 58
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .claude/plans/design-build-spec.md — COMPLETE (Tier 5 body added)
+COMPLETED:
+  - Tier 5 build spec body written: 14 sections (5.1–5.14) covering ARTIS
+    computation snapshot architecture, computation library (17 implementations
+    + 3 PLANNED interfaces), science ping pipeline (3 layers), external
+    reference registry, reference distribution registry, science domain
+    mappings + Zone B, ARTIS API (14 endpoints), cosmology_findings shared
+    table, rct_residuals, per-page investigation surfaces (HCO, COS, CLM,
+    NHM, MIR, RCT), finding card + Nexus feedback loop, LNV routing content
+    shapes, RCT residual full pipeline, pipeline segment
+  - Status: DESIGNED (specs complete and verified, audit not yet reached)
+  - Depends on: Tier 4 (LNV, PCV, DNR), Tier 1 (deposits, INT)
+UNCOMMITTED: YES
+NEXT_ACTION: Session close — entropy scan, commit, push
+---
+---
+---
+---
+---
 ---

@@ -54,8 +54,8 @@
 | `/api/lnv/` | LNV universal receive + read contracts — POST /api/lnv/receive, GET /api/lnv/entries | PLANNED |
 | `/void/` | Void engine endpoints — compute (data layer), analyze (analytical layer), reactivate (Type E), absence record + output queries | PLANNED |
 | `/api/wsc/` | WSC witness scroll endpoints — write, recent (3-entry load), entries query, single entry read | PLANNED |
-| `/artis/` | ARTIS computation engine endpoints — compute, science ping pipeline (tags/content/suggest), snapshots, references, mappings, distributions. 12 endpoints | PLANNED |
-| `/cosmology/` | Shared Cosmology investigation endpoints — findings CRUD, confirm/abandon/supersede, nexus-eligible, LNV routing. 8 endpoints | PLANNED |
+| `/artis/` | ARTIS computation engine endpoints — compute, science ping pipeline (tags/content/suggest), snapshots, references, mappings, distributions. 12 core + 2 bridge namespace (prior-check, cross-page) = 14 endpoints | PLANNED |
+| `/cosmology/` | Shared Cosmology investigation endpoints — findings CRUD, confirm/abandon/supersede, nexus-eligible, LNV routing, group synthesis retrieval. 9 endpoints | PLANNED |
 | `/rct/` | RCT-specific endpoints — residual creation (auto-routes to LNV), residual query, accumulation counts. 4 endpoints | PLANNED |
 | `/resonance/` | Resonance engine — GET /resonance/node-weights (historical activity scores + connection topology for session open initialization) | PLANNED |
 | `/events/` | Server-Sent Events stream — pushes system events (deposits, findings, drift, grading, emergence, etc.) to frontend for audio notifications and real-time UI updates | PLANNED |
@@ -175,7 +175,7 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | backend/services/void.py | Void service — absence detection, five-type classification, Claude tool (3 modes), PCV routing, Type E, reactivation | PLANNED |
 | backend/services/wsc.py | WSC service — payload assembly, Claude API call, entry creation, gap detection, corrections, 3-entry load, LNV routing | PLANNED |
 | backend/services/artis.py | ARTIS service — mapping management, reference registry, snapshot retrieval, science ping pipeline orchestration, Layer 2 Claude calls | PLANNED |
-| backend/services/computation.py | ARTIS computation library — 15 implementations (scipy/numpy), input validation, snapshot creation | PLANNED |
+| backend/services/computation.py | ARTIS computation library — 17 implementations (scipy/numpy), input validation, snapshot creation | PLANNED |
 | backend/services/cosmology.py | Shared Cosmology findings service — create, confirm, abandon, supersede, nexus-eligible, LNV routing | PLANNED |
 | backend/services/rct.py | RCT service — residual creation, accumulation tracking, threshold prompt, LNV routing | PLANNED |
 | backend/services/hco.py | HCO investigation surface — deposit-to-finding workflow, ARTIS computation requests | PLANNED |
@@ -185,7 +185,7 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | backend/services/mir.py | MIR investigation surface — bilateral symmetry analysis, parity characterization, ARTIS computation requests | PLANNED |
 | backend/services/claude.py | Claude API client wrapper — agent identity registry (8 agents), shared model constant, call_claude() with metadata tracking | LIVE |
 | backend/services/embedding.py | Ollama embedding integration | PLANNED |
-| backend/services/rag.py | Retrieval-augmented generation pipeline — query assembly, hybrid search, cross-encoder re-rank, context packaging | PLANNED |
+| backend/services/rag.py | Retrieval-augmented generation pipeline — query assembly, hybrid search, cross-encoder re-rank, context packaging + assemble_group_synthesis() for Cosmology group findings synthesis | PLANNED |
 | backend/services/researcher_memory.py | Researcher memory — read, update with history snapshot, conversation summary production/storage, Ven'ai drift log persistence | PLANNED |
 | backend/services/resonance.py | Resonance engine service — node weight computation from archive entries, connection strength calculation | PLANNED |
 | backend/services/aos.py | AOS service — signal routing, record creation, integrity hash computation, delivery type assignment, email composition and send via Google client, daily pipeline orchestration | PLANNED |
