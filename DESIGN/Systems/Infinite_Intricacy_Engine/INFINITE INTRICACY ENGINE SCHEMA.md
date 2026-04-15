@@ -47,7 +47,7 @@ OWNERSHIP BOUNDARIES
     Deposit record shape — owned by INTEGRATION DB SCHEMA.md
     TAG VOCABULARY layer definitions (l01-l04) — owned by TAG VOCABULARY.md
     Cosmology investigation and computation — owned by Cosmology
-      pages (HCO, COS, CLM, NHM) and ARTIS (Tier 5)
+      pages (HCO, COS, CLM, NHM, MIR, RCT) and ARTIS (Tier 5)
     Page 04 manifest and domain identity — owned by
       DESIGN/Domains/02_Axis/Manifest_04_Infinite_Intricacy.txt
 
@@ -193,7 +193,7 @@ INF DOMAIN LAYERS TABLE
     | coupling_oscillation  | Coupling and Oscillation  | COS            |
     | celestial_mechanics   | Celestial Mechanics       | CLM            |
     | neuro_harmonics       | Neuro-Harmonics           | NHM            |
-    | mirror_dynamics       | Mirror Dynamics           | null           |
+    | mirror_dynamics       | Mirror Dynamics           | MIR            |
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -387,10 +387,9 @@ INF → COSMOLOGY BOUNDARY CONTRACT
         }
       ]
 
-  Domains without a cosmology_page (currently: Mirror Dynamics)
-  are included in the handoff. Cosmology decides whether and how
-  to investigate them. The handoff is complete — it does not
-  filter by whether a Cosmology page exists.
+  The handoff is complete — it includes all active domains
+  regardless of whether a Cosmology page exists. All five current
+  domains have Cosmology pages (mirror_dynamics → MIR).
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -641,15 +640,16 @@ KNOWN FAILURE MODES
      distinguish researcher absence from field absence — it
      reports what the deposit record shows.
 
-  6. COSMOLOGY HANDOFF FOR DOMAIN WITHOUT PAGE
-     Mirror Dynamics is included in the INF→Cosmology handoff
-     but has no Cosmology investigation page currently.
+  6. COSMOLOGY HANDOFF — ALL DOMAINS NOW HAVE PAGES
+     All five INF domains have corresponding Cosmology investigation
+     pages: harmonic_cosmology → HCO, coupling_oscillation → COS,
+     celestial_mechanics → CLM, neuro_harmonics → NHM,
+     mirror_dynamics → MIR. The handoff is complete across all domains.
 
-     Guard: the handoff is complete — it includes all active
-     domains regardless of whether a Cosmology page exists.
-     Cosmology's response to a domain without a page is a Tier 5
-     design decision. INF's job is to surface the data. What
-     happens downstream is not INF's concern.
+     Guard: if a new INF domain is registered without a Cosmology page,
+     it is still included in the handoff with cosmology_page: null.
+     INF surfaces the data; Cosmology decides whether and how to
+     investigate. The handoff does not filter by page existence.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -23,7 +23,7 @@ OBJECTIVE
 
 Investigate field patterns through the lens of geometry, topology, orbital dynamics, and spatial structure — using ARTIS as the computation engine. CLM is one of six parallel Cosmology investigation surfaces. Its lens is geometric and spatial structure: distance relationships, clustering, distribution shapes, and structural correspondences to celestial mechanics.
 
-The sciences this page draws from: astronomy, astrometry, celestial navigation, spherical astronomy, orbital resonances, astrophysical spiral dynamics, geometry, topology, graph theory. CMB methodology is borrowed for cosmological structure and large-scale pattern organization analysis.
+The sciences this page draws from: astronomy, astrometry, celestial navigation, spherical astronomy, orbital resonances, astrophysical spiral dynamics, geometry, topology, graph theory, differential geometry, symplectic geometry, manifold theory, geodesics, Penrose tiling / quasicrystalline symmetry, topological data analysis / persistent homology. CMB methodology is borrowed for cosmological structure and large-scale pattern organization analysis.
 
 CLM has a dependency on the embedding pipeline. Distance and similarity computations require vector representation of deposits. The vector_type parameter specifies the representation: embedding (existing embedding vectors, default — requires embedding_status: complete), tag (tag presence as binary feature vector), or custom (specified deposit fields as numeric dimensions). Deposits without complete embeddings surface a warning when selected for computation — the computation is not blocked, alternative vector types are available.
 

@@ -134,7 +134,7 @@ COSMOLOGY SCHEMA.md.
 
 | Table | Write authority | Defined in |
 | --- | --- | --- |
-| cosmology_findings | Cosmology page services (hco, cos, clm, nhm, rct) | COSMOLOGY SCHEMA.md |
+| cosmology_findings | Cosmology page services (hco, cos, clm, nhm, mir, rct) | COSMOLOGY SCHEMA.md |
 | rct_residuals | RCT service only | COSMOLOGY SCHEMA.md |
 
 ---
@@ -155,3 +155,4 @@ COSMOLOGY SCHEMA.md.
 | backend/services/cos.py | COS investigation surface | PLANNED |
 | backend/services/clm.py | CLM investigation surface | PLANNED |
 | backend/services/nhm.py | NHM investigation surface | PLANNED |
+| backend/services/mir.py | MIR investigation surface | PLANNED |

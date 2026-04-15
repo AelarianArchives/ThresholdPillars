@@ -2074,7 +2074,7 @@ TABLE: cosmology_findings
 Shared Cosmology investigation findings, discriminated by page_code.
 Full spec in COSMOLOGY SCHEMA.md.
 
-Write authority: Cosmology page services (hco, cos, clm, nhm, rct).
+Write authority: Cosmology page services (hco, cos, clm, nhm, mir, rct).
 
   finding_id           — serial, primary key
   page_code            — text, NOT NULL

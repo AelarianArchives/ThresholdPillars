@@ -22,7 +22,7 @@
   language without a formal mode switch
 * Page context assembly — reading current page identity (page_code,
   section_id), engine state summaries (THR, STR, INF, ECR, SNM, DTX,
-  SGR, PCV, VOI, HCO, COS, CLM, NHM pages), and active filter state
+  SGR, PCV, VOI, HCO, COS, CLM, NHM, MIR pages), and active filter state
   from the tagger store at query time.
   Injecting them into the prompt context as a live feed rebuilt per
   query. The assistant reads these sources; it does not own them
@@ -847,7 +847,7 @@ All design items fully specified in standalone specs:
   conversation history, provenance summaries). embedding_dirty
   connection named
 * **Cosmology bridge** — RESEARCH ASSISTANT COSMOLOGY BRIDGE.md
-  Page orientation map (HCO/COS/CLM/NHM/RCT), prior computation
+  Page orientation map (HCO/COS/CLM/NHM/MIR/RCT), prior computation
   check, plain language translation, ambiguous result behavior,
   honest uncertainty, pipeline awareness. 6 behavioral rules
 * **Research posture** — RESEARCH ASSISTANT RESEARCH POSTURE.md

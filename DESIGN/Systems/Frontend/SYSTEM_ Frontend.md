@@ -131,6 +131,7 @@ frontend/
 | CorrelationScatter | COS signature visualization — correlation scatter plot, LayerCake + D3 |
 | ClusterDendrogram | CLM signature visualization — hierarchical clustering dendrogram / distance heatmap, LayerCake + D3 |
 | EntropyComparisonBar | NHM signature visualization — three-bar comparison (observed, random, structured), LayerCake + D3 |
+| MirrorSymmetryDisplay | MIR signature visualization — bilateral structure mapping with explicit symmetry scoring, LayerCake + D3 |
 | NexusFeedbackIndicator | nexus_eligible status display on finding cards — visual state for not-eligible, eligible, routed-to-PCV |
 | ReferenceCard | External reference display — doi link, url link, summary, title, accessed date, page_codes badges |
 | DistributionCard | Reference distribution display — name, description, source, page_codes, data preview |
@@ -248,7 +249,7 @@ Three provenance icons: INT batch · Manual · Black Pearl promoted
 - **MTM:** no deposit cards — findings display component
 - **WSC:** no deposit cards — own entry display (Tier 4)
 - **Domain pages:** provenance icon prominent. Per-page layout in PAGE_LAYOUTS.md
-- **HCO, COS, CLM, NHM, RCT, ART:** base card, no variation
+- **HCO, COS, CLM, NHM, MIR, RCT, ART:** base card, no variation
 
 ### Media deposit card
 
@@ -374,7 +375,7 @@ Guard: sort overrides stored in UI store per page per session. Reset on session 
 | frontend/src/routes/+layout.svelte | Root layout — shared shell (minimal scaffold) | LIVE |
 | frontend/src/routes/+page.svelte | Root page — Home, soft landing (minimal scaffold) | LIVE |
 | frontend/src/lib/index.ts | Lib barrel export | LIVE |
-| frontend/src/lib/components/ | Shared components (Shell, NavigationSidebar, DepositCard, MediaDepositCard, CompositeId, TaggerPanel, DepositPanel, BlackPearlPanel, Observatory, ThreadTrace, ResonanceCanvas, DepositGenealogy, ARTISWorkbench, ARTISRegistryPanel, ARTISPagePanel, SciencePingIndicator, SciencePingFlow, ComputationSnapshotCard, MappingReviewCard, FindingCard, FindingsPanel, FindingInlineIndicator, ResidualPanel, ResidualCard, CouplingAnalysis, HarmonicSpectrum, CorrelationScatter, ClusterDendrogram, EntropyComparisonBar, NexusFeedbackIndicator, ReferenceCard, DistributionCard) | PLANNED |
+| frontend/src/lib/components/ | Shared components (Shell, NavigationSidebar, DepositCard, MediaDepositCard, CompositeId, TaggerPanel, DepositPanel, BlackPearlPanel, Observatory, ThreadTrace, ResonanceCanvas, DepositGenealogy, ARTISWorkbench, ARTISRegistryPanel, ARTISPagePanel, SciencePingIndicator, SciencePingFlow, ComputationSnapshotCard, MappingReviewCard, FindingCard, FindingsPanel, FindingInlineIndicator, ResidualPanel, ResidualCard, CouplingAnalysis, HarmonicSpectrum, CorrelationScatter, ClusterDendrogram, EntropyComparisonBar, MirrorSymmetryDisplay, NexusFeedbackIndicator, ReferenceCard, DistributionCard) | PLANNED |
 | frontend/src/lib/stores/ | Svelte stores (session, entries, tagger, ui, pearls) | PLANNED |
 | frontend/src/lib/api.ts | Fetch wrapper — single interface to FastAPI backend | PLANNED |
 | frontend/src/routes/[...] | 52 page routes — routing strategy TBD | PLANNED |

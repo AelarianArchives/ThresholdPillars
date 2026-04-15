@@ -3,7 +3,7 @@
 ## /DESIGN/Systems/ARTIS/ARTIS SCHEMA.md
 
 Mechanical spec — computation engine for the Cosmology group. Five PostgreSQL
-tables, twelve endpoint contracts, fifteen computation implementations,
+tables, twelve endpoint contracts, seventeen computation implementations,
 three PLANNED interfaces, three-layer science ping pipeline, computation
 snapshot architecture, external reference registry, reference distribution
 registry, mapping management, validation rules, failure modes.
@@ -77,7 +77,7 @@ computation from the snapshot and get the same number.
 | --- | --- | --- |
 | snapshot_id | auto | Primary key |
 | computation_type | string | Identifier from the computation library (e.g., `shannon_entropy`, `pearson_correlation`, `fft_decomposition`). Must match a registered computation in the library. |
-| caller_page_code | string | Which Cosmology page requested this computation. Values: `HCO`, `COS`, `CLM`, `NHM`, `RCT`, `ART` (workbench). |
+| caller_page_code | string | Which Cosmology page requested this computation. Values: `HCO`, `COS`, `CLM`, `NHM`, `MIR`, `RCT`, `ART` (workbench). |
 | deposit_ids | array of strings | Which deposits were involved in this computation. Minimum 1. COS submits 2+ for coupling analysis. |
 | inputs | jsonb | Exact input data passed to the computation function. Shape varies by computation_type. Must be sufficient to reproduce the result. |
 | parameters | jsonb | Configuration parameters for the computation (bin count, frequency range, distance metric, etc.). Distinct from inputs — parameters configure the method, inputs are the data. |
@@ -111,7 +111,7 @@ all investigation pages.
 | summary | string | Required. Sage's own words. Not the abstract. What THIS reference contributes to THIS investigation. Embeddable for semantic search across references. |
 | title | string / null | Display name. Optional. |
 | accessed | date / null | When Sage retrieved the reference. Optional. |
-| page_codes | array of strings | Which Cosmology pages use this reference. Values: `HCO`, `COS`, `CLM`, `NHM`, `RCT`. A reference can serve multiple pages. |
+| page_codes | array of strings | Which Cosmology pages use this reference. Values: `HCO`, `COS`, `CLM`, `NHM`, `MIR`, `RCT`. A reference can serve multiple pages. |
 | tag_ids | array of strings / null | Tags associated with this reference, for cross-referencing with science domain mappings. Optional. |
 | created_at | timestamp | Written once. Never updated. |
 | updated_at | timestamp | Updated when page_codes or tag_ids are modified. |
@@ -135,7 +135,7 @@ and the Cosmology pages that investigate them.
 | mapping_id | auto | Primary key |
 | tag_id | string | The tag that fires the mapping. References a tag in TAG VOCABULARY.md. |
 | domain | string | Scientific domain name (e.g., "coupled oscillator dynamics", "Fourier analysis", "information theory"). |
-| page_code | string | Which Cosmology page this mapping pings. Values: `HCO`, `COS`, `CLM`, `NHM`, `RCT`. |
+| page_code | string | Which Cosmology page this mapping pings. Values: `HCO`, `COS`, `CLM`, `NHM`, `MIR`, `RCT`. |
 | description | string | Why this tag maps to this domain. Makes the mapping analytically legible. Not optional — a mapping without reasoning is opaque. |
 | computation_hints | jsonb | Which computations to suggest when this mapping fires. Array of computation_type identifiers from the computation library. Closes the loop between Layer 1 and Layer 3. |
 | confidence | float | 1.0 = definitive ping, 0.5 = suggestion. Display surface weights accordingly. |
@@ -215,12 +215,14 @@ same registry.
 
 ## COMPUTATION LIBRARY
 
-Fifteen implementations. Three PLANNED interfaces.
+Seventeen implementations. Three PLANNED interfaces.
 
-Design plan listed 13 items. This schema expands to 15: scipy.spatial.distance
+Design plan listed 13 items. This schema expands to 17: scipy.spatial.distance
 split into distance_matrix (cdist, matrix operations) and cosine_similarity
 (single-pair comparison) — distinct input/output contracts. hierarchical_clustering
 added from CLM per-page computation notes (scipy.cluster.hierarchy.linkage).
+bilateral_symmetry_score and parity_analysis added as custom implementations
+for MIR (Chiral Mechanics).
 
 Every computation in this library is callable through POST /artis/compute.
 The computation_type identifier is the key. Each entry defines: what it
@@ -288,7 +290,7 @@ linear relationship.
 | Function | `scipy.stats.pearsonr(x, y)` |
 | Input | `{ x: number[], y: number[] }` |
 | Output | `{ correlation: float, p_value: float, sample_size: int }` |
-| Pages | COS (linear coupling strength) |
+| Pages | COS (linear coupling strength), MIR (bilateral correspondence) |
 
 ---
 
@@ -335,7 +337,7 @@ co-occurrence of two categorical variables is statistically significant.
 | Function | `scipy.stats.chi2_contingency(observed)` |
 | Input | `{ observed: number[][] }` — 2D contingency table |
 | Output | `{ chi2: float, p_value: float, dof: int, expected: number[][] }` |
-| Pages | HCO (harmonic co-occurrence), COS (coupling co-occurrence), CLM (spatial co-occurrence), NHM (neural-pattern co-occurrence), RCT (algorithm recurrence co-occurrence) |
+| Pages | HCO (harmonic co-occurrence), COS (coupling co-occurrence), CLM (spatial co-occurrence), NHM (neural-pattern co-occurrence), MIR (symmetry co-occurrence), RCT (algorithm recurrence co-occurrence) |
 
 ---
 
@@ -477,6 +479,49 @@ sizes — this proxy uses mutual information partitioning as an approximation.
 
 ---
 
+**bilateral_symmetry_score**
+
+Custom implementation. Measures bilateral symmetry in field pattern data —
+how closely the pattern mirrors itself across a defined axis.
+
+| Property | Value |
+| --- | --- |
+| Function | Custom (ARTIS computation service) |
+| Input | `{ pattern_data: number[], axis: string (default 'center'), scoring_method: string (default 'ratio') }` |
+| Output | `{ symmetry_score: float, axis_used: string, scoring_method: string, left_values: number[], right_values: number[], delta: number[], note: "document inputs, method, and scoring formula at first use" }` |
+| Pages | MIR (bilateral structure measurement) |
+
+axis specifies the axis of symmetry to evaluate against: 'center' (midpoint
+of the array), 'mean' (mean value as axis), or 'custom' (requires
+axis_position: int). scoring_method: 'ratio' (symmetric / total), 'residual'
+(mean absolute delta). The note field is always present. Inputs, method, and
+scoring formula must be documented explicitly at first use in each session —
+this is not optional. Custom implementations require session documentation
+because they lack scipy's established methodology record.
+
+---
+
+**parity_analysis**
+
+Custom implementation. Characterizes parity behavior in field pattern data —
+whether the pattern exhibits even parity (symmetric under inversion), odd
+parity (antisymmetric), or mixed/broken parity.
+
+| Property | Value |
+| --- | --- |
+| Function | Custom (ARTIS computation service) |
+| Input | `{ pattern_data: number[], inversion_type: string (default 'point') }` |
+| Output | `{ parity_classification: string, even_component: number[], odd_component: number[], asymmetry_index: float, parameter_values: {}, note: "document inputs, method, and scoring formula at first use" }` |
+| Pages | MIR (parity behavior characterization) |
+
+inversion_type: 'point' (inversion through origin), 'axis' (reflection
+across axis). parity_classification values: 'even', 'odd', 'mixed', 'broken'.
+asymmetry_index: 0.0 = perfect parity, 1.0 = maximum asymmetry. The note
+field is always present. Same session documentation requirement as
+bilateral_symmetry_score.
+
+---
+
 ### PLANNED interfaces (not yet implemented)
 
 These interfaces define the contract. Implementation is blocked on prerequisite
@@ -601,7 +646,7 @@ Return candidates as a structured list. For each candidate:
 - framework: the scientific framework name
 - reasoning: why this pattern corresponds to this framework
 - confidence: your assessment (0.0 to 1.0)
-- suggested_page_code: which Cosmology page (HCO, COS, CLM, NHM, RCT)
+- suggested_page_code: which Cosmology page (HCO, COS, CLM, NHM, MIR, RCT)
 
 Do not conclude. Propose. The researcher decides which correspondences are
 genuine.
@@ -1142,7 +1187,7 @@ itself — each cascade file is updated as its own work unit.
 | --- | --- | --- |
 | backend/routes/artis.py | FastAPI ARTIS endpoints — 12 routes under /artis/ namespace | PLANNED |
 | backend/services/artis.py | ARTIS service — mapping management, reference registry, snapshot retrieval, science ping pipeline orchestration, Layer 2 Claude calls | PLANNED |
-| backend/services/computation.py | Computation library — 15 implementations, input validation, snapshot creation, computation execution | PLANNED |
+| backend/services/computation.py | Computation library — 17 implementations, input validation, snapshot creation, computation execution | PLANNED |
 | frontend/src/lib/components/ARTISWorkbench.svelte | Zone A computation workbench | PLANNED |
 | frontend/src/lib/components/ARTISRegistryPanel.svelte | Zone B registry and health surface | PLANNED |
 | frontend/src/lib/components/ARTISPagePanel.svelte | Right-side panel for Cosmology pages | PLANNED |

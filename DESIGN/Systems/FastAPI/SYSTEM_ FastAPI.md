@@ -182,6 +182,7 @@ Guard: vector and metadata are written in a single INSERT within one transaction
 | backend/services/cos.py | COS investigation surface — coupling analysis, multi-deposit findings | PLANNED |
 | backend/services/clm.py | CLM investigation surface — geometric analysis, embedding dependency check | PLANNED |
 | backend/services/nhm.py | NHM investigation surface — information-theoretic analysis, reference distribution queries | PLANNED |
+| backend/services/mir.py | MIR investigation surface — bilateral symmetry analysis, parity characterization, ARTIS computation requests | PLANNED |
 | backend/services/claude.py | Claude API client wrapper — agent identity registry (8 agents), shared model constant, call_claude() with metadata tracking | LIVE |
 | backend/services/embedding.py | Ollama embedding integration | PLANNED |
 | backend/services/rag.py | Retrieval-augmented generation pipeline — query assembly, hybrid search, cross-encoder re-rank, context packaging | PLANNED |

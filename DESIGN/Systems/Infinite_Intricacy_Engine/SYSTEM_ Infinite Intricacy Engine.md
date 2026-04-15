@@ -45,7 +45,7 @@
   deposit weight constants, signal classification, null observation
   flow, snapshot writes, and stale flag mechanics. INF implements
   its lens within that contract
-* Cosmology investigation pages — Cosmology owns HCO, COS, CLM, NHM.
+* Cosmology investigation pages — Cosmology owns HCO, COS, CLM, NHM, MIR, RCT.
   INF hands off data via boundary contract; Cosmology owns
   interpretation and statistical testing
 * Database table definitions — owned by INTEGRATION DB SCHEMA.md
@@ -83,7 +83,7 @@ Reads engine_snapshots — current, previous, delta. INF layer presences,
 intersections, and emergence timeline consumed at synthesis time.
 
 **Cosmology (Tier 5 investigation pages)**
-INF → Cosmology boundary contract available for HCO, COS, CLM, NHM
+INF → Cosmology boundary contract available for HCO, COS, CLM, NHM, MIR, RCT
 investigation. Cosmology reads at its own cadence.
 
 **Liber Novus (LNV · 47)**

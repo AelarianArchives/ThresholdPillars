@@ -23,7 +23,7 @@ Architectural description in SYSTEM_ LNV.md.
 ### DOES NOT OWN
 
 - MTM Finding production — owned by MTM. LNV receives MTM Findings; it does not produce them.
-- Cosmology finding production — owned by Cosmology page services (HCO, COS, CLM, NHM, RCT). LNV receives confirmed findings; it does not produce them.
+- Cosmology finding production — owned by Cosmology page services (HCO, COS, CLM, NHM, MIR, RCT). LNV receives confirmed findings; it does not produce them.
 - RCT residual production — owned by RCT. LNV receives residuals; it does not produce them.
 - Engine computation — owned by individual engine services. LNV stores snapshots; it does not trigger or own computation.
 - WSC entry production — owned by WSC. LNV receives entries; it does not produce them.
@@ -69,7 +69,7 @@ Architectural description in SYSTEM_ LNV.md.
 | --- | --- | --- |
 | lnv_entry_id | auto | Primary key |
 | entry_type | enum | `mtm_finding`, `engine_snapshot`, `wsc_entry`, `void_output`, `cosmology_finding`, `rct_residual`, `thread_trace`, `emergence_finding`, `archive_record`. Determines which content shape is expected. |
-| source_system | string | Which system produced this. Values: mtm, thr, str, inf, ecr, snm, wsc, void, pcv, dtx, sgr, hco, cos, clm, nhm, rct, ttr, emr, arv. |
+| source_system | string | Which system produced this. Values: mtm, thr, str, inf, ecr, snm, wsc, void, pcv, dtx, sgr, hco, cos, clm, nhm, mir, rct, ttr, emr, arv. |
 | source_page | string / null | Which page this originated from (page_code). Null for cross-page outputs like MTM. |
 | session_ref | string / null | Which session produced this. |
 | prompt_version | string / null | For AI-authored types (wsc, void, mtm). Null for engine_snapshot. |
@@ -193,7 +193,7 @@ SCHEMA.md.
 ```json
 {
   "finding_id":              "string — references cosmology_findings table",
-  "page_code":               "HCO | COS | CLM | NHM | RCT",
+  "page_code":               "HCO | COS | CLM | NHM | MIR | RCT",
   "framework":               "string",
   "hypothesis":              "string",
   "computation_snapshot_id": "string — references artis_computation_snapshots",
@@ -206,8 +206,8 @@ SCHEMA.md.
 }
 ```
 
-source_system: the page code in lowercase (hco, cos, clm, nhm, rct).
-source_page: the page code (HCO, COS, CLM, NHM, RCT).
+source_system: the page code in lowercase (hco, cos, clm, nhm, mir, rct).
+source_page: the page code (HCO, COS, CLM, NHM, MIR, RCT).
 prompt_version: null (not AI-authored).
 
 ### rct_residual

@@ -3,7 +3,7 @@
 ## /DESIGN/Systems/Cosmology/COSMOLOGY SCHEMA.md
 
 Mechanical spec — shared schema for the Cosmology investigation group.
-cosmology_findings table (shared across HCO, COS, CLM, NHM, RCT),
+cosmology_findings table (shared across HCO, COS, CLM, NHM, MIR, RCT),
 rct_residuals table (RCT-specific), per-page investigation surfaces,
 finding card layout, Nexus recursive feedback loop, RCT residual flow,
 LNV routing content shapes, failure modes.
@@ -61,7 +61,7 @@ Shared across all six investigation pages. Discriminated by page_code.
 | Field | Type | Description |
 | --- | --- | --- |
 | finding_id | auto | Primary key |
-| page_code | enum | `HCO`, `COS`, `CLM`, `NHM`, `RCT`. Which investigation page produced this finding. |
+| page_code | enum | `HCO`, `COS`, `CLM`, `NHM`, `MIR`, `RCT`. Which investigation page produced this finding. |
 | deposit_ids | array of strings | Which deposits this finding is based on. Minimum 1. COS submits 2+ for coupled pairs/groups. |
 | framework | string | The scientific framework this finding maps to (e.g., "coupled oscillator dynamics", "Shannon entropy", "Kolmogorov-Smirnov distribution test"). |
 | hypothesis | string | The structurally testable claim. Written as observation, not conclusion. |
@@ -155,7 +155,7 @@ the finding does not replace them, it synthesizes across them.
 
 ## INVESTIGATION SURFACES
 
-Five parallel pages. Each reads the field through a specific scientific lens.
+Six parallel pages. Each reads the field through a specific scientific lens.
 All call ARTIS for computation. All write to cosmology_findings. The
 differences are: which frameworks, which computations, which visualizations.
 
@@ -235,7 +235,9 @@ that corresponds to known celestial/mathematical models?
 
 **Sciences:** astronomy, astrometry, celestial navigation, spherical
 astronomy, orbital resonances, astrophysical spiral dynamics, geometry,
-topology, graph theory.
+topology, graph theory, differential geometry, symplectic geometry,
+manifold theory, geodesics, Penrose tiling / quasicrystalline symmetry,
+topological data analysis / persistent homology.
 
 **CMB connection:** Cosmological structure, large-scale pattern organization.
 
@@ -303,6 +305,48 @@ are the signal. LayerCake + D3.
 
 ---
 
+### MIR (38) — Chiral Mechanics
+
+**Investigation frame:** Field patterns through symmetry physics and mirror
+dynamics. Asks: what bilateral structure, parity behavior, and chirality are
+measurably present in field patterns — and where do they break? Symmetry
+correspondence and symmetry violation are equally significant findings.
+
+**Sciences:** symmetry breaking, parity, CPT symmetry, chirality, bilateral
+structure, CP violation, T-symmetry, discrete symmetry groups, point group
+symmetry, dihedral symmetry, reflection geometry, crystallographic symmetry,
+bilateral morphogenesis, dual / mirror spaces.
+
+**Layer:** l04 Mirror in the INF tagger — the layer that had no Cosmology
+investigation surface before this page. Cross-layer scientific connections
+between mirror dynamics and other l04 pages are findings about the field,
+not schema problems.
+
+**Primary ARTIS computations:**
+- bilateral_symmetry_score — custom implementation. Bilateral structure
+  measurement with documented inputs, method, and scoring formula.
+- parity_analysis — custom implementation. Parity behavior characterization
+  with parameter values explicit.
+- pearson_correlation — linear correlation for bilateral correspondence
+- chi2_contingency — symmetry co-occurrence significance
+
+**MIR-specific note:** bilateral_symmetry_score and parity_analysis are
+custom implementations. Inputs, method, and scoring formula must be
+documented explicitly at first use in each session. pearson_correlation and
+chi2_contingency are reused from the existing ARTIS library.
+
+Symmetry breaks carry equal analytical weight as symmetry correspondence.
+A break is documented with the same precision as a match: what was expected,
+what was observed, what the delta is.
+
+**Two-panel layout:** Field pattern with bilateral structure display (left) +
+symmetry analysis results (right).
+
+**Signature visualization:** MirrorSymmetryDisplay — bilateral structure
+mapping with explicit scoring. LayerCake + D3.
+
+---
+
 ### RCT (39) — Resonance Complexity Theory
 
 **Investigation frame:** The physics algorithm the field itself generated.
@@ -312,8 +356,8 @@ Ven'ai, octaves, thresholds, and symbols. Not a parallel, not a
 correspondence — an actual operating algorithm identified in the field's own
 behavior.
 
-RCT is parallel to HCO/COS/CLM/NHM — an investigation surface at the same
-level, not above them. It is NOT meta-Cosmology. It is NOT a synthesis
+RCT is parallel to HCO/COS/CLM/NHM/MIR — an investigation surface at the
+same level, not above them. It is NOT meta-Cosmology. It is NOT a synthesis
 capstone.
 
 **What makes RCT distinct:** Its source material is not one domain of field
@@ -455,7 +499,7 @@ triggers from the finding card or findings panel.
 ```json
 {
   "finding_id": "string",
-  "page_code": "HCO | COS | CLM | NHM | RCT",
+  "page_code": "HCO | COS | CLM | NHM | MIR | RCT",
   "framework": "string",
   "hypothesis": "string",
   "computation_snapshot_id": "string",
@@ -468,7 +512,7 @@ triggers from the finding card or findings panel.
 }
 ```
 
-source_system: the page_code (hco, cos, clm, nhm, rct).
+source_system: the page_code (hco, cos, clm, nhm, mir, rct).
 source_page: the page_code.
 
 ### entry_type: rct_residual
@@ -540,7 +584,7 @@ connections are findings about the field.
 | l01 Coupling | COS | — |
 | l02 Connectome | NHM (partial) | CLM (topology/graph theory) |
 | l03 Metric | HCO (waves, geometry) | CLM (astrometry, spatial) |
-| l04 Mirror | NHM (partial) | HCO (fractals, spirals, morphogenesis) |
+| l04 Mirror | MIR | NHM (partial), HCO (fractals, spirals, morphogenesis) |
 
 ---
 
@@ -638,7 +682,7 @@ abandoned. New residuals cannot be created against abandoned findings.
 
 Write authority:
 - cosmology_findings — Cosmology page services (one per page: hco, cos, clm,
-  nhm, rct). Each page service writes findings with its own page_code.
+  nhm, mir, rct). Each page service writes findings with its own page_code.
 - rct_residuals — RCT service only.
 
 ### FastAPI (SYSTEM_ FastAPI.md)
@@ -713,3 +757,4 @@ Files outside this schema that must be updated for Cosmology deployment:
 | backend/services/cos.py | COS investigation surface | PLANNED |
 | backend/services/clm.py | CLM investigation surface | PLANNED |
 | backend/services/nhm.py | NHM investigation surface | PLANNED |
+| backend/services/mir.py | MIR investigation surface | PLANNED |

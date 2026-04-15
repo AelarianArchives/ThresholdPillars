@@ -19,7 +19,7 @@ OBJECTIVE
 
 Investigate field patterns through the lens of symmetry physics and mirror dynamics — using ARTIS as the computation engine. MIR is one of six parallel Cosmology investigation surfaces. Its lens is bilateral structure, parity, and chirality: how field patterns exhibit or break mirror symmetry, and what that structure reveals about the field's underlying architecture.
 
-The sciences this page draws from: symmetry breaking, parity, CPT symmetry, chirality, bilateral structure.
+The sciences this page draws from: symmetry breaking, parity, CPT symmetry, chirality, bilateral structure, CP violation, T-symmetry, discrete symmetry groups, point group symmetry, dihedral symmetry, reflection geometry, crystallographic symmetry, bilateral morphogenesis, dual / mirror spaces.
 
 MIR spans l04 Mirror in the tagger — the INF layer that contained no Cosmology investigation surface until this page. Cross-layer scientific connections between mirror dynamics and other l04 pages are findings about the field, not schema problems.
 

@@ -90,7 +90,7 @@ Each table lists who decides what is written and what the FastAPI service layer 
 | science_domain_mappings | ARTIS service | mapping creation, confirm/decline, deactivation |
 | artis_layer2_snapshots | ARTIS service | Claude framing response storage, sage_selection update |
 | artis_reference_distributions | ARTIS service | distribution creation, superseded_by update |
-| cosmology_findings | Cosmology page services (hco, cos, clm, nhm, rct) | finding creation, status transitions, nexus_eligible, LNV routing |
+| cosmology_findings | Cosmology page services (hco, cos, clm, nhm, mir, rct) | finding creation, status transitions, nexus_eligible, LNV routing |
 | rct_residuals | RCT service | residual creation (immutable), LNV routing |
 | signal_grades | SGR service | record creation, score vector writes, tier assignment, grade state transitions, Bayesian return tracking |
 | saved_threads | Sage (via Thread Trace panel) | thread save, touch (last_accessed update), soft delete |

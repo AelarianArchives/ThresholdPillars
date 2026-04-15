@@ -41,7 +41,7 @@ group's computation engine. Full mechanical spec in ARTIS SCHEMA.md.
 ## DOES NOT OWN
 
 - **Cosmology findings** — owned by their respective investigation pages
-  (HCO, COS, CLM, NHM, RCT). ARTIS provides the computation that informs
+  (HCO, COS, CLM, NHM, MIR, RCT). ARTIS provides the computation that informs
   a finding; it does not produce or store the finding. The cosmology_findings
   table is defined in COSMOLOGY SCHEMA.md, not ARTIS SCHEMA.md.
 

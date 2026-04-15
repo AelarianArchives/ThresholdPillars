@@ -18,7 +18,7 @@
 ## WHAT THIS SYSTEM DOES NOT OWN
 
 * MTM Finding production — owned by MTM. LNV receives Findings after DNR routes them. LNV does not produce, modify, or interpret Findings.
-* Cosmology finding production — owned by Cosmology page services (HCO, COS, CLM, NHM, RCT). LNV receives confirmed findings; it does not produce them.
+* Cosmology finding production — owned by Cosmology page services (HCO, COS, CLM, NHM, MIR, RCT). LNV receives confirmed findings; it does not produce them.
 * RCT residual production — owned by RCT. LNV receives residuals; it does not produce them.
 * Engine computation — owned by individual engine services (Tier 3). LNV stores snapshots of computed visualizations; it does not trigger or own computation.
 * WSC entry production — owned by WSC. LNV receives entries after WSC write path completes. LNV does not produce or modify WSC entries.
