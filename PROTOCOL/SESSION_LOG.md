@@ -18292,3 +18292,49 @@ COMPLETED:
 UNCOMMITTED: YES
 NEXT_ACTION: Commit and push
 ---
+---
+TIMESTAMP: 2026-04-16 00:00
+SESSION: 61
+TYPE: RESUME
+FILES_MODIFIED:
+  - CLAUDE.md — COMPLETE (strikethrough permanence rule confirmed at line 433)
+  - PROTOCOL/SESSION_LOG.md — IN_PROGRESS
+COMPLETED:
+  - Session 61 WORK_UNIT changes confirmed committed: d55acb2
+    "rule: strikethrough in design-build-spec.md is permanent — session violation to touch"
+  - UNCOMMITTED: YES in prior WORK_UNIT entry was pre-commit state — now clean
+  - Git state: clean, up to date with origin/main (last auto-backup 5e2c905)
+  - CLAUDE.md strikethrough rule confirmed present at KEY INVARIANTS (line 433)
+  - No file discrepancy between log record and disk state
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Tier 6 build spec write (Research Assistant + Audio)
+  - ROT 006 (SYSTEM_ content review) — Sage directs removal from ROT_OPEN as session flag
+UNCOMMITTED: NO
+NEXT_ACTION: Write TYPE: OPEN for session 62; remove ROT_OPEN item per Sage direction
+---
+---
+TIMESTAMP: 2026-04-16 00:00
+SESSION: 62
+TYPE: OPEN
+FILES_MODIFIED: none yet
+COMPLETED: none yet
+IN_PROGRESS: none
+NOT_STARTED:
+  - Tier 6 build spec write (Research Assistant + Audio)
+RESUMING_FROM: Session 61 TYPE: WORK_UNIT — interrupted close. Changes confirmed committed
+  (d55acb2). Resume entry written. Clean git state confirmed.
+CONFIRMED_STATE:
+  - Mandatory reads: CLAUDE.md read, RECURSION_REPAIR.md read, ENTROPY_EXCAVATION.md read,
+    ROT_REGISTRY.md read, ROT_OPEN.md read
+  - ROT_OPEN.md: one item (ROT 006 — SYSTEM_ content review). Sage directs removal —
+    session flag, no longer applicable. Being cleared this session open.
+  - Page code scan: SECTION MAP not yet verified this session — no page codes referenced
+    in session work yet. Will verify against SECTION MAP before any page code work.
+  - DESIGN/Systems/ and DESIGN/Domains/: no changes since session 60 close (session 61
+    only modified CLAUDE.md).
+  - Last commit: 5e2c905 (auto-backup). Git state: clean.
+NEXT_ACTION: Clear ROT_OPEN.md per Sage direction; await session work direction
+---
+---

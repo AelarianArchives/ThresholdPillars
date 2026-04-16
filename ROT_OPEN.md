@@ -28,5 +28,5 @@ When rot is fixed:
 
 ## OPEN ITEMS
 
-- **SYSTEMIC: Entropy scan does not equal content approval** (Registry 006) — 2026-04-09 session 40. Verified status means rot-pattern-clean, not Sage-approved content. All SYSTEM_ overview files on VERIFIED list need content-level review before SOT.
+
 
