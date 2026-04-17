@@ -233,17 +233,18 @@ No file is added to this list without Sage's explicit confirmation.
     Verified: 2026-04-07
     Scope: targeted fix — box-drawing header replaced. VOI references
     are correct (Void engine page exists, mid-build when rot interrupted).
-    VOI missing from SECTION MAP.md — SECTION MAP gap, not Emergence error.
     Gate: SPEC → BUILD → AUDIT → PASS
-    Entropy scan: 1 finding (VOI phantom — scanner false positive,
-    VOI is real but not yet in SECTION MAP)
+    Entropy scan: 0 real findings. Prior note "VOI phantom" was a
+    scanner limitation at time of writing — VOI is page 52 (Void),
+    standalone section, confirmed in SECTION MAP.md. (ROT 016, session 63)
 
   SYSTEM_ Emergence.md
     Verified: 2026-04-07
     Scope: targeted fix — "seven detectors" → "eight detectors".
     VOI reference correct (same as EMERGENCE SCHEMA).
     Gate: SPEC → BUILD → AUDIT → PASS
-    Entropy scan: 1 finding (VOI phantom — same scanner limitation)
+    Entropy scan: 0 real findings. Prior note "VOI phantom" was same
+    scanner limitation — resolved. (ROT 016, session 63)
 
   SWARM ARCHITECTURE SCHEMA.md
     Verified: 2026-04-07
@@ -529,8 +530,23 @@ WRONG FRAMEWORK NAME [#2]
   behavior at relational thresholds.
 
 PHANTOM PAGE CODES [#12, #14]
-  Page codes referenced that do not exist in SECTION MAP.md. Known
-  phantom: VOI (appears in Emergence files, not in SECTION MAP).
+  Page codes referenced that do not exist in SECTION MAP.md.
+  No current known phantoms. VOI was listed here previously but is
+  confirmed as page 52 (Void), standalone section in SECTION MAP.md.
+  (ROT 016, session 63 — scanner fixed session 38)
+
+UNSOURCED PROTECTION CLAUSES [#8, #14]
+  Any rule of the form "do not flag X," "X is correct," or "never
+  correct X" that cannot point to a named canonical source (a specific
+  file and section). Protection clauses without canonical backing are a
+  rot persistence vector — they cause errors to survive correction by
+  being mistaken for intentional invariants.
+  Rule defined in: CLAUDE.md BEHAVIORAL RULES.
+  Prior instance: morphogy — Claude spelling error encoded as a
+  protected invariant in CLAUDE.md KEY INVARIANTS for one month.
+  Resolved ROT 015, session 63.
+  Search: grep for "never flag\|do not flag\|is correct\|never correct"
+  in CLAUDE.md and any protocol docs. Verify each has a canonical source.
 
 VERSION CONTAMINATION [#15]
   Any version number other than V1. Everything in this rebuild is V1.

@@ -184,6 +184,17 @@ They are not code-writing rules — they apply at all times.
   If a behavior was not specified, stop and ask. Reasonable-seeming
   interpolation is not authorization.
 
+- **Protection clauses require a named canonical source.**
+  Any rule of the form "do not flag X," "X is correct," or "never
+  correct X" — whether found in this file or any document Claude reads
+  as authoritative — must be traceable to a specific canonical source
+  (a file name and section). If a protection clause cannot point to a
+  canonical source, it is flagged for review before it is obeyed.
+  Protection clauses without canonical backing are a known vector for
+  rot contamination to persist across sessions. (See ROT 015 — morphogy
+  was a Claude spelling error encoded as a protected invariant with no
+  canonical source. It survived for a month.)
+
 ---
 
 ## CODE CONTRACT RULES
@@ -445,7 +456,6 @@ Full planned structure in .claude/plans/infrastructure-build-plan.md.
   populated. When this fires, name it in the UI
 - Split deposit targets confirm sequentially, one at a time. Never
   simultaneously
-- `morphogy` is the correct schema ID for Ven'ai Morphology. Never flag it
 - Memory Vault is a section name. Not infrastructure
 - SOT wins all conflicts. Always. If something feels canonical but isn't in
   SOT, flag it before building on it

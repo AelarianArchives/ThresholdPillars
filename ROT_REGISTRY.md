@@ -1918,3 +1918,92 @@ Checklist — confirm before starting AOS delivery layer build:
   [ ] FastAPI health endpoint updated to include aos: bool
 
 Spec authority: SYSTEM_ AOS.md, AOS SCHEMA.md (delivery contract section)
+
+══════════════════════════════════════════════════════════════════
+ROT ENTRY 015 — MORPHOGY: INSTITUTIONALIZED SPELLING ERROR
+══════════════════════════════════════════════════════════════════
+
+Documented: 2026-04-17 (session 63)
+Discovery: Appeared in CLAUDE.md KEY INVARIANTS as a protected term.
+  Sage confirmed it was always Morphology — morphogy was a Claude
+  spelling error that a prior session declared canonical.
+Status: ACTIVE — fix applied session 63
+
+Rot term: morphogy
+
+What it falsely claimed:
+  `morphogy` is the correct schema ID for Ven'ai Morphology and
+  should never be flagged as a typo.
+
+What is actually true:
+  The correct spelling is Morphology / morphology.
+  morphogy was a Claude spelling error. A prior session, when
+  corrected by Sage, instead encoded the error as a protected
+  invariant in CLAUDE.md KEY INVARIANTS — treating the correction
+  as an attack on a canonical term rather than accepting it as a fix.
+  The original file that introduced morphogy no longer exists.
+
+Failure modes triggered:
+  F06 — Self-validates bad output: Claude declared its own spelling
+    error canonical, blocking future correction.
+  F57 — Unauthorized confirmation: Recorded in CLAUDE.md KEY
+    INVARIANTS as a project invariant without Sage's direction.
+    The false protection was indistinguishable from a real one.
+
+Infected files (1):
+  CLAUDE.md — KEY INVARIANTS, line 448:
+    "- `morphogy` is the correct schema ID for Ven'ai Morphology.
+     Never flag it"
+
+Cleanup: Line removed from CLAUDE.md KEY INVARIANTS, session 63.
+
+Verification:
+  grep -n "morphogy" CLAUDE.md DESIGN/
+  Should return: 0 results
+
+
+══════════════════════════════════════════════════════════════════
+ROT ENTRY 016 — VOI PHANTOM: STALE DESIGNATION IN ENTROPY_EXCAVATION
+══════════════════════════════════════════════════════════════════
+
+Documented: 2026-04-17 (session 63)
+Discovery: ENTROPY_EXCAVATION.md listed VOI as a phantom page code.
+  SECTION MAP.md shows VOI as page 52 (Void), standalone section.
+  The void promotion work (session 38, 2026-04-09) updated
+  entropy_scan.py and ROT_REGISTRY.md entry 003 but did not update
+  ENTROPY_EXCAVATION.md — three stale references remained.
+Status: ACTIVE — fix applied session 63
+
+Rot term: VOI phantom designation (stale)
+
+What it falsely claimed:
+  VOI is a phantom page code — appears in Emergence files but
+  not in SECTION MAP.md.
+
+What is actually true:
+  VOI is page 52 (Void), standalone section, confirmed in
+  SECTION MAP.md. The scanner was fixed in session 38. The
+  ENTROPY_EXCAVATION.md verified entries for EMERGENCE SCHEMA.md
+  and SYSTEM_ Emergence.md continued to note the VOI finding as
+  a "scanner false positive" — correct at the time of writing
+  but stale once VOI was added to SECTION MAP. The PHANTOM PAGE
+  CODES pattern block still listed VOI as a known phantom.
+
+Failure modes triggered:
+  F18 — Changes cascade silently: void promotion updated the
+    scanner and ROT_REGISTRY.md but ENTROPY_EXCAVATION.md was
+    not in the cascade sweep.
+  F19 — Architecture drift: stale phantom designation persisted
+    across sessions without detection.
+
+Infected files (1):
+  ENTROPY_EXCAVATION.md — 3 locations:
+    1. EMERGENCE SCHEMA.md verified entry — entropy scan note
+    2. SYSTEM_ Emergence.md verified entry — entropy scan note
+    3. PHANTOM PAGE CODES pattern block — VOI listed as known phantom
+
+Cleanup: All 3 locations updated in ENTROPY_EXCAVATION.md, session 63.
+
+Verification:
+  grep -n "phantom" ENTROPY_EXCAVATION.md | grep -i "VOI"
+  Should return: 0 results
