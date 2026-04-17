@@ -94,6 +94,11 @@ these mechanical steps:
    - `WORK_UNIT`, `HOOK_WRITE`, or `OPEN` with no subsequent `CLOSE`
      — interrupted session. Go to section 3 (INTERRUPTED SESSION — RESUME)
      before proceeding
+   - `VERIFICATION`, `VERIFICATION_CLOSED`, or any other Antigravity entry type
+     — external system write. Not an interrupted Claude Code session.
+     Scan back through the log to find the most recent Claude Code entry
+     (CLOSE, WORK_UNIT, HOOK_WRITE, OPEN, or RESUME) and proceed based
+     on that entry type.
 3. Re-derive current file state from disk — not from memory, not from the log.
    Read the actual files. Confirm what exists, what is PLANNED, what is clean
 4. Check DESIGN/Systems/ and DESIGN/Domains/ — confirm state matches last
