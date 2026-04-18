@@ -11,6 +11,12 @@ on:
   pull_request:
     branches: [main]
 
+# Least-privilege token permissions (CWE-275).
+# All jobs in this workflow are read-only against the repo.
+# Lighthouse CI posts check-runs via LHCI_GITHUB_APP_TOKEN, not GITHUB_TOKEN.
+permissions:
+  contents: read
+
 jobs:
   # ═══════════════════════════════════════════════════════════════
   # BUILD AND TEST (frontend)
