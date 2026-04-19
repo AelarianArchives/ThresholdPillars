@@ -235,8 +235,7 @@ VISUALIZE (Step 3)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 All STR visualizations are SVG instruments rendered via LayerCake
-+ D3 utilities. Rendering category: SVG instrument (see ENGINE
-COMPUTATION SCHEMA.md VISUALIZATION ARCHITECTURE).
++ D3 utilities. Rendering category: SVG instrument (see ENGINE COMPUTATION SCHEMA.md VISUALIZATION ARCHITECTURE).
 
 All visualizations render from computed results, never from raw
 deposit data.

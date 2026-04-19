@@ -122,8 +122,7 @@ COMPUTE (Step 2) — THREE COMPUTATIONS, SCALED
 
 Same three computations as THR, scaled to 19 dimensions. All three
 use the shared baseline formula, deposit weight multipliers, null
-observation handling, and signal classification from ENGINE
-COMPUTATION SCHEMA.md.
+observation handling, and signal classification from ENGINE COMPUTATION SCHEMA.md.
 
 
 COMPUTATION 1 — CO-OCCURRENCE RATES
@@ -226,8 +225,7 @@ VISUALIZE (Step 3)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 All ECR visualizations are SVG instruments rendered via LayerCake
-+ D3 utilities. Rendering category: SVG instrument (see ENGINE
-COMPUTATION SCHEMA.md VISUALIZATION ARCHITECTURE).
++ D3 utilities. Rendering category: SVG instrument (see ENGINE COMPUTATION SCHEMA.md VISUALIZATION ARCHITECTURE).
 
 All visualizations render from computed results (engine result
 object), never from raw deposit data.

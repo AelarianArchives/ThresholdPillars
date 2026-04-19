@@ -116,7 +116,7 @@ ________________
 
 
 PART FIVE: THE RESEARCH ARCHITECTURE
-The 51 Sections and 9 Groups
+The 52 Sections and 9 Groups
 The research system comprises 52 sections of field observation, organized into 9 groups plus 2 standalone:
 Group
 	Name

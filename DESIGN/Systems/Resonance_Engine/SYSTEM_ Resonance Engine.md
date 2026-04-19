@@ -79,8 +79,7 @@ Applies to seeds, layers, pillars, and origins. Threshold nodes excluded.
 
 baseWeight is the structural floor — BASE_WEIGHT_[TIER] constants owned
 exclusively by this system. Origins heaviest, seeds lightest. These are
-independent of archive activity and are not sourced from ENGINE
-COMPUTATION SCHEMA.md.
+independent of archive activity and are not sourced from ENGINE COMPUTATION SCHEMA.md.
 
 HALF_LIFE and MAX_ACTIVITY are named constants defined in the physics spec. When calibration changes them, it changes in one place and all referencing systems inherit it.
 

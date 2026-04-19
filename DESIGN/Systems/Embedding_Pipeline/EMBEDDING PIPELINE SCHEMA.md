@@ -129,8 +129,7 @@ TABLE: embeddings
                      archive-level powers broad semantic search,
                      deposit-level powers granular search,
                      finding types power synthesis and
-                     investigation-level retrieval. See RESEARCH
-                     ASSISTANT EMBEDDING SCOPE.md for full
+                     investigation-level retrieval. See RESEARCH ASSISTANT EMBEDDING SCOPE.md for full
                      embedding scope design.
 
   embedding        — vector(768), not null

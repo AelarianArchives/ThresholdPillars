@@ -1442,8 +1442,7 @@ TABLE: visualization_snapshots
 
 Captures of engine visualization state. Two triggers: (1) auto on
 significant signal delta (engine_base.py); (2) Sage-triggered on
-demand. Routes to LNV (48) with optional note. Full spec in ENGINE
-COMPUTATION SCHEMA.md.
+demand. Routes to LNV (48) with optional note. Full spec in ENGINE COMPUTATION SCHEMA.md.
 
 Write authority: engine_base.py (auto-captures) and frontend via
 FastAPI endpoint (Sage-triggered captures). lnv_routed updated by
@@ -1619,8 +1618,7 @@ TABLE: inf_layer_bridge
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Bridge between TAG VOCABULARY routing layers (l01-l04) and INF
-domain layers. Many-to-many. Full spec in INFINITE INTRICACY
-ENGINE SCHEMA.md.
+domain layers. Many-to-many. Full spec in INFINITE INTRICACY ENGINE SCHEMA.md.
 
 Write authority: application config (seed data at startup).
 Updated when new domains or layer mappings are added.

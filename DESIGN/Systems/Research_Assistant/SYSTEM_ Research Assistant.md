@@ -528,7 +528,7 @@ research action — the assistant converting absence into a deposit
 opportunity. That behavior makes it a research partner, not a chatbot.
 
 Confidence determination mechanics (thresholds, distance scoring) belong
-in RESEARCH ASSISTANT SCHEMA.md.
+in RESEARCH ASSISTANT ARCHIVE ACCESS.md.
 
 ---
 

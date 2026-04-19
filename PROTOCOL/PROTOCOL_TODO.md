@@ -49,12 +49,6 @@ any code writing begins. These are not optional.
       the domain vocab scan on legitimate commits. Remove it.
       Do this alongside domain term list finalization (Section 3).
 
-- [!] Write SYSTEM_ doc and SCHEMA for schema.js — BLOCKED: pending SOT
-      SYSTEM_ Schema.md and the schema.js SCHEMA are written when schema.js
-      is built. schema.js is blocked on SOT. SOT is blocked on DOCS completion.
-      These documents are not a pre-SOT action — they are a build phase step.
-      This item was incorrectly listed as a Section 0 safeguard gap. Correct
-      placement: Section 5, build prerequisites, after SOT is verified.
 
 - [~] Section 4 stress tests — run all 6 manual protocol scenarios
       Section 4 tests the protocol machinery itself. No code required.

@@ -76,6 +76,7 @@ CANONICAL_PAGE_CODES = {
     "LAR", "VRT", "CAE", "SEE", "SAC", "RIT", "BRT", "MLY", "GLY", "GEN",
     "DIV", "REC", "CNV", "HCO", "COS", "CLM", "NHM", "RCT", "ART", "MVM",
     "ANC", "LQL", "ALE", "MMT", "ARV", "WSC", "LNV", "DTX", "SGR", "PCV", "VOI",
+    "MIR",
 }
 
 # Phase codes (SECTION MAP.md)
@@ -104,7 +105,7 @@ CANONICAL_ORIGINS = {"o01", "o02", "o03"}
 
 # Correct counts
 CORRECT_COUNTS = {
-    "sections": 51,
+    "sections": 52,
     "domains": 51,
     "groups": 9,
     "tags": 320,
@@ -212,10 +213,21 @@ def scan_contamination(files):
     ]
 
     for fpath in files:
+        # SESSION_LOG.md is a historical record — old-architecture terms in prior
+        # work unit entries are accurate logs of past work, not live contamination.
+        if os.path.basename(fpath) == "SESSION_LOG.md":
+            continue
         lines, content = read_file(fpath)
         if not lines:
             continue
         for i, line in enumerate(lines, 1):
+            # Skip lines that are intentional provenance/history documentation:
+            # "(was emergence.js)", rebuild description "(index.html + IndexedDB + vanilla JS)"
+            if re.search(r'\(was\s+\S', line) or re.search(r'\bvanilla\s+JS\b', line):
+                continue
+            # Skip self-referential scanner descriptions listing the markers they detect
+            if re.search(r'[Cc]ontamination\s+markers?:', line):
+                continue
             for pattern, desc, severity, suggestion in markers:
                 if re.search(pattern, line):
                     add_finding(1, severity, fpath, i, desc, suggestion)
@@ -261,6 +273,12 @@ def scan_phantom_refs(files):
                     ref_name = match.group(0).strip()
                     if ref_name in file_seen:
                         continue
+                    # Suppress if ref_name is a suffix of a longer existing filename
+                    # that also appears on this line — avoids false positives from
+                    # multi-word filenames like "SAT NAM ENGINE SCHEMA.md" → "ENGINE SCHEMA.md"
+                    if any(ef != ref_name and ef.endswith(ref_name) and ef in line
+                           for ef in existing_files):
+                        continue
                     if ref_name not in existing_files:
                         # Check with different spacing
                         found = False
@@ -289,6 +307,7 @@ def scan_stale_counts(files):
         (r'\b50\s+domains\b', "50 domains (correct: 51)", HIGH),
         (r'\b8\s+groups\b', "8 groups (correct: 9)", HIGH),
         (r'\beight\s+groups\b', "eight groups (correct: 9)", HIGH),
+        (r'\b51\s+sections\b', "51 sections (correct: 52)", HIGH),
         (r'\b7\s+detectors?\b', "7 detectors (correct: 8)", HIGH),
         (r'\bseven\s+detectors?\b', "seven detectors (correct: 8)", HIGH),
         (r'\b200\s+tags\b', "200 tags (correct: 320)", HIGH),
@@ -298,6 +317,9 @@ def scan_stale_counts(files):
     ]
 
     for fpath in files:
+        # SESSION_LOG.md is a historical record — stale counts in old entries are expected
+        if os.path.basename(fpath) == "SESSION_LOG.md":
+            continue
         lines, content = read_file(fpath)
         if not lines:
             continue
@@ -371,6 +393,9 @@ def scan_threshold_order(files):
 
         fname = os.path.basename(fpath)
         if fname == "TAG VOCABULARY.md":
+            continue
+        # Domain .txt files use threshold names in prose descriptions — not structured listings
+        if fpath.endswith(".txt") and "/Domains/" in fpath.replace("\\", "/"):
             continue
 
         # Find sequences of threshold ID + name pairs
@@ -598,8 +623,21 @@ def scan_version_contamination(files):
 def scan_count_consistency(files):
     """Verify counts mentioned in prose match canonical values."""
 
+    # Per-file exclusions: files where specific count words mean something different
+    # from the archive-wide canonical (e.g., visualization nodes, cluster sizes,
+    # document-internal sections, INF's 5-domain computation pair set).
+    COUNT_EXCLUSIONS = {
+        "ECHO RECALL ENGINE SCHEMA.md":          {"nodes", "anchors"},  # 19 signal nodes in d3-force viz; s12 Anchor seed code
+        "RESONANCE ENGINE AUDIO SPEC.md":        {"nodes"},    # 2-3/4-6/7+ cluster size rows
+        "INFINITE INTRICACY ENGINE SCHEMA.md":   {"domains"},  # 5 domain pairs in INF computation
+        "SYSTEM_ Infinite Intricacy Engine.md":  {"domains"},  # same
+        "PIPELINE CONTRACT 1 \u2014 INT TO LNV.md": {"domains"},  # INF domain pair reference
+        "SYSTEM_ Research Assistant.md":         {"sections"}, # 23 sections in Research Posture doc
+        "TAG VOCABULARY.md":                     {"anchors"},  # s12/s13 seed IDs parsed as counts
+    }
+
     count_patterns = [
-        (r'(\d+)\s+sections', "sections", 51),
+        (r'(\d+)\s+sections', "sections", 52),
         (r'(\d+)\s+groups', "groups", 9),
         (r'(\d+)\s+seeds', "seeds", 40),
         (r'(\d+)\s+tags\b(?!\s*,\s*and|\s*per)', "tags", 320),
@@ -621,11 +659,15 @@ def scan_count_consistency(files):
             continue
 
         fname = os.path.basename(fpath)
-        if fname in ("ENTROPY_EXCAVATION.md",):
+        if fname in ("ENTROPY_EXCAVATION.md", "SESSION_LOG.md"):
             continue
+
+        excluded_items = COUNT_EXCLUSIONS.get(fname, set())
 
         for i, line in enumerate(lines, 1):
             for pattern, item, correct in count_patterns:
+                if item in excluded_items:
+                    continue
                 for match in re.finditer(pattern, line, re.IGNORECASE):
                     found = int(match.group(1))
                     if found != correct and found > 1:

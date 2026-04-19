@@ -277,8 +277,7 @@ VISUALIZE (Step 3)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 All THR visualizations are SVG instruments rendered via LayerCake
-+ D3 utilities. Rendering category: SVG instrument (see ENGINE
-COMPUTATION SCHEMA.md VISUALIZATION ARCHITECTURE).
++ D3 utilities. Rendering category: SVG instrument (see ENGINE COMPUTATION SCHEMA.md VISUALIZATION ARCHITECTURE).
 
 All visualizations render from computed results (engine result
 object), never from raw deposit data.
@@ -375,8 +374,7 @@ On computation completion:
   4. Results served to requester (page view, MTM pull, or
      batch close trigger)
 
-Visualization snapshots: Sage-triggered capture per ENGINE
-COMPUTATION SCHEMA.md VISUALIZATION SNAPSHOTS. Co-occurrence
+Visualization snapshots: Sage-triggered capture per ENGINE COMPUTATION SCHEMA.md VISUALIZATION SNAPSHOTS. Co-occurrence
 matrix state (cell values, hover data, color mapping) captured
 as viz_data JSON.
 

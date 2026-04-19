@@ -72,7 +72,7 @@ human-readable section is the active cascade reference until then.
 ---
 
 ### INTEGRATION SCHEMA.md
-Touches: COMPOSITE ID SCHEMA.md · INTEGRATION IDB SCHEMA.md · TAGGER SCHEMA.md
+Touches: COMPOSITE ID SCHEMA.md · INTEGRATION DB SCHEMA.md · TAGGER SCHEMA.md
 
 - Composite ID: stamp assignment in INT flow — format and sequence counter
   behavior must align
@@ -85,7 +85,7 @@ Touches: COMPOSITE ID SCHEMA.md · INTEGRATION IDB SCHEMA.md · TAGGER SCHEMA.md
 ---
 
 ### TAGGER SCHEMA.md
-Touches: RESONANCE ENGINE SCHEMA.md · EMERGENCE SCHEMA.md · SYSTEM_ Tagger.md · INTEGRATION SCHEMA.md
+Touches: RESONANCE ENGINE PHYSICS SPEC.md · EMERGENCE SCHEMA.md · SYSTEM_ Tagger.md · INTEGRATION SCHEMA.md
 
 - Resonance Engine: ae:tagCommit payload field names are a hard contract.
   seed_id/layer_id/threshold_id/pillar_id — exact spelling, always
@@ -98,7 +98,7 @@ Touches: RESONANCE ENGINE SCHEMA.md · EMERGENCE SCHEMA.md · SYSTEM_ Tagger.md 
 ---
 
 ### COMPOSITE ID SCHEMA.md
-Touches: INTEGRATION SCHEMA.md · INTEGRATION IDB SCHEMA.md
+Touches: INTEGRATION SCHEMA.md · INTEGRATION DB SCHEMA.md
 
 - Integration: stamp format is used at INT step 4. previewCompositeId()
   is sync (safe on every keystroke). buildCompositeId() is async (permanent
@@ -144,7 +144,7 @@ Touches: EMERGENCE SCHEMA.md
 
 ---
 
-### RESONANCE ENGINE SCHEMA.md
+### RESONANCE ENGINE PHYSICS SPEC.md
 Touches: TAGGER SCHEMA.md
 
 - ae:tagCommit payload received from tagger — payload field names must

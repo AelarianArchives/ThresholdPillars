@@ -416,8 +416,7 @@ implications. The framing sequence is the path in; the bridge is
 the path through.
 
 **Archive Access → Cosmology Bridge:**
-The prior computation check uses the RAG pipeline (RESEARCH ASSISTANT
-ARCHIVE ACCESS.md) to retrieve existing findings before suggesting
+The prior computation check uses the RAG pipeline (RESEARCH ASSISTANT ARCHIVE ACCESS.md) to retrieve existing findings before suggesting
 new computations.
 
 **ARTIS (ART·40) → Cosmology Bridge:**

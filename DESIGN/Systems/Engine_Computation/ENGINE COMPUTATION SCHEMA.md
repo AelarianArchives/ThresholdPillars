@@ -31,7 +31,7 @@ OWNERSHIP BOUNDARIES
       (THR, STR, INF, ECR, SNM)
     Individual engine visualization design — owned by each engine schema
     Engine-specific tables — owned by each engine schema
-    Ven'ai service — owned by VEN'AI SERVICE SCHEMA.md
+    Ven'ai service — owned by VENAI SERVICE SCHEMA.md
     SNM Claude API integration — owned by SAT NAM ENGINE SCHEMA.md
     MTM synthesis — owned by METAMORPHOSIS SCHEMA.md
     Deposit record shape — owned by INTEGRATION DB SCHEMA.md
@@ -741,7 +741,7 @@ lens-contextual awareness.
   investigate.
 
   Ven'ai name deduplication is handled separately by the Ven'ai
-  service (see VEN'AI SERVICE SCHEMA.md). STR engine reads the
+  service (see VENAI SERVICE SCHEMA.md). STR engine reads the
   service's output (venai_correlations) — it does not re-implement
   name normalization.
 

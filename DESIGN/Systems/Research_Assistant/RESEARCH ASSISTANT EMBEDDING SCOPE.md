@@ -37,8 +37,7 @@ determines:
 * Deposit-level embedding trigger and dirty flag — owned by INTEGRATION
   SCHEMA.md EMBEDDING PIPELINE section. That section defines
   embedding_dirty, 3-attempt retry, failed_permanent status
-* Archive-level embedding (provenance_summary) — owned by EMBEDDING
-  PIPELINE SCHEMA.md. Already designed, already scoped
+* Archive-level embedding (provenance_summary) — owned by EMBEDDING PIPELINE SCHEMA.md. Already designed, already scoped
 * Vector table schema — owned by EMBEDDING PIPELINE SCHEMA.md
   (embeddings table)
 * Retrieval mechanics — owned by RESEARCH ASSISTANT ARCHIVE ACCESS.md.
@@ -194,8 +193,7 @@ without INT provenance.
 ### Provenance Summaries — already embedded via existing pipeline
 
 Provenance summaries on retired archive documents are already embedded
-by the existing archive-level embedding pipeline defined in EMBEDDING
-PIPELINE SCHEMA.md.
+by the existing archive-level embedding pipeline defined in EMBEDDING PIPELINE SCHEMA.md.
 
 **Why not embed again:** Already covered. The existing pipeline handles
 archive-level embedding at retirement. This spec does not duplicate
