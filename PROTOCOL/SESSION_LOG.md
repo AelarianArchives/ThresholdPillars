@@ -790,3 +790,82 @@ TIMESTAMP: 2026-04-18 21:57
 TYPE: HOOK_WRITE
 FILE: C:\Users\sasir\Desktop\Aelarian\Archives\.github\workflows\codeql.yml
 ---
+
+---
+TIMESTAMP: 2026-04-18 21:59
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && gh run view 24619532933 --json conclusion,status,jobs 2>&1 | python -c "import sys,json; r=json.load(sys.stdin); [print(j['name'], j['conclusion']) for j in r.get('jobs', [])]"
+---
+
+---
+TIMESTAMP: 2026-04-18 21:59
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && gh run view 24619532941 --json conclusion,status,jobs 2>&1 | python -c "import sys,json; r=json.load(sys.stdin); print('CI status:', r.get('status'), r.get('conclusion')); [print(j['name'], j['conclusion']) for j in r.get('jobs', [])]"
+---
+
+---
+TIMESTAMP: 2026-04-19 00:00
+SESSION: 66
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Mandatory reads complete. Session 65 interrupted — RESUME written, disk clean.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - PR review and CodeQL work (Sage direction)
+UNCOMMITTED: NO
+NEXT_ACTION: Execute PR and CodeQL work
+---
+
+---
+TIMESTAMP: 2026-04-19 00:30
+SESSION: 66
+TYPE: WORK_UNIT
+FILES_MODIFIED:
+  - .github/workflows/codeql.yml — COMPLETE
+  - PROTOCOL/SESSION_LOG.md — IN_PROGRESS
+COMPLETED:
+  - PR #2 closed (superseded by PR #11)
+  - PRs #7 (TypeScript 6), #8 (Vite 8), #9 (vite-plugin-svelte 7) closed with
+    @dependabot ignore major version — peer dep conflicts, ecosystem not ready
+  - PRs #3, #4, #11, #12 rebased — all CI green: build-and-test, integrity-check,
+    bundle-size, lighthouse, CodeRabbit all SUCCESS
+  - .github/workflows/codeql.yml written — Python + JS/TS matrix, build-mode: none,
+    security-events: write for SARIF upload and real pass/fail
+  - GitHub default CodeQL setup disabled via API (conflicted with custom workflow)
+  - CodeQL action upgraded v3 → v4 (v3 deprecated Dec 2026)
+  - CodeQL confirmed working on main: both languages SUCCESS (run 24619532933)
+  - Dependabot security alert reviewed: cookie < 0.7.0, low severity, transitive
+    dep — will likely resolve when PR #11 merges
+  - CodeRabbit confirmed live on all open PRs (SUCCESS on #3, #4, #11, #12)
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  - Merge PRs #3, #4, #11, #12 — all CI passing, awaiting Sage direction
+  - CodeQL will show on future PRs (existing PR runs predated the workflow push)
+  - Antigravity MCP config
+  - Tier 6 build spec write (Research Assistant + Audio) — held
+UNCOMMITTED: YES — committing now
+NEXT_ACTION: Sage to direct PR merges; close session or continue
+---
+
+---
+TIMESTAMP: 2026-04-18 22:00
+TYPE: HOOK_BASH
+COMMAND: cat >> "C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SESSION_LOG.md" << 'ENTRY'
+
+---
+TIMESTAMP: 2026-04-19 00:00
+SESSION: 66
+TYPE: OPEN
+FILES_MODIFIED:
+  - none
+COMPLETED:
+  - Mandatory reads complete. Session 65 interrupted â€” RESUME written, disk clean.
+IN_PROGRESS:
+  - none
+NOT_STARTED:
+  -...
+---
