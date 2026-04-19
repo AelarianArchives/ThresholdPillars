@@ -25,6 +25,38 @@ archive's structure.
 
 ---
 
+## ACTIVE AGENTS
+
+### Sage Sirona (human)
+**Role:** Researcher, architect, merge authority
+**Authority:** Absolute. Sage's direct report of current state overrides all
+agent understanding. Sage is the only merge authority.
+
+### Claude Code (Anthropic)
+**Role:** BUILD phase primary, AUDIT phase
+**Contract:** CLAUDE.md
+**Commit identity:** `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
+**Entry points:** Terminal inside project folder; Antigravity extension
+
+### Antigravity (Google DeepMind)
+**Role:** SPEC phase primary, orchestration, AUDIT phase
+**Contract:** TBD — ANTIGRAVITY.md not yet written
+**Commit identity:** `Co-Authored-By: Antigravity <noreply@deepmind.google.com>`
+**Entry points:** Antigravity IDE; MCP server for GitHub
+
+---
+
+## PHASE OWNERSHIP
+
+| Phase | Primary     | Rule                                                    |
+|-------|-------------|---------------------------------------------------------|
+| SPEC  | Antigravity | Claude Code does not author SPEC artifacts unilaterally |
+| BUILD | Claude Code | Antigravity may execute simple, bounded builds          |
+| AUDIT | Either      | Cross-agent audit preferred for high-stakes files       |
+| PASS  | Sage only   | No agent marks PASS without Sage's explicit approval    |
+
+---
+
 ## Tone and Register
 
 Commits, comments, documentation, and any generated content must match
@@ -85,6 +117,23 @@ identity registry. Their session conventions are defined in
 `PROTOCOL/SESSION_PROTOCOL.md`. This file applies to all agents
 including swarm nodes; swarm-specific overrides are defined in the
 protocol, not here.
+
+---
+
+## HANDOFF PROTOCOL
+
+When one agent completes a phase and passes work to another, a TYPE: HANDOFF
+entry is written to SESSION_LOG.md. Full format and procedure in
+SESSION_PROTOCOL.md section 8.
+
+---
+
+## AGENT IDENTITY REGISTRY
+
+The backend Agent Identity Registry (backend/services/ — core files phase,
+not yet built) tracks AI provenance for archive operations. Namespace keys
+and agent IDs are TBD — to be defined when backend/services/ is written.
+Antigravity has offered to establish namespace keys at that time.
 
 ---
 

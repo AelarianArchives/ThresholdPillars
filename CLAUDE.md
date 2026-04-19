@@ -256,6 +256,19 @@ because prior sessions reported files as clean when they were not.
 
 ---
 
+## AGENT PHASE OWNERSHIP — NON-NEGOTIABLE
+
+Phase ownership is defined in AGENTS.md. The binding rule for Claude Code:
+
+- **SPEC:** Antigravity is primary. Claude Code does not author SPEC
+  artifacts unilaterally. If a SPEC is needed and no Antigravity SPEC
+  exists, stop and flag to Sage. Do not proceed.
+- **BUILD:** Claude Code is primary.
+- **AUDIT:** Either agent. Cross-agent audit preferred for high-stakes files.
+- **PASS:** Sage only. No agent declares PASS without Sage's explicit approval.
+
+---
+
 ## STRESS TEST PROTOCOL
 
 Every schema, system document, and significant file is stress tested before
@@ -373,6 +386,16 @@ stores are built from SOT in the core files phase (step 4).
 All Claude-generated files go in .claude/ unless absolutely needed
 elsewhere. Do not create working files, memory files, or session
 artifacts outside this directory.
+
+**SHARED SOURCES — read when inter-agent work is active:**
+```
+AGENTS.md           — agent registry. Lists all agents, their roles, contracts,
+                      commit identities, and phase ownership. Read before any
+                      inter-agent handoff, SPEC authoring, or cross-agent
+                      boundary decision. Not a mandatory read every session —
+                      required only when the session involves inter-agent
+                      operations or global boundary decisions.
+```
 
 **RETIRED — consolidated and archived:**
 ```

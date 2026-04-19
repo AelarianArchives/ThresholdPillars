@@ -28,7 +28,7 @@ No fields are optional. If a field has nothing to report, write `none`.
 ```
 ---
 TIMESTAMP: YYYY-MM-DD HH:MM
-TYPE: OPEN | CLOSE | WORK_UNIT | RESUME | GHOST_FIX
+TYPE: OPEN | CLOSE | WORK_UNIT | RESUME | GHOST_FIX | HANDOFF
 FILES_MODIFIED:
   - [file path] — [COMPLETE | IN_PROGRESS | DELETED]
 COMPLETED:
@@ -349,6 +349,47 @@ committed with the session's work — auditable after the fact.
 entity. The artifact does not validate itself. It is a record that Sage
 can read. The hook enforces that the record exists. Sage evaluates
 whether the record is honest.
+
+---
+
+## 8. HANDOFF PROCEDURE
+
+Run when one agent completes a phase and passes work to another.
+A partial handoff is not a handoff — all work for the phase must be
+in COMPLETE or explicitly DEFERRED state before handing off.
+
+**Sending agent:**
+1. Confirm all phase work is committed and pushed
+2. Run the close audit: `python hooks/entropy_scan.py --close-audit`
+3. Write a `TYPE: HANDOFF` entry to SESSION_LOG.md:
+
+```
+---
+TIMESTAMP: YYYY-MM-DD HH:MM
+TYPE: HANDOFF
+FROM_AGENT: [Claude Code | Antigravity]
+TO_AGENT: [Claude Code | Antigravity | Sage]
+PHASE_COMPLETED: [SPEC | BUILD | AUDIT]
+PHASE_NEXT: [BUILD | AUDIT | PASS]
+FILES_HANDED_OFF:
+  - [file path] — [state]
+OPEN_QUESTIONS:
+  - [unresolved decision the receiving agent must address, or none]
+NEXT_ACTION: [first thing the receiving agent must do]
+---
+```
+
+4. State the handoff to Sage: what was completed, what is handed off,
+   what the receiving agent's first action is.
+5. Sage confirms the handoff before the receiving agent begins.
+
+**Receiving agent:**
+1. Read AGENTS.md
+2. Read the HANDOFF entry in SESSION_LOG.md
+3. Read every file listed in FILES_HANDED_OFF from disk — confirm actual
+   state matches what the entry records
+4. Report confirmed state to Sage and wait for acknowledgment before
+   any new work begins
 
 ---
 
