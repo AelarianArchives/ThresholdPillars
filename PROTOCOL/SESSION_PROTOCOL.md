@@ -103,8 +103,35 @@ these mechanical steps:
    Read the actual files. Confirm what exists, what is PLANNED, what is clean
 4. Check DESIGN/Systems/ and DESIGN/Domains/ — confirm state matches last
    known record. Name any discrepancy before proceeding
-5. Write a `TYPE: OPEN` entry to SESSION_LOG.md with current confirmed state
-6. State current confirmed state to Sage before any work begins
+5. PR STATE AUDIT — required from Phase 2 onward
+   Audit the state of open pull requests targeting main before any
+   new work begins.
+   a. Run: `gh pr list --base main --state open`
+   b. For each open PR, run: `gh pr checks` and `gh pr view --comments`
+   c. Classify each PR:
+      - Ready to merge — all checks passing, no unresolved review
+        comments. Report to Sage for merge decision.
+      - Needs action — failed checks, pending review comments, or
+        CodeQL findings requiring triage. Record the required action
+        and which session owns it.
+      - Blocked/abandoned — stale PR from a prior session with no
+        clear path forward. Document the PR state, record what is
+        needed to close it, and report to Sage. Sage decides whether
+        to resolve, close, or defer before new work begins.
+   d. Report PR state to Sage. Sage decides whether any PR must be
+      resolved before new work begins, or whether new work proceeds
+      in parallel on a separate branch.
+   e. No new work begins until this audit is completed and reported.
+      This is a gate, not a reminder — same weight as mandatory reads.
+
+   PR-ROT linkage: If an open PR has CodeRabbit or CodeQL findings
+   that match rot patterns in ROT_REGISTRY.md, cross-reference them.
+   Not every CodeRabbit comment is a rot event — but findings that
+   match confirmed failure modes (F-codes) should be logged in
+   ROT_REGISTRY.md and ROT_OPEN.md per the mid-session rot discovery
+   procedure in CLAUDE.md.
+6. Write a `TYPE: OPEN` entry to SESSION_LOG.md with current confirmed state
+7. State current confirmed state to Sage before any work begins
 
 ---
 

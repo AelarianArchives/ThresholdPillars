@@ -530,7 +530,10 @@ ROT_OPEN.md has entries, name them to Sage and resolve before proceeding.
    anything else → interrupted session, follow SESSION_PROTOCOL.md section 3 before any work
 8. Verify DESIGN/Systems/ and DESIGN/Domains/ state — do not assume it matches
    any prior session's record
-9. **Page code rot scan — NON-NEGOTIABLE.** Verify any page codes referenced
+9. **PR STATE AUDIT — Phase 2 onward.** Before any new work begins, audit
+   open PRs targeting main. Full procedure in SESSION_PROTOCOL.md section 1,
+   step 5. Gate, not a reminder — same weight as mandatory reads.
+10. **Page code rot scan — NON-NEGOTIABLE.** Verify any page codes referenced
    in session work against DESIGN/Systems/SECTION MAP.md. The canonical
    SECTION MAP is the sole authority for page codes, group names, and group
    numbers. Page codes drift silently across sessions when carried from
@@ -538,8 +541,8 @@ ROT_OPEN.md has entries, name them to Sage and resolve before proceeding.
    the SECTION MAP is contamination — flag it before writing. This check
    was added after session 18 caught 9 drifted page codes that had entered
    the design build plan undetected.
-10. Do not assume anything about file state — verify before touching
-11. If uncertain about anything — ask before acting.
+11. Do not assume anything about file state — verify before touching
+12. If uncertain about anything — ask before acting.
     Silent failure is not acceptable
 
 **RELATIONSHIP BETWEEN ROOT DOCUMENTS**
