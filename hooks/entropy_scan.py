@@ -717,7 +717,17 @@ PYTHON_STDLIB = {
     "logging", "unittest", "dataclasses", "contextlib", "textwrap",
     "uuid", "base64", "urllib", "http", "socket", "sqlite3", "csv",
     "shutil", "tempfile", "glob", "fnmatch", "struct", "importlib",
-    "asyncio", "concurrent", "multiprocessing", "threading",
+    "asyncio", "concurrent", "multiprocessing", "threading", "warnings",
+}
+
+# Package name aliases: import name → requirements.txt name
+PYTHON_IMPORT_ALIASES = {
+    "dotenv": "python-dotenv",
+    "cv2": "opencv-python",
+    "PIL": "pillow",
+    "sklearn": "scikit-learn",
+    "bs4": "beautifulsoup4",
+    "yaml": "pyyaml",
 }
 
 
@@ -760,9 +770,12 @@ def scan_imports(files):
                 match = re.match(r'^(?:from|import)\s+(\w+)', line.strip())
                 if match:
                     mod = match.group(1)
-                    if mod not in PYTHON_STDLIB and mod.lower() not in py_deps:
-                        # Check if it's a local import (relative path)
-                        if not os.path.exists(os.path.join(os.path.dirname(fpath), mod)):
+                    resolved = PYTHON_IMPORT_ALIASES.get(mod, mod)
+                    if mod not in PYTHON_STDLIB and resolved.lower() not in py_deps:
+                        # Check if it's a local package (relative dir or project-root package)
+                        local_rel = os.path.exists(os.path.join(os.path.dirname(fpath), mod))
+                        local_root = os.path.exists(os.path.join(PROJECT_ROOT, mod))
+                        if not local_rel and not local_root:
                             add_finding(15, MEDIUM, fpath, i,
                                         f"Unverified import: {mod}",
                                         f"Verify '{mod}' exists in requirements.txt or is stdlib")
@@ -775,7 +788,7 @@ def scan_imports(files):
                     pkg = match.group(1).split("/")[0]  # @scope/pkg → @scope
                     if pkg.startswith("@"):
                         pkg = "/".join(match.group(1).split("/")[:2])
-                    if pkg not in js_deps and pkg != "$app":  # $app is SvelteKit builtin
+                    if pkg not in js_deps and not pkg.startswith("$") and not pkg.startswith("node:"):
                         add_finding(15, MEDIUM, fpath, i,
                                     f"Unverified import: {pkg}",
                                     f"Verify '{pkg}' exists in package.json")

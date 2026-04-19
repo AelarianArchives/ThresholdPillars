@@ -105,10 +105,18 @@ if [ -f "frontend/package.json" ]; then
     fi
     if echo "$STAGED_FILES" | grep -q "^frontend/package.json$"; then
         if ! echo "$STAGED_FILES" | grep -q "^frontend/package-lock.json$"; then
-            echo ""
-            echo "  BLOCKED: frontend/package.json staged without frontend/package-lock.json."
-            echo "  Both must be committed together."
-            exit 1
+            # Only block if actual dependency entries changed (semver values).
+            # Metadata-only changes (engines, scripts, name, etc.) don't affect the lockfile.
+            DEP_CHANGED=$(git diff --cached frontend/package.json | \
+                grep -E '^\+[^+]' | \
+                grep -E '"[~^][0-9]|"[0-9]+\.[0-9]' | \
+                wc -l | tr -d ' ')
+            if [ "$DEP_CHANGED" -gt 0 ]; then
+                echo ""
+                echo "  BLOCKED: frontend/package.json staged without frontend/package-lock.json."
+                echo "  Dependency changes require lockfile update. Both must be committed together."
+                exit 1
+            fi
         fi
     fi
     echo "  PASS"
