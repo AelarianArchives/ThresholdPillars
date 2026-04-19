@@ -316,3 +316,386 @@ TIMESTAMP: 2026-04-18 19:46
 TYPE: HOOK_WRITE
 FILE: C:\Users\sasir\Desktop\Aelarian\Archives\frontend\package.json
 ---
+
+---
+TIMESTAMP: 2026-04-18 20:05
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\pre-commit
+---
+
+---
+TIMESTAMP: 2026-04-18 20:05
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:06
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:06
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:06
+TYPE: HOOK_BASH
+COMMAND: cp hooks/pre-commit .git/hooks/pre-commit && python hooks/entropy_scan.py --category 15 2>&1
+---
+
+---
+TIMESTAMP: 2026-04-18 20:06
+TYPE: HOOK_BASH
+COMMAND: python hooks/entropy_scan.py --summary 2>&1 | head -20
+---
+
+---
+TIMESTAMP: 2026-04-18 20:36
+TYPE: HOOK_BASH
+COMMAND: python3 -c "
+import re
+files_and_lines = [
+  ('DESIGN/Systems/Echo_Recall_Engine/ECHO RECALL ENGINE SCHEMA.md', 126),
+  ('DESIGN/Systems/Embedding_Pipeline/EMBEDDING PIPELINE SCHEMA.md', 133),
+  ('DESIGN/Systems/Engine_Computation/ENGINE COMPUTATION SCHEMA.md', 34),
+  ('DESIGN/Systems/Engine_Computa...
+---
+
+---
+TIMESTAMP: 2026-04-18 20:37
+TYPE: HOOK_BASH
+COMMAND: ls "DESIGN/Systems/Venai_Service/" 2>/dev/null && ls "DESIGN/Systems/Sat_Nam_Engine/" 2>/dev/null && python3 -c "
+with open('DESIGN/Systems/Research_Assistant/SYSTEM_ Research Assistant.md', encoding='utf-8') as f:
+    lines = f.readlines()
+print('Line 528-535:')
+for i in range(527, 535):
+    print(...
+---
+
+---
+TIMESTAMP: 2026-04-18 20:39
+TYPE: HOOK_BASH
+COMMAND: python3 -c "
+files = [
+  ('PROTOCOL/PROTOCOL_TODO.md', 51, 56),
+  ('PROTOCOL/SCHEMA_PROTOCOL.md', 73, 92),
+  ('PROTOCOL/SESSION_LOG.md', 233, 237),
+]
+for fpath, start, end in files:
+    print(f'=== {fpath}:{start}-{end} ===')
+    with open(fpath, encoding='utf-8') as f:
+        lines = f.readlines()...
+---
+
+---
+TIMESTAMP: 2026-04-18 20:42
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:43
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:44
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:44
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:44
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:45
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 20:45
+TYPE: COMPACT_CHECKPOINT
+WORK_UNITS_TODAY: 0
+PHASE_STATE: DESIGN/Systems/Tagger/SYSTEM_ Tagger.md=audit_pass, DESIGN/Systems/TAG VOCABULARY.md=audit_pass, DESIGN/Systems/Composite_ID/COMPOSITE ID SCHEMA.md=audit_pass
+OPEN_ROT: no
+NOTE: Context compaction occurred. Re-read CLAUDE.md mandatory rules.
+---
+
+---
+TIMESTAMP: 2026-04-18 20:48
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION DB SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:49
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Infinite_Intricacy_Engine\INFINITE INTRICACY ENGINE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:49
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Resonance_Engine\SYSTEM_ Resonance Engine.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:49
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\StarRoot_Engine\STARROOT ENGINE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:49
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Sat_Nam_Engine\SAT NAM ENGINE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:49
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Echo_Recall_Engine\ECHO RECALL ENGINE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:49
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Echo_Recall_Engine\ECHO RECALL ENGINE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:50
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Threshold_Engine\THRESHOLD ENGINE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:50
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Threshold_Engine\THRESHOLD ENGINE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:51
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Research_Assistant\RESEARCH ASSISTANT EMBEDDING SCOPE.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:51
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Research_Assistant\RESEARCH ASSISTANT EMBEDDING SCOPE.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:51
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Research_Assistant\RESEARCH ASSISTANT COSMOLOGY BRIDGE.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:51
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Embedding_Pipeline\EMBEDDING PIPELINE SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:53
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Engine_Computation\ENGINE COMPUTATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:53
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Research_Assistant\SYSTEM_ Research Assistant.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:53
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SCHEMA_PROTOCOL.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:53
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SCHEMA_PROTOCOL.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:53
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\PROTOCOL_TODO.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:53
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py --summary 2>&1
+---
+
+---
+TIMESTAMP: 2026-04-18 20:54
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py 2>&1 | grep -E "^(HIGH|MEDIUM|LOW|  File|  Line|  Found|  Pattern)" | head -120
+---
+
+---
+TIMESTAMP: 2026-04-18 20:54
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py 2>&1 | head -300
+---
+
+---
+TIMESTAMP: 2026-04-18 20:55
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Engine_Computation\ENGINE COMPUTATION SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:55
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\DESIGN\Systems\Integration\INTEGRATION DB SCHEMA.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:55
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SCHEMA_PROTOCOL.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\PROTOCOL\SCHEMA_PROTOCOL.md
+---
+
+---
+TIMESTAMP: 2026-04-18 20:56
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\api\prompts\GLOBAL_KNOWLEDGE_BASE.txt
+---
+
+---
+TIMESTAMP: 2026-04-18 20:57
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py --summary 2>&1
+---
+
+---
+TIMESTAMP: 2026-04-18 21:00
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 21:03
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 21:03
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 21:04
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 21:04
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py --summary 2>&1
+---
+
+---
+TIMESTAMP: 2026-04-18 21:04
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py 2>&1 | grep -A3 "Cross-File"
+---
+
+---
+TIMESTAMP: 2026-04-18 21:05
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 21:05
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py --summary 2>&1
+---
+
+---
+TIMESTAMP: 2026-04-18 21:05
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py 2>&1 | grep -B1 "SESSION_LOG\|CLAUDE.md\|SCHEMA_PROTOCOL\|PROTOCOL_TODO\|SESSION_PROTOCOL" | head -60
+---
+
+---
+TIMESTAMP: 2026-04-18 21:06
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 21:07
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py --summary 2>&1
+---
+
+---
+TIMESTAMP: 2026-04-18 21:09
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 21:09
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py --summary 2>&1
+---
+
+---
+TIMESTAMP: 2026-04-18 21:09
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py 2>&1 | grep -A2 "\[Contamination" | grep "HIGH" -A1 | head -40
+---
+
+---
+TIMESTAMP: 2026-04-18 21:10
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py 2>&1 | sed -n '/-- HIGH --/,/-- MEDIUM --/p' | head -80
+---
+
+---
+TIMESTAMP: 2026-04-18 21:12
+TYPE: HOOK_WRITE
+FILE: C:\Users\sasir\Desktop\Aelarian\Archives\hooks\entropy_scan.py
+---
+
+---
+TIMESTAMP: 2026-04-18 21:12
+TYPE: HOOK_BASH
+COMMAND: cd "C:\Users\sasir\Desktop\Aelarian\Archives" && python hooks/entropy_scan.py --summary 2>&1
+---
