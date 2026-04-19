@@ -256,7 +256,7 @@ Nothing in this section begins until Sections 1–4 open items are resolved.
       have no elarianAnchor field. Decide: backfill needed, or archive starts
       fresh from rebuild. Record decision here before build begins.
 - [ ] elarianAnchor added to AI-facing JSON export spec alongside arcCode and
-      doc_type. Verify at schema.js build time (failure mode 7 in COMPOSITE ID
+      doc_type. Verify at FastAPI model build time (failure mode 7 in COMPOSITE ID
       SCHEMA).
 
 ---

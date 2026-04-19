@@ -76,8 +76,8 @@ Touches: COMPOSITE ID SCHEMA.md · INTEGRATION DB SCHEMA.md · TAGGER SCHEMA.md
 
 - Composite ID: stamp assignment in INT flow — format and sequence counter
   behavior must align
-- Integration IDB: store write sequence must match INT step order. Known
-  conflict point: intake_status field — see IDB Schema header before
+- Integration DB: store write sequence must match INT step order. Known
+  conflict point: intake_status field — see INTEGRATION DB SCHEMA.md header before
   touching either
 - Tagger: INT step 5 calls the tagger routing chain. Any change to INT
   step 5 sequence cascades to TAGGER SCHEMA.md
@@ -103,7 +103,7 @@ Touches: INTEGRATION SCHEMA.md · INTEGRATION DB SCHEMA.md
 - Integration: stamp format is used at INT step 4. previewCompositeId()
   is sync (safe on every keystroke). buildCompositeId() is async (permanent
   sequence counter increment — called only on confirmed save)
-- Integration IDB: stamp field in the IDB store must match schema definition
+- Integration DB: stamp field in the Integration DB must match schema definition
 
 ---
 
@@ -128,9 +128,9 @@ Touches: METAMORPHOSIS SCHEMA.md
 ### EMERGENCE SCHEMA.md
 Touches: THREAD TRACE SCHEMA.md · TAGGER SCHEMA.md
 
-- Thread Trace: window.ThreadTraceUI is the bridge — not ES module import.
-  Graph export stub is disabled in both files. Update both together.
-- Tagger: onTagSessionComplete always fetches entries fresh from data.js.
+- Thread Trace: graph export stub is disabled in both files. Update both together
+  when the graph route is live.
+- Tagger: onTagSessionComplete always fetches entries fresh from the FastAPI backend.
   capturedTags flows from tagger commit hook
 
 ---
@@ -138,9 +138,8 @@ Touches: THREAD TRACE SCHEMA.md · TAGGER SCHEMA.md
 ### THREAD TRACE SCHEMA.md
 Touches: EMERGENCE SCHEMA.md
 
-- window.ThreadTraceUI global used by emergence as bridge
 - Graph export stub: GRAPH_PAGE_PATH = '/graph' — stays stubbed until
-  route is live. Update both emergence.js and thread_trace_ui.js together
+  route is live. Update both EmergencePanel and ThreadTrace components together
 
 ---
 
@@ -157,8 +156,8 @@ Touches: TAGGER SCHEMA.md
 ### ARCHIVE SCHEMA.md
 Touches: INTEGRATION SCHEMA.md (for sealed record write path)
 
-- Entries with status: 'sealed' are read-only everywhere. data.js rejects
-  updates at the store level. This constraint must be reflected in
+- Entries with status: 'sealed' are read-only everywhere. The FastAPI backend
+  enforces this at the API layer. This constraint must be reflected in
   Integration if the write path changes.
 
 ---
