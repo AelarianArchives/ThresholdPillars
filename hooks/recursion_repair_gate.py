@@ -9,6 +9,7 @@ This hook runs BEFORE every Write or Edit. It checks the target file's
 phase state and blocks writes that violate the current phase.
 
 BUILD PHASE ENFORCEMENT:
+  - SPEC must carry a terminal STATUS marker (APPROVED or FINAL) in its header
   - Only files listed in the SPEC's '## Test files' or '## Files' can be written
   - Test files must exist on disk before any implementation file can be written
   - SPEC must not be modified after approval (hash check)
@@ -197,6 +198,60 @@ def validate_spec_structure(spec_content):
     return True, ""
 
 
+# ── STATUS marker (must match phase_control.py SPEC template convention) ─────
+
+VALID_STATUS_VALUES = ("APPROVED", "FINAL")
+
+
+def check_status_marker(spec_content):
+    """Verify SPEC carries a terminal STATUS marker in its header zone.
+
+    The marker must appear on its own line between the `# SPEC:` title
+    line and the first `##` section header. Valid values are APPROVED
+    and FINAL. Key and value are case-sensitive. Whitespace between
+    the colon and the value is flexible.
+
+    Returns (True, "") if a valid marker is found.
+    Returns (False, reason) otherwise, where reason is a human-readable
+    message suitable for a gate block.
+    """
+    lines = spec_content.split("\n")
+    seen_title = False
+    in_header_zone = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        if stripped.startswith("# SPEC:"):
+            seen_title = True
+            in_header_zone = True
+            continue
+
+        if not in_header_zone:
+            continue
+
+        # Reached first H2 section header — end of header zone.
+        if stripped.startswith("## "):
+            break
+
+        if stripped.startswith("STATUS:"):
+            value = stripped[len("STATUS:"):].strip()
+            if value in VALID_STATUS_VALUES:
+                return True, ""
+            if not value:
+                return False, "STATUS marker has no value. Expected 'APPROVED' or 'FINAL'."
+            return False, f"STATUS value is '{value}', expected 'APPROVED' or 'FINAL'."
+
+    if not seen_title:
+        return False, "SPEC file missing '# SPEC:' title line."
+
+    return False, (
+        "No STATUS marker found in SPEC header. "
+        "Expected 'STATUS: APPROVED' or 'STATUS: FINAL' "
+        "between title line and first section."
+    )
+
+
 def get_audit_path(rel_path):
     return os.path.join(AUDITS_DIR, rel_path + ".audit.md")
 
@@ -328,7 +383,16 @@ def main():
             test_files = parse_file_list(spec_content, "## Test files")
             all_files = parse_file_list(spec_content, "## Files")
 
-        # Re-validate SPEC structure (don't trust phase_state alone)
+        # Gate 3 — SPEC must carry terminal STATUS marker
+        status_valid, status_problem = check_status_marker(spec_content)
+        if not status_valid:
+            block(
+                rel_path,
+                f"SPEC missing terminal STATUS marker. {status_problem}",
+                "STATUS marker validation failed.",
+            )
+
+        # Gate 4 — Re-validate SPEC structure (don't trust phase_state alone)
         spec_valid, spec_problems = validate_spec_structure(spec_content)
         if not spec_valid:
             block(
